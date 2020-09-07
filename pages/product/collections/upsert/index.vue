@@ -9,7 +9,7 @@ export default {
     data() {
         return {
             collection: {},
-            domainName: process.env.DOMAIN_NAME
+            domainName: this.$config.DOMAIN_NAME
         };
     },
 

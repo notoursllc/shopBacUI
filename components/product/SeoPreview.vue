@@ -4,24 +4,27 @@ export default {
 
     props: {
         title: {
-            type: String
+            type: String,
+            default: ''
         },
 
         description: {
-            type: String
+            type: String,
+            default: ''
         },
 
         uri: {
-            type: String
+            type: String,
+            default: ''
         }
     },
 
     data: function() {
         return {
-            domainName: process.env.DOMAIN_NAME
-        }
+            domainName: this.$config.DOMAIN_NAME
+        };
     }
-}
+};
 </script>
 
 

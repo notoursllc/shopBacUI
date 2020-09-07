@@ -12,12 +12,11 @@
     "test": "jest"
   },
   "dependencies": {
-    "@bugsnag/js": "^5.2.0",
-    "@bugsnag/plugin-vue": "^5.2.0",
+    "@bugsnag/js": "^7.3.3",
+    "@bugsnag/plugin-vue": "^7.3.3",
     "@johmun/vue-tags-input": "^2.1.0",
     "@nuxt/http": "^0.5.2",
     "@nuxtjs/axios": "^5.12.2",
-    "@nuxtjs/dotenv": "^1.4.0",
     "accounting": "^0.4.1",
     "bootstrap": "^4.5.0",
     "bootstrap-vue": "^2.15.0",

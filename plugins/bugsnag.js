@@ -1,16 +1,15 @@
-import Vue from 'vue';
-import bugsnag from '@bugsnag/js';
-import bugsnagVue from '@bugsnag/plugin-vue';
+import Bugsnag from '@bugsnag/js';
+import BugsnagPluginVue from '@bugsnag/plugin-vue';
 
-export default (context) => {
+export default (context, inject) => {
 
-    const bugsnagClient = bugsnag({
-        apiKey: context.env.BUG_SNAG_API_KEY,
+    Bugsnag.start({
+        apiKey: context.$config.BUG_SNAG_API_KEY,
+        plugins: [new BugsnagPluginVue()],
         notifyReleaseStages: [ 'production' ]
     });
 
-    bugsnagClient.use(bugsnagVue, Vue);
-
-    Vue.prototype.$bugsnag = bugsnagClient;
+    inject('bugsnag', Bugsnag);
 
 };
+

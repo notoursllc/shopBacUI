@@ -1,5 +1,8 @@
-require('dotenv').config();
 const isDev = process.env.NODE_ENV === 'development';
+
+if(isDev) {
+    require('dotenv').config();
+}
 
 export default {
 
@@ -9,11 +12,38 @@ export default {
     */
     mode: 'spa',
 
+    vue: {
+        config: {
+            productionTip: isDev,
+            devtools: isDev
+        }
+    },
+
+    publicRuntimeConfig: {
+        axios: {
+            browserBaseURL: process.env.API_URL
+        },
+        BUG_SNAG_API_KEY: process.env.BUG_SNAG_API_KEY,
+        DOMAIN_NAME: process.env.DOMAIN_NAME,
+        EMAIL_INFO: process.env.EMAIL_INFO,
+        IMAGE_MANAGER_MAX_IMAGES: process.env.IMAGE_MANAGER_MAX_IMAGES,
+        IMAGE_MANAGER_MAX_FEATURED_IMAGES: process.env.IMAGE_MANAGER_MAX_FEATURED_IMAGES,
+        SKU_IMAGE_MANAGER_MAX_IMAGES: process.env.SKU_IMAGE_MANAGER_MAX_IMAGES,
+
+        SHIPPING_ADDRESS_FROM_ADDRESS1: process.env.SHIPPING_ADDRESS_FROM_ADDRESS1,
+        SHIPPING_ADDRESS_FROM_CITY: process.env.SHIPPING_ADDRESS_FROM_CITY,
+        SHIPPING_ADDRESS_FROM_COMPANY: process.env.SHIPPING_ADDRESS_FROM_COMPANY,
+        SHIPPING_ADDRESS_FROM_COUNTRY_CODE: process.env.SHIPPING_ADDRESS_FROM_COUNTRY_CODE,
+        SHIPPING_ADDRESS_FROM_PHONE: process.env.SHIPPING_ADDRESS_FROM_PHONE,
+        SHIPPING_ADDRESS_FROM_STATE: process.env.SHIPPING_ADDRESS_FROM_STATE,
+        SHIPPING_ADDRESS_FROM_ZIP: process.env.SHIPPING_ADDRESS_FROM_ZIP
+    },
+
     /*
     ** Nuxt target
     ** See https://nuxtjs.org/api/configuration-target
     */
-    target: 'server',
+    // target: 'server',
 
     server: {
         port: process.env.PORT || 3000
@@ -49,6 +79,7 @@ export default {
     ** https://nuxtjs.org/guide/plugins
     */
     plugins: [
+        '@/plugins/bugsnag',
         '@/plugins/api.js',
         '@/plugins/http',
         '@/plugins/i18n.js',

@@ -29,9 +29,9 @@ export default {
                 images: []
             },
             productHasMetaData: false,
-            domainName: process.env.DOMAIN_NAME,
-            imageManagerMaxImages: process.env.IMAGE_MANAGER_MAX_IMAGES || 8,
-            imageManagerMaxFeaturedImages: process.env.IMAGE_MANAGER_MAX_FEATURED_IMAGES || 3,
+            domainName: this.$config.DOMAIN_NAME,
+            imageManagerMaxImages: this.$config.IMAGE_MANAGER_MAX_IMAGES || 8,
+            imageManagerMaxFeaturedImages: this.$config.IMAGE_MANAGER_MAX_FEATURED_IMAGES || 3,
             videoPlayerModal: {
                 isActive: false,
                 videoId: null,
