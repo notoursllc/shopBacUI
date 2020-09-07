@@ -57,5 +57,8 @@
     "jest": "^26.1.0",
     "vue-jest": "^3.0.4",
     "svg-inline-loader": "^0.8.2"
+  },
+  "engines": {
+    "node": "12.x"
   }
 }
