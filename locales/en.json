@@ -26,6 +26,7 @@
     "An email confirmation was sent to:": "An email confirmation was sent to:",
     "An error occurred": "An error occurred",
     "An error occurred while processing the PayPal transaction": "An error occurred while processing the PayPal transaction",
+    "any alphanumeric character, plus _chars_": "any alphanumeric character, plus {chars}",
     "Are you sure you want to return to your Shopping Cart?": "Are you sure you want to return to your Shopping Cart?",
     "Artist": "Artist",
     "Attributes": "Attributes",
@@ -230,6 +231,7 @@
     "PLACE YOUR ORDER": "PLACE YOUR ORDER",
     "Place your order": "Place your order",
     "Please allow a few minutes for email delivery.": "Please allow a few minutes for email delivery.",
+    "Please fix the errors above before saving": "Please fix the errors above before saving",
 
     "Please confirm": "Please confirm",
     "Please select a quantity": "Please select a quantity",
@@ -368,6 +370,7 @@
     "use this": "use this",
     "Used to calculate shipping rates at checkout and label prices during fulfillment.": "Used to calculate shipping rates at checkout and label prices during fulfillment.",
 
+    "Valid characters: _chars_": "Valid characters: {chars}",
     "Value": "Value",
     "Values": "Values",
     "Variant": "Variant",

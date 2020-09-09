@@ -1,17 +1,27 @@
 <script>
+import { required } from 'vuelidate/lib/validators';
 import cloneDeep from 'lodash.clonedeep';
 import product_mixin from '@/mixins/product_mixin';
 import shipping_mixin from '@/mixins/shipping_mixin';
+
+const urlValidator = (value) => {
+    const val = value || '';
+
+    // https://stackoverflow.com/a/1547940
+    return val.match(/^[A-Za-z0-9\-._~:?#\[\]@!$&'()*+,;=]+$/g) !== null;
+};
+
 
 export default {
     components: {
         MasterTypeSelect: () => import('@/components/MasterTypeSelect'),
         TextCard: () => import('@/components/TextCard'),
         MetaDataBuilder: () => import('@/components/MetaDataBuilder'),
-        ImageManager: () => import('@/components/product/ImageManager'),
+        // ImageManager: () => import('@/components/product/ImageManager'),
         SeoPreview: () => import('@/components/product/SeoPreview'),
         SkuManager: () => import('@/components/product/sku/SkuManager'),
-        AppOverlay: () => import('@/components/AppOverlay')
+        AppOverlay: () => import('@/components/AppOverlay'),
+        AppMessage: () => import('@/components/AppMessage')
     },
 
     mixins: [
@@ -38,6 +48,30 @@ export default {
                 player: null
             }
         };
+    },
+
+    computed: {
+        seoUrlValidationErrorMessage() {
+            if(!this.$v.product.seo_uri.required) {
+                return this.$t('Required');
+            }
+            if(!this.$v.product.seo_uri.urlValidator) {
+                return this.$t(
+                    'Valid characters: _chars_',
+                    { chars: this.$t('any alphanumeric character, plus _chars_', {chars: '?#[]@!$&\'()*+,;:=-._~'}) }
+                );
+            }
+            return '';
+        }
+    },
+
+    validations: {
+        product: {
+            seo_uri: {
+                required,
+                urlValidator
+            }
+        }
     },
 
     mounted() {
@@ -389,14 +423,18 @@ export default {
                     <b-col lg="12">
                         <b-form-group
                             :label="$t('URL and handle')"
-                            label-for="product_seo_uri">
+                            label-for="product_seo_uri"
+                            :invalid-feedback="seoUrlValidationErrorMessage"
+                            :state="$v.product.seo_uri.$anyError">
                             <b-input-group :prepend="`https://${domainName}/p/`">
                                 <b-form-input
                                     v-model="product.seo_uri"
                                     maxlength="50"
+                                    :state="!$v.product.seo_uri.$invalid ? null : false"
                                     id="product_seo_uri" />
                             </b-input-group>
                         </b-form-group>
+                        {{ $v.product.seo_uri }}
                     </b-col>
                 </b-row>
             </b-container>
@@ -428,10 +466,21 @@ export default {
         </text-card>
 
 
-        <div>
+        <div class="pt-4 text-center">
             <b-button
                 variant="primary"
-                @click="onSaveClick">{{ $t('Save') }}</b-button>
+                size="lg"
+                @click="onSaveClick"
+                :disabled="$v.product.$invalid">{{ $t('Save') }}</b-button>
+
+            <div class="pt-2 text-danger" v-show="$v.product.$invalid">
+                <div class="inlineBlock">
+                    <app-message>
+                        <svg-icon slot="icon" icon="alert-circle" variant="danger" />
+                        {{ $t('Please fix the errors above before saving') }}
+                    </app-message>
+                </div>
+            </div>
         </div>
     </app-overlay>
 </template>
