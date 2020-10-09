@@ -1,7 +1,7 @@
 <script>
 import isObject from 'lodash.isobject';
-import FDatePicker from '@notoursllc/figleaf/components/datepicker/FDatePicker';
 import storage_mixin from '@/mixins/storage_mixin'; // TODO: not needed?
+import DatePicker from '@/components/DatePicker';
 import InputMoney from '@/components/InputMoney';
 import TextCard from '@/components/TextCard';
 import CountrySelect from '@/components/CountrySelect';
@@ -17,6 +17,7 @@ export default {
     name: 'SkuUpsertForm',
 
     components: {
+        DatePicker,
         InputMoney,
         TextCard,
         CountrySelect,
@@ -25,8 +26,7 @@ export default {
         SkuAccentMessageSelect,
         DataTableWizard,
         NumberInput,
-        AppOverlay,
-        FDatePicker
+        AppOverlay
     },
 
     mixins: [
@@ -279,7 +279,7 @@ export default {
                             :label="$t('Display: Start')"
                             label-for="accent_message_begin"
                             :description="$t('sku_accent_message_begin_desc')">
-                            <f-date-picker
+                            <date-picker
                                 v-model="sku.accent_message_begin"
                                 :config="datePickerConfig" />
                         </b-form-group>
@@ -291,24 +291,10 @@ export default {
                             :label="$t('Display: End')"
                             label-for="accent_message_end"
                             :description="$t('sku_accent_message_end_desc')">
-                            <f-date-picker
+                            <date-picker
                                 v-model="sku.accent_message_end"
-                                :config="datePickerConfig"
-                                :clear-button="true" />
+                                :config="datePickerConfig" />
                         </b-form-group>
-
-                        <!-- <b-form-group
-                            :label="$t('Display: End')"
-                            label-for="accent_message_end"
-                            :description="$t('sku_accent_message_end_desc')">
-                            <b-input-group>
-                                <f-date-picker
-                                    v-model="sku.accent_message_end"
-                                    :config="datePickerConfig"
-                                    :clear-button="true" />
-                            </b-input-group>
-                        </b-form-group> -->
-
                     </b-col>
                 </b-row>
             </b-container>
