@@ -204,7 +204,7 @@ export default {
                             effect="light"
                             :content="$t('Remove item from cart')"
                             placement="top-start">
-                            <svg-icon icon="trash" />
+                            <fig-icon icon="trash" />
                         </el-tooltip>
                     </span>
                 </el-popover>

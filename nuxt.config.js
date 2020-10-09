@@ -89,7 +89,7 @@ export default {
         '@/plugins/prettyJson',
         '@/plugins/vue-select',
         '@/plugins/notifications',
-        '@/plugins/svgIcon',
+        '@/plugins/figIcon',
         { src: '@/plugins/youtube', ssr: false },
         { src: '@/plugins/bugsnag', ssr: false }
     ],

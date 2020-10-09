@@ -113,7 +113,7 @@ export default {
                     <div class="meta-row-fields">
                         <!-- drag handle -->
                         <div class="meta-row-handle cursorGrab" v-if="canSortRows">
-                            <svg-icon icon="dots-vertical-double" />
+                            <fig-icon icon="dots-vertical-double" />
                         </div>
 
                         <div class="meta-row-property">
@@ -136,7 +136,7 @@ export default {
                                     slot="reference"
                                     class="mlm border-dashed-2"
                                     variant="outline-secondary">
-                                    <svg-icon icon="trash" width="18" height="18" />
+                                    <fig-icon icon="trash" width="18" height="18" />
                                 </b-button>
                             </pop-confirm>
                         </div>
@@ -149,7 +149,7 @@ export default {
             <b-button
                 @click="addNewItem"
                 variant="outline-secondary">
-                <svg-icon icon="plus" width="18" height="18" />&nbsp;{{ $t('New item') }}
+                <fig-icon icon="plus" width="18" height="18" />&nbsp;{{ $t('New item') }}
             </b-button>
         </div>
     </div>

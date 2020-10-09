@@ -1,19 +1,32 @@
 <script>
 import isObject from 'lodash.isobject';
+import FDatePicker from '@notoursllc/figleaf/components/datepicker/FDatePicker';
 import storage_mixin from '@/mixins/storage_mixin'; // TODO: not needed?
+import InputMoney from '@/components/InputMoney';
+import TextCard from '@/components/TextCard';
+import CountrySelect from '@/components/CountrySelect';
+import ImageManager from '@/components/product/ImageManager';
+import SkuAttributeInputs from '@/components/product/sku/SkuAttributeInputs';
+import SkuAccentMessageSelect from '@/components/product/sku/skuAccentMessage/SkuAccentMessageSelect';
+import DataTableWizard from '@/components/product/dataTable/DataTableWizard';
+import NumberInput from '@/components/NumberInput';
+import AppOverlay from '@/components/AppOverlay';
+
 
 export default {
     name: 'SkuUpsertForm',
 
     components: {
-        InputMoney: () => import('@/components/InputMoney'),
-        TextCard: () => import('@/components/TextCard'),
-        CountrySelect: () => import('@/components/CountrySelect'),
-        ImageManager: () => import('@/components/product/ImageManager'),
-        SkuAttributeInputs: () => import('@/components/product/sku/SkuAttributeInputs'),
-        DataTableWizard: () => import('@/components/product/dataTable/DataTableWizard'),
-        NumberInput: () => import('@/components/NumberInput'),
-        AppOverlay: () => import('@/components/AppOverlay')
+        InputMoney,
+        TextCard,
+        CountrySelect,
+        ImageManager,
+        SkuAttributeInputs,
+        SkuAccentMessageSelect,
+        DataTableWizard,
+        NumberInput,
+        AppOverlay,
+        FDatePicker
     },
 
     mixins: [
@@ -40,7 +53,15 @@ export default {
         return {
             imageManagerMaxImages: this.$config.SKU_IMAGE_MANAGER_MAX_IMAGES || 6,
             loadingImages: false,
-            skuVariantTypes: []
+            skuVariantTypes: [],
+            datePickerConfig: {
+                // dateFormat: this.$t('dateFormatPicker_mdy_hm'),
+                altFormat: this.$t('dateFormatPicker_mdy_hm')
+                // dateFormat: this.$t('Z'),
+                // altFormat: this.$t('M j, Y h:i K'),
+                // altInput: true,
+                // enableTime: true
+            }
         };
     },
 
@@ -54,7 +75,11 @@ export default {
 
         showAttributes() {
             return this.sku.attributes.length;
-        }
+        },
+
+        // accentMessageStartConfig() {
+
+        // }
     },
 
     watch: {
@@ -226,6 +251,66 @@ export default {
                     <data-table-wizard
                         v-model="sku.data_table" />
                 </b-form-group>
+            </b-container>
+        </text-card>
+
+
+        <!-- accent message -->
+        <text-card  class="mbxl">
+            <template v-slot:header>{{ $t('Accent Message') }}</template>
+            <template v-slot:headerSub>{{ $t('accent_message_description') }}</template>
+
+            <b-container>
+                <b-row>
+                    <!-- accent message -->
+                    <b-col sm="12" lg="4">
+                        <b-form-group
+                            :label="$t('Accent Message') "
+                            label-for="accent_message_id">
+                            <sku-accent-message-select
+                                v-model="sku.accent_message_id"
+                                id="accent_message_id" />
+                        </b-form-group>
+                    </b-col>
+
+                    <!--  accent message begin -->
+                    <b-col sm="12" lg="4">
+                        <b-form-group
+                            :label="$t('Display: Start')"
+                            label-for="accent_message_begin"
+                            :description="$t('sku_accent_message_begin_desc')">
+                            <f-date-picker
+                                v-model="sku.accent_message_begin"
+                                :config="datePickerConfig" />
+                        </b-form-group>
+                    </b-col>
+
+                    <!--  accent message end -->
+                    <b-col sm="12" lg="4">
+                        <b-form-group
+                            :label="$t('Display: End')"
+                            label-for="accent_message_end"
+                            :description="$t('sku_accent_message_end_desc')">
+                            <f-date-picker
+                                v-model="sku.accent_message_end"
+                                :config="datePickerConfig"
+                                :clear-button="true" />
+                        </b-form-group>
+
+                        <!-- <b-form-group
+                            :label="$t('Display: End')"
+                            label-for="accent_message_end"
+                            :description="$t('sku_accent_message_end_desc')">
+                            <b-input-group>
+                                <f-date-picker
+                                    v-model="sku.accent_message_end"
+                                    :config="datePickerConfig"
+                                    :clear-button="true" />
+                            </b-input-group>
+                        </b-form-group> -->
+
+                    </b-col>
+                </b-row>
             </b-container>
         </text-card>
 

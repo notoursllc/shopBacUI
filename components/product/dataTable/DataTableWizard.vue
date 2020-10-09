@@ -189,7 +189,7 @@ export default {
         <div class="pb-3" v-if="showWarning">
             <app-message>
                 <template v-slot:icon>
-                    <svg-icon
+                    <fig-icon
                         icon="alert-circle"
                         variant="danger"
                         :width="24"
@@ -206,7 +206,7 @@ export default {
             @input="onActionSelectChange"></b-form-select>
 
         <template v-if="canShowPredefinedTables && action === 'pre'">
-            <svg-icon icon="arrow-right" />
+            <fig-icon icon="arrow-right" />
 
             <data-table-select
                 v-model="dataTableSelectValue"

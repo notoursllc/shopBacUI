@@ -1,8 +1,7 @@
 import Vue from 'vue';
 import uuid from 'uuid';
 import cloneDeep from 'lodash.clonedeep';
-import SvgIcon from '@/components/icons/SvgIcon';
-
+import FigIcon from '@notoursllc/figleaf/components/icon/FigIcon';
 
 export default ({ store }) => {
 
@@ -129,7 +128,7 @@ export default ({ store }) => {
 
         switch(variant) {
             case 'warning':
-                childNode = h(SvgIcon, {
+                childNode = h(FigIcon, {
                     attrs: {
                         icon: 'alert-circle',
                         width: 35,

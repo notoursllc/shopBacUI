@@ -4,8 +4,11 @@
     "A server error occurred while setting the shipping address": "A server error occurred while setting the shipping address",
     "About": "About",
     "About Billing and Shipping Addresses": "About Billing and Shipping Addresses",
+    "Accent Message": "Accent Message",
+    "accent_message_description": "A short message that appears for this SKU on the product list page",
     "accept_privacy_and_tos": "By placing your order, you agree to our {linkPrivacy} and {linkTos}.",
     "Add column": "Add column",
+    "Add Item": "Add Item",
     "Add Option": "Add Option",
     "Add row": "Add row",
     "Add To Your Order": "Add To Your Order",
@@ -108,9 +111,12 @@
     "Description": "Description",
     "Details": "Details",
     "digits_text": "digit | digits",
+    "Display: End": "Display: End",
+    "Display: Start": "Display: Start",
     "Done": "Done",
 
     "Edit": "Edit",
+    "Edit Item": "Edit Item",
     "Email address": "Email address",
     "Error": "Error",
     "Error placing order": "Error placing order",
@@ -185,6 +191,7 @@
     "No file chosen": "No file chosen",
     "No matching values": "No matching values",
     "No results": "No results",
+    "None": "None",
     "_num_ images selected": "{number} image selected|{number} images selected",
 
     "OK": "OK",
@@ -321,6 +328,9 @@
     "SKU": "SKU",
     "SKU (Stock Keeping Unit)": "SKU (Stock Keeping Unit)",
     "sku_barcode_description": "ISBN, UPC, GTIN, etc.",
+    "SKU Accent Messages": "SKU Accent Messages",
+    "sku_accent_message_begin_desc": "The accent message will be displayed on this date",
+    "sku_accent_message_end_desc": "The accent message will be hidden on this date",
     "Sleeve": "Sleeve",
     "Sleeve measurement": "Sleeve measurement",
     "sleeve_measurement_description": "The sleeve length is measured from the shoulder seam to the end of the sleeve.",
@@ -783,5 +793,9 @@
     "Yemen, The Republic of": "Yemen, The Republic of",
     "South African Republic": "South African Republic",
     "Zambia": "Zambia",
-    "Zimbabwe": "Zimbabwe"
+    "Zimbabwe": "Zimbabwe",
+
+
+    "dateFormatPicker_mdy": "M j, Y",
+    "dateFormatPicker_mdy_hm": "M j, Y h:i K"
 }

@@ -202,13 +202,13 @@ export default {
                     <b-th>
                         {{ $t('Alt text') }}
                         <i class="cursorPointer" v-b-tooltip.hover :title="$t('Image_alt_text_description')">
-                            <svg-icon icon="info-circle" />
+                            <fig-icon icon="info-circle" />
                         </i>
                     </b-th>
                     <b-th class="text-center">
                         {{ $t('Featured variant image') }}
                         <i class="cursorPointer" v-b-tooltip.hover :title="$t('Featured images represent this variant on the product list page')">
-                            <svg-icon icon="info-circle" />
+                            <fig-icon icon="info-circle" />
                         </i>
                     </b-th>
                     <b-th class="width100"></b-th>
@@ -226,7 +226,7 @@ export default {
                     <!-- handle -->
                     <b-td v-if="fileList.length > 1" class="vam">
                         <i class="handle">
-                            <svg-icon icon="dots-vertical-double" />
+                            <fig-icon icon="dots-vertical-double" />
                         </i>
                     </b-td>
 
@@ -277,7 +277,7 @@ export default {
                                 slot="reference"
                                 variant="outline-secondary"
                                 class="mls border-dashed-2">
-                                <svg-icon icon="trash" stroke-width="1px" width="18" height="18" />
+                                <fig-icon icon="trash" stroke-width="1px" width="18" height="18" />
                             </b-button>
                         </pop-confirm>
                     </b-td>

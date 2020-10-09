@@ -1,6 +1,4 @@
 <script>
-import SvgIcon from '@/components/icons/SvgIcon';
-
 export default {
     props: {
         icon: {
@@ -42,38 +40,23 @@ export default {
         onclick() {
             this.$emit('click');
         }
-    },
-
-    render: function(createElement) {
-        return createElement(
-            'BButton',
-            {
-                class: ['fab', this.buttonClass],
-                props: {
-                    variant: this.buttonType,
-                    pill: true
-                },
-                on: {
-                    click: this.onclick
-                }
-            },
-            [
-                createElement(
-                    SvgIcon,
-                    {
-                        attrs: {
-                            icon: this.icon,
-                            height: 30,
-                            width: 30,
-                            stroke: '#fff'
-                        }
-                    }
-                )
-            ]
-        );
     }
 };
 </script>
+
+<template>
+    <b-button
+        :class="['fab', buttonClass]"
+        :variant="buttonType"
+        :pill="true"
+        @click="onclick">
+        <fig-icon
+            :icon="icon"
+            :height="30"
+            :width="30"
+            stroke="#fff" />
+    </b-button>
+</template>
 
 
 <style lang="scss" scoped>

@@ -1,12 +1,16 @@
 <script>
 import { mapState } from 'vuex';
+import FigIconSprite from '@notoursllc/figleaf/components/icon/FigIconSprite';
+import NavigationList from '@/components/navigationList/NavigationList';
+import NavigationItem from '@/components/navigationList/NavigationItem';
+import NavigationCollapse from '@/components/navigationList/NavigationCollapse';
 
 export default {
     components: {
-        NavigationList: () => import('@/components/navigationList/NavigationList'),
-        NavigationItem: () => import('@/components/navigationList/NavigationItem'),
-        NavigationCollapse: () => import('@/components/navigationList/NavigationCollapse'),
-        SvgSprite: () => import('@/components/icons/SvgSprite')
+        NavigationList,
+        NavigationItem,
+        NavigationCollapse,
+        FigIconSprite
     },
 
     computed: {
@@ -70,12 +74,12 @@ export default {
 
 <template>
     <div class="layoutContainer">
-        <svg-sprite />
+        <fig-icon-sprite />
 
         <div class="sidenav-container">
             <aside class="sidenav" :class="{'sidenav-fixed': $store.state.ui.sidebarOpened}">
                 <div class="sidenav-header ptm">
-                    <svg-icon icon="bv-logo" :width="60" class-name="fillWhite" />
+                    <fig-icon icon="bv-logo" :width="60" class-name="fillWhite" />
                 </div>
 
                 <navigation-list
@@ -122,6 +126,10 @@ export default {
                         <navigation-item
                             :route="{ name: 'product-datatables-list' }"
                             @click="menuItemClick">{{ $t('Data Tables') }}</navigation-item>
+
+                        <navigation-item
+                            :route="{ name: 'product-sku-accent-messages-list' }"
+                            @click="menuItemClick">{{ $t('SKU Accent Messages') }}</navigation-item>
                     </navigation-collapse>
 
                     <navigation-item

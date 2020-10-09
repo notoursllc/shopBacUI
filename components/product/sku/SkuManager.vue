@@ -416,7 +416,7 @@ export default {
                                 v-b-tooltip.hover.top="$t('Add column')"
                                 @click="onClickAddColumnButton"
                                 id="btn_add_variant">
-                                <svg-icon icon="plus" />
+                                <fig-icon icon="plus" />
                             </b-button>
                         </pop>
                     </th>
@@ -430,7 +430,7 @@ export default {
                                 <pop-confirm @onConfirm="onClickDeleteColumn(index);">
                                     {{ $t('Delete this column?') }}
 
-                                    <svg-icon
+                                    <fig-icon
                                         slot="reference"
                                         icon="trash"
                                         stroke-width="1px"
@@ -458,7 +458,7 @@ export default {
                                             @click="hideInputTypePopover(index, false)">{{ $t('Done') }}</b-button>
                                     </div>
 
-                                    <svg-icon
+                                    <fig-icon
                                         slot="reference"
                                         icon="adjustments"
                                         stroke-width="1px"
@@ -473,7 +473,7 @@ export default {
                                     <b-input-group-text
                                         class="header-input"
                                         @click="onColumnMove(index, true)">
-                                        <svg-icon icon="arrow-left" />
+                                        <fig-icon icon="arrow-left" />
                                     </b-input-group-text>
                                 </template>
 
@@ -486,7 +486,7 @@ export default {
                                     <b-input-group-text
                                         class="header-input"
                                         @click="onColumnMove(index, false)">
-                                        <svg-icon icon="arrow-right" />
+                                        <fig-icon icon="arrow-right" />
                                     </b-input-group-text>
                                 </template>
                             </b-input-group>
@@ -511,7 +511,7 @@ export default {
                     <!-- drag handle -->
                     <td>
                         <i v-show="canShowGrabHandles">
-                            <svg-icon
+                            <fig-icon
                                 icon="dots-vertical-double"
                                 class="handle cursorGrab" />
                         </i>
@@ -572,7 +572,7 @@ export default {
                                 slot="reference"
                                 variant="outline-secondary"
                                 class="border-dashed-2">
-                                <svg-icon icon="trash" stroke-width="1px" />
+                                <fig-icon icon="trash" stroke-width="1px" />
                             </b-button>
                         </pop-confirm>
                     </td>
@@ -586,7 +586,7 @@ export default {
                 variant="primary"
                 size="sm"
                 @click="addEmptySku">
-                <svg-icon icon="plus" /> {{ $t('Add variant') }}
+                <fig-icon icon="plus" /> {{ $t('Add variant') }}
             </b-button>
         </div>
 

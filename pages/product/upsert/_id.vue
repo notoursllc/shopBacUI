@@ -220,7 +220,7 @@ export default {
             <b-button
                 variant="outline-secondary"
                 @click="goToStore(product.seo_uri)">
-                <svg-icon icon="new-window" stroke-width="1px" />&nbsp;{{ $t('View product in store') }}</b-button>
+                <fig-icon icon="new-window" stroke-width="1px" />&nbsp;{{ $t('View product in store') }}</b-button>
         </div>
 
         <!-- published-->
@@ -476,7 +476,7 @@ export default {
             <div class="pt-2 text-danger" v-show="$v.product.$invalid">
                 <div class="inlineBlock">
                     <app-message>
-                        <svg-icon slot="icon" icon="alert-circle" variant="danger" />
+                        <fig-icon slot="icon" icon="alert-circle" variant="danger" />
                         {{ $t('Please fix the errors above before saving') }}
                     </app-message>
                 </div>
