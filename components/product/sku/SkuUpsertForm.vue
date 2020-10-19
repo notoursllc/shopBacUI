@@ -242,15 +242,23 @@ export default {
 
 
         <!-- data table -->
-        <text-card  class="mbxl">
+        <text-card class="mbxl">
             <template v-slot:header>{{ $t('Data table') }}</template>
             <template v-slot:headerSub>{{ $t('data_table_subheader') }}</template>
 
             <b-container>
-                <b-form-group>
-                    <data-table-wizard
-                        v-model="sku.data_table" />
-                </b-form-group>
+                <data-table-wizard v-model="sku.data_table">
+                    <b-form-group
+                        slot="create-before"
+                        class="pb-2"
+                        :label="$t('Name')"
+                        label-for="data_table_name">
+                        <b-form-input
+                            v-model="sku.data_table_name"
+                            class="widthAuto"
+                            id="data_table_name"></b-form-input>
+                    </b-form-group>
+                </data-table-wizard>
             </b-container>
         </text-card>
 

@@ -222,11 +222,19 @@ export default {
 
         <div class="pt-4" v-if="action === 'create'">
             <app-overlay :show="loading">
-                <table-builder
-                    v-model="tableBuilderData"
-                    @input="onTableBuilderChange"
-                    :show-import="true">
-                </table-builder>
+                <slot name="create-before"></slot>
+
+                <!-- table builder -->
+                <b-form-group
+                    class="pb-2"
+                    :label="$t('Data Table')"
+                    label-for="data_table">
+                    <table-builder
+                        v-model="tableBuilderData"
+                        @input="onTableBuilderChange"
+                        :show-import="true"
+                        id="data_table"></table-builder>
+                </b-form-group>
             </app-overlay>
         </div>
     </div>
