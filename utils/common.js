@@ -70,6 +70,7 @@ export const isNumeric = (n) => {
     return !isNaN(parseFloat(n)) && isFinite(n);
 };
 
+
 export const isNumber = (val) => {
     return typeof val === 'number' || val instanceof Number;
 };
@@ -77,4 +78,16 @@ export const isNumber = (val) => {
 
 export const isString = (val) => {
     return typeof val === 'string' || val instanceof String;
+};
+
+
+// https://github.com/brandonscript/lodash-uuid/blob/master/index.js
+export const isUuid4 = (val) => {
+    const re = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    return re.test(val);
+};
+
+export const isUuid = (val) => {
+    const re = /^([a-f\d]{8}(-[a-f\d]{4}){3}-[a-f\d]{12}?)$/i;
+    return re.test(val);
 };

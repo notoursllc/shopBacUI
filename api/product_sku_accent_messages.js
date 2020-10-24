@@ -21,7 +21,7 @@ export default ($http) => ({
     },
 
 
-    async getAll(params) {
+    async all(params) {
         const { data } = await $http.$get(`/product/sku/accent_messages/all?${formatParams(params)}`);
         return data;
     },

@@ -1,13 +1,12 @@
 <script>
 import isObject from 'lodash.isobject';
 import storage_mixin from '@/mixins/storage_mixin'; // TODO: not needed?
-import DatePicker from '@/components/DatePicker';
 import InputMoney from '@/components/InputMoney';
 import TextCard from '@/components/TextCard';
 import CountrySelect from '@/components/CountrySelect';
 import ImageManager from '@/components/product/ImageManager';
 import SkuAttributeInputs from '@/components/product/sku/SkuAttributeInputs';
-import SkuAccentMessageSelect from '@/components/product/sku/skuAccentMessage/SkuAccentMessageSelect';
+import SkuAccentMessageWizard from '@/components/product/sku/skuAccentMessage/SkuAccentMessageWizard';
 import DataTableWizard from '@/components/product/dataTable/DataTableWizard';
 import NumberInput from '@/components/NumberInput';
 import AppOverlay from '@/components/AppOverlay';
@@ -17,13 +16,12 @@ export default {
     name: 'SkuUpsertForm',
 
     components: {
-        DatePicker,
         InputMoney,
         TextCard,
         CountrySelect,
         ImageManager,
         SkuAttributeInputs,
-        SkuAccentMessageSelect,
+        SkuAccentMessageWizard,
         DataTableWizard,
         NumberInput,
         AppOverlay
@@ -75,11 +73,7 @@ export default {
 
         showAttributes() {
             return this.sku.attributes.length;
-        },
-
-        // accentMessageStartConfig() {
-
-        // }
+        }
     },
 
     watch: {
@@ -125,6 +119,13 @@ export default {
             }
 
             this.loadingImages = false;
+        },
+
+        onAccentWizardChange(obj) {
+            console.log("ON ACCENT WIZARD CHAGGE", obj)
+            this.sku.accent_message_id = obj.accent_message_id;
+            this.sku.accent_message_begin = obj.accent_message_begin;
+            this.sku.accent_message_end = obj.accent_message_end;
         }
     }
 };
@@ -264,47 +265,14 @@ export default {
 
 
         <!-- accent message -->
-        <text-card  class="mbxl">
+        <text-card class="mbxl">
             <template v-slot:header>{{ $t('Accent Message') }}</template>
             <template v-slot:headerSub>{{ $t('accent_message_description') }}</template>
 
             <b-container>
-                <b-row>
-                    <!-- accent message -->
-                    <b-col sm="12" lg="4">
-                        <b-form-group
-                            :label="$t('Accent Message') "
-                            label-for="accent_message_id">
-                            <sku-accent-message-select
-                                v-model="sku.accent_message_id"
-                                id="accent_message_id" />
-                        </b-form-group>
-                    </b-col>
-
-                    <!--  accent message begin -->
-                    <b-col sm="12" lg="4">
-                        <b-form-group
-                            :label="$t('Display: Start')"
-                            label-for="accent_message_begin"
-                            :description="$t('sku_accent_message_begin_desc')">
-                            <date-picker
-                                v-model="sku.accent_message_begin"
-                                :config="datePickerConfig" />
-                        </b-form-group>
-                    </b-col>
-
-                    <!--  accent message end -->
-                    <b-col sm="12" lg="4">
-                        <b-form-group
-                            :label="$t('Display: End')"
-                            label-for="accent_message_end"
-                            :description="$t('sku_accent_message_end_desc')">
-                            <date-picker
-                                v-model="sku.accent_message_end"
-                                :config="datePickerConfig" />
-                        </b-form-group>
-                    </b-col>
-                </b-row>
+                <sku-accent-message-wizard
+                    :sku="sku"
+                    @input="onAccentWizardChange" />
             </b-container>
         </text-card>
 

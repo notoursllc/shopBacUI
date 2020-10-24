@@ -1,11 +1,5 @@
 <script>
-import isObject from 'lodash.isobject';
-
 export default {
-    components: {
-        VueSelect2: () => import('@/components/VueSelect2')
-    },
-
     inheritAttrs: false,
 
     props: {
@@ -26,14 +20,7 @@ export default {
     watch: {
         value: {
             handler(newVal) {
-                this.setSelectedValue();
-            },
-            immediate: true
-        },
-
-        options: {
-            handler(newVal) {
-                this.setSelectedValue();
+                this.selectedVal = newVal;
             },
             immediate: true
         }
@@ -46,7 +33,7 @@ export default {
     methods: {
         async getMessages() {
             try {
-                const data = await this.$api.productSkuAccentMessages.getAll({
+                const data = await this.$api.productSkuAccentMessages.all({
                     sortBy: 'message',
                     sortDesc: false
                 });
@@ -55,7 +42,7 @@ export default {
                 if(Array.isArray(data)) {
                     data.forEach((obj) => {
                         options.push({
-                            label: obj.message,
+                            text: obj.message,
                             value: obj.id
                         });
                     });
@@ -68,16 +55,8 @@ export default {
             }
         },
 
-        setSelectedValue() {
-            this.selectedVal = this.options.find((obj) => obj.value === this.value);
-        },
-
-        onChange(obj) {
-            console.log("ONCHANGE", obj)
-            this.$emit(
-                'input',
-                isObject(obj) ? obj.value : null
-            );
+        onChange(val) {
+            this.$emit('input', val);
         }
     }
 };
@@ -85,10 +64,9 @@ export default {
 
 
 <template>
-    <vue-select2
+    <b-form-select
         v-model="selectedVal"
         :options="options"
         @input="onChange"
-        v-bind="$attrs">
-    </vue-select2>
+        v-bind="$attrs" />
 </template>
