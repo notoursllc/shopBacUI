@@ -123,8 +123,8 @@ export default {
 
         onDataTableWizardChange(obj) {
             // console.log("ON DT WIZARD CHANGE", obj);
-            this.data_table = obj.data_table;
-            this.data_table_name = obj.data_table_name;
+            this.sku.data_table = obj.data_table;
+            this.sku.data_table_name = obj.data_table_name;
         },
 
         onAccentWizardChange(obj) {
