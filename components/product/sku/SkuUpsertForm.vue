@@ -121,8 +121,14 @@ export default {
             this.loadingImages = false;
         },
 
+        onDataTableWizardChange(obj) {
+            // console.log("ON DT WIZARD CHANGE", obj);
+            this.data_table = obj.data_table;
+            this.data_table_name = obj.data_table_name;
+        },
+
         onAccentWizardChange(obj) {
-            console.log("ON ACCENT WIZARD CHAGGE", obj)
+            // console.log("ON ACCENT WIZARD CHAGGE", obj)
             this.sku.accent_message_id = obj.accent_message_id;
             this.sku.accent_message_begin = obj.accent_message_begin;
             this.sku.accent_message_end = obj.accent_message_end;
@@ -242,28 +248,6 @@ export default {
         </text-card>
 
 
-        <!-- data table -->
-        <text-card class="mbxl">
-            <template v-slot:header>{{ $t('Data table') }}</template>
-            <template v-slot:headerSub>{{ $t('data_table_subheader') }}</template>
-
-            <b-container>
-                <data-table-wizard v-model="sku.data_table">
-                    <b-form-group
-                        slot="create-before"
-                        class="pb-2"
-                        :label="$t('Name')"
-                        label-for="data_table_name">
-                        <b-form-input
-                            v-model="sku.data_table_name"
-                            class="widthAuto"
-                            id="data_table_name"></b-form-input>
-                    </b-form-group>
-                </data-table-wizard>
-            </b-container>
-        </text-card>
-
-
         <!-- accent message -->
         <text-card class="mbxl">
             <template v-slot:header>{{ $t('Accent Message') }}</template>
@@ -273,6 +257,19 @@ export default {
                 <sku-accent-message-wizard
                     :sku="sku"
                     @input="onAccentWizardChange" />
+            </b-container>
+        </text-card>
+
+
+        <!-- data table -->
+        <text-card class="mbxl">
+            <template v-slot:header>{{ $t('Data table') }}</template>
+            <template v-slot:headerSub>{{ $t('data_table_subheader') }}</template>
+
+            <b-container>
+                <data-table-wizard
+                    :sku="sku"
+                    @input="onDataTableWizardChange" />
             </b-container>
         </text-card>
 

@@ -1,6 +1,7 @@
 <script>
 import isObject from 'lodash.isobject';
 import cloneDeep from 'lodash.clonedeep';
+import { isUuid4 } from '@/utils/common';
 
 export default {
     name: 'DataTableWizard',
@@ -16,8 +17,8 @@ export default {
     inheritAttrs: false,
 
     props: {
-        value: {
-            type: [String, Object],
+        sku: {
+            type: Object,
             default: null
         }
     },
@@ -30,13 +31,12 @@ export default {
                 { text: this.$t('Use pre-defined'), value: 'pre' },
                 { text: this.$t('Create new'), value: 'create' }
             ],
-            selectedValue: null,
-            dataTableSelectValue: null,
             action: null,
             readOnlyTableData: null,
-            tableBuilderData: null,
-            showImportOptions: false,
-            allDataTables: []
+            readOnlyTableId: null,
+            allDataTables: [],
+            data_table: null,
+            data_table_name: null
         };
     },
 
@@ -56,14 +56,14 @@ export default {
         },
 
         showWarning() {
-            if(!this.dataTableSelectValue) {
+            if(!this.readOnlyTableId) {
                 return false;
             }
 
             let exists = false;
 
             this.allDataTables.forEach((opt) => {
-                if(opt.id === this.dataTableSelectValue) {
+                if(opt.id === this.readOnlyTableId) {
                     exists = true;
                 }
             });
@@ -73,18 +73,44 @@ export default {
     },
 
     watch: {
-        value: {
+        sku: {
             handler(newVal) {
-                if(newVal) {
-                    if(isObject(newVal)) {
-                        this.action = this.actionSelectOptions[2].value;
-                        this.tableBuilderData = newVal;
+                if(isObject(newVal)) {
+                    let selectedOptionIndex = 0;
+
+                    if(newVal.data_table_name) {
+                        // data_table_name will be a UUID if the sku
+                        // is using a pre-defined data table
+                        if(isUuid4(newVal.data_table_name)) {
+                            this.readOnlyTableId = newVal.data_table_name;
+                            this.data_table_name = null;
+
+                            selectedOptionIndex = 1;
+                            this.fetchDataForReadOnlyTable(newVal);
+                        }
+                        // if data_table_name is a string that's not a UUID
+                        // then this sku has it's own data table defined and
+                        // is not using a pre-defined one
+                        else {
+                            this.readOnlyTableId = null;
+                            this.data_table_name = newVal.data_table_name;
+                            this.data_table = newVal.data_table;
+
+                            selectedOptionIndex = 2;
+                        }
                     }
                     else {
-                        this.action = this.actionSelectOptions[1].value;
-                        this.dataTableSelectValue = newVal;
-                        this.fetchDataForReadOnlyTable(newVal);
+                        this.readOnlyTableId = null;
+                        this.data_table_name = null;
+                        this.data_table = null;
                     }
+
+                    this.action = this.actionSelectOptions[selectedOptionIndex].value;
+                }
+                else {
+                    this.data_table = null;
+                    this.readOnlyTableId = null;
+                    this.data_table_name = null;
                 }
             },
             immediate: true
@@ -128,56 +154,41 @@ export default {
             }
         },
 
-        onDataTableSelectChange(val) {
-            this.selectedValue = val;
-            this.emitInput();
-
-            // fetch the data for <table-builder-view>
-            this.fetchDataForReadOnlyTable(val);
-        },
-
-        async fetchDataForReadOnlyTable(dataTableId) {
-            const results = await this.fetchDataTable(dataTableId);
+        async fetchDataForReadOnlyTable() {
+            const results = await this.fetchDataTable(this.readOnlyTableId);
             this.readOnlyTableData = isObject(results) ? results.table_data : null;
         },
 
         emitInput() {
-            this.$emit('input', this.selectedValue);
+            const data = {
+                data_table_name: null,
+                data_table: null
+            };
+
+            switch(this.action) {
+                // pre
+                case this.actionSelectOptions[1].value:
+                    data.data_table_name = this.readOnlyTableId;
+                    data.data_table = null;
+                    break;
+
+                // create
+                case this.actionSelectOptions[2].value:
+                    data.data_table_name = this.data_table_name;
+                    data.data_table = this.data_table;
+                    break;
+            }
+
+            this.$emit('input', data);
         },
 
         onTableBuilderChange() {
-            this.selectedValue = Object.assign({}, this.tableBuilderData);
             this.emitInput();
         },
 
-        onActionSelectChange(val) {
-            this.showImportOptions = false;
-
-            switch(val) {
-                case 'create':
-                    this.onTableBuilderChange();
-                    break;
-
-                case 'pre':
-                    this.onDataTableSelectChange(this.dataTableSelectValue);
-                    break;
-
-                default:
-                    this.selectedValue = null;
-                    this.emitInput();
-            }
-        },
-
-        onClickImportData() {
-            this.showImportOptions = true;
-        },
-
-        async onImportSelectChange(val) {
-            // fetch the data for <table-builder-view>
-            const results = await this.fetchDataTable(val);
-            this.tableBuilderData = isObject(results) ? results.table_data : null;
-            this.onTableBuilderChange();
-            // this.showImportOptions = false;
+        onPredefinedSelectChange() {
+            this.fetchDataForReadOnlyTable();
+            this.emitInput();
         }
     }
 };
@@ -203,38 +214,57 @@ export default {
             v-model="action"
             :options="visibleActionSelectOptions"
             class="widthAuto"
-            @input="onActionSelectChange"></b-form-select>
+            @input="emitInput"></b-form-select>
 
-        <template v-if="canShowPredefinedTables && action === 'pre'">
-            <fig-icon icon="arrow-right" />
+        <fig-icon
+            icon="arrow-right"
+            v-if="canShowPredefinedTables && (action === 'pre' || action === 'create')" />
 
+        <!-- select predefined data table  -->
+        <b-form-group
+            v-show="canShowPredefinedTables && action === 'pre'"
+            :label="$t('Choose')"
+            label-for="input_choose_predefined"
+            class="inlineBlock mb-0 align-bottom">
             <data-table-select
-                v-model="dataTableSelectValue"
+                v-model="readOnlyTableId"
                 class="width150"
-                @input="onDataTableSelectChange" />
+                @input="onPredefinedSelectChange"
+                id="input_choose_predefined" />
+        </b-form-group>
 
-            <div class="pt-4" v-if="dataTableSelectValue">
-                <app-overlay :show="loading">
-                    <table-builder-view :table-data="readOnlyTableData" />
-                </app-overlay>
-            </div>
-        </template>
+        <!-- new data table name -->
+        <b-form-group
+            v-show="action === 'create'"
+            :label="$t('Name')"
+            label-for="input_create_dt"
+            class="inlineBlock mb-0 align-bottom">
+            <b-form-input
+                v-if="action === 'create'"
+                v-model="data_table_name"
+                @input="emitInput"
+                class="widthAuto"
+                id="input_create_dt" />
+        </b-form-group>
 
-        <div class="pt-4" v-if="action === 'create'">
+        <!-- table builder -->
+        <div class="pt-4">
             <app-overlay :show="loading">
-                <slot name="create-before"></slot>
-
-                <!-- table builder -->
                 <b-form-group
+                    v-if="action === 'create'"
                     class="pb-2"
-                    :label="$t('Data Table')"
+                    :label="$t('Data table')"
                     label-for="data_table">
                     <table-builder
-                        v-model="tableBuilderData"
+                        v-model="data_table"
                         @input="onTableBuilderChange"
                         :show-import="true"
                         id="data_table"></table-builder>
                 </b-form-group>
+
+                <table-builder-view
+                    v-if="action === 'pre' && readOnlyTableId"
+                    :table-data="readOnlyTableData" />
             </app-overlay>
         </div>
     </div>

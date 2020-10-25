@@ -30,7 +30,6 @@ export default {
                 { text: this.$t('Use pre-defined'), value: 'pre' },
                 { text: this.$t('Create new'), value: 'create' }
             ],
-            selectedValue: null,
             accent_message_new: null,
             accent_message_id: null,
             accent_message_begin: null,
@@ -155,7 +154,6 @@ export default {
         },
 
         onActionSelectChange(val) {
-            this.showImportOptions = false;
             this.emitInput();
         }
     }
