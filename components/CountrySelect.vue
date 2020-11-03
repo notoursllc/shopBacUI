@@ -1,5 +1,6 @@
 <script>
 import isObject from 'lodash.isobject';
+import FigSelect from '@notoursllc/figleaf/components/select/FigSelect';
 
 // NOTE: this object can not be formatted as { US: "United States of America (USA)" }
 // because there are some duplicate 'alpha2' values, like Puerto Rico
@@ -12,7 +13,7 @@ import isObject from 'lodash.isobject';
 
 export default {
     components: {
-        VueSelect2: () => import('@/components/VueSelect2')
+        FigSelect
     },
 
     inheritAttrs: false,
@@ -261,11 +262,10 @@ export default {
 
 
 <template>
-    <vue-select2
+    <fig-select
         v-model="selectedCountry"
         :options="countryList"
         label="name"
         @input="onChange"
-        v-bind="$attrs">
-    </vue-select2>
+        v-bind="$attrs" />
 </template>

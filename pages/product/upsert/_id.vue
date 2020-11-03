@@ -4,6 +4,16 @@ import cloneDeep from 'lodash.clonedeep';
 import product_mixin from '@/mixins/product_mixin';
 import shipping_mixin from '@/mixins/shipping_mixin';
 
+import MasterTypeSelect from '@/components/MasterTypeSelect';
+import TextCard from '@/components/TextCard';
+import MetaDataBuilder from '@/components/MetaDataBuilder';
+// ImageManager: () => import('@/components/product/ImageManager'),
+import SeoPreview from '@/components/product/SeoPreview';
+import SkuManager from '@/components/product/sku/SkuManager';
+import ColorManager from '@/components/product/color/ColorManager';
+import AppOverlay from '@/components/AppOverlay';
+import AppMessage from '@/components/AppMessage';
+
 const urlValidator = (value) => {
     const val = value || '';
 
@@ -14,14 +24,14 @@ const urlValidator = (value) => {
 
 export default {
     components: {
-        MasterTypeSelect: () => import('@/components/MasterTypeSelect'),
-        TextCard: () => import('@/components/TextCard'),
-        MetaDataBuilder: () => import('@/components/MetaDataBuilder'),
-        // ImageManager: () => import('@/components/product/ImageManager'),
-        SeoPreview: () => import('@/components/product/SeoPreview'),
-        SkuManager: () => import('@/components/product/sku/SkuManager'),
-        AppOverlay: () => import('@/components/AppOverlay'),
-        AppMessage: () => import('@/components/AppMessage')
+        MasterTypeSelect,
+        TextCard,
+        MetaDataBuilder,
+        SeoPreview,
+        SkuManager,
+        ColorManager,
+        AppOverlay,
+        AppMessage
     },
 
     mixins: [
@@ -367,6 +377,13 @@ export default {
             </b-container>
         </text-card>
         -->
+
+        <text-card class="mbl">
+            <div slot="header">{{ $t('Colors') }}</div>
+
+            <color-manager
+                :product="product" />
+        </text-card>
 
 
         <!-- Variants / Options -->

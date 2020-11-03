@@ -1,22 +1,22 @@
 <script>
 import isObject from 'lodash.isobject';
 import cloneDeep from 'lodash.clonedeep';
-import SkuAccentMessageSelect from '@/components/product/sku/skuAccentMessage/SkuAccentMessageSelect';
+import AccentMessageSelect from '@/components/product/accentMessage/AccentMessageSelect';
 import DateInput from '@/components/DateInput';
 import { isUuid4 } from '@/utils/common';
 
 export default {
-    name: 'SkuAccentMessageWizard',
+    name: 'AccentMessageWizard',
 
     components: {
-        SkuAccentMessageSelect,
+        AccentMessageSelect,
         DateInput
     },
 
     inheritAttrs: false,
 
     props: {
-        sku: {
+        model: {
             type: Object,
             default: null
         }
@@ -72,7 +72,7 @@ export default {
     },
 
     watch: {
-        sku: {
+        model: {
             handler(newVal) {
                 if(isObject(newVal)) {
                     this.accent_message_id = newVal.accent_message_id;
@@ -184,7 +184,7 @@ export default {
             :label="$t('Choose')"
             label-for="input_choose_message"
             class="inlineBlock mb-0 align-bottom">
-            <sku-accent-message-select
+            <accent-message-select
                 v-model="accent_message_id"
                 @input="emitInput"
                 class="width150"
@@ -214,7 +214,6 @@ export default {
                         :label="$t('Display: Start')"
                         label-for="accent_message_begin"
                         :description="$t('sku_accent_message_begin_desc')">
-                        <!-- sku.accent_message_begin -->
                         <date-input
                             v-model="accent_message_begin"
                             @input="emitInput"
@@ -228,7 +227,6 @@ export default {
                         :label="$t('Display: End')"
                         label-for="accent_message_end"
                         :description="$t('sku_accent_message_end_desc')">
-                        <!-- sku.accent_message_end -->
                         <date-input
                             v-model="accent_message_end"
                             @input="emitInput"

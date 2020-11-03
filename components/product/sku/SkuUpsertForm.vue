@@ -51,15 +51,7 @@ export default {
         return {
             imageManagerMaxImages: this.$config.SKU_IMAGE_MANAGER_MAX_IMAGES || 6,
             loadingImages: false,
-            skuVariantTypes: [],
-            datePickerConfig: {
-                // dateFormat: this.$t('dateFormatPicker_mdy_hm'),
-                altFormat: this.$t('dateFormatPicker_mdy_hm')
-                // dateFormat: this.$t('Z'),
-                // altFormat: this.$t('M j, Y h:i K'),
-                // altInput: true,
-                // enableTime: true
-            }
+            skuVariantTypes: []
         };
     },
 

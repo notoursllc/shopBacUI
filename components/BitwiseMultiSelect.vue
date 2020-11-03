@@ -1,7 +1,9 @@
 <script>
+import FigSelect from '@notoursllc/figleaf/components/select/FigSelect';
+
 export default {
     components: {
-        VueSelect2: () => import('@/components/VueSelect2')
+        FigSelect
     },
 
     props: {
@@ -70,12 +72,11 @@ export default {
 </script>
 
 <template>
-    <vue-select2
+    <fig-select
         v-model="selectedVal"
         :multiple="multiple"
         :placeholder="placeholder"
         :options="options"
         @input="selectValueChanged"
-        class="widthAll">
-    </vue-select2>
+        class="widthAll" />
 </template>
