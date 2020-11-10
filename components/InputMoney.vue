@@ -1,16 +1,19 @@
 <script>
 import Vue from 'vue';
-import { Money } from 'v-money';
+ import { VMoney } from 'v-money';
 import accounting from 'accounting';
 import { isNumeric } from '@/utils/common';
 
 // register directive v-money and component <money>
 // Vue.use(money, {precision: 2})
 
-export default{
-    components: {
-        Money
+export default {
+
+    directives: {
+        money: VMoney
     },
+
+    inheritAttrs: false,
 
     props: {
         value: {
@@ -29,12 +32,13 @@ export default{
         return {
             selectedPrice: null,
             money: {
-                decimal: '.',
-                thousands: ',',
-                prefix: '$  ',
+                decimal: this.$t('money_decimal'),
+                thousands: this.$t('money_thousands'),
+                prefix: `${this.$t('money_symbol')}  `,
                 suffix: '',
                 precision: 2,
-                masked: false
+                masked: false,
+                ...this.$attrs
             }
         };
     },
@@ -52,8 +56,15 @@ export default{
 
     methods: {
         emitInput(val) {
-            let clean = val ? val.toString().replace(new RegExp(this.money.thousands, 'g'), '') : 0;
-            clean = accounting.toFixed(parseFloat(clean) * 100, 0);
+            let clean = 0;
+
+            if(val) {
+                clean = val.toString().replace(new RegExp(this.money.thousands, 'g'), '');
+                clean = val.replace(this.money.prefix, '');
+                //  clean = accounting.toFixed(parseFloat(clean) * 100, 0);
+                clean = parseFloat(clean) * 100;
+            }
+
             this.$emit('input', parseInt(clean, 10));
         }
     }
@@ -62,12 +73,10 @@ export default{
 
 
 <template>
-    <div class="el-input">
-        <money
-            v-model="selectedPrice"
-            v-bind="money"
-            @input="emitInput"
-            class="form-control"
-            :maxlength="maxlength"></money>
-    </div>
+    <b-form-input
+        v-model.lazy="selectedPrice"
+        v-bind="$attrs"
+        v-money="money"
+        @input="emitInput"
+        :maxlength="maxlength" />
 </template>

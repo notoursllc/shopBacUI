@@ -5,7 +5,7 @@
     "About": "About",
     "About Billing and Shipping Addresses": "About Billing and Shipping Addresses",
     "Accent Message": "Accent Message",
-    "accent_message_description": "A short message that appears for this SKU on the product list page",
+    "accent_message_description": "A short message that appears for this color on the product list page",
     "accept_privacy_and_tos": "By placing your order, you agree to our {linkPrivacy} and {linkTos}.",
     "Add Color": "Add Color",
     "Add column": "Add column",
@@ -819,5 +819,9 @@
 
 
     "dateFormatPicker_mdy": "M j, Y",
-    "dateFormatPicker_mdy_hm": "M j, Y h:i K"
+    "dateFormatPicker_mdy_hm": "M j, Y h:i K",
+
+    "money_thousands": ",",
+    "money_decimal": ".",
+    "money_symbol": "$"
 }

@@ -1,20 +1,33 @@
 <script>
+import uuid from 'uuid';
 import {
-    BCollapse,
     BInputGroup,
-    BInputGroupAppend } from 'bootstrap-vue';
+    BInputGroupAppend,
+    BPopover
+} from 'bootstrap-vue';
+
 
 export default {
     name: 'SizeInput',
 
     components: {
-        BCollapse,
         BInputGroup,
-        BInputGroupAppend
+        BInputGroupAppend,
+        BPopover
     },
 
     props: {
         value: {
+            type: String,
+            default: null
+        },
+
+        placeholder: {
+            type: String,
+            default: null
+        },
+
+        size: {
             type: String,
             default: null
         }
@@ -23,7 +36,8 @@ export default {
     data: function() {
         return {
             selectedSize: null,
-            showCollapse: false,
+            showPopover: false,
+            uuid: uuid(),
             predefinedSizes: [
                 { label: 'Tshirt sizes', sizes: ['S', 'M', 'L', 'XL', '2XL'] },
                 { label: 'Sweatshirt sizes', sizes: ['S', 'M', 'L', 'XL', '2XL'] }
@@ -45,13 +59,14 @@ export default {
             this.$emit('input', this.selectedSize);
         },
 
-        toggleCollapse() {
-            this.showCollapse = !this.showCollapse;
+        togglePopover() {
+            this.showPopover = !this.showPopover;
         },
 
         selectPredefined(size) {
             this.selectedSize = size;
             this.emitInput();
+            this.togglePopover();
         }
     }
 };
@@ -60,34 +75,41 @@ export default {
 
 <template>
     <div class="d-inline-block">
-        <b-input-group>
+        <b-input-group :size="size">
             <b-form-input
                 v-model="selectedSize"
-                @input="emitInput" />
+                @input="emitInput"
+                :placeholder="placeholder" />
             <b-input-group-append>
                 <b-button
                     variant="outline-secondary"
-                    @click="toggleCollapse">
-                    <fig-icon :icon="showCollapse ? 'chevron-up' : 'chevron-down'" width="18" height="18" />
+                    @click="togglePopover"
+                    :id="uuid">
+                    <fig-icon :icon="showPopover ? 'chevron-up' : 'chevron-down'" width="18" height="18" />
                 </b-button>
             </b-input-group-append>
         </b-input-group>
 
-        <b-collapse v-model="showCollapse" class="mt-2">
+        <b-popover
+            :target="uuid"
+            triggers="click"
+            :show.sync="showPopover"
+            placement="right"
+            ref="popover">
             <div
                 v-for="(obj, index) in predefinedSizes"
                 :key="index"
                 :class="{'mb-2': predefinedSizes[index + 1]}">
                 <div class="fs14">{{ obj.label }}:</div>
                 <b-button
-                    v-for="(size, idx) in obj.sizes"
+                    v-for="(sz, idx) in obj.sizes"
                     :key="idx"
                     size="sm"
                     variant="light"
                     :class="{'mr-2': obj.sizes[idx + 1]}"
-                    :disabled="selectedSize == size"
-                    @click="selectPredefined(size)">{{ size }}</b-button>
+                    :disabled="selectedSize == sz"
+                    @click="selectPredefined(sz)">{{ sz }}</b-button>
             </div>
-        </b-collapse>
+        </b-popover>
     </div>
 </template>

@@ -10,9 +10,10 @@ import MetaDataBuilder from '@/components/MetaDataBuilder';
 // ImageManager: () => import('@/components/product/ImageManager'),
 import SeoPreview from '@/components/product/SeoPreview';
 import SkuManager from '@/components/product/sku/SkuManager';
-import ColorManager from '@/components/product/color/ColorManager';
+import ColorTable from '@/components/product/color/ColorTable';
 import AppOverlay from '@/components/AppOverlay';
 import AppMessage from '@/components/AppMessage';
+import AccentMessageWizard from '@/components/product/accentMessage/AccentMessageWizard';
 
 const urlValidator = (value) => {
     const val = value || '';
@@ -29,9 +30,10 @@ export default {
         MetaDataBuilder,
         SeoPreview,
         SkuManager,
-        ColorManager,
+        ColorTable,
         AppOverlay,
-        AppMessage
+        AppMessage,
+        AccentMessageWizard
     },
 
     mixins: [
@@ -182,6 +184,15 @@ export default {
             }
 
             this.loading = false;
+        },
+
+
+        // TODO: product model still needs accent_message attributes added to it
+        onAccentWizardChange(obj) {
+            // console.log("ON ACCENT WIZARD CHAGGE", obj)
+            this.product.accent_message_id = obj.accent_message_id;
+            this.product.accent_message_begin = obj.accent_message_begin;
+            this.product.accent_message_end = obj.accent_message_end;
         },
 
 
@@ -379,10 +390,19 @@ export default {
         -->
 
         <text-card class="mbl">
-            <div slot="header">{{ $t('Colors') }}</div>
-
-            <color-manager
+            <template v-slot:header>{{ $t('Colors') }}</template>
+            <color-table
                 :product="product" />
+        </text-card>
+
+
+        <!-- accent message -->
+        <text-card class="mbxl">
+            <template v-slot:header>{{ $t('Accent Message') }}</template>
+            <template v-slot:headerSub>{{ $t('accent_message_description') }}</template>
+            <accent-message-wizard
+                :model="product"
+                @input="onAccentWizardChange" />
         </text-card>
 
 

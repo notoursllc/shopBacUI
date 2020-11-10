@@ -1,34 +1,26 @@
 <script>
 import isObject from 'lodash.isobject';
 import storage_mixin from '@/mixins/storage_mixin'; // TODO: not needed?
-import InputMoney from '@/components/InputMoney';
 import TextCard from '@/components/TextCard';
-import CountrySelect from '@/components/CountrySelect';
-import ImageManager from '@/components/product/ImageManager';
 import PricingForm from '@/components/product/PricingForm';
 import ColorExpressionForm from '@/components/product/color/ColorExpressionForm';
-import SizeChooserForm from '@/components/product/size/SizeChooserForm';
 import AccentMessageWizard from '@/components/product/accentMessage/AccentMessageWizard';
-import DataTableWizard from '@/components/product/dataTable/DataTableWizard';
+import SizeUpsertTable from '@/components/product/size/SizeUpsertTable';
 import NumberInput from '@/components/NumberInput';
-import AppOverlay from '@/components/AppOverlay';
+import CountrySelect from '@/components/CountrySelect';
 
 
 export default {
     name: 'ColorUpsertForm',
 
     components: {
-        InputMoney,
         TextCard,
-        CountrySelect,
-        ImageManager,
         PricingForm,
         ColorExpressionForm,
-        SizeChooserForm,
         AccentMessageWizard,
-        DataTableWizard,
+        SizeUpsertTable,
         NumberInput,
-        AppOverlay
+        CountrySelect
     },
 
     mixins: [
@@ -36,18 +28,19 @@ export default {
     ],
 
     props: {
-        value: {
-            type: Object,
-            default: () => {
-                return {};
-            }
-            // required: true
+        id: {
+            type: String,
+            default: null
         }
     },
 
     data: function() {
         return {
-            model: {},
+            color: {
+                sizes: [
+                    { label: null }
+                ]
+            },
             imageManagerMaxImages: this.$config.SKU_IMAGE_MANAGER_MAX_IMAGES || 6,
             loadingImages: false,
             skuVariantTypes: []
@@ -58,13 +51,18 @@ export default {
     },
 
     watch: {
-        value: {
+        id: {
             handler(newVal) {
-                this.model = isObject(newVal) ? Object.assign({}, newVal) : {};
-
-                if(!Array.isArray(this.model.images)) {
-                    this.model.images = [];
+                if(newVal) {
+                    this.color = {}; // TODO: fetch color data
+                    return;
                 }
+
+                this.color = {
+                    sizes: [
+                        { label: null }
+                    ]
+                };
             },
             immediate: true
         }
@@ -88,37 +86,27 @@ export default {
             this.loadingImages = false;
         },
 
-        // onDataTableWizardChange(obj) {
-        //     // console.log("ON DT WIZARD CHANGE", obj);
-        //     this.sku.data_table = obj.data_table;
-        //     this.sku.data_table_name = obj.data_table_name;
-        // },
-
         onAccentWizardChange(obj) {
             // console.log("ON ACCENT WIZARD CHAGGE", obj)
-            this.model.accent_message_id = obj.accent_message_id;
-            this.model.accent_message_begin = obj.accent_message_begin;
-            this.model.accent_message_end = obj.accent_message_end;
+            this.color.accent_message_id = obj.accent_message_id;
+            this.color.accent_message_begin = obj.accent_message_begin;
+            this.color.accent_message_end = obj.accent_message_end;
         },
 
-
-
         onClickDone() {
-            // this.$emit('input', {
-            //     ...this.value
-            // });
-
-            // this.$emit('done');
+            this.$emit('done', {
+                ...this.color
+            });
         },
 
         onClickCancel() {
-            this.$emit('done');
+            this.$emit('cancel');
         },
 
         onPricingFormInput(obj) {
             if(isObject(obj)) {
                 for(const key in obj) {
-                    this.$set(this.model, key, obj[key]);
+                    this.$set(this.color, key, obj[key]);
                 }
             }
         }
@@ -130,103 +118,109 @@ export default {
 <template>
     <div>
 
-        <!-- general info -->
-        <text-card class="mbxl">
-            <template v-slot:header>{{ $t('General Info') }}</template>
-
-            <b-container>
-                <!-- published -->
-                <b-form-group
-                    label-for="color_published">
-                    <b-form-checkbox
-                        v-model="model.published"
-                        id="color_published">{{ $t('Published') }}</b-form-checkbox>
-                </b-form-group>
-
-                <!-- color name -->
-                <b-form-group
-                    :label="$t('Color Name')"
-                    label-for="color_name">
-                    <b-form-input
-                        v-model="model.label"
-                        id="color_name" />
-                </b-form-group>
-            </b-container>
-        </text-card>
-
+        color: {{ color }}
 
         <!-- Color expression -->
-        <text-card class="mbxl">
+        <text-card class="mb-3">
             <template v-slot:header>{{ $t('Display color using...') }}</template>
-
-            <b-container>
-                <color-expression-form :color-model="model" />
-            </b-container>
+            <color-expression-form
+                :color-model="color" />
         </text-card>
 
 
         <!-- Sizes -->
-        <text-card class="mbxl">
+        <text-card class="mb-3">
             <template v-slot:header>{{ $t('Sizes') }}</template>
-
-            <b-container>
-                <size-chooser-form />
-                <!-- <color-expression-form :color-model="model" /> -->
-            </b-container>
+            <size-upsert-table
+                v-model="color.sizes" />
         </text-card>
 
 
         <!-- pricing -->
-        <text-card class="mbxl">
+        <text-card class="mb-3">
             <template v-slot:header>{{ $t('Pricing') }}</template>
-
-            <b-container>
-                <pricing-form
-                    :data="model"
-                    @input="onPricingFormInput" />
-            </b-container>
+            <pricing-form
+                :data="color"
+                @input="onPricingFormInput" />
         </text-card>
-
-        <!-- Images -->
-        <!-- <text-card class="mbxl">
-            <template v-slot:header>{{ $t('Images') }}</template>
-            <template v-slot:headerSub>{{ $t('You can add up to num images', {number: imageManagerMaxImages}) }}</template>
-
-            <b-container>
-                <app-overlay :show="loadingImages">
-                    <image-manager
-                        v-model="model.images"
-                        @delete="onDeleteImage"
-                        :max-num-images="parseInt(imageManagerMaxImages, 10)" />
-                </app-overlay>
-            </b-container>
-        </text-card> -->
 
 
         <!-- accent message -->
         <text-card class="mbxl">
             <template v-slot:header>{{ $t('Accent Message') }}</template>
             <template v-slot:headerSub>{{ $t('accent_message_description') }}</template>
-
-            <b-container>
-                <accent-message-wizard
-                    :model="model"
-                    @input="onAccentWizardChange" />
-            </b-container>
+            <accent-message-wizard
+                :model="color"
+                @input="onAccentWizardChange" />
         </text-card>
 
 
-        <!-- data table -->
-        <!-- <text-card class="mbxl">
-            <template v-slot:header>{{ $t('Data table') }}</template>
-            <template v-slot:headerSub>{{ $t('data_table_subheader') }}</template>
+        <!-- shipping -->
+        <text-card class="mbxl">
+            <div slot="header">{{ $t('Shipping') }}</div>
 
-            <b-container>
-                <data-table-wizard
-                    :sku="sku"
-                    @input="onDataTableWizardChange" />
-            </b-container>
-        </text-card> -->
+            <!-- requires shipping -->
+            <b-form-group>
+                <b-form-checkbox
+                    v-model="color.requires_shipping">{{ $t('This is a physical product') }}</b-form-checkbox>
+            </b-form-group>
+
+            <template v-if="!color.requires_shipping">
+                {{ $t('requires_shipping_off_desc') }}
+            </template>
+            <template v-else>
+                <hr />
+
+                <b-row>
+                    <b-col lg="12">
+                        <template v-if="color.requires_shipping">
+                            <b-form-group
+                                :label="$t('Weight (oz)')"
+                                label-for="sku_weight_oz"
+                                :description="$t('Used to calculate shipping rates at checkout and label prices during fulfillment.')">
+                                <number-input
+                                    v-model="color.weight_oz"
+                                    :step=".01"
+                                    :min="0"
+                                    class="input-number"
+                                    id="sku_weight_oz" />
+                            </b-form-group>
+                        </template>
+
+                    </b-col>
+                </b-row>
+
+                <hr />
+
+                <h4>{{ $t('CUSTOMS INFORMATION') }}</h4>
+
+                <b-row>
+                    <b-col sm="12" lg="6">
+                        <!-- country of origin -->
+                        <b-form-group
+                            :label="$t('Country of origin')"
+                            label-for="sku_customs_country_of_origin"
+                            :description="$t('customs_country_of_origin_desc')">
+                            <country-select
+                                v-model="color.customs_country_of_origin"
+                                id="sku_customs_country_of_origin" />
+                        </b-form-group>
+                    </b-col>
+
+                    <b-col sm="12" lg="6">
+                        <!-- HS code -->
+                        <b-form-group
+                            :label="$t('HS (Harmonized System) code')"
+                            label-for="sku_customs_harmonized_system_code"
+                            :description="$t('customs_hs_code_desc')">
+                            <b-form-input
+                                v-model="color.customs_harmonized_system_code"
+                                id="sku_customs_harmonized_system_code" />
+                        </b-form-group>
+                    </b-col>
+                </b-row>
+            </template>
+        </text-card>
 
 
         <div class="tac">
@@ -244,9 +238,5 @@ export default {
 
 
 <style lang="scss">
-@import "~assets/css/components/_formRow.scss";
 
-.input-number {
-    width: 150px;
-}
 </style>
