@@ -12,6 +12,7 @@
     "Add Item": "Add Item",
     "Add Option": "Add Option",
     "Add row": "Add row",
+    "Add Size": "Add Size",
     "Add To Your Order": "Add To Your Order",
     "Add variant": "Add variant",
     "added_name": "Added: {name}",
@@ -31,6 +32,7 @@
     "An error occurred": "An error occurred",
     "An error occurred while processing the PayPal transaction": "An error occurred while processing the PayPal transaction",
     "any alphanumeric character, plus _chars_": "any alphanumeric character, plus {chars}",
+    "Apply": "Apply",
     "Are you sure you want to remove all data from this table?": "Are you sure you want to remove all data from this table?",
     "Are you sure you want to return to your Shopping Cart?": "Are you sure you want to return to your Shopping Cart?",
     "Artist": "Artist",
@@ -38,6 +40,7 @@
 
     "Barcode": "Barcode",
     "Billing address": "Billing address",
+    "Bulk edit": "Bulk edit",
     "Buttons": "Buttons",
 
     "cancel": "cancel",
@@ -50,6 +53,7 @@
     "Cart": "Cart",
     "Card number": "Card number",
     "Cart updated!": "Cart updated!",
+    "Check to inherit value from the Color": "Check to inherit value from the Color",
     "CITY": "CITY",
     "City": "City",
     "Change": "Change",
@@ -79,6 +83,7 @@
     "Column label": "Column label",
     "COMPANY NAME": "COMPANY NAME",
     "Company name": "Company name",
+    "Compare at": "Compare at",
     "Compare at price": "Compare at price",
     "Complete Order": "Complete Order",
     "Conditions": "Conditions",
@@ -381,6 +386,7 @@
     "This product is available for purchase": "This product is available for purchase",
     "This SKU is assigned to a Data Table that no longer exists.": "This SKU is assigned to a Data Table that no longer exists.",
     "This SKU is available for purchase": "This SKU is available for purchase",
+    "This value is being inherited from the Color": "This value is being inherited from the Color",
     "Tips for entering addresses": "Tips for entering addresses",
     "Title": "Title",
     "TOPS": "TOPS",
@@ -390,6 +396,7 @@
     "Types": "Types",
 
     "Unable to initialize PayPal flow. Are your options correct?": "Unable to initialize PayPal flow. Are your options correct?",
+    "Update all sizes": "Update all sizes",
     "Updated": "Updated",
     "updated_name": "Updated: {name}",
     "URL and handle": "URL and handle",
@@ -423,6 +430,7 @@
     "We were unable to get shipping rates because of a server error": "We were unable to get shipping rates because of a server error",
     "We'll get back to you within 1 business day.": "We'll get back to you within 1 business day.",
     "Weight (oz)": "Weight (oz)",
+    "When out of stock": "When out of stock",
 
     "Yes": "Yes",
     "Your billing info": "Your billing info",

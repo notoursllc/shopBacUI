@@ -1,17 +1,7 @@
 <script>
-import Vue from 'vue';
- import { VMoney } from 'v-money';
 import accounting from 'accounting';
-import { isNumeric } from '@/utils/common';
-
-// register directive v-money and component <money>
-// Vue.use(money, {precision: 2})
 
 export default {
-
-    directives: {
-        money: VMoney
-    },
 
     inheritAttrs: false,
 
@@ -19,14 +9,8 @@ export default {
         value: {
             type: Number,
             default: 0
-        },
-
-        maxlength: {
-            type: Number,
-            default: 14
         }
     },
-
 
     data: function() {
         return {
@@ -45,27 +29,35 @@ export default {
 
     watch: {
         value: {
+            /**
+             * Value is sent as a number (in cents) that needs
+             * to be converted to 'dollars' (divide by 100)
+             */
             handler(newVal) {
-                const val = parseInt(newVal);
-                const cleanVal = isNumeric(val) ? val : 0;
-                this.selectedPrice = cleanVal > 0 ? cleanVal/100 : 0;
+                this.selectedPrice = newVal ? newVal/100 : 0;
+                // console.log('input money val watch', newVal, this.selectedPrice)
+
             },
             immediate: true
         }
     },
 
     methods: {
+        /**
+         * Value is emitted as a number (cents)
+         *
+         * @param val String
+         */
         emitInput(val) {
             let clean = 0;
 
             if(val) {
-                clean = val.toString().replace(new RegExp(this.money.thousands, 'g'), '');
-                clean = val.replace(this.money.prefix, '');
-                //  clean = accounting.toFixed(parseFloat(clean) * 100, 0);
-                clean = parseFloat(clean) * 100;
+                clean = accounting.toFixed(parseFloat(val) * 100, 0);
+                clean = parseFloat(clean);
             }
 
-            this.$emit('input', parseInt(clean, 10));
+            // console.log('MONEY EMIT CLEAN', clean, typeof clean)
+            this.$emit('input', clean);
         }
     }
 };
@@ -74,9 +66,19 @@ export default {
 
 <template>
     <b-form-input
-        v-model.lazy="selectedPrice"
+        v-model="selectedPrice"
+        type="number"
+        min="0"
+        max="9999999"
+        step=".01"
         v-bind="$attrs"
-        v-money="money"
         @input="emitInput"
-        :maxlength="maxlength" />
+        class="input-money" />
 </template>
+
+
+<style scoped>
+.input-money {
+    min-width: 70px;
+}
+</style>

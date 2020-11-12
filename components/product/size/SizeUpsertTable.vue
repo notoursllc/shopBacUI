@@ -6,10 +6,10 @@ import PopConfirm from '@/components/PopConfirm';
 import SizeInput from '@/components/product/size/SizeInput';
 import NumberInput from '@/components/NumberInput';
 import CountrySelect from '@/components/CountrySelect';
+import InputAppendCheckbox from '@/components/product/size/formInputs/InputAppendCheckbox';
 import {
-    BInputGroup,
-    BInputGroupAppend,
-    BTooltip
+    BTooltip,
+    BPopover
 } from 'bootstrap-vue';
 
 
@@ -19,13 +19,13 @@ export default {
     components: {
         draggable,
         BTooltip,
+        BPopover,
         InputMoney,
         PopConfirm,
         SizeInput,
         NumberInput,
         CountrySelect,
-        BInputGroup,
-        BInputGroupAppend
+        InputAppendCheckbox
     },
 
     props: {
@@ -40,7 +40,14 @@ export default {
     data: function() {
         return {
             sizes: [],
-            visibleDetailsRow: null
+            visibleDetailsRow: null,
+            showBulkEdit: false,
+            bulkEdit: {},
+            bulkEditInputToggle: {},
+            whenOutOfStockOptions: [
+                { text: this.$t('Continue selling'), value: true },
+                { text: this.$t('Hide'), value: false }
+            ]
         };
     },
 
@@ -73,9 +80,9 @@ export default {
         },
 
         addRow() {
-            this.sizes.push({
+            this.sizes.splice(this.sizes.length, 1, {
                 ordinal: this.sizes.length,
-                // label: null,
+                label: null,
                 base_price: null,
                 base_price_inherit: true,
                 track_quantity: true,
@@ -84,10 +91,54 @@ export default {
                 cost_price_inherit: true,
                 weight_oz_inherit: true
             });
+
+            this.emitInput();
         },
 
         onClickMoreColorBtn(index) {
             this.visibleDetailsRow = this.visibleDetailsRow === index ? null : index;
+        },
+
+        getInheritTooltip(useColorVal) {
+            return useColorVal ? this.$t('This value is being inherited from the Color') : this.$t('Check to inherit value from the Color');
+        },
+
+        toggleBulkEdit() {
+            this.showBulkEdit = !this.showBulkEdit;
+        },
+
+        onClickApplyBulkEdit() {
+            for (const key in this.bulkEdit) {
+                this.sizes.forEach((size) => {
+                    this.$set(size, key, this.bulkEdit[key]);
+                    this.emitInput();
+                });
+            }
+
+            this.toggleBulkEdit();
+        },
+
+        onClickCancelBulkEdit() {
+            this.toggleBulkEdit();
+        },
+
+        onBulkEditRegister(key, val) {
+            // remove from register
+            if(!val) {
+                const removeKeys = Array.isArray(key) ? key : [key];
+
+                removeKeys.forEach((k) => {
+                    this.$delete(this.bulkEdit, k);
+                });
+            }
+            // add to register
+            else {
+                const addKeys = Array.isArray(key) ? key : [key];
+
+                addKeys.forEach((k) => {
+                    this.$set(this.bulkEdit, k, null);
+                });
+            }
         }
     }
 };
@@ -96,6 +147,182 @@ export default {
 
 <template>
     <div>
+        <div class="pb-2" v-if="sizes.length">
+            <div class="text-right" id="header-container">
+                <b-button
+                    variant="outline-secondary"
+                    size="sm"
+                    v-b-tooltip.hover.left="$t('Bulk edit')"
+                    @click="toggleBulkEdit"
+                    id="bulk-edit-button">
+                    <fig-icon icon="list-check" stroke-width="1.5" width="20" height="20" />
+                </b-button>
+
+                <b-popover
+                    target="bulk-edit-button"
+                    triggers="click"
+                    :show.sync="showBulkEdit"
+                    placement="auto"
+                    container="header-container"
+                    ref="popover">
+
+                    <template #title>{{ $t('Update all sizes') }}</template>
+
+                    <!-- price -->
+                    <div class="bulk-edit-row">
+                        <label>
+                            <b-form-checkbox
+                                v-model="bulkEditInputToggle.base_price"
+                                @input="(val) => { onBulkEditRegister(['base_price', 'base_price_inherit'], val) }">
+                                {{ $t('Price') }}
+                            </b-form-checkbox>
+                        </label>
+                        <span>
+                            <input-append-checkbox
+                                v-if="bulkEdit.hasOwnProperty('base_price')"
+                                v-model="bulkEdit.base_price_inherit">
+                                <template slot-scope="scope">
+                                    <input-money
+                                        :disabled="scope.checked"
+                                        v-model="bulkEdit.base_price" />
+                                </template>
+                            </input-append-checkbox>
+                        </span>
+                    </div>
+
+                    <!-- compare at -->
+                    <div class="bulk-edit-row">
+                        <label>
+                            <b-form-checkbox
+                                v-model="bulkEditInputToggle.compare_at_price"
+                                @input="(val) => { onBulkEditRegister(['compare_at_price', 'compare_at_price_inherit'], val) }">
+                                {{ $t('Compare at') }}
+                            </b-form-checkbox>
+                        </label>
+                        <span>
+                            <input-append-checkbox
+                                v-if="bulkEdit.hasOwnProperty('compare_at_price')"
+                                v-model="bulkEdit.compare_at_price_inherit">
+                                <template slot-scope="scope">
+                                    <input-money
+                                        :disabled="scope.checked"
+                                        v-model="bulkEdit.compare_at_price" />
+                                </template>
+                            </input-append-checkbox>
+                        </span>
+                    </div>
+
+                    <!-- cost per item -->
+                    <div class="bulk-edit-row">
+                        <label>
+                            <b-form-checkbox
+                                v-model="bulkEditInputToggle.cost_price"
+                                @input="(val) => { onBulkEditRegister(['cost_price', 'cost_price_inherit'], val) }">
+                                {{ $t('Cost per item') }}
+                            </b-form-checkbox>
+                        </label>
+                        <span>
+                            <input-append-checkbox
+                                v-if="bulkEdit.hasOwnProperty('cost_price')"
+                                v-model="bulkEdit.cost_price_inherit">
+                                <template slot-scope="scope">
+                                    <input-money
+                                        :disabled="scope.checked"
+                                        v-model="bulkEdit.cost_price" />
+                                </template>
+                            </input-append-checkbox>
+                        </span>
+                    </div>
+
+                    <!-- weight -->
+                    <div class="bulk-edit-row">
+                        <label>
+                            <b-form-checkbox
+                                v-model="bulkEditInputToggle.weight_oz"
+                                @input="(val) => { onBulkEditRegister(['weight_oz', 'weight_oz_inherit'], val) }">
+                                {{ $t('Weight (oz)') }}
+                            </b-form-checkbox>
+                        </label>
+                        <span>
+                            <input-append-checkbox
+                                v-if="bulkEdit.hasOwnProperty('weight_oz')"
+                                v-model="bulkEdit.weight_oz_inherit">
+                                <template slot-scope="scope">
+                                    <b-form-input
+                                        :disabled="scope.checked"
+                                        v-model="bulkEdit.weight_oz"
+                                        type="number"
+                                        :step=".01"
+                                        :min="0"
+                                        size="sm"
+                                        @input="emitInput" />
+                                </template>
+                            </input-append-checkbox>
+                        </span>
+                    </div>
+
+                    <!-- when out of stock -->
+                    <div class="bulk-edit-row">
+                        <label>
+                            <b-form-checkbox
+                                v-model="bulkEditInputToggle.visible_if_out_of_stock"
+                                @input="(val) => { onBulkEditRegister('visible_if_out_of_stock', val) }">
+                                {{ $t('When out of stock') }}
+                            </b-form-checkbox>
+                        </label>
+                        <span>
+                            <div v-if="bulkEdit.hasOwnProperty('visible_if_out_of_stock')">
+                                <b-form-select
+                                    v-model="bulkEdit.visible_if_out_of_stock"
+                                    :options="whenOutOfStockOptions"
+                                    size="sm" />
+                            </div>
+                        </span>
+                    </div>
+
+                    <!-- Country of origin -->
+                    <div class="bulk-edit-row">
+                        <label>
+                            <b-form-checkbox
+                                v-model="bulkEditInputToggle.customs_country_of_origin"
+                                @input="(val) => { onBulkEditRegister(['customs_country_of_origin', 'customs_country_of_origin_inherit'], val) }">
+                                {{ $t('Country of origin') }}
+                            </b-form-checkbox>
+                        </label>
+                        <span>
+                            <input-append-checkbox
+                                v-if="bulkEdit.hasOwnProperty('customs_country_of_origin')"
+                                v-model="bulkEdit.customs_country_of_origin_inherit">
+                                <template slot-scope="scope">
+                                    <country-select
+                                        size="sm"
+                                        :disabled="scope.checked"
+                                        v-model="bulkEdit.customs_country_of_origin"
+                                        :right-radius="false"
+                                        class="widthAll" />
+                                </template>
+                            </input-append-checkbox>
+                        </span>
+                    </div>
+
+
+                    <div class="text-center pt-2">
+                        <b-button
+                            variant="primary"
+                            size="sm"
+                            @click="onClickApplyBulkEdit"
+                            class="mr-2">{{ $t('Apply') }}</b-button>
+
+                        <b-button
+                            variant="light"
+                            size="sm"
+                            @click="onClickCancelBulkEdit">{{ $t('Cancel') }}</b-button>
+                    </div>
+
+                </b-popover>
+            </div>
+        </div>
+
         <b-table-simple
             hover
             small
@@ -104,19 +331,13 @@ export default {
             v-show="sizes.length">
 
             <b-thead>
-                <!-- <b-tr>
-                    <b-th :colspan="sizes.length > 1 ? 3 : 2"></b-th>
-                    <b-th colspan="3" class="text-center">click checkboxes to use color price info</b-th>
-                    <b-th colspan="5"></b-th>
-                </b-tr> -->
-
                 <b-tr>
                     <b-th v-if="sizes.length > 1" class="width50"></b-th>
                     <b-th>{{ $t('Size') }}</b-th>
                     <b-th>{{ $t('Quantity') }}</b-th>
                     <b-th>{{ $t('SKU') }}</b-th>
                     <b-th>{{ $t('Price') }}</b-th>
-                    <b-th>{{ $t('Compare at price') }}</b-th>
+                    <b-th>{{ $t('Compare at') }}</b-th>
                     <b-th>{{ $t('Cost per item') }}</b-th>
                     <b-th>{{ $t('Weight (oz)') }}</b-th>
                     <b-th class="width100"></b-th>
@@ -167,76 +388,55 @@ export default {
 
                         <!-- price -->
                         <b-td class="text-center">
-                            <b-input-group size="sm">
-                                <input-money
-                                    :disabled="size.base_price_inherit"
-                                    v-model="size.base_price"
-                                    @input="emitInput" />
-                                <b-input-group-append is-text>
-                                    <b-form-checkbox
-                                        v-model="size.base_price_inherit"
-                                        @input="emitInput"
-                                        plain
-                                        v-b-tooltip.hover :title="`${$t('Inherit value from color')}: ${$t(size.base_price_inherit ? 'Yes' : 'No')}`" />
-                                </b-input-group-append>
-                            </b-input-group>
+                            <input-append-checkbox
+                                v-model="size.base_price_inherit">
+                                <template slot-scope="scope">
+                                    <input-money
+                                        :disabled="scope.checked"
+                                        v-model="size.base_price" />
+                                </template>
+                            </input-append-checkbox>
                         </b-td>
 
                         <!-- compare at price -->
                         <b-td class="text-center">
-                            <b-input-group size="sm">
-                                <input-money
-                                    :disabled="size.compare_at_price_inherit"
-                                    v-model="size.compare_at_price"
-                                    @input="emitInput" />
-                                <b-input-group-append is-text>
-                                    <b-form-checkbox
-                                        v-model="size.compare_at_price_inherit"
-                                        @input="emitInput"
-                                        plain
-                                        v-b-tooltip.hover :title="`${$t('Inherit value from color')}: ${$t(size.compare_at_price_inherit ? 'Yes' : 'No')}`" />
-                                </b-input-group-append>
-                            </b-input-group>
+                            <input-append-checkbox
+                                v-model="size.compare_at_price_inherit">
+                                <template slot-scope="scope">
+                                    <input-money
+                                        :disabled="scope.checked"
+                                        v-model="size.compare_at_price" />
+                                </template>
+                            </input-append-checkbox>
                         </b-td>
 
                         <!-- cost per item -->
                         <b-td class="text-center">
-                            <b-input-group size="sm">
-                                <input-money
-                                    :disabled="size.cost_price_inherit"
-                                    v-model="size.cost_price"
-                                    @input="emitInput" />
-                                <b-input-group-append is-text>
-                                    <b-form-checkbox
-                                        v-model="size.cost_price_inherit"
-                                        @input="emitInput"
-                                        plain
-                                        v-b-tooltip.hover :title="`${$t('Inherit value from color')}: ${$t(size.cost_price_inherit ? 'Yes' : 'No')}`" />
-                                </b-input-group-append>
-                            </b-input-group>
+                            <input-append-checkbox
+                                v-model="size.cost_price_inherit">
+                                <template slot-scope="scope">
+                                    <input-money
+                                        :disabled="scope.checked"
+                                        v-model="size.cost_price" />
+                                </template>
+                            </input-append-checkbox>
                         </b-td>
-
-
 
                         <!-- weight -->
                         <b-td>
-                            <b-input-group size="sm" class="no-flex-wrap">
-                                <b-form-input
-                                    :disabled="size.weight_oz_inherit"
-                                    v-model="size.weight_oz"
-                                    type="number"
-                                    :step=".01"
-                                    :min="0"
-                                    size="sm"
-                                    @input="emitInput" />
-                                <b-input-group-append is-text>
-                                    <b-form-checkbox
-                                        v-model="size.weight_oz_inherit"
-                                        @input="emitInput"
-                                        plain
-                                        v-b-tooltip.hover :title="`${$t('Inherit value from color')}: ${$t(size.weight_oz_inherit ? 'Yes' : 'No')}`" />
-                                </b-input-group-append>
-                            </b-input-group>
+                            <input-append-checkbox
+                                v-model="size.weight_oz_inherit">
+                                <template slot-scope="scope">
+                                    <b-form-input
+                                        :disabled="scope.checked"
+                                        v-model="size.weight_oz"
+                                        type="number"
+                                        :step=".01"
+                                        :min="0"
+                                        size="sm"
+                                        @input="emitInput" />
+                                </template>
+                            </input-append-checkbox>
                         </b-td>
 
                         <!-- actions -->
@@ -278,9 +478,9 @@ export default {
                                         id="size_track_qty" />
                                 </b-form-group>
 
-                                <!-- out of stock behavior -->
+                                <!-- When out of stock -->
                                 <b-form-group
-                                    :label="$t('Out of stock behavior')"
+                                    :label="$t('When out of stock')"
                                     label-for="size_out_of_stock">
                                     <b-form-select
                                         v-model="size.visible_if_out_of_stock"
@@ -307,19 +507,15 @@ export default {
                                     :label="$t('Country of origin')"
                                     label-for="sku_customs_country_of_origin"
                                     :description="$t('customs_country_of_origin_desc')">
-                                    <b-input-group class="no-flex-wrap">
-                                        <country-select
-                                            :disabled="size.customs_country_of_origin_inherit"
-                                            v-model="size.customs_country_of_origin"
-                                            class="widthAll" />
-                                        <b-input-group-append is-text>
-                                            <b-form-checkbox
-                                                v-model="size.customs_country_of_origin_inherit"
-                                                @input="emitInput"
-                                                plain
-                                                v-b-tooltip.hover :title="`${$t('Inherit value from color')}: ${$t(size.customs_country_of_origin_inherit ? 'Yes' : 'No')}`" />
-                                        </b-input-group-append>
-                                    </b-input-group>
+                                    <input-append-checkbox
+                                        v-model="size.customs_country_of_origin_inherit">
+                                        <template slot-scope="scope">
+                                            <country-select
+                                                :disabled="scope.checked"
+                                                v-model="size.customs_country_of_origin"
+                                                class="widthAll" />
+                                        </template>
+                                    </input-append-checkbox>
                                 </b-form-group>
                             </b-td>
                         </b-tr>
@@ -377,6 +573,22 @@ export default {
 
 .no-flex-wrap {
     flex-wrap: nowrap !important
+}
+
+.bulk-edit-row {
+    // display: table-row;
+    display: block;
+    padding-bottom: 5px;
+
+    >label, >span {
+        // display: table-cell;
+        display: block;
+
+    }
+    >label {
+        padding-right: 5px;
+        vertical-align: top;
+    }
 }
 </style>
 
