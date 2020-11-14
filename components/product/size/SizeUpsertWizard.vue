@@ -9,12 +9,14 @@ import CountrySelect from '@/components/CountrySelect';
 import InputAppendCheckbox from '@/components/product/size/formInputs/InputAppendCheckbox';
 import {
     BTooltip,
-    BPopover
+    BPopover,
+    BCard,
+    BCardHeader
 } from 'bootstrap-vue';
 
 
 export default {
-    name: 'SizeUpsertTable',
+    name: 'SizeUpsertWizard',
 
     components: {
         draggable,
@@ -25,7 +27,9 @@ export default {
         SizeInput,
         NumberInput,
         CountrySelect,
-        InputAppendCheckbox
+        InputAppendCheckbox,
+        BCard,
+        BCardHeader
     },
 
     props: {
@@ -87,10 +91,16 @@ export default {
                 base_price_inherit: true,
                 track_quantity: true,
                 visible_if_out_of_stock: true,
+                compare_at_price: null,
                 compare_at_price_inherit: true,
                 cost_price_inherit: true,
-                weight_oz_inherit: true
+                weight_oz_inherit: true,
+                inventory_count: 0,
+                sku: null,
+                barcode: null,
+                customs_country_of_origin: null
             });
+            // this.sizes.push({});
 
             this.emitInput();
         },
@@ -148,6 +158,27 @@ export default {
 <template>
     <div>
         <div class="pb-2" v-if="sizes.length">
+
+            <div>
+                <div class="d-inline-block pr-2 fs14">{{ $t('Created') }}:</div>
+                <div class="d-inline-block">
+                    <draggable
+                        v-model="sizes"
+                        @update="emitInput"
+                        ghost-class="ghost"
+                        handle=".size-btn"
+                        tag="div">
+                        <b-button
+                            v-for="(size, idx) in sizes"
+                            :key="idx"
+                            variant="outline-success"
+                            class="mr-2 size-btn handle"
+                            size="sm"
+                            :href="`#size-card-${idx}`">{{ size.label }}</b-button>
+                    </draggable>
+                </div>
+            </div>
+
             <div class="text-right" id="header-container">
                 <b-button
                     variant="outline-secondary"
@@ -323,208 +354,229 @@ export default {
             </div>
         </div>
 
-        <b-table-simple
-            hover
-            small
-            responsive
-            table-class="bread-table"
-            v-show="sizes.length">
 
-            <b-thead>
-                <b-tr>
-                    <b-th v-if="sizes.length > 1" class="width50"></b-th>
-                    <b-th>{{ $t('Size') }}</b-th>
-                    <b-th>{{ $t('Quantity') }}</b-th>
-                    <b-th>{{ $t('SKU') }}</b-th>
-                    <b-th>{{ $t('Price') }}</b-th>
-                    <b-th>{{ $t('Compare at') }}</b-th>
-                    <b-th>{{ $t('Cost per item') }}</b-th>
-                    <b-th>{{ $t('Weight (oz)') }}</b-th>
-                    <b-th class="width100"></b-th>
-                </b-tr>
-            </b-thead>
+        <draggable
+            v-model="sizes"
+            @update="emitInput"
+            ghost-class="ghost"
+            handle=".handle"
+            tag="div">
+            <b-card
+                v-for="(size, index) in sizes"
+                :key="index"
+                body-class="p-0"
+                class="mb-4"
+                :id="`size-card-${index}`">
+                <b-card-header header-class="p-2">
 
-            <draggable
-                v-model="sizes"
-                @update="emitInput"
-                ghost-class="ghost"
-                handle=".handle"
-                tag="b-tbody">
-
-                <template v-for="(size, index) in sizes">
-                    <b-tr
-                        :key="index"
-                        :class="{'visible-details': visibleDetailsRow === index}">
-                        <!-- handle -->
-                        <b-td v-if="sizes.length > 1">
-                            <i class="handle">
-                                <fig-icon icon="dots-vertical-double" />
-                            </i>
-                        </b-td>
-
-                        <!-- size -->
-                        <b-td>
+                    <div class="d-flex flex-row align-items-center">
+                        <div class="flex-fill">
                             <size-input
                                 v-model="size.label"
                                 @input="emitInput"
-                                size="sm" />
-                        </b-td>
-
-                        <!-- quantity -->
-                        <b-td>
-                            <number-input
-                                v-model="size.inventory_count"
-                                :min="0"
-                                size="sm" />
-                        </b-td>
-
-                        <!-- sku -->
-                        <b-td>
-                            <b-form-input
-                                v-model="size.sku"
-                                size="sm"
-                                @input="emitInput" />
-                        </b-td>
-
-                        <!-- price -->
-                        <b-td class="text-center">
-                            <input-append-checkbox
-                                v-model="size.base_price_inherit">
-                                <template slot-scope="scope">
-                                    <input-money
-                                        :disabled="scope.checked"
-                                        v-model="size.base_price" />
-                                </template>
-                            </input-append-checkbox>
-                        </b-td>
-
-                        <!-- compare at price -->
-                        <b-td class="text-center">
-                            <input-append-checkbox
-                                v-model="size.compare_at_price_inherit">
-                                <template slot-scope="scope">
-                                    <input-money
-                                        :disabled="scope.checked"
-                                        v-model="size.compare_at_price" />
-                                </template>
-                            </input-append-checkbox>
-                        </b-td>
-
-                        <!-- cost per item -->
-                        <b-td class="text-center">
-                            <input-append-checkbox
-                                v-model="size.cost_price_inherit">
-                                <template slot-scope="scope">
-                                    <input-money
-                                        :disabled="scope.checked"
-                                        v-model="size.cost_price" />
-                                </template>
-                            </input-append-checkbox>
-                        </b-td>
-
-                        <!-- weight -->
-                        <b-td>
-                            <input-append-checkbox
-                                v-model="size.weight_oz_inherit">
-                                <template slot-scope="scope">
-                                    <b-form-input
-                                        :disabled="scope.checked"
-                                        v-model="size.weight_oz"
-                                        type="number"
-                                        :step=".01"
-                                        :min="0"
-                                        size="sm"
-                                        @input="emitInput" />
-                                </template>
-                            </input-append-checkbox>
-                        </b-td>
-
-                        <!-- actions -->
-                        <b-td class="text-right nowrap">
-                            <b-button
-                                variant="outline-secondary"
-                                @click="onClickMoreColorBtn(index)"
-                                size="sm"
-                                class="m-l-1">{{ $t('more') }}</b-button>
+                                size="md"
+                                :placeholder="$t('Choose a size')"
+                                class="size-select" />
 
                             <pop-confirm
                                 @onConfirm="removeRow(index)">
-                                {{ $t('Delete this row?') }}
+                                {{ $t('Delete this size?') }}
 
-                                <b-button
-                                    slot="reference"
-                                    variant="outline-secondary"
-                                    class="mls border-dashed-2"
-                                    size="sm">
-                                    <fig-icon icon="trash" stroke-width="1px" width="18" height="18" />
-                                </b-button>
+                                <i slot="reference" class="ml-3 cursorPointer">
+                                    <fig-icon icon="trash" stroke-width="1px" width="20" height="20" />
+                                </i>
                             </pop-confirm>
-                        </b-td>
-                    </b-tr>
+                        </div>
 
-                    <!-- more details row -->
-                    <transition name="dropdown" :key="`${index}_details`">
-                        <b-tr
-                            :class="{'visible-details': visibleDetailsRow === index}"
-                            v-if="visibleDetailsRow === index">
-                            <b-td :colspan="sizes.length > 1 ? 11 : 10" class="p-3">
-                                <!-- track quantity -->
-                                <b-form-group
-                                    :label="$t('Track quantity')"
-                                    label-for="size_track_qty">
+                        <i class="handle">
+                            <fig-icon icon="dots-vertical-double" />
+                        </i>
+                    </div>
+                </b-card-header>
+
+                <b-container class="d-flex flex-row flex-wrap">
+                    <!-- left column -->
+                    <div class="flex-fill p-2">
+                        <!-- quantity -->
+                        <div class="px-2">
+                            <b-form-group label-class="p-0">
+                                <label for="size_qty" slot="label" class="fs14">
+                                    {{ $t('Quantity') }}
+                                </label>
+
+                                <number-input
+                                    v-model="size.inventory_count"
+                                    :min="0"
+                                    size="sm"
+                                    id="size_qty" />
+
+                                <div class="pt-1">
                                     <b-form-checkbox
                                         v-model="size.track_quantity"
                                         @input="emitInput"
-                                        id="size_track_qty" />
-                                </b-form-group>
+                                        size="sm">{{ $t('Track quantity') }}</b-form-checkbox>
+                                </div>
 
-                                <!-- When out of stock -->
-                                <b-form-group
-                                    :label="$t('When out of stock')"
-                                    label-for="size_out_of_stock">
-                                    <b-form-select
+                                <div>
+                                    <b-form-checkbox
                                         v-model="size.visible_if_out_of_stock"
                                         @input="emitInput"
-                                        id="size_out_of_stock">
-                                        <b-form-select-option :value="true">{{ $t('Continue selling') }}</b-form-select-option>
-                                        <b-form-select-option :value="false">{{ $t('Hide') }}</b-form-select-option>
-                                    </b-form-select>
-                                </b-form-group>
+                                        size="sm">{{ $t('Hide when out of stock') }}</b-form-checkbox>
+                                </div>
+                            </b-form-group>
+                        </div>
 
-                                <!-- barcode -->
-                                <b-form-group
-                                    :label="$t('Barcode')"
-                                    label-for="size_barcode"
-                                    :description="$t('sku_barcode_description')">
-                                    <b-form-input
-                                        v-model="size.barcode"
-                                        @input="emitInput"
-                                        id="size_barcode" />
-                                </b-form-group>
+                        <!-- sku -->
+                        <div class="px-2">
+                            <b-form-group label-class="p-0">
+                                <label for="size_sku" slot="label" class="fs14">
+                                    {{ $t('SKU') }}
+                                </label>
 
-                                <!-- country of origin -->
-                                <b-form-group
-                                    :label="$t('Country of origin')"
-                                    label-for="sku_customs_country_of_origin"
-                                    :description="$t('customs_country_of_origin_desc')">
-                                    <input-append-checkbox
-                                        v-model="size.customs_country_of_origin_inherit">
-                                        <template slot-scope="scope">
-                                            <country-select
-                                                :disabled="scope.checked"
-                                                v-model="size.customs_country_of_origin"
-                                                class="widthAll" />
-                                        </template>
-                                    </input-append-checkbox>
-                                </b-form-group>
-                            </b-td>
-                        </b-tr>
-                    </transition>
-                </template>
-            </draggable>
-        </b-table-simple>
+                                <b-form-input
+                                    v-model="size.sku"
+                                    size="sm"
+                                    @input="emitInput"
+                                    id="size_sku" />
+                            </b-form-group>
+                        </div>
+                    </div>
 
-        <div class="pt-2">
+                    <!-- middle column -->
+                    <div class="flex-fill p-2">
+                        <!-- price -->
+                        <div class="px-2">
+                            <b-form-group label-class="p-0">
+                                <label for="size_price" slot="label" class="fs14">
+                                    {{ $t('Price') }}
+                                </label>
+
+                                <input-append-checkbox
+                                    v-model="size.base_price_inherit">
+                                    <template slot-scope="scope">
+                                        <input-money
+                                            :disabled="scope.checked"
+                                            v-model="size.base_price"
+                                            id="size_price" />
+                                    </template>
+                                </input-append-checkbox>
+                            </b-form-group>
+                        </div>
+
+                        <!-- compare at -->
+                        <div class="px-2">
+                            <b-form-group label-class="p-0">
+                                <label for="size_price_compare_at" slot="label" class="fs14">
+                                    {{ $t('Compare at') }}
+                                </label>
+
+                                <input-append-checkbox
+                                    v-model="size.compare_at_price_inherit">
+                                    <template slot-scope="scope">
+                                        <input-money
+                                            :disabled="scope.checked"
+                                            v-model="size.compare_at_price"
+                                            id="size_price_compare_at" />
+                                    </template>
+                                </input-append-checkbox>
+                            </b-form-group>
+                        </div>
+
+                        <!-- cost per item -->
+                        <div class="px-2">
+                            <b-form-group label-class="p-0">
+                                <label for="size_price_cost" slot="label" class="fs14">
+                                    {{ $t('Cost') }}
+                                </label>
+
+                                <input-append-checkbox
+                                    v-model="size.cost_price_inherit">
+                                    <template slot-scope="scope">
+                                        <input-money
+                                            :disabled="scope.checked"
+                                            v-model="size.cost_price"
+                                            id="size_price_cost" />
+                                    </template>
+                                </input-append-checkbox>
+                            </b-form-group>
+                        </div>
+                    </div>
+
+                    <!-- right column -->
+                    <div class="flex-fill p-2">
+                        <!-- weight -->
+                        <div class="px-2">
+                            <b-form-group label-class="p-0">
+                                <label for="size_weight" slot="label" class="fs14">
+                                    {{ $t('Weight (oz)') }}
+                                </label>
+
+                                <input-append-checkbox
+                                    v-model="size.weight_oz_inherit">
+                                    <template slot-scope="scope">
+                                        <b-form-input
+                                            :disabled="scope.checked"
+                                            v-model="size.weight_oz"
+                                            type="number"
+                                            :step=".01"
+                                            :min="0"
+                                            size="sm"
+                                            @input="emitInput"
+                                            id="size_weight" />
+                                    </template>
+                                </input-append-checkbox>
+                            </b-form-group>
+                        </div>
+
+                        <!-- barcode -->
+                        <div class="px-2">
+                            <b-form-group label-class="p-0">
+                                <label for="size_barcode" slot="label" class="fs14">
+                                    {{ $t('Barcode') }}
+                                    <i v-b-tooltip.hover.top="$t('sku_barcode_description')">
+                                        <fig-icon icon="info-circle" width="16" height="16" />
+                                    </i>
+                                </label>
+
+                                <b-form-input
+                                    v-model="size.barcode"
+                                    @input="emitInput"
+                                    size="sm"
+                                    id="size_barcode" />
+                            </b-form-group>
+                        </div>
+
+                        <!-- country of origin -->
+                        <div class="px-2">
+                            <b-form-group label-class="p-0">
+                                <label for="size_origin" slot="label" class="fs14">
+                                    {{ $t('Country of origin') }}
+                                    <i v-b-tooltip.hover.top="$t('customs_country_of_origin_desc')">
+                                        <fig-icon icon="info-circle" width="16" height="16" />
+                                    </i>
+                                </label>
+
+                                <input-append-checkbox
+                                    v-model="size.customs_country_of_origin_inherit">
+                                    <template slot-scope="scope">
+                                        <country-select
+                                            :disabled="scope.checked"
+                                            v-model="size.customs_country_of_origin"
+                                            size="sm"
+                                            class="widthAll"
+                                            id="size_origin" />
+                                    </template>
+                                </input-append-checkbox>
+                            </b-form-group>
+                        </div>
+                    </div>
+
+                </b-container>
+            </b-card>
+        </draggable>
+
+
+        <div>
             <b-button
                 variant="primary"
                 size="sm"
@@ -538,41 +590,13 @@ export default {
 
 <style lang="scss">
 .handle {
-    cursor: grab;
+    cursor: grab !important;
 }
 
-.bread-table {
-    th {
-        font-size: 14px;
-        text-align: center;
+.size-select {
+    input, button {
+        border: 1px solid #2eb85c !important;
     }
-
-    input:disabled {
-        opacity: .5;
-    }
-
-    .vs--disabled .vs__dropdown-toggle {
-        background-color: #d8dbe0;
-        opacity: .5;
-    }
-
-    .input-group-append .input-group-text {
-        background-color: #f1f2f3;
-    }
-
-    .visible-details > td {
-        border-top: 0 !important;
-        background-color: #f2fdec;
-    }
-}
-
-.header-icon {
-    margin: -3px 0 0 5px;
-    cursor: pointer;
-}
-
-.no-flex-wrap {
-    flex-wrap: nowrap !important
 }
 
 .bulk-edit-row {

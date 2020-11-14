@@ -1,7 +1,12 @@
 <script>
 import accounting from 'accounting';
+import { CurrencyDirective } from 'vue-currency-input';
+
 
 export default {
+    directives: {
+        currency: CurrencyDirective
+    },
 
     inheritAttrs: false,
 
@@ -14,28 +19,20 @@ export default {
 
     data: function() {
         return {
-            selectedPrice: null,
-            money: {
-                decimal: this.$t('money_decimal'),
-                thousands: this.$t('money_thousands'),
-                prefix: `${this.$t('money_symbol')}  `,
-                suffix: '',
-                precision: 2,
-                masked: false,
-                ...this.$attrs
-            }
+            selectedPrice: null
         };
     },
 
     watch: {
         value: {
+
             /**
              * Value is sent as a number (in cents) that needs
              * to be converted to 'dollars' (divide by 100)
              */
             handler(newVal) {
                 this.selectedPrice = newVal ? newVal/100 : 0;
-                // console.log('input money val watch', newVal, this.selectedPrice)
+                // console.log('watch', newVal, this.selectedPrice)
 
             },
             immediate: true
@@ -43,16 +40,20 @@ export default {
     },
 
     methods: {
+
         /**
          * Value is emitted as a number (cents)
          *
          * @param val String
          */
-        emitInput(val) {
+        emitInput() {
             let clean = 0;
+            // console.log('MONEY EMIT VAL', this.selectedPrice, typeof this.selectedPrice)
 
-            if(val) {
-                clean = accounting.toFixed(parseFloat(val) * 100, 0);
+            if(this.selectedPrice) {
+                clean = accounting.toFixed(parseFloat(this.selectedPrice) * 100, 0);
+
+                // accounting returns a string.  This converts back to a float
                 clean = parseFloat(clean);
             }
 
@@ -67,13 +68,15 @@ export default {
 <template>
     <b-form-input
         v-model="selectedPrice"
-        type="number"
-        min="0"
-        max="9999999"
-        step=".01"
+        type="text"
         v-bind="$attrs"
         @input="emitInput"
-        class="input-money" />
+        class="input-money"
+        v-currency="{
+            currency: 'USD',
+            locale: 'en-US',
+            valueAsInteger: true,
+            allowNegative: false }" />
 </template>
 
 

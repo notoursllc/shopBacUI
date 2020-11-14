@@ -33,59 +33,66 @@ export default {
     ],
 
     props: {
-        // product: {
-        //     type: Object,
-        //     default: function() {
-        //         return {};
-        //     }
-        // }
+        colors: {
+            type: Array,
+            default: function() {
+                return [];
+            }
+        }
     },
 
     data: function() {
         return {
-            // define the product here for development only
-            product: {
-                id: 'foo',
-                colors: []
-            },
+            selectedColors: [],
             visibleDetailsRow: null,
 
-            upsertingColor: null
+            upsertDialog: {
+                color: {}
+            }
         };
     },
 
     computed: {
         canShowGrabHandles() {
-            return Array.isArray(this.product.colors) && this.product.colors.length > 1;
+            return Array.isArray(this.selectedColors) && this.selectedColors.length > 1;
         }
     },
 
-    created() {
-        this.init();
+    watch: {
+        colors: {
+            handler: function(newVal) {
+                this.selectedColors = newVal;
+            },
+            immediate: true
+        }
     },
 
+    // created() {
+    //     this.init();
+    // },
+
     methods: {
-        init() {
-            if(Array.isArray(this.product.colors) && !this.product.colors.length) {
-                this.addEmptyColor();
-            }
-        },
+        // init() {
+        //     if(Array.isArray(this.selectedColors) && !this.selectedColors.length) {
+        //         this.addEmptyColor();
+        //     }
+        // },
 
         addEmptyColor() {
-            this.upsertingColor = {};
+            this.upsertDialog.color = {};
             this.$bvModal.show('color_upsert_form_modal');
-            // this.product.colors.push({
+            // this.selectedColors.push({
             //     published: true,
             //     label: null,
             //     product_id: this.product.id,
-            //     ordinal: this.product.colors.length,
+            //     ordinal: this.selectedColors.length,
             // });
 
             // this.visibleDetailsRow = null;
         },
 
         setColorOrdinals() {
-            this.product.colors.forEach((obj, index) => {
+            this.selectedColors.forEach((obj, index) => {
                 obj.ordinal = index;
             });
         },
@@ -103,14 +110,14 @@ export default {
 
         async deleteColor(index) {
             try {
-                const color = this.product.colors[index];
+                const color = this.selectedColors[index];
 
                 // Only delete the skus that are persisted in the DB (which have an id)
                 if(color.id) {
                     await this.$api.productColors.delete(color.id); // TODO
                 }
 
-                this.product.colors.splice(index, 1);
+                this.selectedColors.splice(index, 1);
 
                 this.init();
 
@@ -121,6 +128,10 @@ export default {
             catch(e) {
                 this.$errorToast(e.message);
             }
+        },
+
+        onColorUpsertDone() {
+
         }
     }
 };
@@ -133,7 +144,8 @@ export default {
             hover
             small
             responsive
-            table-class="bread-table">
+            table-class="bread-table"
+            v-if="selectedColors.length">
             <b-thead>
                 <b-tr>
                     <b-th v-if="canShowGrabHandles" class="vabtm width50"></b-th>
@@ -147,12 +159,12 @@ export default {
             </b-thead>
 
             <draggable
-                v-model="product.colors"
+                v-model="selectedColors"
                 handle=".handle"
                 @update="setColorOrdinals"
                 ghost-class="ghost"
                 tag="b-tbody">
-                <template v-for="(color, idx) in product.colors">
+                <template v-for="(color, idx) in selectedColors">
                     <b-tr
                         :key="idx"
                         :class="{'visible-details': visibleDetailsRow === idx}">
@@ -273,10 +285,10 @@ export default {
             <!-- <color-upsert-form
                 :sku="skuDialog.sku"
                 :product-attributes="product.attributes"
-                @done="onSkuUpsertDone" /> -->
+                @done="onColorUpsertDone" /> -->
             <color-upsert-form
-                :id="upsertingColor.id"
-                @done="onSkuUpsertDone"/>
+                :id="upsertDialog.color"
+                @done="onColorUpsertDone" />
         </b-modal>
 
     </div>

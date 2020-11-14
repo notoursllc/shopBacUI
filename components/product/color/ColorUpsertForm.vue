@@ -5,7 +5,7 @@ import TextCard from '@/components/TextCard';
 import PricingForm from '@/components/product/PricingForm';
 import ColorExpressionForm from '@/components/product/color/ColorExpressionForm';
 import AccentMessageWizard from '@/components/product/accentMessage/AccentMessageWizard';
-import SizeUpsertTable from '@/components/product/size/SizeUpsertTable';
+import SizeUpsertWizard from '@/components/product/size/SizeUpsertWizard';
 import NumberInput from '@/components/NumberInput';
 import CountrySelect from '@/components/CountrySelect';
 
@@ -18,7 +18,7 @@ export default {
         PricingForm,
         ColorExpressionForm,
         AccentMessageWizard,
-        SizeUpsertTable,
+        SizeUpsertWizard,
         NumberInput,
         CountrySelect
     },
@@ -28,37 +28,35 @@ export default {
     ],
 
     props: {
-        id: {
-            type: String,
-            default: null
+        color: {
+            type: Object,
+            default: () => {
+                return {};
+            }
         }
     },
 
     data: function() {
         return {
-            color: {
+            upsertColor: {
                 sizes: [
                     { label: null }
                 ]
             },
             imageManagerMaxImages: this.$config.SKU_IMAGE_MANAGER_MAX_IMAGES || 6,
-            loadingImages: false,
-            skuVariantTypes: []
+            loadingImages: false
         };
     },
 
-    computed: {
-    },
-
     watch: {
-        id: {
+        color: {
             handler(newVal) {
-                if(newVal) {
-                    this.color = {}; // TODO: fetch color data
+                if(isObject(newVal)) {
+                    this.upsertColor = newVal;
                     return;
                 }
 
-                this.color = {
+                this.upsertColor = {
                     sizes: [
                         { label: null }
                     ]
@@ -68,15 +66,11 @@ export default {
         }
     },
 
-    created() {
-
-    },
-
     methods: {
         async onDeleteImage(id) {
             try {
                 this.loadingImages = true;
-                await this.$api.productSkus.deleteImage(id); //TODO
+                await this.$api.productSkus.deleteImage(id); // TODO
                 this.$successToast(this.$t('Image deleted successfully'));
             }
             catch(e) {
@@ -87,15 +81,14 @@ export default {
         },
 
         onAccentWizardChange(obj) {
-            // console.log("ON ACCENT WIZARD CHAGGE", obj)
-            this.color.accent_message_id = obj.accent_message_id;
-            this.color.accent_message_begin = obj.accent_message_begin;
-            this.color.accent_message_end = obj.accent_message_end;
+            this.$set(this.upsertColor, 'accent_message_id', obj.accent_message_id);
+            this.$set(this.upsertColor, 'accent_message_begin', obj.accent_message_begin);
+            this.$set(this.upsertColor, 'accent_message_end', obj.accent_message_end);
         },
 
         onClickDone() {
             this.$emit('done', {
-                ...this.color
+                ...this.upsertColor
             });
         },
 
@@ -106,7 +99,7 @@ export default {
         onPricingFormInput(obj) {
             if(isObject(obj)) {
                 for(const key in obj) {
-                    this.$set(this.color, key, obj[key]);
+                    this.$set(this.upsertColor, key, obj[key]);
                 }
             }
         }
@@ -118,21 +111,21 @@ export default {
 <template>
     <div>
 
-        color: {{ color }}
+        upsertColor: {{ upsertColor }}
 
         <!-- Color expression -->
         <text-card class="mb-3">
             <template v-slot:header>{{ $t('Display color using...') }}</template>
             <color-expression-form
-                :color-model="color" />
+                :color-model="upsertColor" />
         </text-card>
 
 
         <!-- Sizes -->
         <text-card class="mb-3">
             <template v-slot:header>{{ $t('Sizes') }}</template>
-            <size-upsert-table
-                v-model="color.sizes" />
+            <size-upsert-wizard
+                v-model="upsertColor.sizes" />
         </text-card>
 
 
@@ -140,7 +133,7 @@ export default {
         <text-card class="mb-3">
             <template v-slot:header>{{ $t('Pricing') }}</template>
             <pricing-form
-                :data="color"
+                :data="upsertColor"
                 @input="onPricingFormInput" />
         </text-card>
 
@@ -150,7 +143,7 @@ export default {
             <template v-slot:header>{{ $t('Accent Message') }}</template>
             <template v-slot:headerSub>{{ $t('accent_message_description') }}</template>
             <accent-message-wizard
-                :model="color"
+                :model="upsertColor"
                 @input="onAccentWizardChange" />
         </text-card>
 
@@ -162,10 +155,10 @@ export default {
             <!-- requires shipping -->
             <b-form-group>
                 <b-form-checkbox
-                    v-model="color.requires_shipping">{{ $t('This is a physical product') }}</b-form-checkbox>
+                    v-model="upsertColor.requires_shipping">{{ $t('This is a physical product') }}</b-form-checkbox>
             </b-form-group>
 
-            <template v-if="!color.requires_shipping">
+            <template v-if="!upsertColor.requires_shipping">
                 {{ $t('requires_shipping_off_desc') }}
             </template>
             <template v-else>
@@ -173,13 +166,13 @@ export default {
 
                 <b-row>
                     <b-col lg="12">
-                        <template v-if="color.requires_shipping">
+                        <template v-if="upsertColor.requires_shipping">
                             <b-form-group
                                 :label="$t('Weight (oz)')"
                                 label-for="sku_weight_oz"
                                 :description="$t('Used to calculate shipping rates at checkout and label prices during fulfillment.')">
                                 <number-input
-                                    v-model="color.weight_oz"
+                                    v-model="upsertColor.weight_oz"
                                     :step=".01"
                                     :min="0"
                                     class="input-number"
@@ -202,7 +195,7 @@ export default {
                             label-for="sku_customs_country_of_origin"
                             :description="$t('customs_country_of_origin_desc')">
                             <country-select
-                                v-model="color.customs_country_of_origin"
+                                v-model="upsertColor.customs_country_of_origin"
                                 id="sku_customs_country_of_origin" />
                         </b-form-group>
                     </b-col>
@@ -214,7 +207,7 @@ export default {
                             label-for="sku_customs_harmonized_system_code"
                             :description="$t('customs_hs_code_desc')">
                             <b-form-input
-                                v-model="color.customs_harmonized_system_code"
+                                v-model="upsertColor.customs_harmonized_system_code"
                                 id="sku_customs_harmonized_system_code" />
                         </b-form-group>
                     </b-col>

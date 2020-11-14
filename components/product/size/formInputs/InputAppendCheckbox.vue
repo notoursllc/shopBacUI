@@ -59,10 +59,9 @@ export default {
 <template>
     <b-input-group :size="size" class="no-flex-wrap">
         <slot :checked="inherit"></slot>
-        <b-input-group-append
-            is-text
-            v-b-tooltip.hover.left="getInheritTooltip(inherit)">
+        <b-input-group-append is-text>
             <b-form-checkbox
+                v-b-tooltip.hover.right="getInheritTooltip(inherit)"
                 v-model="inherit"
                 plain
                 @input="emitInput" />

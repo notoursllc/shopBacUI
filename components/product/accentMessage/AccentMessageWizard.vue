@@ -3,6 +3,7 @@ import isObject from 'lodash.isobject';
 import cloneDeep from 'lodash.clonedeep';
 import AccentMessageSelect from '@/components/product/accentMessage/AccentMessageSelect';
 import DateInput from '@/components/DateInput';
+import AppMessage from '@/components/AppMessage';
 import { isUuid4 } from '@/utils/common';
 
 export default {
@@ -10,7 +11,8 @@ export default {
 
     components: {
         AccentMessageSelect,
-        DateInput
+        DateInput,
+        AppMessage
     },
 
     inheritAttrs: false,
@@ -75,17 +77,14 @@ export default {
         model: {
             handler(newVal) {
                 if(isObject(newVal)) {
-                    this.accent_message_id = newVal.accent_message_id;
-                    this.accent_message_begin = newVal.accent_message_begin;
-                    this.accent_message_end = newVal.accent_message_end;
-
-                    let selectedOptionIndex = 0;
+                    this.accent_message_id = newVal.accent_message_id || null;
+                    this.accent_message_begin = newVal.accent_message_begin || null;
+                    this.accent_message_end = newVal.accent_message_end || null;
 
                     if(this.accent_message_id) {
-                        selectedOptionIndex = isUuid4(this.accent_message_id) ? 1 : 2;
+                        let selectedOptionIndex = isUuid4(this.accent_message_id) ? 1 : 2;
+                        this.action = this.actionSelectOptions[selectedOptionIndex].value;
                     }
-
-                    this.action = this.actionSelectOptions[selectedOptionIndex].value;
                 }
                 else {
                     this.action = this.actionSelectOptions[0].value;

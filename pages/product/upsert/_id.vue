@@ -44,21 +44,11 @@ export default {
     data() {
         return {
             loading: false,
-            loadingProductImages: false,
             product: {
-                attributes: [],
-                skus: [],
-                images: []
+                colors: []
             },
             productHasMetaData: false,
-            domainName: this.$config.DOMAIN_NAME,
-            imageManagerMaxImages: this.$config.IMAGE_MANAGER_MAX_IMAGES || 8,
-            imageManagerMaxFeaturedImages: this.$config.IMAGE_MANAGER_MAX_FEATURED_IMAGES || 3,
-            videoPlayerModal: {
-                isActive: false,
-                videoId: null,
-                player: null
-            }
+            domainName: this.$config.DOMAIN_NAME
         };
     },
 
@@ -113,12 +103,7 @@ export default {
                     throw new Error(this.$t('Product not found'));
                 }
 
-                this.productHasMetaData = product.metadata ? true : false;
-
-                if(!Array.isArray(product.images)) {
-                    product.images = [];
-                }
-
+                this.productHasMetaData = !!product.metadata;
                 this.product = product;
             }
             catch(e) {
@@ -129,40 +114,26 @@ export default {
         },
 
 
-        async onDeleteProductImage(id) {
-            try {
-                this.loadingProductImages = true;
-                await this.$api.products.deleteImage(id);
-                this.$successToast(this.$t('Image deleted successfully'));
-            }
-            catch(e) {
-                this.$errorToast(e.message);
-            }
+        // async saveSkus(productId) {
+        //     try {
+        //         const product = cloneDeep(this.product);
+        //         const p = await this.$api.products.upsert(product);
 
-            this.loadingProductImages = false;
-        },
+        //         if(!p) {
+        //             throw new Error('Error updating product');
+        //         }
 
+        //         await this.saveImages(p.id);
+        //         await this.saveSkus(p.id);
 
-        async saveSkus(productId) {
-            try {
-                const product = cloneDeep(this.product);
-                const p = await this.$api.products.upsert(product);
-
-                if(!p) {
-                    throw new Error('Error updating product');
-                }
-
-                await this.saveImages(p.id);
-                await this.saveSkus(p.id);
-
-                const title = p.id ? 'Product updated successfully' : 'Product added successfully';
-                this.$successToast(`${title}: ${p.title}`);
-                this.goToProductList();
-            }
-            catch(e) {
-                this.$errorToast(e.message);
-            }
-        },
+        //         const title = p.id ? 'Product updated successfully' : 'Product added successfully';
+        //         this.$successToast(`${title}: ${p.title}`);
+        //         this.goToProductList();
+        //     }
+        //     catch(e) {
+        //         this.$errorToast(e.message);
+        //     }
+        // },
 
 
         async onSaveClick() {
@@ -204,30 +175,6 @@ export default {
 
             // this opens the page in a new tab
             window.open(routeData.href, '_blank');
-        },
-
-
-        playVideo(url) {
-            const id = this.$youtube.getIdFromURL(url);
-            if(id) {
-                this.videoPlayerModal.videoId = id;
-                this.videoPlayerModal.isActive = true;
-            }
-            else {
-                this.videoPlayerModal.isActive = false;
-            }
-        },
-
-
-        modalClosed() {
-            if(this.videoPlayerModal.player) {
-                this.videoPlayerModal.player.stopVideo();
-            }
-        },
-
-
-        videoPlaying(player) {
-            this.videoPlayerModal.player = player;
         }
     }
 };
@@ -373,41 +320,26 @@ export default {
         </text-card>
 
 
-        <!-- Images
-        <text-card class="mbl">
-            <template v-slot:header>{{ $t('Featured images') }}</template>
-            <template v-slot:headerSub>{{ $t('You can add up to num images', {number: imageManagerMaxFeaturedImages}) }}</template>
-
-            <b-container>
-                <app-overlay :show="loadingProductImages">
-                    <image-manager
-                        v-model="product.images"
-                        :max-num-images="parseInt(imageManagerMaxFeaturedImages, 10)"
-                        @delete="onDeleteProductImage" />
-                </app-overlay>
-            </b-container>
-        </text-card>
-        -->
-
         <text-card class="mbl">
             <template v-slot:header>{{ $t('Colors') }}</template>
             <color-table
-                :product="product" />
+                :colors="product.colors"
+                @change="colors => this.$set(product, 'colors', colors)" />
         </text-card>
 
 
         <!-- accent message -->
-        <text-card class="mbxl">
+        <!-- <text-card class="mbxl">
             <template v-slot:header>{{ $t('Accent Message') }}</template>
             <template v-slot:headerSub>{{ $t('accent_message_description') }}</template>
             <accent-message-wizard
                 :model="product"
                 @input="onAccentWizardChange" />
-        </text-card>
+        </text-card> -->
 
 
         <!-- Variants / Options -->
-        <text-card class="mbl">
+        <!-- <text-card class="mbl">
             <div slot="header">{{ $t('Variants') }}</div>
 
             <sku-manager
@@ -418,7 +350,7 @@ export default {
                     this.$t('Color'),
                     this.$t('Material')
                 ]" />
-        </text-card>
+        </text-card> -->
 
 
         <!-- SEO -->
