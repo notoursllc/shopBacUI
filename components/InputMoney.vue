@@ -48,7 +48,6 @@ export default {
          */
         emitInput() {
             let clean = 0;
-            // console.log('MONEY EMIT VAL', this.selectedPrice, typeof this.selectedPrice)
 
             if(this.selectedPrice) {
                 clean = accounting.toFixed(parseFloat(this.selectedPrice) * 100, 0);
@@ -75,7 +74,11 @@ export default {
         v-currency="{
             currency: 'USD',
             locale: 'en-US',
-            valueAsInteger: true,
+            valueAsInteger: false,
+            allowNegative: false,
+            distractionFree: true,
+            autoDecimalMode: true,
+            valueRange: { min: 0 },
             allowNegative: false }" />
 </template>
 

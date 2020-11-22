@@ -45,7 +45,7 @@ export default {
         return {
             loading: false,
             product: {
-                colors: []
+                variants: []
             },
             productHasMetaData: false,
             domainName: this.$config.DOMAIN_NAME
@@ -183,6 +183,8 @@ export default {
 
 <template>
     <app-overlay :show="loading">
+
+        {{ product }}
 
         <div class="tar mbm" v-if="product.id">
             <b-button
@@ -322,9 +324,12 @@ export default {
 
         <text-card class="mbl">
             <template v-slot:header>{{ $t('Colors') }}</template>
-            <color-table
-                :colors="product.colors"
-                @change="colors => this.$set(product, 'colors', colors)" />
+
+            <b-container>
+                <color-table
+                    :colors="product.variants"
+                    @change="colors => this.$set(product, 'variants', colors)" />
+            </b-container>
         </text-card>
 
 

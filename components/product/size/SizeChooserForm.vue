@@ -172,19 +172,19 @@ export default {
                                 <b-form-input
                                     v-if="editInventoryColumn"
                                     v-model="size.barcode"
-                                    size="sm"/>
+                                    size="sm" />
                                 <template v-else>{{ size.barcode }}</template>
                             </span>
                         </div>
 
                         <!-- track quantity -->
                         <div class="mini-row">
-                            <label>{{ $t('Track quantity') }}:</label>
+                            <label>{{ $t('Track inventory') }}:</label>
                             <span>
                                 <b-form-checkbox
                                     v-if="editInventoryColumn"
-                                    v-model="size.track_quantity" />
-                                <template v-else>{{ size.track_quantity }}</template>
+                                    v-model="size.track_inventory_count" />
+                                <template v-else>{{ size.track_inventory_count }}</template>
                             </span>
                         </div>
 
@@ -194,8 +194,8 @@ export default {
                             <span>
                                 <b-form-checkbox
                                     v-if="editInventoryColumn"
-                                    v-model="size.visible_if_out_of_stock" />
-                                <template v-else>{{ size.visible_if_out_of_stock }}</template>
+                                    v-model="size.visible_if_no_inventory" />
+                                <template v-else>{{ size.visible_if_no_inventory }}</template>
                             </span>
                         </div>
                     </b-td>

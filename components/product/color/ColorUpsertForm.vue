@@ -39,7 +39,7 @@ export default {
     data: function() {
         return {
             upsertColor: {
-                sizes: [
+                skus: [
                     { label: null }
                 ]
             },
@@ -52,12 +52,12 @@ export default {
         color: {
             handler(newVal) {
                 if(isObject(newVal)) {
-                    this.upsertColor = newVal;
+                    this.upsertColor = Object.assign({}, newVal);
                     return;
                 }
 
                 this.upsertColor = {
-                    sizes: [
+                    skus: [
                         { label: null }
                     ]
                 };
@@ -102,6 +102,13 @@ export default {
                     this.$set(this.upsertColor, key, obj[key]);
                 }
             }
+        },
+
+        onColorExpressionFormInput(data) {
+            if(isObject(data)) {
+                this.$set(this.upsertColor, 'exhibitType', data.exhibitType);
+                this.$set(this.upsertColor, 'exhibits', [ ...data.exhibits ]);
+            }
         }
     }
 };
@@ -113,106 +120,144 @@ export default {
 
         upsertColor: {{ upsertColor }}
 
+        <!-- General info -->
+        <text-card class="mb-5">
+            <template v-slot:header>{{ $t('Color info') }}</template>
+
+            <!-- published -->
+            <b-container>
+                <b-form-group>
+                    <b-form-checkbox
+                        v-model="upsertColor.published">{{ $t('Published') }}</b-form-checkbox>
+                </b-form-group>
+
+                <!-- color name -->
+                <b-form-group
+                    :label="$t('Color name')"
+                    label-for="color_name">
+                    <b-form-input
+                        v-model="upsertColor.label"
+                        id="color_name" />
+                </b-form-group>
+            </b-container>
+        </text-card>
+
+
         <!-- Color expression -->
-        <text-card class="mb-3">
+        <text-card class="mb-5">
             <template v-slot:header>{{ $t('Display color using...') }}</template>
-            <color-expression-form
-                :color-model="upsertColor" />
+
+            <b-container>
+                <color-expression-form
+                    :color-model="upsertColor"
+                    @input="onColorExpressionFormInput" />
+            </b-container>
         </text-card>
 
 
         <!-- Sizes -->
-        <text-card class="mb-3">
+        <text-card class="mb-5">
             <template v-slot:header>{{ $t('Sizes') }}</template>
-            <size-upsert-wizard
-                v-model="upsertColor.sizes" />
+
+            <b-container>
+                <size-upsert-wizard
+                    v-model="upsertColor.skus" />
+            </b-container>
         </text-card>
 
 
         <!-- pricing -->
-        <text-card class="mb-3">
+        <text-card class="mb-5">
             <template v-slot:header>{{ $t('Pricing') }}</template>
-            <pricing-form
-                :data="upsertColor"
-                @input="onPricingFormInput" />
+
+            <b-container>
+                <pricing-form
+                    :data="upsertColor"
+                    @input="onPricingFormInput" />
+            </b-container>
         </text-card>
 
 
         <!-- accent message -->
-        <text-card class="mbxl">
+        <text-card class="mb-5">
             <template v-slot:header>{{ $t('Accent Message') }}</template>
             <template v-slot:headerSub>{{ $t('accent_message_description') }}</template>
-            <accent-message-wizard
-                :model="upsertColor"
-                @input="onAccentWizardChange" />
+
+            <b-container>
+                <accent-message-wizard
+                    :model="upsertColor"
+                    @input="onAccentWizardChange" />
+            </b-container>
         </text-card>
 
 
         <!-- shipping -->
-        <text-card class="mbxl">
-            <div slot="header">{{ $t('Shipping') }}</div>
+        <text-card class="mb-5">
+            <template v-slot:header>{{ $t('Shipping') }}</template>
 
-            <!-- requires shipping -->
-            <b-form-group>
-                <b-form-checkbox
-                    v-model="upsertColor.requires_shipping">{{ $t('This is a physical product') }}</b-form-checkbox>
-            </b-form-group>
+            <b-container>
+                <!-- requires shipping -->
+                <b-form-group>
+                    <b-form-checkbox
+                        v-model="upsertColor.requires_shipping">{{ $t('This is a physical product') }}</b-form-checkbox>
+                </b-form-group>
 
-            <template v-if="!upsertColor.requires_shipping">
-                {{ $t('requires_shipping_off_desc') }}
-            </template>
-            <template v-else>
-                <hr />
+                <template v-if="!upsertColor.requires_shipping">
+                    {{ $t('requires_shipping_off_desc') }}
+                </template>
+                <template v-else>
+                    <hr />
 
-                <b-row>
-                    <b-col lg="12">
-                        <template v-if="upsertColor.requires_shipping">
+                    <b-row>
+                        <b-col lg="12">
+                            <template v-if="upsertColor.requires_shipping">
+                                <b-form-group
+                                    :label="$t('Weight (oz)')"
+                                    label-for="sku_weight_oz"
+                                    :description="$t('Used to calculate shipping rates at checkout and label prices during fulfillment.')">
+                                    <number-input
+                                        v-model="upsertColor.weight_oz"
+                                        :step=".01"
+                                        :min="0"
+                                        class="input-number"
+                                        id="sku_weight_oz" />
+                                </b-form-group>
+                            </template>
+
+                        </b-col>
+                    </b-row>
+
+                    <hr />
+
+                    <h4>{{ $t('CUSTOMS INFORMATION') }}</h4>
+
+                    <b-row>
+                        <b-col sm="12" lg="6">
+                            <!-- country of origin -->
                             <b-form-group
-                                :label="$t('Weight (oz)')"
-                                label-for="sku_weight_oz"
-                                :description="$t('Used to calculate shipping rates at checkout and label prices during fulfillment.')">
-                                <number-input
-                                    v-model="upsertColor.weight_oz"
-                                    :step=".01"
-                                    :min="0"
-                                    class="input-number"
-                                    id="sku_weight_oz" />
+                                :label="$t('Country of origin')"
+                                label-for="sku_customs_country_of_origin"
+                                :description="$t('customs_country_of_origin_desc')">
+                                <country-select
+                                    v-model="upsertColor.customs_country_of_origin"
+                                    id="sku_customs_country_of_origin" />
                             </b-form-group>
-                        </template>
+                        </b-col>
 
-                    </b-col>
-                </b-row>
-
-                <hr />
-
-                <h4>{{ $t('CUSTOMS INFORMATION') }}</h4>
-
-                <b-row>
-                    <b-col sm="12" lg="6">
-                        <!-- country of origin -->
-                        <b-form-group
-                            :label="$t('Country of origin')"
-                            label-for="sku_customs_country_of_origin"
-                            :description="$t('customs_country_of_origin_desc')">
-                            <country-select
-                                v-model="upsertColor.customs_country_of_origin"
-                                id="sku_customs_country_of_origin" />
-                        </b-form-group>
-                    </b-col>
-
-                    <b-col sm="12" lg="6">
-                        <!-- HS code -->
-                        <b-form-group
-                            :label="$t('HS (Harmonized System) code')"
-                            label-for="sku_customs_harmonized_system_code"
-                            :description="$t('customs_hs_code_desc')">
-                            <b-form-input
-                                v-model="upsertColor.customs_harmonized_system_code"
-                                id="sku_customs_harmonized_system_code" />
-                        </b-form-group>
-                    </b-col>
-                </b-row>
-            </template>
+                        <b-col sm="12" lg="6">
+                            <!-- HS code -->
+                            <b-form-group
+                                :label="$t('HS (Harmonized System) code')"
+                                label-for="sku_customs_harmonized_system_code"
+                                :description="$t('customs_hs_code_desc')">
+                                <b-form-input
+                                    v-model="upsertColor.customs_harmonized_system_code"
+                                    id="sku_customs_harmonized_system_code" />
+                            </b-form-group>
+                        </b-col>
+                    </b-row>
+                </template>
+            </b-container>
         </text-card>
 
 
@@ -228,8 +273,3 @@ export default {
         </div>
     </div>
 </template>
-
-
-<style lang="scss">
-
-</style>

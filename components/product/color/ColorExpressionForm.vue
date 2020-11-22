@@ -1,5 +1,6 @@
 <script>
 import isObject from 'lodash.isobject';
+import cloneDeep from 'lodash.clonedeep';
 import ImageManager from '@/components/product/ImageManager';
 import AppOverlay from '@/components/AppOverlay';
 import storage_mixin from '@/mixins/storage_mixin'; // TODO: not needed?
@@ -32,11 +33,9 @@ export default {
 
     data: function() {
         return {
+            exhibitType: 'IMAGE',
+            selectedImages: [],
             selectedColors: [],
-            form: {
-                expressAs: 'IMAGE',
-                images: []
-            },
             imageManagerMaxImages: this.$config.SKU_IMAGE_MANAGER_MAX_IMAGES || 6,
             maxSelectedColors: this.$config.COLOR_SWATCH_MAX_SWATCHES || 3,
             loadingImages: false
@@ -52,26 +51,53 @@ export default {
     watch: {
         colorModel: {
             handler(newVal) {
-                this.form = isObject(newVal) ? Object.assign({}, newVal) : {};
+                if(isObject(newVal)) {
+                    this.exhibitType = newVal.exhibitType;
 
-                if(!Array.isArray(this.form.images)) {
-                    this.form.images = [];
+                    const exhibits = Array.isArray(newVal.exhibits) ? cloneDeep(newVal.exhibits) : [];
+                    this.selectedImages = newVal.exhibitType === 'IMAGE' ? exhibits : [];
+                    this.selectedColors = newVal.exhibitType === 'SWATCH' ? exhibits : [];
+                }
+                else {
+                    this.exhibitType = 'IMAGE';
+                    this.selectedImages = [];
+                    this.selectedColors = [];
                 }
             },
             immediate: true
+        },
+
+        selectedColors: {
+            handler(newVal) {
+                this.emitInput();
+            },
+            deep: true
+        },
+
+        selectedImages: {
+            handler(newVal) {
+                this.emitInput();
+            },
+            deep: true
         }
     },
 
-    created() {
-
-    },
-
     methods: {
+        emitInput() {
+            const data = {
+                exhibitType: this.exhibitType,
+                exhibits: this.exhibitType === 'IMAGE' ? [ ...this.selectedImages ] : [ ...this.selectedColors ]
+            };
+
+            this.$emit('input', data);
+        },
+
         async onDeleteImage(id) {
             try {
                 this.loadingImages = true;
                 await this.$api.productSkus.deleteImage(id); //TODO
                 this.$successToast(this.$t('Image deleted successfully'));
+                this.emitInput();
             }
             catch(e) {
                 this.$errorToast(e.message);
@@ -80,26 +106,17 @@ export default {
             this.loadingImages = false;
         },
 
-        setSelectedColorOrdinals() {
-            this.selectedColors.forEach((obj, index) => {
-                obj.ordinal = index;
-            });
-        },
-
         onDeleteColor(index) {
             this.selectedColors.splice(index, 1);
-
-            if(this.selectedColors.length) {
-                this.setSelectedColorOrdinals();
-            }
+            this.emitInput();
         },
 
         addColorRow() {
             this.selectedColors.push({
-                ordinal: this.selectedColors.length,
                 label: null,
                 swatch: '#000000'
             });
+            this.emitInput();
         }
     }
 };
@@ -111,15 +128,17 @@ export default {
         <b-form-group>
             <div class="d-inline-block mr-3">
                 <b-form-radio
-                    v-model="form.expressAs"
-                    name="expressAs"
+                    v-model="exhibitType"
+                    @input="emitInput"
+                    name="exhibitType"
                     value="IMAGE">{{ $t('Images') }}</b-form-radio>
             </div>
 
             <div class="d-inline-block">
                 <b-form-radio
-                    v-model="form.expressAs"
-                    name="expressAs"
+                    v-model="exhibitType"
+                    @input="emitInput"
+                    name="exhibitType"
                     value="SWATCH">{{ $t('Color swatches') }}</b-form-radio>
             </div>
         </b-form-group>
@@ -128,21 +147,15 @@ export default {
         <div>
             <app-overlay :show="loadingImages">
                 <image-manager
-                    v-show="form.expressAs === 'IMAGE'"
-                    v-model="form.images"
+                    v-show="exhibitType === 'IMAGE'"
+                    v-model="selectedImages"
                     @delete="onDeleteImage"
                     :max-num-images="parseInt(imageManagerMaxImages, 10)" />
             </app-overlay>
-
-            <!-- <color-swatch-form
-                v-show="form.expressAs === 'SWATCH'"
-                :color-model="selectedColors"
-                :max-num-swatches="parseInt(maxSelectedColors, 10)"
-                @input="(swatches) => { $set(form, 'swatches', swatches) }" /> -->
         </div>
 
         <!-- color swatches -->
-        <div v-show="form.expressAs === 'SWATCH'">
+        <div v-show="exhibitType === 'SWATCH'">
             <b-table-simple
                 hover
                 small
@@ -151,7 +164,7 @@ export default {
                 v-if="selectedColors.length">
                 <b-thead>
                     <b-tr>
-                        <b-th v-if="maxSelectedColors.length > 1" class="width50"></b-th>
+                        <b-th v-if="selectedColors.length > 1" class="width50"></b-th>
                         <b-th class="swatchCell">{{ $t('Color') }}</b-th>
                         <b-th>{{ $t('Label') }}</b-th>
                         <b-th class="width100"></b-th>
@@ -162,13 +175,12 @@ export default {
                     v-model="selectedColors"
                     ghost-class="ghost"
                     handle=".handle"
-                    @update="setSelectedColorOrdinals"
                     tag="b-tbody">
 
                     <template v-for="(obj, index) in selectedColors">
                         <b-tr :key="index">
                             <!-- handle -->
-                            <b-td v-if="maxSelectedColors.length > 1" class="vam">
+                            <b-td v-if="selectedColors.length > 1" class="vam">
                                 <i class="handle">
                                     <fig-icon icon="dots-vertical-double" />
                                 </i>

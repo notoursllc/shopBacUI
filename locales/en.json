@@ -77,7 +77,7 @@
     "Collections": "Collections",
     "Color": "Color",
     "Color deleted successfully": "Color deleted successfully",
-    "Color Name": "Color Name",
+    "Color name": "Color name",
     "Color swatches": "Color swatches",
     "Colors": "Colors",
     "column": "column",
@@ -136,6 +136,7 @@
     "Done": "Done",
 
     "Edit": "Edit",
+    "Edit color: _color_": "Edit color: {color}",
     "Edit Item": "Edit Item",
     "Email address": "Email address",
     "Error": "Error",
@@ -146,8 +147,6 @@
     "Expiration date": "Expiration date",
 
     "Featured images": "Featured images",
-    "Featured images represent this variant on the product list page": "Featured images represent this variant on the product list page",
-    "Featured variant image": "Featured variant image",
     "Fit type": "Fit type",
     "footer_cart_secure": "Our cart is protected by 256-bit encrypted connection and we never store your card details.",
     "File type not allowed": "File type not allowed",
@@ -398,7 +397,7 @@
     "TOPS": "TOPS",
     "Total": "Total",
     "Total before tax": "Total before tax",
-    "Track quantity": "Track quantity",
+    "Track inventory": "Track inventory",
     "Types": "Types",
 
     "Unable to initialize PayPal flow. Are your options correct?": "Unable to initialize PayPal flow. Are your options correct?",

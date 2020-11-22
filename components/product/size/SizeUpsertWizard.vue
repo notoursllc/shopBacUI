@@ -33,10 +33,10 @@ export default {
     },
 
     props: {
-        color: {
-            type: Object,
+        value: {
+            type: Array,
             default: () => {
-                return {};
+                return [];
             }
         }
     },
@@ -56,17 +56,16 @@ export default {
     },
 
     watch: {
-        color: {
+        value: {
             handler(newVal) {
-                if(isObject(newVal)) {
-                    if(Array.isArray(newVal.sizes)) {
-                        this.sizes = [
-                            ...newVal.sizes
-                        ];
-                    }
-                    else {
-                        this.sizes = [];
-                    }
+                if(Array.isArray(newVal)) {
+                    // mapping the value into a new array
+                    this.sizes = [
+                        ...newVal
+                    ];
+                }
+                else {
+                    this.sizes = [];
                 }
             },
             immediate: true
@@ -89,13 +88,13 @@ export default {
                 label: null,
                 base_price: null,
                 base_price_inherit: true,
-                track_quantity: true,
-                visible_if_out_of_stock: true,
+                visible_if_no_inventory: true,
                 compare_at_price: null,
                 compare_at_price_inherit: true,
                 cost_price_inherit: true,
                 weight_oz_inherit: true,
                 inventory_count: 0,
+                track_inventory_count: true,
                 sku: null,
                 barcode: null,
                 customs_country_of_origin: null
@@ -159,199 +158,205 @@ export default {
     <div>
         <div class="pb-2" v-if="sizes.length">
 
-            <div>
-                <div class="d-inline-block pr-2 fs14">{{ $t('Created') }}:</div>
-                <div class="d-inline-block">
-                    <draggable
-                        v-model="sizes"
-                        @update="emitInput"
-                        ghost-class="ghost"
-                        handle=".size-btn"
-                        tag="div">
-                        <b-button
-                            v-for="(size, idx) in sizes"
-                            :key="idx"
-                            variant="outline-success"
-                            class="mr-2 size-btn handle"
-                            size="sm"
-                            :href="`#size-card-${idx}`">{{ size.label }}</b-button>
-                    </draggable>
+            <div class="d-flex flex-row align-items-center pb-2">
+                <div class="flex-fill">
+                    <div class="d-inline-block pr-2 fs14">{{ $t('Created') }}:</div>
+                    <div class="d-inline-block">
+                        <draggable
+                            v-model="sizes"
+                            @update="emitInput"
+                            ghost-class="ghost"
+                            handle=".size-btn"
+                            tag="div">
+                            <b-button
+                                v-for="(size, idx) in sizes"
+                                :key="idx"
+                                variant="outline-success"
+                                class="mr-2 size-btn handle"
+                                size="sm"
+                                :href="`#size-card-${idx}`">{{ size.label }}</b-button>
+                        </draggable>
+                    </div>
                 </div>
+
+                <div id="header-container">
+                    <b-button
+                        variant="outline-secondary"
+                        size="sm"
+                        @click="toggleBulkEdit"
+                        id="bulk-edit-button">
+                        <fig-icon icon="list-check" stroke-width="1.5" width="20" height="20" />
+                        {{ $t('Bulk edit') }}
+                    </b-button>
+
+                    <b-popover
+                        target="bulk-edit-button"
+                        triggers="click"
+                        :show.sync="showBulkEdit"
+                        placement="auto"
+                        container="header-container"
+                        ref="popover">
+
+                        <template #title>{{ $t('Update all sizes') }}</template>
+
+                        <!-- price -->
+                        <div class="bulk-edit-row">
+                            <label>
+                                <b-form-checkbox
+                                    v-model="bulkEditInputToggle.base_price"
+                                    @input="(val) => { onBulkEditRegister(['base_price', 'base_price_inherit'], val) }">
+                                    {{ $t('Price') }}
+                                </b-form-checkbox>
+                            </label>
+                            <span>
+                                <input-append-checkbox
+                                    v-if="bulkEdit.hasOwnProperty('base_price')"
+                                    v-model="bulkEdit.base_price_inherit">
+                                    <template slot-scope="scope">
+                                        <input-money
+                                            :disabled="scope.checked"
+                                            v-model="bulkEdit.base_price" />
+                                    </template>
+                                </input-append-checkbox>
+                            </span>
+                        </div>
+
+                        <!-- compare at -->
+                        <div class="bulk-edit-row">
+                            <label>
+                                <b-form-checkbox
+                                    v-model="bulkEditInputToggle.compare_at_price"
+                                    @input="(val) => { onBulkEditRegister(['compare_at_price', 'compare_at_price_inherit'], val) }">
+                                    {{ $t('Compare at') }}
+                                </b-form-checkbox>
+                            </label>
+                            <span>
+                                <input-append-checkbox
+                                    v-if="bulkEdit.hasOwnProperty('compare_at_price')"
+                                    v-model="bulkEdit.compare_at_price_inherit">
+                                    <template slot-scope="scope">
+                                        <input-money
+                                            :disabled="scope.checked"
+                                            v-model="bulkEdit.compare_at_price" />
+                                    </template>
+                                </input-append-checkbox>
+                            </span>
+                        </div>
+
+                        <!-- cost per item -->
+                        <div class="bulk-edit-row">
+                            <label>
+                                <b-form-checkbox
+                                    v-model="bulkEditInputToggle.cost_price"
+                                    @input="(val) => { onBulkEditRegister(['cost_price', 'cost_price_inherit'], val) }">
+                                    {{ $t('Cost per item') }}
+                                </b-form-checkbox>
+                            </label>
+                            <span>
+                                <input-append-checkbox
+                                    v-if="bulkEdit.hasOwnProperty('cost_price')"
+                                    v-model="bulkEdit.cost_price_inherit">
+                                    <template slot-scope="scope">
+                                        <input-money
+                                            :disabled="scope.checked"
+                                            v-model="bulkEdit.cost_price" />
+                                    </template>
+                                </input-append-checkbox>
+                            </span>
+                        </div>
+
+                        <!-- weight -->
+                        <div class="bulk-edit-row">
+                            <label>
+                                <b-form-checkbox
+                                    v-model="bulkEditInputToggle.weight_oz"
+                                    @input="(val) => { onBulkEditRegister(['weight_oz', 'weight_oz_inherit'], val) }">
+                                    {{ $t('Weight (oz)') }}
+                                </b-form-checkbox>
+                            </label>
+                            <span>
+                                <input-append-checkbox
+                                    v-if="bulkEdit.hasOwnProperty('weight_oz')"
+                                    v-model="bulkEdit.weight_oz_inherit">
+                                    <template slot-scope="scope">
+                                        <b-form-input
+                                            :disabled="scope.checked"
+                                            v-model="bulkEdit.weight_oz"
+                                            type="number"
+                                            :step=".01"
+                                            :min="0"
+                                            size="sm"
+                                            @input="emitInput" />
+                                    </template>
+                                </input-append-checkbox>
+                            </span>
+                        </div>
+
+                        <!-- when out of stock -->
+                        <div class="bulk-edit-row">
+                            <label>
+                                <b-form-checkbox
+                                    v-model="bulkEditInputToggle.visible_if_no_inventory"
+                                    @input="(val) => { onBulkEditRegister('visible_if_no_inventory', val) }">
+                                    {{ $t('When out of stock') }}
+                                </b-form-checkbox>
+                            </label>
+                            <span>
+                                <div v-if="bulkEdit.hasOwnProperty('visible_if_no_inventory')">
+                                    <b-form-select
+                                        v-model="bulkEdit.visible_if_no_inventory"
+                                        :options="whenOutOfStockOptions"
+                                        size="sm" />
+                                </div>
+                            </span>
+                        </div>
+
+                        <!-- Country of origin -->
+                        <div class="bulk-edit-row">
+                            <label>
+                                <b-form-checkbox
+                                    v-model="bulkEditInputToggle.customs_country_of_origin"
+                                    @input="(val) => { onBulkEditRegister(['customs_country_of_origin', 'customs_country_of_origin_inherit'], val) }">
+                                    {{ $t('Country of origin') }}
+                                </b-form-checkbox>
+                            </label>
+                            <span>
+                                <input-append-checkbox
+                                    v-if="bulkEdit.hasOwnProperty('customs_country_of_origin')"
+                                    v-model="bulkEdit.customs_country_of_origin_inherit">
+                                    <template slot-scope="scope">
+                                        <country-select
+                                            size="sm"
+                                            :disabled="scope.checked"
+                                            v-model="bulkEdit.customs_country_of_origin"
+                                            :right-radius="false"
+                                            class="widthAll" />
+                                    </template>
+                                </input-append-checkbox>
+                            </span>
+                        </div>
+
+
+                        <div class="text-center pt-2">
+                            <b-button
+                                variant="primary"
+                                size="sm"
+                                @click="onClickApplyBulkEdit"
+                                class="mr-2">{{ $t('Apply') }}</b-button>
+
+                            <b-button
+                                variant="light"
+                                size="sm"
+                                @click="onClickCancelBulkEdit">{{ $t('Cancel') }}</b-button>
+                        </div>
+
+                    </b-popover>
+                </div>
+
+
             </div>
 
-            <div class="text-right" id="header-container">
-                <b-button
-                    variant="outline-secondary"
-                    size="sm"
-                    v-b-tooltip.hover.left="$t('Bulk edit')"
-                    @click="toggleBulkEdit"
-                    id="bulk-edit-button">
-                    <fig-icon icon="list-check" stroke-width="1.5" width="20" height="20" />
-                </b-button>
 
-                <b-popover
-                    target="bulk-edit-button"
-                    triggers="click"
-                    :show.sync="showBulkEdit"
-                    placement="auto"
-                    container="header-container"
-                    ref="popover">
-
-                    <template #title>{{ $t('Update all sizes') }}</template>
-
-                    <!-- price -->
-                    <div class="bulk-edit-row">
-                        <label>
-                            <b-form-checkbox
-                                v-model="bulkEditInputToggle.base_price"
-                                @input="(val) => { onBulkEditRegister(['base_price', 'base_price_inherit'], val) }">
-                                {{ $t('Price') }}
-                            </b-form-checkbox>
-                        </label>
-                        <span>
-                            <input-append-checkbox
-                                v-if="bulkEdit.hasOwnProperty('base_price')"
-                                v-model="bulkEdit.base_price_inherit">
-                                <template slot-scope="scope">
-                                    <input-money
-                                        :disabled="scope.checked"
-                                        v-model="bulkEdit.base_price" />
-                                </template>
-                            </input-append-checkbox>
-                        </span>
-                    </div>
-
-                    <!-- compare at -->
-                    <div class="bulk-edit-row">
-                        <label>
-                            <b-form-checkbox
-                                v-model="bulkEditInputToggle.compare_at_price"
-                                @input="(val) => { onBulkEditRegister(['compare_at_price', 'compare_at_price_inherit'], val) }">
-                                {{ $t('Compare at') }}
-                            </b-form-checkbox>
-                        </label>
-                        <span>
-                            <input-append-checkbox
-                                v-if="bulkEdit.hasOwnProperty('compare_at_price')"
-                                v-model="bulkEdit.compare_at_price_inherit">
-                                <template slot-scope="scope">
-                                    <input-money
-                                        :disabled="scope.checked"
-                                        v-model="bulkEdit.compare_at_price" />
-                                </template>
-                            </input-append-checkbox>
-                        </span>
-                    </div>
-
-                    <!-- cost per item -->
-                    <div class="bulk-edit-row">
-                        <label>
-                            <b-form-checkbox
-                                v-model="bulkEditInputToggle.cost_price"
-                                @input="(val) => { onBulkEditRegister(['cost_price', 'cost_price_inherit'], val) }">
-                                {{ $t('Cost per item') }}
-                            </b-form-checkbox>
-                        </label>
-                        <span>
-                            <input-append-checkbox
-                                v-if="bulkEdit.hasOwnProperty('cost_price')"
-                                v-model="bulkEdit.cost_price_inherit">
-                                <template slot-scope="scope">
-                                    <input-money
-                                        :disabled="scope.checked"
-                                        v-model="bulkEdit.cost_price" />
-                                </template>
-                            </input-append-checkbox>
-                        </span>
-                    </div>
-
-                    <!-- weight -->
-                    <div class="bulk-edit-row">
-                        <label>
-                            <b-form-checkbox
-                                v-model="bulkEditInputToggle.weight_oz"
-                                @input="(val) => { onBulkEditRegister(['weight_oz', 'weight_oz_inherit'], val) }">
-                                {{ $t('Weight (oz)') }}
-                            </b-form-checkbox>
-                        </label>
-                        <span>
-                            <input-append-checkbox
-                                v-if="bulkEdit.hasOwnProperty('weight_oz')"
-                                v-model="bulkEdit.weight_oz_inherit">
-                                <template slot-scope="scope">
-                                    <b-form-input
-                                        :disabled="scope.checked"
-                                        v-model="bulkEdit.weight_oz"
-                                        type="number"
-                                        :step=".01"
-                                        :min="0"
-                                        size="sm"
-                                        @input="emitInput" />
-                                </template>
-                            </input-append-checkbox>
-                        </span>
-                    </div>
-
-                    <!-- when out of stock -->
-                    <div class="bulk-edit-row">
-                        <label>
-                            <b-form-checkbox
-                                v-model="bulkEditInputToggle.visible_if_out_of_stock"
-                                @input="(val) => { onBulkEditRegister('visible_if_out_of_stock', val) }">
-                                {{ $t('When out of stock') }}
-                            </b-form-checkbox>
-                        </label>
-                        <span>
-                            <div v-if="bulkEdit.hasOwnProperty('visible_if_out_of_stock')">
-                                <b-form-select
-                                    v-model="bulkEdit.visible_if_out_of_stock"
-                                    :options="whenOutOfStockOptions"
-                                    size="sm" />
-                            </div>
-                        </span>
-                    </div>
-
-                    <!-- Country of origin -->
-                    <div class="bulk-edit-row">
-                        <label>
-                            <b-form-checkbox
-                                v-model="bulkEditInputToggle.customs_country_of_origin"
-                                @input="(val) => { onBulkEditRegister(['customs_country_of_origin', 'customs_country_of_origin_inherit'], val) }">
-                                {{ $t('Country of origin') }}
-                            </b-form-checkbox>
-                        </label>
-                        <span>
-                            <input-append-checkbox
-                                v-if="bulkEdit.hasOwnProperty('customs_country_of_origin')"
-                                v-model="bulkEdit.customs_country_of_origin_inherit">
-                                <template slot-scope="scope">
-                                    <country-select
-                                        size="sm"
-                                        :disabled="scope.checked"
-                                        v-model="bulkEdit.customs_country_of_origin"
-                                        :right-radius="false"
-                                        class="widthAll" />
-                                </template>
-                            </input-append-checkbox>
-                        </span>
-                    </div>
-
-
-                    <div class="text-center pt-2">
-                        <b-button
-                            variant="primary"
-                            size="sm"
-                            @click="onClickApplyBulkEdit"
-                            class="mr-2">{{ $t('Apply') }}</b-button>
-
-                        <b-button
-                            variant="light"
-                            size="sm"
-                            @click="onClickCancelBulkEdit">{{ $t('Cancel') }}</b-button>
-                    </div>
-
-                </b-popover>
-            </div>
         </div>
 
 
@@ -360,6 +365,7 @@ export default {
             @update="emitInput"
             ghost-class="ghost"
             handle=".handle"
+            class="size-card-list"
             tag="div">
             <b-card
                 v-for="(size, index) in sizes"
@@ -401,7 +407,7 @@ export default {
                         <div class="px-2">
                             <b-form-group label-class="p-0">
                                 <label for="size_qty" slot="label" class="fs14">
-                                    {{ $t('Quantity') }}
+                                    {{ $t('Inventory') }}
                                 </label>
 
                                 <number-input
@@ -412,14 +418,14 @@ export default {
 
                                 <div class="pt-1">
                                     <b-form-checkbox
-                                        v-model="size.track_quantity"
+                                        v-model="size.track_inventory_count"
                                         @input="emitInput"
-                                        size="sm">{{ $t('Track quantity') }}</b-form-checkbox>
+                                        size="sm">{{ $t('Track inventory') }}</b-form-checkbox>
                                 </div>
 
                                 <div>
                                     <b-form-checkbox
-                                        v-model="size.visible_if_out_of_stock"
+                                        v-model="size.visible_if_no_inventory"
                                         @input="emitInput"
                                         size="sm">{{ $t('Hide when out of stock') }}</b-form-checkbox>
                                 </div>
@@ -599,15 +605,17 @@ export default {
     }
 }
 
+// zebra striping the cards to they are a bit easier to differentiate
+.size-card-list .card:nth-child(odd) {
+    background-color: #f5f5f5;
+}
+
 .bulk-edit-row {
-    // display: table-row;
     display: block;
     padding-bottom: 5px;
 
     >label, >span {
-        // display: table-cell;
         display: block;
-
     }
     >label {
         padding-right: 5px;

@@ -1,16 +1,11 @@
 <script>
+import isObject from 'lodash.isobject';
 import draggable from 'vuedraggable';
 import PopConfirm from '@/components/PopConfirm';
-import InputMoney from '@/components/InputMoney';
 import ColorUpsertForm from '@/components/product/color/ColorUpsertForm';
-
-import TextCard from '@/components/TextCard';
-import PricingForm from '@/components/product/PricingForm';
-import ColorExpressionForm from '@/components/product/color/ColorExpressionForm';
-import SizeChooserForm from '@/components/product/size/SizeChooserForm';
-
 import storage_mixin from '@/mixins/storage_mixin';
 import product_mixin from '@/mixins/product_mixin';
+
 
 export default {
     name: 'ColorTable',
@@ -18,13 +13,7 @@ export default {
     components: {
         draggable,
         PopConfirm,
-        InputMoney,
-        ColorUpsertForm,
-
-        TextCard,
-        PricingForm,
-        ColorExpressionForm,
-        SizeChooserForm
+        ColorUpsertForm
     },
 
     mixins: [
@@ -43,83 +32,70 @@ export default {
 
     data: function() {
         return {
-            selectedColors: [],
-            visibleDetailsRow: null,
-
-            upsertDialog: {
-                color: {}
-            }
+            colorList: [],
+            visibleColorIndex: null
         };
     },
 
     computed: {
         canShowGrabHandles() {
-            return Array.isArray(this.selectedColors) && this.selectedColors.length > 1;
+            return Array.isArray(this.colorList) && this.colorList.length > 1;
+        },
+
+        modalTitle() {
+            return isObject(this.colorList[this.visibleColorIndex]) && this.colorList[this.visibleColorIndex].label
+                ? this.$t('Edit color: _color_', {color: this.colorList[this.visibleColorIndex].label})
+                : this.$t('Add a new Color');
         }
     },
 
     watch: {
         colors: {
             handler: function(newVal) {
-                this.selectedColors = newVal;
+                this.colorList = newVal || [];
             },
             immediate: true
         }
     },
 
-    // created() {
-    //     this.init();
-    // },
-
     methods: {
-        // init() {
-        //     if(Array.isArray(this.selectedColors) && !this.selectedColors.length) {
-        //         this.addEmptyColor();
-        //     }
-        // },
+        showColorUpsertModal(index) {
+            this.visibleColorIndex = index;
+            this.$bvModal.show('color_upsert_form_modal');
+        },
+
+        hideColorUpsertModal() {
+            this.$bvModal.hide('color_upsert_form_modal');
+        },
 
         addEmptyColor() {
-            this.upsertDialog.color = {};
-            this.$bvModal.show('color_upsert_form_modal');
-            // this.selectedColors.push({
-            //     published: true,
-            //     label: null,
-            //     product_id: this.product.id,
-            //     ordinal: this.selectedColors.length,
-            // });
+            this.colorList.push({
+                published: true,
+                label: null,
+                ordinal: this.colorList.length
+            });
 
-            // this.visibleDetailsRow = null;
+            this.showColorUpsertModal(this.colorList.length - 1);
         },
 
         setColorOrdinals() {
-            this.selectedColors.forEach((obj, index) => {
+            this.colorList.forEach((obj, index) => {
                 obj.ordinal = index;
             });
-        },
-
-        onClickMoreColorBtn(index) {
-            // const sku = this.product.skus[index];
-
-            // this.skuDialog.sku = sku;
-            // this.skuDialog.action = 'append';
-
-            // this.$bvModal.show('color_upsert_form_modal');
-
-            this.visibleDetailsRow = this.visibleDetailsRow === index ? null : index;
+            this.emitChange();
         },
 
         async deleteColor(index) {
             try {
-                const color = this.selectedColors[index];
+                const color = this.colorList[index];
 
                 // Only delete the skus that are persisted in the DB (which have an id)
                 if(color.id) {
                     await this.$api.productColors.delete(color.id); // TODO
                 }
 
-                this.selectedColors.splice(index, 1);
-
-                this.init();
+                this.colorList.splice(index, 1);
+                this.emitChange();
 
                 if(color.id) {
                     this.$successToast(this.$t('Color deleted successfully'));
@@ -130,8 +106,24 @@ export default {
             }
         },
 
-        onColorUpsertDone() {
+        onColorUpsertDone(colorData) {
+            this.$set(this.colorList, this.visibleColorIndex, colorData);
+            this.emitChange();
+            this.hideColorUpsertModal();
+        },
 
+        onColorUpsertCancel() {
+            this.hideColorUpsertModal();
+        },
+
+        onEditBtnClick(index) {
+            this.showColorUpsertModal(index);
+        },
+
+        emitChange() {
+            this.$emit('change', [
+                ...this.colorList
+            ]);
         }
     }
 };
@@ -145,12 +137,12 @@ export default {
             small
             responsive
             table-class="bread-table"
-            v-if="selectedColors.length">
+            v-if="colorList.length">
             <b-thead>
                 <b-tr>
                     <b-th v-if="canShowGrabHandles" class="vabtm width50"></b-th>
                     <b-th class="width50">{{ $t('Published') }}</b-th>
-                    <b-th>{{ $t('Color Name') }}</b-th>
+                    <b-th>{{ $t('Color name') }}</b-th>
                     <b-th>{{ $t('Price') }}</b-th>
                     <b-th>{{ $t('Sizes') }}</b-th>
                     <b-th>{{ $t('Images') }}</b-th>
@@ -159,113 +151,70 @@ export default {
             </b-thead>
 
             <draggable
-                v-model="selectedColors"
+                v-model="colorList"
                 handle=".handle"
                 @update="setColorOrdinals"
                 ghost-class="ghost"
                 tag="b-tbody">
-                <template v-for="(color, idx) in selectedColors">
-                    <b-tr
-                        :key="idx"
-                        :class="{'visible-details': visibleDetailsRow === idx}">
-                        <!-- drag handle -->
-                        <b-td v-show="canShowGrabHandles">
-                            <fig-icon
-                                icon="dots-vertical-double"
-                                class="handle cursorGrab" />
-                        </b-td>
+                <b-tr v-for="(color, idx) in colorList" :key="idx">
+                    <!-- drag handle -->
+                    <b-td v-show="canShowGrabHandles">
+                        <fig-icon
+                            icon="dots-vertical-double"
+                            class="handle cursorGrab" />
+                    </b-td>
 
-                        <!-- Published -->
-                        <b-td class="text-center">
-                            <b-form-checkbox
-                                v-model="color.published" />
-                        </b-td>
+                    <!-- Published -->
+                    <b-td class="text-center">
+                        {{ color.published }}
+                    </b-td>
 
-                        <!-- Color name -->
-                        <b-td>
-                            <b-form-input
-                                v-model="color.label" />
-                        </b-td>
+                    <!-- Color name -->
+                    <b-td>
+                        {{ color.label }}
+                    </b-td>
 
-                        <!-- Price -->
-                        <b-td>
-                            <input-money
-                                v-model="color.base_price" />
-                        </b-td>
+                    <!-- Price -->
+                    <b-td>
+                        {{ color.base_price }}
+                    </b-td>
 
-                        <!-- Sizes -->
-                        <b-td>
+                    <!-- Sizes -->
+                    <b-td>
 
-                        </b-td>
+                    </b-td>
 
-                        <!-- Images -->
-                        <b-td>
-                            <!-- <span
-                                v-for="(result, index) in getVariantThumbs(color)"
-                                :key="index"
-                                class="variant-thumb">
-                                <figure
-                                    :style="`background-image:url(${result.url});`"
-                                    class="shadow"
-                                    :class="{'featured-thumb': result.is_featured}"></figure>
-                            </span> -->
-                        </b-td>
+                    <!-- Images -->
+                    <b-td>
+                        <!-- <span
+                            v-for="(result, index) in getVariantThumbs(color)"
+                            :key="index"
+                            class="variant-thumb">
+                            <figure
+                                :style="`background-image:url(${result.url});`"
+                                class="shadow"
+                                :class="{'featured-thumb': result.is_featured}"></figure>
+                        </span> -->
+                    </b-td>
 
-                        <b-td class="text-right">
+                    <b-td class="text-right">
+                        <b-button
+                            variant="outline-secondary"
+                            class="mr-1"
+                            @click="onEditBtnClick(idx)">{{ $t('Edit') }}</b-button>
+
+                        <pop-confirm @onConfirm="deleteColor(idx)">
+                            {{ $t('Delete this row?') }}
+
                             <b-button
+                                slot="reference"
                                 variant="outline-secondary"
-                                @click="onClickMoreColorBtn(idx)"
-                                class="mrs">{{ $t('more') }}</b-button>
-
-                            <pop-confirm @onConfirm="deleteColor(idx)">
-                                {{ $t('Delete this row?') }}
-
-                                <b-button
-                                    slot="reference"
-                                    variant="outline-secondary"
-                                    class="border-dashed-2">
-                                    <fig-icon icon="trash" stroke-width="1px" />
-                                </b-button>
-                            </pop-confirm>
-                        </b-td>
-                    </b-tr>
-
-                    <!-- more details row -->
-                    <transition name="dropdown" :key="`${idx}_details`">
-                        <b-tr
-                            :class="{'visible-details': visibleDetailsRow === idx}"
-                            v-if="visibleDetailsRow === idx">
-                            <b-td colspan="7" class="p-3">
-                                <!-- <color-upsert-form /> -->
-
-                                <!-- Color expression -->
-                                <text-card class="mb-3">
-                                    <template v-slot:header>{{ $t('Display color using...') }}</template>
-                                    <color-expression-form :color-model="product" />
-                                </text-card>
-
-                                <!-- Sizes -->
-                                <text-card class="mb-3">
-                                    <template v-slot:header>{{ $t('Sizes') }}</template>
-                                    color.sizes {{ color.sizes }}
-                                    <size-chooser-form
-                                        v-model="color.sizes" />
-                                </text-card>
-
-                                <!-- pricing -->
-                                <text-card class="mb-3">
-                                    <template v-slot:header>{{ $t('Pricing') }}</template>
-                                    <pricing-form
-                                        :data="product" />
-                                    <!-- <pricing-form
-                                        :data="model"
-                                        @input="onPricingFormInput" /> -->
-                                </text-card>
-
-                            </b-td>
-                        </b-tr>
-                    </transition>
-                </template>
+                                class="border-dashed-2">
+                                <fig-icon icon="trash" stroke-width="1px" />
+                            </b-button>
+                        </pop-confirm>
+                    </b-td>
+                </b-tr>
             </draggable>
         </b-table-simple>
 
@@ -281,14 +230,15 @@ export default {
 
 
         <!-- color upsert form -->
-        <b-modal id="color_upsert_form_modal" size="xl" hide-footer>
-            <!-- <color-upsert-form
-                :sku="skuDialog.sku"
-                :product-attributes="product.attributes"
-                @done="onColorUpsertDone" /> -->
+        <b-modal
+            id="color_upsert_form_modal"
+            size="xl"
+            hide-footer
+            :title="modalTitle">
             <color-upsert-form
-                :id="upsertDialog.color"
-                @done="onColorUpsertDone" />
+                :color="colorList[visibleColorIndex]"
+                @done="onColorUpsertDone"
+                @cancel="onColorUpsertCancel" />
         </b-modal>
 
     </div>
@@ -300,10 +250,6 @@ export default {
 // @import "~assets/css/components/_formRow.scss";
 // @import "~assets/css/components/_mixins.scss";
 
-.visible-details > td {
-    border-top: 0 !important;
-    background-color: #f2fdec;
-}
 
 .dropdown {
   position: relative;
