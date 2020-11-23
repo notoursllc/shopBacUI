@@ -117,9 +117,6 @@ export default {
 
 <template>
     <div>
-
-        upsertColor: {{ upsertColor }}
-
         <!-- General info -->
         <text-card class="mb-5">
             <template v-slot:header>{{ $t('Color info') }}</template>

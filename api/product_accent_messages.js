@@ -7,12 +7,12 @@ function formatParams(params) {
 export default ($http) => ({
 
     list(params) {
-        return $http.$get(`/product/sku/accent_messages?${formatParams(params)}`); // TODO: is there a XSS issue here?
+        return $http.$get(`/product/accent_messages?${formatParams(params)}`); // TODO: is there a XSS issue here?
     },
 
 
     async get(id) {
-        const { data } = await $http.$get('/product/sku/accent_message', {
+        const { data } = await $http.$get('/product/accent_message', {
             params: {
                 id
             }
@@ -22,19 +22,19 @@ export default ($http) => ({
 
 
     async all(params) {
-        const { data } = await $http.$get(`/product/sku/accent_messages/all?${formatParams(params)}`);
+        const { data } = await $http.$get(`/product/accent_messages/all?${formatParams(params)}`);
         return data;
     },
 
 
     async upsert(props) {
-        const { data } = await $http[props.id ? '$put' : '$post']('/product/sku/accent_message', props);
+        const { data } = await $http[props.id ? '$put' : '$post']('/product/accent_message', props);
         return data;
     },
 
 
     async delete(id) {
-        const { data } = await $http.$delete('/product/sku/accent_message', {
+        const { data } = await $http.$delete('/product/accent_message', {
             params: {
                 id
             }

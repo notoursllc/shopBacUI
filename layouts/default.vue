@@ -120,16 +120,12 @@ export default {
                             @click="menuItemClick">{{ $t('Collections') }}</navigation-item>
 
                         <navigation-item
-                            :route="{ name: 'product-sku-variant-types-list' }"
-                            @click="menuItemClick">{{ $t('Variant properties') }}</navigation-item>
-
-                        <navigation-item
                             :route="{ name: 'product-datatables-list' }"
                             @click="menuItemClick">{{ $t('Data Tables') }}</navigation-item>
 
                         <navigation-item
-                            :route="{ name: 'product-sku-accent-messages-list' }"
-                            @click="menuItemClick">{{ $t('SKU Accent Messages') }}</navigation-item>
+                            :route="{ name: 'product-accent-messages-list' }"
+                            @click="menuItemClick">{{ $t('Accent Messages') }}</navigation-item>
                     </navigation-collapse>
 
                     <navigation-item

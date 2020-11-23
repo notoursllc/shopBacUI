@@ -227,10 +227,10 @@ export default {
                     size="sm"
                     @click="addColorRow"
                     :disabled="numRemainingColors <= 0">
-                    <fig-icon icon="plus" /> {{ $t('Add Color') }}
+                    <fig-icon icon="plus" /> {{ $t('Add swatch') }}
                 </b-button>
 
-                <div class="text-muted fs14 pt-2">{{ $t('You can add up to num colors', {number: maxSelectedColors} ) }}</div>
+                <div class="text-muted fs14 pt-2">{{ $t('You can add up to {number} swatches', {number: maxSelectedColors} ) }}</div>
             </div>
         </div>
     </div>

@@ -27,7 +27,7 @@ export default {
     methods: {
         async fetchData() {
             try {
-                this.data = await this.$api.productSkuAccentMessages.get(this.id);
+                this.data = await this.$api.productAccentMessages.get(this.id);
             }
             catch(e) {
                 this.$errorToast(e.message);
@@ -36,7 +36,7 @@ export default {
 
         async onFormSave() {
             try {
-                const response = await this.$api.productSkuAccentMessages.upsert(this.data);
+                const response = await this.$api.productAccentMessages.upsert(this.data);
 
                 if(!response) {
                     throw new Error(this.$t('Error updating item'));

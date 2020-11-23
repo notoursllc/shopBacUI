@@ -1,6 +1,5 @@
 <script>
 import { required } from 'vuelidate/lib/validators';
-import cloneDeep from 'lodash.clonedeep';
 import product_mixin from '@/mixins/product_mixin';
 import shipping_mixin from '@/mixins/shipping_mixin';
 
@@ -9,11 +8,10 @@ import TextCard from '@/components/TextCard';
 import MetaDataBuilder from '@/components/MetaDataBuilder';
 // ImageManager: () => import('@/components/product/ImageManager'),
 import SeoPreview from '@/components/product/SeoPreview';
-import SkuManager from '@/components/product/sku/SkuManager';
 import ColorTable from '@/components/product/color/ColorTable';
 import AppOverlay from '@/components/AppOverlay';
 import AppMessage from '@/components/AppMessage';
-import AccentMessageWizard from '@/components/product/accentMessage/AccentMessageWizard';
+
 
 const urlValidator = (value) => {
     const val = value || '';
@@ -29,11 +27,9 @@ export default {
         TextCard,
         MetaDataBuilder,
         SeoPreview,
-        SkuManager,
         ColorTable,
         AppOverlay,
-        AppMessage,
-        AccentMessageWizard
+        AppMessage
     },
 
     mixins: [
@@ -113,29 +109,6 @@ export default {
             this.loading = false;
         },
 
-
-        // async saveSkus(productId) {
-        //     try {
-        //         const product = cloneDeep(this.product);
-        //         const p = await this.$api.products.upsert(product);
-
-        //         if(!p) {
-        //             throw new Error('Error updating product');
-        //         }
-
-        //         await this.saveImages(p.id);
-        //         await this.saveSkus(p.id);
-
-        //         const title = p.id ? 'Product updated successfully' : 'Product added successfully';
-        //         this.$successToast(`${title}: ${p.title}`);
-        //         this.goToProductList();
-        //     }
-        //     catch(e) {
-        //         this.$errorToast(e.message);
-        //     }
-        // },
-
-
         async onSaveClick() {
             try {
                 this.loading = true;
@@ -183,8 +156,6 @@ export default {
 
 <template>
     <app-overlay :show="loading">
-
-        {{ product }}
 
         <div class="tar mbm" v-if="product.id">
             <b-button
@@ -333,31 +304,6 @@ export default {
         </text-card>
 
 
-        <!-- accent message -->
-        <!-- <text-card class="mbxl">
-            <template v-slot:header>{{ $t('Accent Message') }}</template>
-            <template v-slot:headerSub>{{ $t('accent_message_description') }}</template>
-            <accent-message-wizard
-                :model="product"
-                @input="onAccentWizardChange" />
-        </text-card> -->
-
-
-        <!-- Variants / Options -->
-        <!-- <text-card class="mbl">
-            <div slot="header">{{ $t('Variants') }}</div>
-
-            <sku-manager
-                :product="product"
-                :max-count="3"
-                :attribute-suggestions="[
-                    this.$t('Size'),
-                    this.$t('Color'),
-                    this.$t('Material')
-                ]" />
-        </text-card> -->
-
-
         <!-- SEO -->
         <text-card class="mbl">
             <div slot="header">{{ $t('Search engine listing') }}</div>
@@ -408,7 +354,6 @@ export default {
                                     id="product_seo_uri" />
                             </b-input-group>
                         </b-form-group>
-                        {{ $v.product.seo_uri }}
                     </b-col>
                 </b-row>
             </b-container>

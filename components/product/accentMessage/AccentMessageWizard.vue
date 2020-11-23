@@ -104,7 +104,7 @@ export default {
     methods: {
         async fetchAllAccentMessages() {
             try {
-                this.allAccentMessages = await this.$api.productSkuAccentMessages.all({
+                this.allAccentMessages = await this.$api.productAccentMessages.all({
                     sortBy: 'message',
                     sortDesc: false
                 });
@@ -212,7 +212,7 @@ export default {
                     <b-form-group
                         :label="$t('Display: Start')"
                         label-for="accent_message_begin"
-                        :description="$t('sku_accent_message_begin_desc')">
+                        :description="$t('accent_message_begin_desc')">
                         <date-input
                             v-model="accent_message_begin"
                             @input="emitInput"
@@ -225,7 +225,7 @@ export default {
                     <b-form-group
                         :label="$t('Display: End')"
                         label-for="accent_message_end"
-                        :description="$t('sku_accent_message_end_desc')">
+                        :description="$t('accent_message_end_desc')">
                         <date-input
                             v-model="accent_message_end"
                             @input="emitInput"

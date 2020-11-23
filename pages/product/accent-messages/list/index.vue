@@ -1,10 +1,15 @@
 <script>
+import AppTable from '@/components/AppTable';
+import OperationsDropdown from '@/components/OperationsDropdown';
+import AccentMessageForm from '@/components/product/accentMessage/AccentMessageForm';
+import Fab from '@/components/Fab';
+
 export default {
     components: {
-        AppTable: () => import('@/components/AppTable'),
-        OperationsDropdown: () => import('@/components/OperationsDropdown'),
-        SkuVariantTypeForm: () => import('@/components/product/sku/SkuVariantTypeForm'),
-        Fab: () => import('@/components/Fab')
+        AppTable,
+        OperationsDropdown,
+        AccentMessageForm,
+        Fab
     },
 
     data() {
@@ -12,25 +17,29 @@ export default {
             dialog: {
                 id: null
             },
-            types: [],
+            messages: [],
             tableData: {
                 headers: [
-                    { key: 'label', label: this.$t('Label'), sortable: true },
-                    { key: 'description', label: this.$t('Description'), sortable: true }
+                    { key: 'message', label: this.$t('Accent Message'), sortable: true }
                 ]
-            }
+            },
+            tableSort: {sortBy: 'message', sortDesc: false}
         };
     },
 
     created() {
-        this.fetchTypes();
+        this.init();
     },
 
     methods: {
-        async fetchTypes(paramsObj) {
+        init() {
+            this.fetchData(this.tableSort);
+        },
+
+        async fetchData(paramsObj) {
             try {
-                const { data } = await this.$api.productSkuVariantTypes.list(paramsObj);
-                this.types = data;
+                const { data } = await this.$api.productAccentMessages.list(paramsObj);
+                this.messages = data;
             }
             catch(e) {
                 this.$errorToast(e.message);
@@ -38,12 +47,13 @@ export default {
         },
 
         sortChanged(val) {
-            this.fetchTypes(val);
+            this.tableSort = val;
+            this.fetchData(this.tableSort);
         },
 
         async deleteType(data) {
             const confirmed = await this.$confirmModal(
-                this.$t('remove_label?', {label: data.label}),
+                this.$t('remove_label?', {label: data.message}),
                 'warning'
             );
 
@@ -52,14 +62,14 @@ export default {
             }
 
             try {
-                const typeJson = await this.$api.productSkuVariantTypes.delete(data.id);
+                const response = await this.$api.productAccentMessages.delete(data.id);
 
-                if(!typeJson) {
+                if(!response) {
                     throw new Error(this.$t('Item not found'));
                 }
 
-                this.fetchTypes();
-                this.$successToast(this.$t('item_deleted_label', {label: data.label}));
+                this.init();
+                this.$successToast(this.$t('item_deleted_label', {label: data.message}));
             }
             catch(e) {
                 this.$errorToast(e.message);
@@ -73,7 +83,7 @@ export default {
 
         onUpsertSuccess() {
             this.$refs.upsert_modal.hide();
-            this.fetchTypes();
+            this.init();
         }
     }
 };
@@ -85,32 +95,26 @@ export default {
         <fab icon="plus" @click="onUpsertClick" />
 
         <app-table
-            :items="types"
+            :items="messages"
             :fields="tableData.headers"
             @column-sort="sortChanged">
 
-            <!-- label -->
-            <template v-slot:cell(label)="row">
-                {{ row.item.label }}
+            <template v-slot:cell(message)="row">
+                {{ row.item.message }}
                 <operations-dropdown
                     :show-view="false"
                     @edit="onUpsertClick(row.item.id)"
                     @delete="deleteType(row.item)"
                     class="mls" />
             </template>
-
-            <!-- description -->
-            <template v-slot:cell(description)="row">
-                {{ row.item.description }}
-            </template>
         </app-table>
 
         <b-modal
             ref="upsert_modal"
             size="lg"
-            :title="dialog.id ? $t('Edit custom SKU attribute') : $t('Add custom SKU attribute')"
+            :title="dialog.id ? $t('Edit Item') : $t('Add Item')"
             hide-footer>
-            <sku-variant-type-form
+            <accent-message-form
                 :id="dialog.id"
                 @success="onUpsertSuccess" />
         </b-modal>
