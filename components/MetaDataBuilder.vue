@@ -2,7 +2,8 @@
 import draggable from 'vuedraggable';
 import PopConfirm from '@/components/PopConfirm';
 import {
-    FigButton
+    FigButton,
+    FigFormInput
 } from '@notoursllc/figleaf';
 
 
@@ -10,7 +11,8 @@ export default {
     components: {
         draggable,
         PopConfirm,
-        FigButton
+        FigButton,
+        FigFormInput
     },
 
     props: {
@@ -125,14 +127,14 @@ export default {
                         </div>
 
                         <div class="meta-row-property">
-                            <b-form-input
+                            <fig-form-input
                                 v-model="obj.property"
                                 @input="onInputChange"
                                 :placeholder="propertyPlaceholder" />
                         </div>
 
                         <div class="meta-row-value">
-                            <b-form-input
+                            <fig-form-input
                                 v-model="obj.value"
                                 @input="onInputChange"
                                 :placeholder="valuePlaceholder" />

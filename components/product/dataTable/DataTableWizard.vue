@@ -2,16 +2,26 @@
 import isObject from 'lodash.isobject';
 import cloneDeep from 'lodash.clonedeep';
 import { isUuid4 } from '@/utils/common';
+import TableBuilder from '@/components/tableBuilder/TableBuilder';
+import TableBuilderView from '@/components/tableBuilder/TableBuilderView';
+import DataTableSelect from '@/components/product/dataTable/DataTableSelect';
+import AppOverlay from '@/components/AppOverlay';
+import AppMessage from '@/components/AppMessage';
+
+import {
+    FigFormInput
+} from '@notoursllc/figleaf';
 
 export default {
     name: 'DataTableWizard',
 
     components: {
-        TableBuilder: () => import('@/components/tableBuilder/TableBuilder'),
-        TableBuilderView: () => import('@/components/tableBuilder/TableBuilderView'),
-        DataTableSelect: () => import('@/components/product/dataTable/DataTableSelect'),
-        AppOverlay: () => import('@/components/AppOverlay'),
-        AppMessage: () => import('@/components/AppMessage')
+        TableBuilder,
+        TableBuilderView,
+        DataTableSelect,
+        AppOverlay,
+        AppMessage,
+        FigFormInput
     },
 
     inheritAttrs: false,
@@ -239,11 +249,11 @@ export default {
             :label="$t('Name')"
             label-for="input_create_dt"
             class="inlineBlock mb-0 align-bottom">
-            <b-form-input
+            <fig-form-input
                 v-if="action === 'create'"
                 v-model="data_table_name"
                 @input="emitInput"
-                class="widthAuto"
+                class="w-auto"
                 id="input_create_dt" />
         </b-form-group>
 

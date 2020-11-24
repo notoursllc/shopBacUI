@@ -2,7 +2,8 @@
 import AppOverlay from '@/components/AppOverlay';
 
 import {
-    FigButton
+    FigButton,
+    FigFormInput
 } from '@notoursllc/figleaf';
 
 export default {
@@ -10,7 +11,8 @@ export default {
 
     components: {
         AppOverlay,
-        FigButton
+        FigButton,
+        FigFormInput
     },
 
     data() {
@@ -52,7 +54,7 @@ export default {
                 <!-- email -->
                 <div class="inputGroup mrl mbm">
                     <label>{{ $t('Email address') }}</label>
-                    <b-form-input
+                    <fig-form-input
                         v-model="userInfo.email" />
                 </div>
 
@@ -60,7 +62,7 @@ export default {
                 <div class="inputGroup mrl mbm">
                     <label>{{ $t('Password') }}</label>
                     <!-- TODO: create password input component -->
-                    <b-form-input
+                    <fig-form-input
                         v-model="userInfo.password"
                         type="password" />
                 </div>

@@ -8,7 +8,8 @@ import draggable from 'vuedraggable';
 import PopConfirm from '@/components/PopConfirm';
 
 import {
-    FigButton
+    FigButton,
+    FigFormInput
 } from '@notoursllc/figleaf';
 
 export default {
@@ -19,7 +20,8 @@ export default {
         AppOverlay,
         draggable,
         PopConfirm,
-        FigButton
+        FigButton,
+        FigFormInput
     },
 
     mixins: [
@@ -192,16 +194,16 @@ export default {
 
                             <!-- color -->
                             <b-td>
-                                <b-form-input
+                                <fig-form-input
                                     type="color"
                                     v-model="obj.swatch" />
                             </b-td>
 
                             <!-- label -->
                             <b-td class="vam">
-                                <b-form-input
+                                <fig-form-input
                                     v-model="obj.label"
-                                    class="widthAll"
+                                    class="w-full"
                                     :placeholder="$t('example: Black')" />
                             </b-td>
 

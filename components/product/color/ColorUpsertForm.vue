@@ -11,7 +11,8 @@ import CountrySelect from '@/components/CountrySelect';
 
 import {
     FigButton,
-    FigFormCheckbox
+    FigFormCheckbox,
+    FigFormInput
 } from '@notoursllc/figleaf';
 
 
@@ -27,7 +28,8 @@ export default {
         NumberInput,
         CountrySelect,
         FigButton,
-        FigFormCheckbox
+        FigFormCheckbox,
+        FigFormInput
     },
 
     mixins: [
@@ -139,7 +141,7 @@ export default {
                 <b-form-group
                     :label="$t('Color name')"
                     label-for="color_name">
-                    <b-form-input
+                    <fig-form-input
                         v-model="upsertColor.label"
                         id="color_name" />
                 </b-form-group>
@@ -254,7 +256,7 @@ export default {
                                 :label="$t('HS (Harmonized System) code')"
                                 label-for="sku_customs_harmonized_system_code"
                                 :description="$t('customs_hs_code_desc')">
-                                <b-form-input
+                                <fig-form-input
                                     v-model="upsertColor.customs_harmonized_system_code"
                                     id="sku_customs_harmonized_system_code" />
                             </b-form-group>

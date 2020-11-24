@@ -7,7 +7,8 @@ import AppOverlay from '@/components/AppOverlay';
 import AppMessage from '@/components/AppMessage';
 
 import {
-    FigButton
+    FigButton,
+    FigFormInput
 } from '@notoursllc/figleaf';
 
 export default {
@@ -17,7 +18,8 @@ export default {
         DataTableSelect,
         AppOverlay,
         AppMessage,
-        FigButton
+        FigButton,
+        FigFormInput
     },
 
     props: {
@@ -327,11 +329,11 @@ export default {
                                     </b-input-group-text>
                                 </template>
 
-                                <b-form-input
+                                <fig-form-input
                                     v-model="tableData.columns[index].label"
                                     :placeholder="$t('Column label')"
                                     size="sm"
-                                    @input="onInputChange"></b-form-input>
+                                    @input="onInputChange" />
 
                                 <template
                                     v-if="canShowRightIcon(index)"
@@ -371,19 +373,19 @@ export default {
 
                         <!-- row label -->
                         <b-td class="th">
-                            <b-form-input
+                            <fig-form-input
                                 v-model="row.label"
                                 size="sm"
                                 :placeholder="$t('Row label')"
-                                @input="onInputChange"></b-form-input>
+                                @input="onInputChange" />
                         </b-td>
 
                         <!-- row inputs -->
                         <b-td v-for="obj in row.cells" :key="obj.columnId">
-                            <b-form-input
+                            <fig-form-input
                                 v-model="obj.value"
                                 size="sm"
-                                @input="onInputChange"></b-form-input>
+                                @input="onInputChange" />
                         </b-td>
 
                         <!-- delete button -->

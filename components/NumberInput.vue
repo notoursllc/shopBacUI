@@ -3,14 +3,16 @@ import isFinite from 'lodash.isfinite';
 import { isString, isNumber } from '@/utils/common';
 
 import {
-    FigButton
+    FigButton,
+    FigFormInput
 } from '@notoursllc/figleaf';
 
 export default {
     name: 'NumberInput',
 
     components: {
-        FigButton
+        FigButton,
+        FigFormInput
     },
 
     props: {
@@ -143,7 +145,7 @@ export default {
                 icon="minus" />
         </template>
 
-        <b-form-input
+        <fig-form-input
             v-model="selectedVal"
             @change="setValue"
             type="number"
@@ -152,7 +154,7 @@ export default {
             :step="step"
             :size="size"
             class="num-input"
-            :style="{minWidth: styleMinWidth}"></b-form-input>
+            :style="{minWidth: styleMinWidth}" />
 
         <template v-slot:append>
             <fig-button

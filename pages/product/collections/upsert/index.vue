@@ -4,14 +4,16 @@ import TextCard from '@/components/TextCard';
 
 import {
     FigButton,
-    FigFormCheckbox
+    FigFormCheckbox,
+    FigFormInput
 } from '@notoursllc/figleaf';
 
 export default {
     components: {
         TextCard,
         FigButton,
-        FigFormCheckbox
+        FigFormCheckbox,
+        FigFormInput
     },
 
     data() {
@@ -99,7 +101,7 @@ export default {
             <div class="inputRow">
                 <label>{{ $t('Name') }}:</label>
                 <span>
-                    <b-form-input
+                    <fig-form-input
                         v-model="collection.name" />
                 </span>
             </div>
@@ -129,7 +131,7 @@ export default {
             <div class="inputRow">
                 <label>{{ $t('Page title') }}:</label>
                 <span>
-                    <b-form-input
+                    <fig-form-input
                         v-model="collection.seo_page_title" />
                 </span>
             </div>
@@ -149,7 +151,7 @@ export default {
                 <label>{{ $t('URL and handle') }}:</label>
                 <span>
                     <b-input-group :prepend="`https://${domainName}`">
-                        <b-form-input
+                        <fig-form-input
                             v-model="collection.seo_uri"
                             maxlength="50" />
                     </b-input-group>

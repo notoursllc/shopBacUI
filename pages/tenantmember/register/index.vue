@@ -4,7 +4,8 @@ import PasswordValidator from '../../../utils/PasswordValidator';
 import { getPasswordValidationConfig } from '../../../utils/universal';
 import PasswordInputErrors from '@/components/auth/PasswordInputErrors';
 import {
-    FigButton
+    FigButton,
+    FigFormInput
 } from '@notoursllc/figleaf';
 
 const Validator = new PasswordValidator(getPasswordValidationConfig());
@@ -16,7 +17,8 @@ export default {
 
     components: {
         PasswordInputErrors,
-        FigButton
+        FigButton,
+        FigFormInput
     },
 
     data() {
@@ -67,7 +69,7 @@ export default {
                 <!-- email -->
                 <div class="inputGroup mrl mbm">
                     <label>{{ $t('Email') }}</label>
-                    <b-form-input
+                    <fig-form-input
                         v-model="userData.email"
                         @input="delayTouch($v.userData.email)" />
 
@@ -81,7 +83,7 @@ export default {
                 <div class="inputGroup mrl mbm">
                     <label>{{ $t('Password') }}</label>
                     <div>
-                        <b-form-input
+                        <fig-form-input
                             v-model="userData.password"
                             type="password" />
 

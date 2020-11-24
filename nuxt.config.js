@@ -195,7 +195,6 @@ export default {
             'BDropdownItemButton',
             'BFormFile',
             'BFormGroup',
-            'BFormInput',
             'BFormRadio',
             'BFormSelect',
             'BFormSelectOption',

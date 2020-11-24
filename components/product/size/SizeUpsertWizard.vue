@@ -522,7 +522,7 @@ export default {
                             <input-append-checkbox
                                 v-model="size.weight_oz_inherit">
                                 <template slot-scope="scope">
-                                    <b-form-input
+                                    <fig-form-input
                                         :disabled="scope.checked"
                                         v-model="size.weight_oz"
                                         type="number"

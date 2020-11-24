@@ -10,7 +10,8 @@ import AppTable from '@/components/AppTable';
 import {
     FigButton,
     FigButtonFab,
-    FigFormCheckbox
+    FigFormCheckbox,
+    FigFormInput
 } from '@notoursllc/figleaf';
 
 export default {
@@ -21,7 +22,8 @@ export default {
         AppTable,
         FigButton,
         FigButtonFab,
-        FigFormCheckbox
+        FigFormCheckbox,
+        FigFormInput
     },
 
     props: {
@@ -253,7 +255,7 @@ export default {
                 <div class="formRow">
                     <label>{{ $t('Name') }}:</label>
                     <span>
-                        <b-form-input v-model="form.name" />
+                        <fig-form-input v-model="form.name" />
                     </span>
                 </div>
 
@@ -261,7 +263,7 @@ export default {
                 <div class="formRow">
                     <label>{{ $t('Slug') }}:</label>
                     <span>
-                        <b-form-input v-model="form.slug" />
+                        <fig-form-input v-model="form.slug" />
                         <div class="fs12" v-show="slugIdea">
                             <span class="colorGrayLighter">{{ $t('Suggestion') }}:</span>&nbsp;&nbsp;{{ slugIdea }}&nbsp;
                             (<a @click="onUseSlugSuggestion" class="underlineDotted">{{ $t('use this') }}</a>)

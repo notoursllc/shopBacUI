@@ -7,7 +7,8 @@ import {
 } from 'bootstrap-vue';
 
 import {
-    FigButton
+    FigButton,
+    FigFormInput
 } from '@notoursllc/figleaf';
 
 
@@ -18,7 +19,8 @@ export default {
         BInputGroup,
         BInputGroupAppend,
         BPopover,
-        FigButton
+        FigButton,
+        FigFormInput
     },
 
     props: {
@@ -81,7 +83,7 @@ export default {
 <template>
     <div class="d-inline-block">
         <b-input-group :size="size">
-            <b-form-input
+            <fig-form-input
                 v-model="selectedSize"
                 @input="emitInput"
                 :placeholder="placeholder" />

@@ -1,11 +1,13 @@
 <script>
 import {
-    FigButton
+    FigButton,
+    FigFormInput
 } from '@notoursllc/figleaf';
 
 export default {
     components: {
-        FigButton
+        FigButton,
+        FigFormInput
     },
 
     props: {
@@ -69,7 +71,7 @@ export default {
         <div class="formRow">
             <label>{{ $t('Accent Message') }}:</label>
             <span>
-                <b-form-input
+                <fig-form-input
                     v-model="data.message" />
             </span>
         </div>

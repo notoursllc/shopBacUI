@@ -3,7 +3,8 @@ import TableBuilder from '@/components/tableBuilder/TableBuilder';
 import AppOverlay from '@/components/AppOverlay';
 
 import {
-    FigButton
+    FigButton,
+    FigFormInput
 } from '@notoursllc/figleaf';
 
 
@@ -11,7 +12,8 @@ export default {
     components: {
         TableBuilder,
         AppOverlay,
-        FigButton
+        FigButton,
+        FigFormInput
     },
 
     data() {
@@ -88,11 +90,10 @@ export default {
         <b-form-group
             :label="$t('Name')+ ':'"
             label-for="input_name">
-            <b-form-input
+            <fig-form-input
                 v-model="data.name"
                 class="width200"
-                id="input_name"
-                trim />
+                id="input_name" />
         </b-form-group>
 
         <b-form-group :label="$t('Data table') + ':'">
