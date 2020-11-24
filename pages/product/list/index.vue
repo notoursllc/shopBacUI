@@ -1,13 +1,21 @@
 <script>
 import product_mixin from '@/mixins/product_mixin';
+import AppTable from '@/components/AppTable';
+import OperationsDropdown from '@/components/OperationsDropdown';
+import BooleanTag from '@/components/BooleanTag';
+import Vnodes from '@/components/Vnodes';
+
+import {
+    FigButtonFab
+} from '@notoursllc/figleaf';
 
 export default {
     components: {
-        AppTable: () => import('@/components/AppTable'),
-        OperationsDropdown: () => import('@/components/OperationsDropdown'),
-        Fab: () => import('@/components/Fab'),
-        BooleanTag: () => import('@/components/BooleanTag'),
-        Vnodes: () => import('@/components/Vnodes')
+        AppTable,
+        OperationsDropdown,
+        BooleanTag,
+        Vnodes,
+        FigButtonFab
     },
 
     mixins: [
@@ -189,7 +197,7 @@ export default {
 
 <template>
     <div>
-        <fab icon="plus" @click="goToProductUpsert" />
+        <fig-button-fab icon="plus" @click="goToProductUpsert()" />
 
         <app-table
             :items="products"

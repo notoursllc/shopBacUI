@@ -1,13 +1,20 @@
 <script>
 import isObject from 'lodash.isobject';
-import InputMoney from '@/components/InputMoney';
+
+import {
+    FigFormGroup,
+    FigFormCheckbox,
+    FigFormInputMoney
+} from '@notoursllc/figleaf';
 
 
 export default {
     name: 'PricingForm',
 
     components: {
-        InputMoney
+        FigFormGroup,
+        FigFormCheckbox,
+        FigFormInputMoney
     },
 
     props: {
@@ -55,56 +62,48 @@ export default {
         <b-row>
             <!-- price -->
             <b-col sm="12" lg="4">
-                <b-form-group
-                    :label="$t('Price') "
-                    label-for="color_base_price">
-                    <input-money
+                <fig-form-group>
+                    <label slot="label" for="color_base_price">{{ $t('Price') }}</label>
+                    <fig-form-input-money
                         v-model="form.base_price"
                         @input="onChange"
                         id="color_base_price" />
-                </b-form-group>
+                </fig-form-group>
             </b-col>
 
             <!-- compare at price -->
             <b-col sm="12" lg="4">
-                <b-form-group
-                    :label="$t('Compare at price') "
-                    label-for="color_compare_at_price">
-                    <input-money
+                <fig-form-group>
+                    <label slot="label" for="color_compare_at_price">{{ $t('Compare at price') }}</label>
+                    <fig-form-input-money
                         v-model="form.compare_at_price"
                         @input="onChange"
                         id="color_compare_at_price" />
-                </b-form-group>
+                </fig-form-group>
             </b-col>
 
             <!-- cost pre item -->
             <b-col sm="12" lg="4">
-                <b-form-group
-                    :label="$t('Cost per item') "
-                    label-for="color_cost_price"
-                    :description="$t('Customers won’t see this')">
-                    <input-money
+                <fig-form-group>
+                    <label slot="label" for="color_cost_price">{{ $t('Cost per item') }}</label>
+                    <fig-form-input-money
                         v-model="form.cost_price"
                         @input="onChange"
                         id="color_cost_price" />
-                </b-form-group>
+
+                    <div slot="description">{{ $t('Customers won’t see this') }}</div>
+                </fig-form-group>
             </b-col>
         </b-row>
 
         <b-row>
             <!-- Charge tax on this product -->
             <b-col lg="12">
-                <b-form-group>
-                    <b-form-checkbox
-                        v-model="form.is_taxable"
-                        @input="onChange">{{ $t('Charge tax on this product') }}</b-form-checkbox>
-                </b-form-group>
+                <fig-form-checkbox
+                    v-model="form.is_taxable"
+                    @input="onChange">{{ $t('Charge tax on this product') }}</fig-form-checkbox>
             </b-col>
         </b-row>
     </div>
 </template>
 
-
-<style lang="scss">
-@import "~assets/css/components/_formRow.scss";
-</style>

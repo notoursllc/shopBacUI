@@ -2,13 +2,24 @@
 import isObject from 'lodash.isobject';
 import slugify from 'slugify';
 
+import OperationsDropdown from '@/components/OperationsDropdown';
+import BooleanTag from '@/components/BooleanTag';
+import MetaDataBuilder from '@/components/MetaDataBuilder';
+import AppTable from '@/components/AppTable';
+
+import {
+    FigButton,
+    FigButtonFab
+} from '@notoursllc/figleaf';
+
 export default {
     components: {
-        Fab: () => import('@/components/Fab'),
-        OperationsDropdown: () => import('@/components/OperationsDropdown'),
-        BooleanTag: () => import('@/components/BooleanTag'),
-        MetaDataBuilder: () => import('@/components/MetaDataBuilder'),
-        AppTable: () => import('@/components/AppTable')
+        OperationsDropdown,
+        BooleanTag,
+        MetaDataBuilder,
+        AppTable,
+        FigButto,
+        FigButtonFab
     },
 
     props: {
@@ -192,7 +203,7 @@ export default {
 
 <template>
     <div>
-        <fab icon="plus" @click="onUpsertClick" />
+        <fig-button-fab icon="plus" @click="onUpsertClick()" />
 
         <app-table
             :items="types"
@@ -282,14 +293,14 @@ export default {
                 <div class="formRow">
                     <label></label>
                     <span class="ptl">
-                        <b-button
+                        <fig-button
                             variant="primary"
                             @click="onUpsertFormSave"
-                            class="mrm">{{ $t('Save') }}</b-button>
+                            class="mrm">{{ $t('Save') }}</fig-button>
 
-                        <b-button
-                            variant="light"
-                            @click="onUpsertFormCancel">{{ $t('Cancel') }}</b-button>
+                        <fig-button
+                            variant="plain"
+                            @click="onUpsertFormCancel">{{ $t('Cancel') }}</fig-button>
                     </span>
                 </div>
             </div>

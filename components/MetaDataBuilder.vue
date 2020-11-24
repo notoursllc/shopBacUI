@@ -1,8 +1,16 @@
 <script>
+import draggable from 'vuedraggable';
+import PopConfirm from '@/components/PopConfirm';
+import {
+    FigButton
+} from '@notoursllc/figleaf';
+
+
 export default {
     components: {
-        draggable: () => import('vuedraggable'),
-        PopConfirm: () => import('@/components/PopConfirm')
+        draggable,
+        PopConfirm,
+        FigButton
     },
 
     props: {
@@ -132,12 +140,13 @@ export default {
                             <pop-confirm @onConfirm="onClickDeleteRow(index)">
                                 {{ $t('Delete this row?') }}
 
-                                <b-button
+                                <fig-button
                                     slot="reference"
-                                    class="mlm border-dashed-2"
-                                    variant="outline-secondary">
-                                    <fig-icon icon="trash" width="18" height="18" />
-                                </b-button>
+                                    class="ml-2"
+                                    variant="plain"
+                                    dotted>foo
+                                    <!-- <fig-icon slot="icon" icon="trash" width="18" height="18" /> -->
+                                </fig-button>
                             </pop-confirm>
                         </div>
                     </div>
@@ -146,11 +155,11 @@ export default {
         </div>
 
         <div class="metaDataFooter">
-            <b-button
+            <fig-button
                 @click="addNewItem"
-                variant="outline-secondary">
+                variant="plain">
                 <fig-icon icon="plus" width="18" height="18" />&nbsp;{{ $t('New item') }}
-            </b-button>
+            </fig-button>
         </div>
     </div>
 </template>

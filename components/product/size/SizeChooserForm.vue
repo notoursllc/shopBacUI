@@ -1,11 +1,16 @@
 <script>
 import draggable from 'vuedraggable';
 import { BTooltip } from 'bootstrap-vue';
-import InputMoney from '@/components/InputMoney';
 import PopConfirm from '@/components/PopConfirm';
 import SizeInput from '@/components/product/size/SizeInput';
 import NumberInput from '@/components/NumberInput';
 
+import {
+    FigFormCheckbox,
+    FigFormInputMoney,
+    FigFormInput,
+    FigButton
+} from '@notoursllc/figleaf';
 
 export default {
     name: 'SizeChooserForm',
@@ -13,10 +18,13 @@ export default {
     components: {
         draggable,
         BTooltip,
-        InputMoney,
         PopConfirm,
         SizeInput,
-        NumberInput
+        NumberInput,
+        FigFormCheckbox,
+        FigFormInputMoney,
+        FigFormInput,
+        FigButton
     },
 
     props: {
@@ -157,10 +165,10 @@ export default {
                         <div class="mini-row">
                             <label>{{ $t('SKU') }}:</label>
                             <span>
-                                <b-form-input
+                                <fig-form-input
                                     v-if="editInventoryColumn"
                                     v-model="size.sku"
-                                    size="sm"/>
+                                    size="sm" />
                                 <template v-else>{{ size.sku }}</template>
                             </span>
                         </div>
@@ -169,7 +177,7 @@ export default {
                         <div class="mini-row">
                             <label>{{ $t('Barcode') }}:</label>
                             <span>
-                                <b-form-input
+                                <fig-form-input
                                     v-if="editInventoryColumn"
                                     v-model="size.barcode"
                                     size="sm" />
@@ -181,7 +189,7 @@ export default {
                         <div class="mini-row">
                             <label>{{ $t('Track inventory') }}:</label>
                             <span>
-                                <b-form-checkbox
+                                <fig-form-checkbox
                                     v-if="editInventoryColumn"
                                     v-model="size.track_inventory_count" />
                                 <template v-else>{{ size.track_inventory_count }}</template>
@@ -192,7 +200,7 @@ export default {
                         <div class="mini-row">
                             <label>{{ $t('Continue selling when out of stock') }}:</label>
                             <span>
-                                <b-form-checkbox
+                                <fig-form-checkbox
                                     v-if="editInventoryColumn"
                                     v-model="size.visible_if_no_inventory" />
                                 <template v-else>{{ size.visible_if_no_inventory }}</template>
@@ -204,9 +212,9 @@ export default {
                     <b-td class="align-top mini-table" :class="{'mini-table-edit': editPriceColumn}">
                         <div class="mini-row">
                             <span>
-                                <b-form-checkbox
+                                <fig-form-checkbox
                                     v-if="editPriceColumn"
-                                    v-model="size.use_color_price">{{ $t('Use color pricing') }}</b-form-checkbox>
+                                    v-model="size.use_color_price">{{ $t('Use color pricing') }}</fig-form-checkbox>
                                 <template v-if="!editPriceColumn && size.use_color_price">
                                     {{ $t('Use color pricing') }}
                                 </template>
@@ -218,7 +226,7 @@ export default {
                             <div class="mini-row">
                                 <label>{{ $t('Price') }}:</label>
                                 <span>
-                                    <input-money
+                                    <fig-form-input-money
                                         v-if="editPriceColumn"
                                         v-model="size.base_price"
                                         size="sm" />
@@ -230,7 +238,7 @@ export default {
                             <div class="mini-row">
                                 <label>{{ $t('Compare at price') }}:</label>
                                 <span>
-                                    <input-money
+                                    <fig-form-input-money
                                         v-if="editPriceColumn"
                                         v-model="size.compare_at_price"
                                         size="sm" />
@@ -242,7 +250,7 @@ export default {
                             <div class="mini-row">
                                 <label>{{ $t('Cost per item') }}:</label>
                                 <span>
-                                    <input-money
+                                    <fig-form-input-money
                                         v-if="editPriceColumn"
                                         v-model="size.cost_price"
                                         size="sm" />
@@ -250,38 +258,6 @@ export default {
                                 </span>
                             </div>
                         </template>
-
-
-
-                        <!-- <b-form-group
-                            :label="$t('Price') "
-                            label-for="size_price">
-                            <number-input
-                                v-model="size.base_price"
-                                :min="0"
-                                size="sm"
-                                id="size_price" />
-                        </b-form-group>
-
-                        <b-form-group
-                            :label="$t('Compare at price') "
-                            label-for="size_compare_at_price">
-                            <number-input
-                                v-model="size.compare_at_price"
-                                :min="0"
-                                size="sm"
-                                id="size_compare_at_price" />
-                        </b-form-group>
-
-                        <b-form-group
-                            :label="$t('Cost per item')"
-                            label-for="size_cost_price">
-                            <number-input
-                                v-model="size.cost_price"
-                                :min="0"
-                                size="sm"
-                                id="size_cost_price" />
-                        </b-form-group> -->
                     </b-td>
 
                     <!-- actions -->
@@ -290,12 +266,12 @@ export default {
                             @onConfirm="removeSelectedSize(index)">
                             {{ $t('Delete this item?') }}
 
-                            <b-button
+                            <fig-button
                                 slot="reference"
-                                variant="outline-secondary"
-                                class="mls border-dashed-2">
-                                <fig-icon icon="trash" stroke-width="1px" width="18" height="18" />
-                            </b-button>
+                                variant="plain"
+                                dotted
+                                icon="trash"
+                                class="mls" />
                         </pop-confirm>
                     </b-td>
                 </b-tr>
@@ -303,12 +279,11 @@ export default {
         </b-table-simple>
 
         <div class="pt-2">
-            <b-button
+            <fig-button
                 variant="primary"
                 size="sm"
-                @click="addRow">
-                <fig-icon icon="plus" /> {{ $t('Add Size') }}
-            </b-button>
+                @click="addRow"
+                icon="plus">{{ $t('Add Size') }}</fig-button>
         </div>
     </div>
 </template>

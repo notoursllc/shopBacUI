@@ -1,12 +1,18 @@
 <script>
 import shipping_mixin from '@/mixins/shipping_mixin';
+import OperationsDropdown from '@/components/OperationsDropdown';
+import AppTable from '@/components/AppTable';
+
+import {
+    FigButtonFab
+} from '@notoursllc/figleaf';
 
 export default {
     components: {
-        OperationsDropdown: () => import('@/components/OperationsDropdown'),
-        Fab: () => import('@/components/Fab'),
-        AppTable: () => import('@/components/AppTable')
+        OperationsDropdown,
+        AppTable,
         // ShippingPackageTypeUpsertForm: () => import('@/components/shipping/ShippingPackageTypeUpsertForm')
+        FigButtonFab
     },
 
     mixins: [
@@ -92,7 +98,7 @@ export default {
 
 <template>
     <div>
-        <fab icon="plus" @click="onUpsertClick" />
+        <fig-button-fab icon="plus" @click="onUpsertClick()" />
 
         <app-table
             :items="shippingPackageTypes"

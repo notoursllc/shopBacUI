@@ -9,6 +9,10 @@ import SizeUpsertWizard from '@/components/product/size/SizeUpsertWizard';
 import NumberInput from '@/components/NumberInput';
 import CountrySelect from '@/components/CountrySelect';
 
+import {
+    FigButton
+} from '@notoursllc/figleaf';
+
 
 export default {
     name: 'ColorUpsertForm',
@@ -20,7 +24,8 @@ export default {
         AccentMessageWizard,
         SizeUpsertWizard,
         NumberInput,
-        CountrySelect
+        CountrySelect,
+        FigButton
     },
 
     mixins: [
@@ -259,14 +264,14 @@ export default {
 
 
         <div class="tac">
-            <b-button
+            <fig-button
                 variant="primary"
-                @click="onClickDone">{{ $t('Done') }}</b-button>
+                @click="onClickDone">{{ $t('Done') }}</fig-button>
 
-            <b-button
-                variant="light"
+            <fig-button
+                variant="plain"
                 @click="onClickCancel"
-                class="ml-3">{{ $t('Cancel') }}</b-button>
+                class="ml-3">{{ $t('Cancel') }}</fig-button>
         </div>
     </div>
 </template>

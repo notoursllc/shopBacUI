@@ -7,6 +7,9 @@ import storage_mixin from '@/mixins/storage_mixin'; // TODO: not needed?
 import draggable from 'vuedraggable';
 import PopConfirm from '@/components/PopConfirm';
 
+import {
+    FigButton
+} from '@notoursllc/figleaf';
 
 export default {
     name: 'ColorExpressionForm',
@@ -15,7 +18,8 @@ export default {
         ImageManager,
         AppOverlay,
         draggable,
-        PopConfirm
+        PopConfirm,
+        FigButton
     },
 
     mixins: [
@@ -207,12 +211,12 @@ export default {
                                     @onConfirm="onDeleteColor(index)">
                                     {{ $t('Delete this item?') }}
 
-                                    <b-button
+                                    <fig-button
                                         slot="reference"
-                                        variant="outline-secondary"
-                                        class="mls border-dashed-2">
-                                        <fig-icon icon="trash" stroke-width="1px" width="18" height="18" />
-                                    </b-button>
+                                        variant="plain"
+                                        dotted
+                                        class="ml-2"
+                                        icon="trash" />
                                 </pop-confirm>
                             </b-td>
                         </b-tr>
@@ -222,13 +226,12 @@ export default {
             </b-table-simple>
 
             <div class="pt-2">
-                <b-button
+                <fig-button
                     variant="primary"
                     size="sm"
                     @click="addColorRow"
-                    :disabled="numRemainingColors <= 0">
-                    <fig-icon icon="plus" /> {{ $t('Add swatch') }}
-                </b-button>
+                    icon="plus"
+                    :disabled="numRemainingColors <= 0">{{ $t('Add swatch') }}</fig-button>
 
                 <div class="text-muted fs14 pt-2">{{ $t('You can add up to {number} swatches', {number: maxSelectedColors} ) }}</div>
             </div>

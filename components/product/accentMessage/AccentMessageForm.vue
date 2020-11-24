@@ -1,5 +1,13 @@
 <script>
+import {
+    FigButton
+} from '@notoursllc/figleaf';
+
 export default {
+    components: {
+        FigButton
+    },
+
     props: {
         id: {
             type: String,
@@ -70,9 +78,9 @@ export default {
         <div class="formRow">
             <label></label>
             <span class="ptl">
-                <b-button
+                <fig-button
                     variant="primary"
-                    @click="onFormSave">{{ $t('Save') }}</b-button>
+                    @click="onFormSave">{{ $t('Save') }}</fig-button>
             </span>
         </div>
     </form>

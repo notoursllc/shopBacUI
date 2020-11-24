@@ -1,9 +1,16 @@
 <script>
+import AppOverlay from '@/components/AppOverlay';
+
+import {
+    FigButton
+} from '@notoursllc/figleaf';
+
 export default {
     name: 'LoginPage',
 
     components: {
-        AppOverlay: () => import('@/components/AppOverlay')
+        AppOverlay,
+        FigButton
     },
 
     data() {
@@ -58,9 +65,9 @@ export default {
                         type="password" />
                 </div>
 
-                <b-button
+                <fig-button
                     variant="primary"
-                    @click="onSubmit">{{ $t('Submit') }}</b-button>
+                    @click="onSubmit">{{ $t('Submit') }}</fig-button>
             </form>
         </app-overlay>
     </div>

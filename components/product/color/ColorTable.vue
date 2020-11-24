@@ -6,6 +6,9 @@ import ColorUpsertForm from '@/components/product/color/ColorUpsertForm';
 import storage_mixin from '@/mixins/storage_mixin';
 import product_mixin from '@/mixins/product_mixin';
 
+import {
+    FigButton
+} from '@notoursllc/figleaf';
 
 export default {
     name: 'ColorTable',
@@ -13,7 +16,8 @@ export default {
     components: {
         draggable,
         PopConfirm,
-        ColorUpsertForm
+        ColorUpsertForm,
+        FigButton
     },
 
     mixins: [
@@ -198,20 +202,19 @@ export default {
                     </b-td>
 
                     <b-td class="text-right">
-                        <b-button
-                            variant="outline-secondary"
+                        <fig-button
+                            variant="plain"
                             class="mr-1"
-                            @click="onEditBtnClick(idx)">{{ $t('Edit') }}</b-button>
+                            @click="onEditBtnClick(idx)">{{ $t('Edit') }}</fig-button>
 
                         <pop-confirm @onConfirm="deleteColor(idx)">
                             {{ $t('Delete this row?') }}
 
-                            <b-button
+                            <fig-button
                                 slot="reference"
-                                variant="outline-secondary"
-                                class="border-dashed-2">
-                                <fig-icon icon="trash" stroke-width="1px" />
-                            </b-button>
+                                variant="plain"
+                                dotted
+                                icon="trash" />
                         </pop-confirm>
                     </b-td>
                 </b-tr>
@@ -220,12 +223,11 @@ export default {
 
 
         <div>
-            <b-button
+            <fig-button
                 variant="primary"
                 size="sm"
-                @click="addEmptyColor">
-                <fig-icon icon="plus" /> {{ $t('Add Color') }}
-            </b-button>
+                @click="addEmptyColor"
+                icon="plus">{{ $t('Add Color') }}</fig-button>
         </div>
 
 

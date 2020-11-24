@@ -1,9 +1,16 @@
 <script>
+import AppTable from '@/components/AppTable';
+import OperationsDropdown from '@/components/OperationsDropdown';
+
+import {
+    FigButtonFab
+} from '@notoursllc/figleaf';
+
 export default {
     components: {
-        AppTable: () => import('@/components/AppTable'),
-        OperationsDropdown: () => import('@/components/OperationsDropdown'),
-        Fab: () => import('@/components/Fab')
+        AppTable,
+        OperationsDropdown,
+        FigButtonFab
     },
 
     data() {
@@ -79,7 +86,7 @@ export default {
 
 <template>
     <div>
-        <fab icon="plus" @click="onUpsertClick" />
+        <fig-button-fab icon="plus" @click="onUpsertClick()" />
 
         <app-table
             :items="dataTables"

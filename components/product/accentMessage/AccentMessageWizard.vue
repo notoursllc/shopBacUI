@@ -2,17 +2,24 @@
 import isObject from 'lodash.isobject';
 import cloneDeep from 'lodash.clonedeep';
 import AccentMessageSelect from '@/components/product/accentMessage/AccentMessageSelect';
-import DateInput from '@/components/DateInput';
 import AppMessage from '@/components/AppMessage';
 import { isUuid4 } from '@/utils/common';
+
+import {
+    FigFormInputDate,
+    FigFormInput,
+    FigFormGroup
+} from '@notoursllc/figleaf';
 
 export default {
     name: 'AccentMessageWizard',
 
     components: {
         AccentMessageSelect,
-        DateInput,
-        AppMessage
+        AppMessage,
+        FigFormInputDate,
+        FigFormInput,
+        FigFormGroup
     },
 
     inheritAttrs: false,
@@ -82,7 +89,7 @@ export default {
                     this.accent_message_end = newVal.accent_message_end || null;
 
                     if(this.accent_message_id) {
-                        let selectedOptionIndex = isUuid4(this.accent_message_id) ? 1 : 2;
+                        const selectedOptionIndex = isUuid4(this.accent_message_id) ? 1 : 2;
                         this.action = this.actionSelectOptions[selectedOptionIndex].value;
                     }
                 }
@@ -177,60 +184,57 @@ export default {
             icon="arrow-right"
             v-if="action === 'pre' || action === 'create'" />
 
-        <!-- select predefined accent message  -->
-        <b-form-group
-            v-show="canShowPredefinedMessages && action === 'pre'"
-            :label="$t('Choose')"
-            label-for="input_choose_message"
-            class="inlineBlock mb-0 align-bottom">
-            <accent-message-select
-                v-model="accent_message_id"
-                @input="emitInput"
-                class="width150"
-                id="input_choose_message" />
-        </b-form-group>
 
-        <!-- new message input -->
-        <b-form-group
-            v-show="action === 'create'"
-            :label="$t('New message')"
-            label-for="input_create_message"
-            class="inlineBlock mb-0 align-bottom">
-            <b-form-input
-                v-if="action === 'create'"
-                v-model="accent_message_new"
-                @input="emitInput"
-                class="widthAuto"
-                id="input_create_message" />
-        </b-form-group>
+        <div class="inline-block mb-0 align-bottom">
+            <!-- select predefined accent message  -->
+            <fig-form-group v-show="canShowPredefinedMessages && action === 'pre'">
+                <label slot="label" for="input_choose_message">{{ $t('Choose') }}</label>
+                <accent-message-select
+                    v-model="accent_message_id"
+                    @input="emitInput"
+                    class="width150"
+                    id="input_choose_message" />
+            </fig-form-group>
+
+            <!-- new message input -->
+            <fig-form-group
+                v-show="action === 'create'">
+                <label slot="label" for="input_create_message">{{ $t('New message') }}</label>
+                <fig-form-input
+                    v-if="action === 'create'"
+                    v-model="accent_message_new"
+                    @input="emitInput"
+                    class="widthAuto"
+                    id="input_create_message" />
+            </fig-form-group>
+        </div>
+
 
         <!-- date inputs -->
         <div class="pt-4" v-if="action">
             <b-row>
                 <!--  accent message begin -->
                 <b-col sm="12" lg="6">
-                    <b-form-group
-                        :label="$t('Display: Start')"
-                        label-for="accent_message_begin"
-                        :description="$t('accent_message_begin_desc')">
-                        <date-input
+                    <fig-form-group>
+                        <label slot="label" for="accent_message_begin">{{ $t('Display: Start') }}</label>
+                        <fig-form-input-date
                             v-model="accent_message_begin"
                             @input="emitInput"
                             id="accent_message_begin" />
-                    </b-form-group>
+                        <div slot="description">{{ $t('accent_message_begin_desc') }}</div>
+                    </fig-form-group>
                 </b-col>
 
                 <!--  accent message end -->
                 <b-col sm="12" lg="6">
-                    <b-form-group
-                        :label="$t('Display: End')"
-                        label-for="accent_message_end"
-                        :description="$t('accent_message_end_desc')">
-                        <date-input
+                    <fig-form-group>
+                        <label slot="label" for="accent_message_end">{{ $t('Display: End') }}</label>
+                        <fig-form-input-date
                             v-model="accent_message_end"
                             @input="emitInput"
                             id="accent_message_end" />
-                    </b-form-group>
+                        <div slot="description">{{ $t('accent_message_end_desc') }}</div>
+                    </fig-form-group>
                 </b-col>
             </b-row>
         </div>

@@ -75,6 +75,7 @@ export default {
 <template>
     <div class="layoutContainer">
         <fig-icon-sprite />
+        <fig-toaster />
 
         <div class="sidenav-container">
             <aside class="sidenav" :class="{'sidenav-fixed': $store.state.ui.sidebarOpened}">

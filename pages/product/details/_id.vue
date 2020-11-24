@@ -1,10 +1,15 @@
 <script>
 import product_mixin from '@/mixins/product_mixin';
+import ProductDetailsJsonView from '@/components/product/ProductDetailsJsonView';
+
+import {
+    FigButtonFab
+} from '@notoursllc/figleaf';
 
 export default {
     components: {
-        ProductDetailsJsonView: () => import('@/components/product/ProductDetailsJsonView'),
-        Fab: () => import('@/components/Fab')
+        ProductDetailsJsonView,
+        FigButtonFab
     },
 
     mixins: [
@@ -44,7 +49,7 @@ export default {
 
 <template>
     <div>
-        <fab icon="edit" @click="goToEdit" />
+        <fig-button-fab icon="edit" @click="goToEdit()" />
 
         <product-details-json-view :product="product"></product-details-json-view>
     </div>

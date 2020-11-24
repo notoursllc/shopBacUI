@@ -1,9 +1,9 @@
 <script>
-import FigSelect from '@notoursllc/figleaf/components/select/FigSelect';
+import { FigFormSelect } from '@notoursllc/figleaf';
 
 export default {
     components: {
-        FigSelect
+        FigFormSelect
     },
 
     props: {
@@ -72,11 +72,11 @@ export default {
 </script>
 
 <template>
-    <fig-select
+    <fig-form-select
         v-model="selectedVal"
         :multiple="multiple"
         :placeholder="placeholder"
         :options="options"
         @input="selectValueChanged"
-        class="widthAll" />
+        class="w-full" />
 </template>

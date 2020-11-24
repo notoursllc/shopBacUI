@@ -2,8 +2,16 @@
 import isFinite from 'lodash.isfinite';
 import { isString, isNumber } from '@/utils/common';
 
+import {
+    FigButton
+} from '@notoursllc/figleaf';
+
 export default {
     name: 'NumberInput',
+
+    components: {
+        FigButton
+    },
 
     props: {
         value: {
@@ -126,14 +134,13 @@ export default {
 <template>
     <b-input-group class="num-input-wrapper">
         <template v-slot:prepend>
-            <b-button
-                variant="outline-secondary"
+            <fig-button
+                variant="plain"
                 :size="size"
                 @click="down"
                 :disabled="minusDisabled"
-                tabindex="-1">
-                <fig-icon icon="minus" width="16" height="16" />
-            </b-button>
+                tabindex="-1"
+                icon="minus" />
         </template>
 
         <b-form-input
@@ -148,14 +155,13 @@ export default {
             :style="{minWidth: styleMinWidth}"></b-form-input>
 
         <template v-slot:append>
-            <b-button
-                variant="outline-secondary"
+            <fig-button
+                variant="plain"
                 :size="size"
                 :disabled="plusDisabled"
                 @click="up"
-                tabindex="-1">
-                <fig-icon icon="plus" width="16" height="16" />
-            </b-button>
+                icon="plus"
+                tabindex="-1" />
         </template>
 
     </b-input-group>

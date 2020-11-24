@@ -1,13 +1,23 @@
 <script>
 import isObject from 'lodash.isobject';
+import draggable from 'vuedraggable';
+import PopConfirm from '@/components/PopConfirm';
+import DataTableSelect from '@/components/product/dataTable/DataTableSelect';
+import AppOverlay from '@/components/AppOverlay';
+import AppMessage from '@/components/AppMessage';
+
+import {
+    FigButton
+} from '@notoursllc/figleaf';
 
 export default {
     components: {
-        draggable: () => import('vuedraggable'),
-        PopConfirm: () => import('@/components/PopConfirm'),
-        DataTableSelect: () => import('@/components/product/dataTable/DataTableSelect'),
-        AppOverlay: () => import('@/components/AppOverlay'),
-        AppMessage: () => import('@/components/AppMessage')
+        draggable,
+        PopConfirm,
+        DataTableSelect,
+        AppOverlay,
+        AppMessage,
+        FigButton
     },
 
     props: {
@@ -276,14 +286,13 @@ export default {
                                     </template>
                                 </div>
 
-                                <b-button
+                                <fig-button
                                     slot="reference"
-                                    variant="outline-secondary"
+                                    variant="plain"
                                     size="sm"
+                                    icon="import"
                                     v-b-tooltip.hover.top="$t('Import data from an existing Data Table')"
-                                    class="border-dashed-2">
-                                    <fig-icon icon="import" stroke-width="1px" width="18" height="18" />
-                                </b-button>
+                                    class="border-dashed-2" />
                             </pop-confirm>
                         </b-th>
 
@@ -295,13 +304,15 @@ export default {
                                 <pop-confirm @onConfirm="deleteColumn(index);">
                                     {{ $t('Delete this column?') }}
 
-                                    <b-button
+                                    <fig-button
                                         slot="reference"
-                                        variant="outline-secondary"
+                                        variant="plain"
                                         size="sm"
                                         class="border-dashed-2">
-                                        <fig-icon icon="trash" stroke-width="1px" /><fig-icon icon="arrow-down" />
-                                    </b-button>
+                                        <template slot="icon">
+                                            <fig-icon icon="trash" stroke-width="1px" /><fig-icon icon="arrow-down" />
+                                        </template>
+                                    </fig-button>
                                 </pop-confirm>
                             </div>
 
@@ -336,12 +347,11 @@ export default {
 
                         <!-- add column button -->
                         <b-th class="no-color empty-column-cell">
-                            <b-button
+                            <fig-button
                                 @click="addColumn"
-                                variant="outline-secondary"
-                                size="sm">
-                                <fig-icon icon="plus" width="16" height="16" /> {{ $t('column') }}
-                            </b-button>
+                                variant="plain"
+                                size="sm"
+                                icon="plus">{{ $t('column') }}</fig-button>
                         </b-th>
                     </b-tr>
                 </b-thead>
@@ -381,13 +391,15 @@ export default {
                             <pop-confirm @onConfirm="deleteRow(idx)">
                                 {{ $t('Delete this row?') }}
 
-                                <b-button
+                                <fig-button
                                     slot="reference"
-                                    variant="outline-secondary"
+                                    variant="plain"
                                     size="sm"
                                     class="border-dashed-2">
-                                    <fig-icon icon="arrow-left" /><fig-icon icon="trash" stroke-width="1px" />
-                                </b-button>
+                                    <template slot="icon">
+                                        <fig-icon icon="arrow-left" /><fig-icon icon="trash" stroke-width="1px" />
+                                    </template>
+                                </fig-button>
                             </pop-confirm>
                         </b-td>
                     </b-tr>
@@ -398,26 +410,24 @@ export default {
 
                     <!-- add row button -->
                     <b-td class="no-color empthy-row-cell" :colspan="numColumns + 1">
-                        <b-button
+                        <fig-button
                             @click="addRow"
-                            variant="outline-secondary"
-                            size="sm">
-                            <fig-icon icon="plus" width="16" height="16" /> {{ $t('row') }}
-                        </b-button>
+                            variant="plain"
+                            size="sm"
+                            icon="plus">{{ $t('row') }}</fig-button>
 
                         <pop-confirm @onConfirm="clearTable()">
                             <app-message>
-                                <fig-icon v-slot:icon icon="alert-circle" />
+                                <fig-icon slot="icon" icon="alert-circle" />
                                 {{ $t('Are you sure you want to remove all data from this table?') }}
                             </app-message>
 
-                            <b-button
+                            <fig-button
                                 slot="reference"
-                                variant="outline-secondary"
+                                variant="plain"
                                 size="sm"
-                                class="ml-3 border-dashed-2">
-                                <fig-icon icon="trash" stroke-width="1px" width="18" height="18" /> {{ $t('Clear table') }}
-                            </b-button>
+                                icon="trash"
+                                class="ml-3 border-dashed-2">{{ $t('Clear table') }}</fig-button>
                         </pop-confirm>
                     </b-td>
 

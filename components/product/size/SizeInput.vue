@@ -6,6 +6,10 @@ import {
     BPopover
 } from 'bootstrap-vue';
 
+import {
+    FigButton
+} from '@notoursllc/figleaf';
+
 
 export default {
     name: 'SizeInput',
@@ -13,7 +17,8 @@ export default {
     components: {
         BInputGroup,
         BInputGroupAppend,
-        BPopover
+        BPopover,
+        FigButton
     },
 
     props: {
@@ -81,12 +86,11 @@ export default {
                 @input="emitInput"
                 :placeholder="placeholder" />
             <b-input-group-append>
-                <b-button
-                    variant="outline-secondary"
+                <fig-button
+                    variant="plain"
                     @click="togglePopover"
-                    :id="uuid">
-                    <fig-icon :icon="showPopover ? 'chevron-up' : 'chevron-down'" width="18" height="18" />
-                </b-button>
+                    :id="uuid"
+                    :icon="showPopover ? 'chevron-up' : 'chevron-down'" />
             </b-input-group-append>
         </b-input-group>
 
@@ -101,14 +105,14 @@ export default {
                 :key="index"
                 :class="{'mb-2': predefinedSizes[index + 1]}">
                 <div class="fs14">{{ obj.label }}:</div>
-                <b-button
+                <fig-button
                     v-for="(sz, idx) in obj.sizes"
                     :key="idx"
                     size="sm"
-                    variant="light"
+                    variant="plain"
                     :class="{'mr-2': obj.sizes[idx + 1]}"
                     :disabled="selectedSize == sz"
-                    @click="selectPredefined(sz)">{{ sz }}</b-button>
+                    @click="selectPredefined(sz)">{{ sz }}</fig-button>
             </div>
         </b-popover>
     </div>

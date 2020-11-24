@@ -1,13 +1,25 @@
 <script>
+import draggable from 'vuedraggable';
 import product_mixin from '@/mixins/product_mixin';
+import PopConfirm from '@/components/PopConfirm';
+import AppOverlay from '@/components/AppOverlay';
+
+import {
+    FigFormGroup,
+    FigFormInput,
+    FigButton
+} from '@notoursllc/figleaf';
 
 export default {
     name: 'ImageManager',
 
     components: {
-        PopConfirm: () => import('@/components/PopConfirm'),
-        AppOverlay: () => import('@/components/AppOverlay'),
-        draggable: () => import('vuedraggable')
+        PopConfirm,
+        AppOverlay,
+        draggable,
+        FigFormGroup,
+        FigFormInput,
+        FigButton
     },
 
     mixins: [
@@ -237,12 +249,11 @@ export default {
 
                     <!-- alt text -->
                     <b-td class="vam">
-                        <b-form-input
+                        <fig-form-input
                             v-model="obj.alt_text"
                             class="widthAll"
                             placeholder="Image alt text"
-                            @input="emitChange"
-                            multiple />
+                            @input="emitChange" />
                     </b-td>
 
                     <!-- actions -->
@@ -252,12 +263,11 @@ export default {
                             v-if="!obj.loading">
                             {{ $t('Delete this item?') }}
 
-                            <b-button
+                            <fig-button
                                 slot="reference"
-                                variant="outline-secondary"
-                                class="mls border-dashed-2">
-                                <fig-icon icon="trash" stroke-width="1px" width="18" height="18" />
-                            </b-button>
+                                variant="plain"
+                                dotted
+                                icon="trash" />
                         </pop-confirm>
                     </b-td>
                 </b-tr>
@@ -265,10 +275,7 @@ export default {
         </b-table-simple>
 
         <div>
-            <b-form-group
-                :description="$t('You can upload num more images', {number: numRemainingUploads} )"
-                :invalid-feedback="fileInputErrorMessage"
-                :state="false">
+            <fig-form-group>
                 <b-form-file
                     id="file-input"
                     ref="file-input"
@@ -279,7 +286,10 @@ export default {
                     :placeholder="$t('No file chosen')"
                     :browse-text="$t('Choose images')"
                     :file-name-formatter="fileInputValueFormatter"></b-form-file>
-            </b-form-group>
+
+                <div slot="error" v-if="fileInputErrorMessage">{{ fileInputErrorMessage }}</div>
+                <div slot="description">{{ $t('You can upload num more images', {number: numRemainingUploads} ) }}</div>
+            </fig-form-group>
         </div>
 
         <b-modal

@@ -12,6 +12,14 @@ import ColorTable from '@/components/product/color/ColorTable';
 import AppOverlay from '@/components/AppOverlay';
 import AppMessage from '@/components/AppMessage';
 
+import {
+    FigFormCheckbox,
+    FigFormGroup,
+    FigFormInput,
+    FigFormTextarea,
+    FigButton
+} from '@notoursllc/figleaf';
+
 
 const urlValidator = (value) => {
     const val = value || '';
@@ -29,7 +37,12 @@ export default {
         SeoPreview,
         ColorTable,
         AppOverlay,
-        AppMessage
+        AppMessage,
+        FigFormCheckbox,
+        FigFormGroup,
+        FigFormInput,
+        FigFormTextarea,
+        FigButton
     },
 
     mixins: [
@@ -158,16 +171,16 @@ export default {
     <app-overlay :show="loading">
 
         <div class="tar mbm" v-if="product.id">
-            <b-button
-                variant="outline-secondary"
-                @click="goToStore(product.seo_uri)">
-                <fig-icon icon="new-window" stroke-width="1px" />&nbsp;{{ $t('View product in store') }}</b-button>
+            <fig-button
+                variant="plain"
+                @click="goToStore(product.seo_uri)"
+                icon="new-window">{{ $t('View product in store') }}</fig-button>
         </div>
 
         <!-- published-->
         <div class="mbl">
-            <b-form-checkbox
-                v-model="product.published">{{ $t('This product is available for purchase') }}</b-form-checkbox>
+            <fig-form-checkbox
+                v-model="product.published">{{ $t('This product is available for purchase') }}</fig-form-checkbox>
         </div>
 
 
@@ -179,63 +192,58 @@ export default {
                 <b-row>
                     <!-- type -->
                     <b-col sm="12" md="4" lg="3">
-                        <b-form-group
-                            :label="$t('Product type')"
-                            label-for="product_type">
+                        <fig-form-group class="mb-2">
+                            <label slot="label" for="product_type">{{ $t('Product type') }}</label>
                             <master-type-select
                                 v-model="product.type"
                                 object="product_type"
                                 id="product_type" />
-                        </b-form-group>
+                        </fig-form-group>
                     </b-col>
 
                     <!-- sub-type -->
                     <b-col sm="12" md="4" lg="3">
-                        <b-form-group
-                            :label="$t('Product sub-type')"
-                            label-for="product_sub_type">
+                        <fig-form-group class="mb-2">
+                            <label slot="label" for="product_sub_type">{{ $t('Product sub-type') }}</label>
                             <master-type-select
                                 v-model="product.sub_type"
                                 object="product_sub_type"
                                 id="product_sub_type" />
-                        </b-form-group>
+                        </fig-form-group>
                     </b-col>
 
                     <!-- fit type -->
                     <b-col sm="12" md="4" lg="3">
-                        <b-form-group
-                            :label="$t('Fit type')"
-                            label-for="product_fit_type">
+                        <fig-form-group class="mb-2">
+                            <label slot="label" for="product_fit_type">{{ $t('Fit type') }}</label>
                             <master-type-select
                                 v-model="product.fit_type"
                                 object="product_fit_type"
                                 id="product_fit_type" />
-                        </b-form-group>
+                        </fig-form-group>
                     </b-col>
 
                     <!-- sales channel -->
                     <b-col sm="12" md="4" lg="3">
-                        <b-form-group
-                            :label="$t('Sales channel')"
-                            label-for="product_sales_channel_type">
+                        <fig-form-group class="mb-2">
+                            <label slot="label" for="product_sales_channel_type">{{ $t('Sales channel') }}</label>
                             <master-type-select
                                 v-model="product.sales_channel_type"
                                 object="product_sales_channel_type"
                                 id="product_sales_channel_type" />
-                        </b-form-group>
+                        </fig-form-group>
                     </b-col>
 
                     <!-- vendor -->
                     <b-col sm="12" md="4" lg="3">
-                        <b-form-group
-                            :label="$t('Vendor')"
-                            label-for="product_vendor_type">
+                        <fig-form-group class="mb-2">
+                            <label slot="label" for="product_vendor_type">{{ $t('Vendor') }}</label>
                             <master-type-select
                                 v-model="product.vendor_type"
                                 object="product_vendor_type"
                                 :multiple="false"
                                 id="product_vendor_type" />
-                        </b-form-group>
+                        </fig-form-group>
                     </b-col>
                 </b-row>
             </b-container>
@@ -250,43 +258,40 @@ export default {
                 <b-row>
                     <!-- page title -->
                     <b-col lg="12">
-                        <b-form-group
-                            :label="$t('Title')"
-                            label-for="product_title">
-                            <b-form-input
+                        <fig-form-group class="mb-2">
+                            <label slot="label" for="product_title">{{ $t('Title') }}</label>
+                            <fig-form-input
                                 v-model="product.title"
                                 maxlength="70"
                                 id="product_title" />
-                        </b-form-group>
+                        </fig-form-group>
                     </b-col>
                 </b-row>
 
                 <b-row>
                     <!-- caption -->
                     <b-col lg="12">
-                        <b-form-group
-                            :label="$t('Caption')"
-                            label-for="product_caption">
-                            <b-form-input
+                        <fig-form-group class="mb-2">
+                            <label slot="label" for="product_caption">{{ $t('Caption') }}</label>
+                            <fig-form-input
                                 v-model="product.caption"
                                 maxlength="70"
                                 id="product_caption" />
-                        </b-form-group>
+                        </fig-form-group>
                     </b-col>
                 </b-row>
 
                 <b-row>
                     <!-- description -->
                     <b-col lg="12">
-                        <b-form-group
-                            :label="$t('Description')"
-                            label-for="product_description">
-                            <b-form-textarea
+                        <fig-form-group class="mb-2">
+                            <label slot="label" for="product_description">{{ $t('Description') }}</label>
+                            <fig-form-textarea
                                 v-model="product.description"
                                 :rows="2"
                                 maxlength="320"
                                 id="product_description" />
-                        </b-form-group>
+                        </fig-form-group>
                     </b-col>
                 </b-row>
             </b-container>
@@ -312,48 +317,48 @@ export default {
                 <b-row>
                     <!-- page title -->
                     <b-col lg="12">
-                        <b-form-group
-                            :label="$t('Page title')"
-                            label-for="product_seo_page_title">
-                            <b-form-input
+                        <fig-form-group class="mb-2">
+                            <label slot="label" for="product_seo_page_title">{{ $t('Page title') }}</label>
+                            <fig-form-input
                                 v-model="product.seo_page_title"
                                 maxlength="70"
                                 id="product_seo_page_title" />
-                        </b-form-group>
+                        </fig-form-group>
                     </b-col>
                 </b-row>
 
                 <b-row>
                     <!-- description -->
                     <b-col lg="12">
-                        <b-form-group
-                            :label="$t('Description')"
-                            label-for="product_seo_page_desc">
-                            <b-form-textarea
+                        <fig-form-group class="mb-2">
+                            <label slot="label" for="product_seo_page_desc">{{ $t('Description') }}</label>
+                            <fig-form-textarea
                                 v-model="product.seo_page_desc"
                                 :rows="2"
                                 maxlength="320"
                                 id="product_seo_page_desc" />
-                        </b-form-group>
+                        </fig-form-group>
                     </b-col>
                 </b-row>
 
                 <b-row>
                     <!-- URI -->
                     <b-col lg="12">
-                        <b-form-group
-                            :label="$t('URL and handle')"
-                            label-for="product_seo_uri"
-                            :invalid-feedback="seoUrlValidationErrorMessage"
-                            :state="$v.product.seo_uri.$anyError">
+                        <fig-form-group class="mb-2">
+                            <label slot="label" for="product_seo_uri">{{ $t('URL and handle') }}</label>
                             <b-input-group :prepend="`https://${domainName}/p/`">
-                                <b-form-input
+                                <fig-form-input
                                     v-model="product.seo_uri"
                                     maxlength="50"
+                                    clearable
                                     :state="!$v.product.seo_uri.$invalid ? null : false"
                                     id="product_seo_uri" />
                             </b-input-group>
-                        </b-form-group>
+
+                            <div
+                                v-if="$v.product.seo_uri.$invalid"
+                                slot="error">{{ seoUrlValidationErrorMessage }}</div>
+                        </fig-form-group>
                     </b-col>
                 </b-row>
             </b-container>
@@ -373,24 +378,24 @@ export default {
             <div slot="header">{{ $t('Metadata') }}</div>
 
             <b-container>
-                <b-form-group>
+                <div class="pb-3">
                     <b-form-checkbox
                         v-model="productHasMetaData">{{ $t('Metadata_description') }}</b-form-checkbox>
-                </b-form-group>
-
-                <div v-if="productHasMetaData">
-                    <meta-data-builder v-model="product.metadata" />
                 </div>
+
+                <meta-data-builder
+                    v-if="productHasMetaData"
+                    v-model="product.metadata" />
             </b-container>
         </text-card>
 
 
         <div class="pt-4 text-center">
-            <b-button
+            <fig-button
                 variant="primary"
                 size="lg"
                 @click="onSaveClick"
-                :disabled="$v.product.$invalid">{{ $t('Save') }}</b-button>
+                :disabled="$v.product.$invalid">{{ $t('Save') }}</fig-button>
 
             <div class="pt-2 text-danger" v-show="$v.product.$invalid">
                 <div class="inlineBlock">

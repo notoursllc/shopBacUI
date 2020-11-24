@@ -1,6 +1,6 @@
 <script>
 import isObject from 'lodash.isobject';
-import FigSelect from '@notoursllc/figleaf/components/select/FigSelect';
+import { FigFormSelect } from '@notoursllc/figleaf';
 
 // NOTE: this object can not be formatted as { US: "United States of America (USA)" }
 // because there are some duplicate 'alpha2' values, like Puerto Rico
@@ -13,7 +13,7 @@ import FigSelect from '@notoursllc/figleaf/components/select/FigSelect';
 
 export default {
     components: {
-        FigSelect
+        FigFormSelect
     },
 
     inheritAttrs: false,
@@ -262,7 +262,7 @@ export default {
 
 
 <template>
-    <fig-select
+    <fig-form-select
         v-model="selectedCountry"
         :options="countryList"
         label="name"

@@ -2,6 +2,10 @@
 import { required, email } from 'vuelidate/lib/validators';
 import PasswordValidator from '../../../utils/PasswordValidator';
 import { getPasswordValidationConfig } from '../../../utils/universal';
+import PasswordInputErrors from '@/components/auth/PasswordInputErrors';
+import {
+    FigButton
+} from '@notoursllc/figleaf';
 
 const Validator = new PasswordValidator(getPasswordValidationConfig());
 const touchMap = new WeakMap();
@@ -11,7 +15,8 @@ export default {
     name: 'RegisterPage',
 
     components: {
-        PasswordInputErrors: () => import('@/components/auth/PasswordInputErrors')
+        PasswordInputErrors,
+        FigButton
     },
 
     data() {
@@ -89,10 +94,10 @@ export default {
                 </div>
 
                 <div class="ptl">
-                    <b-button
+                    <fig-button
                         variant="primary"
                         @click="onSubmit"
-                        :disabled="$v.userData.$invalid || numPasswordErrors > 0">{{ $t('Submit') }}</b-button>
+                        :disabled="$v.userData.$invalid || numPasswordErrors > 0">{{ $t('Submit') }}</fig-button>
                 </div>
             </form>
         </div>

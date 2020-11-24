@@ -1,8 +1,17 @@
 <script>
+import TableBuilder from '@/components/tableBuilder/TableBuilder';
+import AppOverlay from '@/components/AppOverlay';
+
+import {
+    FigButton
+} from '@notoursllc/figleaf';
+
+
 export default {
     components: {
-        TableBuilder: () => import('@/components/tableBuilder/TableBuilder'),
-        AppOverlay: () => import('@/components/AppOverlay')
+        TableBuilder,
+        AppOverlay,
+        FigButton
     },
 
     data() {
@@ -93,14 +102,14 @@ export default {
         </b-form-group>
 
         <div class="mtl">
-            <b-button
+            <fig-button
                 variant="primary"
-                @click="onSaveClick">{{ $t('Save') }}</b-button>
+                @click="onSaveClick">{{ $t('Save') }}</fig-button>
 
-            <b-button
+            <fig-button
                 variant="light"
                 class="ml-2"
-                @click="onCancelClick">{{ $t('cancel') }}</b-button>
+                @click="onCancelClick">{{ $t('cancel') }}</fig-button>
         </div>
 
     </app-overlay>

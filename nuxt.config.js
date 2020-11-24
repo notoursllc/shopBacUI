@@ -90,6 +90,7 @@ export default {
         '@/plugins/vue-select',
         '@/plugins/notifications',
         '@/plugins/figIcon',
+        '@/node_modules/@notoursllc/figleaf/components/toaster',
         { src: '@/plugins/youtube', ssr: false },
         { src: '@/plugins/bugsnag', ssr: false }
     ],
@@ -106,7 +107,14 @@ export default {
     buildModules: [
         // Doc: https://github.com/nuxt-community/eslint-module
         // '@nuxtjs/eslint-module'
+        '@nuxtjs/tailwindcss'
     ],
+
+    tailwindcss: {
+        cssPath: '@/node_modules/@notoursllc/figleaf/assets/css/tailwind.css',
+        configPath: 'tailwind.config.js',
+        exposeConfig: false // https://tailwindcss.nuxtjs.org/options/#exposeconfig
+    },
 
     /*
     ** Nuxt.js modules
@@ -177,8 +185,6 @@ export default {
         // importing only the stuff we are using to reduce bundle size
         components: [
             'BBadge',
-            'BButton',
-            'BButtonGroup',
             'BCollapse',
             'BContainer',
             'BRow',
@@ -212,7 +218,6 @@ export default {
             // 'FormInputPlugin',
             // 'FormRadioPlugin',
             'TablePlugin',
-            'ToastPlugin',
             'ModalPlugin',
             'BVModalPlugin'
         ],

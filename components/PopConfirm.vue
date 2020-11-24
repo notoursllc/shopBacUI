@@ -1,9 +1,15 @@
 <script>
 import uuid from 'uuid';
+import Pop from '@/components/Pop';
+
+import {
+    FigButton
+} from '@notoursllc/figleaf';
 
 export default {
     components: {
-        Pop: () => import('@/components/Pop')
+        Pop,
+        FigButton
     },
 
     inheritAttrs: false,
@@ -90,19 +96,19 @@ export default {
         <slot></slot>
 
         <div class="ptm tar" v-if="showConfirmButton || showCancelButton">
-            <b-button
+            <fig-button
                 v-if="showCancelButton"
                 variant="link"
                 size="sm"
                 @click="onCancelClick"
-                :ref="cancelRef">{{ cancelLabel }}</b-button>
+                :ref="cancelRef">{{ cancelLabel }}</fig-button>
 
-            <b-button
+            <fig-button
                 v-if="showConfirmButton"
                 variant="primary"
                 size="sm"
                 @click="onConfirmClick"
-                :ref="confirmRef">{{ confirmLabel }}</b-button>
+                :ref="confirmRef">{{ confirmLabel }}</fig-button>
         </div>
 
         <template v-slot:reference>

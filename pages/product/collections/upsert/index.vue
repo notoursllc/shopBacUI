@@ -1,9 +1,15 @@
 <script>
 import { getNextAvailableTypeValue } from '@/utils/common';
+import TextCard from '@/components/TextCard';
+
+import {
+    FigButton
+} from '@notoursllc/figleaf';
 
 export default {
     components: {
-        TextCard: () => import('@/components/TextCard')
+        TextCard,
+        FigButton
     },
 
     data() {
@@ -151,14 +157,14 @@ export default {
 
         <!-- buttons -->
         <div class="ptl">
-            <b-button
+            <fig-button
                 variant="primary"
                 @click="onFormSave"
-                class="mrm">{{ $t('Save') }}</b-button>
+                class="mr-2">{{ $t('Save') }}</fig-button>
 
-            <b-button
-                variant="light"
-                @click="goToProductCollectionList">{{ $t('Cancel') }}</b-button>
+            <fig-button
+                variant="plain"
+                @click="goToProductCollectionList">{{ $t('Cancel') }}</fig-button>
         </div>
     </div>
 </template>

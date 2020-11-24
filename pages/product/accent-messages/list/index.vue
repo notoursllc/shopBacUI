@@ -2,14 +2,17 @@
 import AppTable from '@/components/AppTable';
 import OperationsDropdown from '@/components/OperationsDropdown';
 import AccentMessageForm from '@/components/product/accentMessage/AccentMessageForm';
-import Fab from '@/components/Fab';
+
+import {
+    FigButtonFab
+} from '@notoursllc/figleaf';
 
 export default {
     components: {
         AppTable,
         OperationsDropdown,
         AccentMessageForm,
-        Fab
+        FigButtonFab
     },
 
     data() {
@@ -92,7 +95,7 @@ export default {
 
 <template>
     <div>
-        <fab icon="plus" @click="onUpsertClick" />
+        <fig-button-fab icon="plus" @click="onUpsertClick()" />
 
         <app-table
             :items="messages"
