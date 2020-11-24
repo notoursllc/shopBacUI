@@ -5,7 +5,8 @@ import TextCard from '@/components/TextCard';
 import {
     FigButton,
     FigFormCheckbox,
-    FigFormInput
+    FigFormInput,
+    FigFormTextarea
 } from '@notoursllc/figleaf';
 
 export default {
@@ -13,7 +14,8 @@ export default {
         TextCard,
         FigButton,
         FigFormCheckbox,
-        FigFormInput
+        FigFormInput,
+        FigFormTextarea
     },
 
     data() {
@@ -110,9 +112,9 @@ export default {
             <div class="inputRow">
                 <label>{{ $t('Description') }}:</label>
                 <span>
-                    <b-form-textarea
+                    <fig-form-textarea
                         v-model="collection.description"
-                        rows="2"></b-form-textarea>
+                        rows="2" />
                 </span>
             </div>
 
@@ -140,9 +142,9 @@ export default {
             <div class="inputRow">
                 <label>{{ $t('Description') }}:</label>
                 <span>
-                    <b-form-textarea
+                    <fig-form-textarea
                         v-model="collection.seo_page_desc"
-                        rows="2"></b-form-textarea>
+                        rows="2" />
                 </span>
             </div>
 

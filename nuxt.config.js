@@ -198,7 +198,6 @@ export default {
             'BFormRadio',
             'BFormSelect',
             'BFormSelectOption',
-            'BFormTextarea',
             'BImg',
             'BInputGroup',
             'BInputGroupText',

@@ -11,7 +11,8 @@ import {
     FigButton,
     FigButtonFab,
     FigFormCheckbox,
-    FigFormInput
+    FigFormInput,
+    FigFormTextarea
 } from '@notoursllc/figleaf';
 
 export default {
@@ -23,7 +24,8 @@ export default {
         FigButton,
         FigButtonFab,
         FigFormCheckbox,
-        FigFormInput
+        FigFormInput,
+        FigFormTextarea
     },
 
     props: {
@@ -275,7 +277,7 @@ export default {
                 <div class="formRow">
                     <label>{{ $t('Description') }}:</label>
                     <span>
-                        <b-form-textarea
+                        <fig-form-textarea
                             v-model="form.description"
                             :rows="2" />
                     </span>
