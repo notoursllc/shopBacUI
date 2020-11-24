@@ -9,7 +9,8 @@ import AppTable from '@/components/AppTable';
 
 import {
     FigButton,
-    FigButtonFab
+    FigButtonFab,
+    FigFormCheckbox
 } from '@notoursllc/figleaf';
 
 export default {
@@ -18,8 +19,9 @@ export default {
         BooleanTag,
         MetaDataBuilder,
         AppTable,
-        FigButto,
-        FigButtonFab
+        FigButton,
+        FigButtonFab,
+        FigFormCheckbox
     },
 
     props: {
@@ -242,8 +244,8 @@ export default {
                 <div class="formRow">
                     <label class="width100">{{ $t('Published') }}:</label>
                     <span>
-                        <b-form-checkbox
-                            v-model="form.published"></b-form-checkbox>
+                        <fig-form-checkbox
+                            v-model="form.published" />
                     </span>
                 </div>
 
@@ -281,8 +283,8 @@ export default {
                 <div class="formRow">
                     <label>{{ $t('Meta data') }}:</label>
                     <span>
-                        <b-form-checkbox
-                            v-model="formHasMetaData">{{ $t('This item has additional meta data') }}</b-form-checkbox>
+                        <fig-form-checkbox
+                            v-model="formHasMetaData">{{ $t('This item has additional meta data') }}</fig-form-checkbox>
                         <div class="mtm" v-show="formHasMetaData">
                             <meta-data-builder v-model="form.metadata" />
                         </div>

@@ -10,7 +10,8 @@ import NumberInput from '@/components/NumberInput';
 import CountrySelect from '@/components/CountrySelect';
 
 import {
-    FigButton
+    FigButton,
+    FigFormCheckbox
 } from '@notoursllc/figleaf';
 
 
@@ -25,7 +26,8 @@ export default {
         SizeUpsertWizard,
         NumberInput,
         CountrySelect,
-        FigButton
+        FigButton,
+        FigFormCheckbox
     },
 
     mixins: [
@@ -129,8 +131,8 @@ export default {
             <!-- published -->
             <b-container>
                 <b-form-group>
-                    <b-form-checkbox
-                        v-model="upsertColor.published">{{ $t('Published') }}</b-form-checkbox>
+                    <fig-form-checkbox
+                        v-model="upsertColor.published">{{ $t('Published') }}</fig-form-checkbox>
                 </b-form-group>
 
                 <!-- color name -->
@@ -200,8 +202,8 @@ export default {
             <b-container>
                 <!-- requires shipping -->
                 <b-form-group>
-                    <b-form-checkbox
-                        v-model="upsertColor.requires_shipping">{{ $t('This is a physical product') }}</b-form-checkbox>
+                    <fig-form-checkbox
+                        v-model="upsertColor.requires_shipping">{{ $t('This is a physical product') }}</fig-form-checkbox>
                 </b-form-group>
 
                 <template v-if="!upsertColor.requires_shipping">

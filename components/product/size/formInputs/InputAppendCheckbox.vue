@@ -7,6 +7,10 @@ import {
     BTooltip
 } from 'bootstrap-vue';
 
+import {
+    FigFormCheckbox
+} from '@notoursllc/figleaf';
+
 
 export default {
     name: 'InputAppendCheckbox',
@@ -14,7 +18,8 @@ export default {
     components: {
         BTooltip,
         BInputGroup,
-        BInputGroupAppend
+        BInputGroupAppend,
+        FigFormCheckbox
     },
 
     mixins: [
@@ -60,10 +65,9 @@ export default {
     <b-input-group :size="size" class="no-flex-wrap">
         <slot :checked="inherit"></slot>
         <b-input-group-append is-text>
-            <b-form-checkbox
+            <fig-form-checkbox
                 v-b-tooltip.hover.right="getInheritTooltip(inherit)"
                 v-model="inherit"
-                plain
                 @input="emitInput" />
         </b-input-group-append>
     </b-input-group>

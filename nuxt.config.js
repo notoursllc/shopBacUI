@@ -193,7 +193,6 @@ export default {
             'BDropdownForm',
             'BDropdownItem',
             'BDropdownItemButton',
-            'BFormCheckbox',
             'BFormFile',
             'BFormGroup',
             'BFormInput',
@@ -214,7 +213,6 @@ export default {
         componentPlugins: [
             // 'LayoutPlugin',
             // 'FormPlugin',
-            // 'FormCheckboxPlugin',
             // 'FormInputPlugin',
             // 'FormRadioPlugin',
             'TablePlugin',

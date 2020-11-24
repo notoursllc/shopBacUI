@@ -3,13 +3,15 @@ import { getNextAvailableTypeValue } from '@/utils/common';
 import TextCard from '@/components/TextCard';
 
 import {
-    FigButton
+    FigButton,
+    FigFormCheckbox
 } from '@notoursllc/figleaf';
 
 export default {
     components: {
         TextCard,
-        FigButton
+        FigButton,
+        FigFormCheckbox
     },
 
     data() {
@@ -88,8 +90,8 @@ export default {
             <!-- Available -->
             <div class="inputRow">
                 <span>
-                    <b-form-checkbox
-                        v-model="collection.published">{{ $t('Published') }}</b-form-checkbox>
+                    <fig-form-checkbox
+                        v-model="collection.published">{{ $t('Published') }}</fig-form-checkbox>
                 </span>
             </div>
 

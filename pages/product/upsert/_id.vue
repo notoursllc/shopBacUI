@@ -379,8 +379,8 @@ export default {
 
             <b-container>
                 <div class="pb-3">
-                    <b-form-checkbox
-                        v-model="productHasMetaData">{{ $t('Metadata_description') }}</b-form-checkbox>
+                    <fig-form-checkbox
+                        v-model="productHasMetaData">{{ $t('Metadata_description') }}</fig-form-checkbox>
                 </div>
 
                 <meta-data-builder
