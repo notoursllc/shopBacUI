@@ -195,7 +195,6 @@ export default {
             'BDropdownItemButton',
             'BFormFile',
             'BFormGroup',
-            'BFormRadio',
             'BFormSelect',
             'BFormSelectOption',
             'BImg',
@@ -212,7 +211,6 @@ export default {
             // 'LayoutPlugin',
             // 'FormPlugin',
             // 'FormInputPlugin',
-            // 'FormRadioPlugin',
             'TablePlugin',
             'ModalPlugin',
             'BVModalPlugin'

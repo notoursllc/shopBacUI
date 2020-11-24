@@ -9,7 +9,8 @@ import PopConfirm from '@/components/PopConfirm';
 
 import {
     FigButton,
-    FigFormInput
+    FigFormInput,
+    FigFormRadio
 } from '@notoursllc/figleaf';
 
 export default {
@@ -21,7 +22,8 @@ export default {
         draggable,
         PopConfirm,
         FigButton,
-        FigFormInput
+        FigFormInput,
+        FigFormRadio
     },
 
     mixins: [
@@ -133,19 +135,19 @@ export default {
     <div>
         <b-form-group>
             <div class="d-inline-block mr-3">
-                <b-form-radio
+                <fig-form-radio
                     v-model="exhibitType"
                     @input="emitInput"
                     name="exhibitType"
-                    value="IMAGE">{{ $t('Images') }}</b-form-radio>
+                    value="IMAGE">{{ $t('Images') }}</fig-form-radio>
             </div>
 
             <div class="d-inline-block">
-                <b-form-radio
+                <fig-form-radio
                     v-model="exhibitType"
                     @input="emitInput"
                     name="exhibitType"
-                    value="SWATCH">{{ $t('Color swatches') }}</b-form-radio>
+                    value="SWATCH">{{ $t('Color swatches') }}</fig-form-radio>
             </div>
         </b-form-group>
 
