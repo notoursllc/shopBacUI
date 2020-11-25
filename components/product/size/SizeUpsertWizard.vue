@@ -3,7 +3,6 @@ import isObject from 'lodash.isobject';
 import draggable from 'vuedraggable';
 import PopConfirm from '@/components/PopConfirm';
 import SizeInput from '@/components/product/size/SizeInput';
-import NumberInput from '@/components/NumberInput';
 import CountrySelect from '@/components/CountrySelect';
 import InputAppendCheckbox from '@/components/product/size/formInputs/InputAppendCheckbox';
 import {
@@ -19,7 +18,8 @@ import {
     FigFormInputMoney,
     FigFormInput,
     FigButton,
-    FigFormSelect
+    FigFormSelect,
+    FigFormInputNumber
 } from '@notoursllc/figleaf';
 
 
@@ -32,7 +32,6 @@ export default {
         BPopover,
         PopConfirm,
         SizeInput,
-        NumberInput,
         CountrySelect,
         InputAppendCheckbox,
         BCard,
@@ -42,7 +41,8 @@ export default {
         FigFormInputMoney,
         FigFormInput,
         FigButton,
-        FigFormSelect
+        FigFormSelect,
+        FigFormInputNumber
     },
 
     props: {
@@ -424,7 +424,7 @@ export default {
                                 {{ $t('Inventory') }}
                             </label>
 
-                            <number-input
+                            <fig-form-input-number
                                 v-model="size.inventory_count"
                                 :min="0"
                                 size="sm"

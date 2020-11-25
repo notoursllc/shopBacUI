@@ -3,13 +3,13 @@ import draggable from 'vuedraggable';
 import { BTooltip } from 'bootstrap-vue';
 import PopConfirm from '@/components/PopConfirm';
 import SizeInput from '@/components/product/size/SizeInput';
-import NumberInput from '@/components/NumberInput';
 
 import {
     FigFormCheckbox,
     FigFormInputMoney,
     FigFormInput,
-    FigButton
+    FigButton,
+    FigFormInputNumber
 } from '@notoursllc/figleaf';
 
 export default {
@@ -20,11 +20,11 @@ export default {
         BTooltip,
         PopConfirm,
         SizeInput,
-        NumberInput,
         FigFormCheckbox,
         FigFormInputMoney,
         FigFormInput,
-        FigButton
+        FigButton,
+        FigFormInputNumber
     },
 
     props: {
@@ -152,7 +152,7 @@ export default {
                         <div class="mini-row">
                             <label>{{ $t('Quantity') }}:</label>
                             <span>
-                                <number-input
+                                <fig-form-input-number
                                     v-if="editInventoryColumn"
                                     v-model="size.inventory_count"
                                     :min="0"

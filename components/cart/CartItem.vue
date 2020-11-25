@@ -2,6 +2,10 @@
 import product_mixin from '@/mixins/product_mixin';
 import shopping_cart_mixin from '@/mixins/shopping_cart_mixin';
 
+import {
+    FigFormInputNumber
+} from '@notoursllc/figleaf';
+
 export default {
     name: 'CartItem',
 
@@ -9,8 +13,8 @@ export default {
         ProductPrice: () => import('@/components/product/ProductPrice'),
         ProductDetailsLayout: () => import('@/components/product/ProductDetailsLayout'),
         ProductImageCarousel: () => import('@/components/product/ProductImageCarousel'),
-        NumberInput: () => import('@/components/NumberInput'),
-        ProductQuantityWarning: () => import('@/components/product/ProductQuantityWarning')
+        ProductQuantityWarning: () => import('@/components/product/ProductQuantityWarning'),
+        FigFormInputNumber
     },
 
     mixins: [
@@ -164,7 +168,7 @@ export default {
                         </label>
                         <span>
                             <template v-if="editMode">
-                                <number-input
+                                <fig-form-input-number
                                     v-model="data.qty"
                                     :max="getProductQuantityMaxValue(data.variants.size, data.product)"
                                     size="mini"

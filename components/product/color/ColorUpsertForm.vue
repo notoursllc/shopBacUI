@@ -6,14 +6,14 @@ import PricingForm from '@/components/product/PricingForm';
 import ColorExpressionForm from '@/components/product/color/ColorExpressionForm';
 import AccentMessageWizard from '@/components/product/accentMessage/AccentMessageWizard';
 import SizeUpsertWizard from '@/components/product/size/SizeUpsertWizard';
-import NumberInput from '@/components/NumberInput';
 import CountrySelect from '@/components/CountrySelect';
 
 import {
     FigButton,
     FigFormCheckbox,
     FigFormInput,
-    FigFormGroup
+    FigFormGroup,
+    FigFormInputNumber
 } from '@notoursllc/figleaf';
 
 
@@ -26,12 +26,12 @@ export default {
         ColorExpressionForm,
         AccentMessageWizard,
         SizeUpsertWizard,
-        NumberInput,
         CountrySelect,
         FigButton,
         FigFormCheckbox,
         FigFormInput,
-        FigFormGroup
+        FigFormGroup,
+        FigFormInputNumber
     },
 
     mixins: [
@@ -216,14 +216,13 @@ export default {
                     <hr />
 
                     <b-row>
-                        <b-col lg="12">
+                        <b-col lg="4">
                             <fig-form-group v-if="upsertColor.requires_shipping">
                                 <label slot="label" for="sku_weight_oz">{{ $t('Weight (oz)') }}</label>
-                                <number-input
+                                <fig-form-input-number
                                     v-model="upsertColor.weight_oz"
                                     :step=".01"
                                     :min="0"
-                                    class="input-number"
                                     id="sku_weight_oz" />
 
                                 <div slot="description">
