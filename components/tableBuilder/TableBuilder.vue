@@ -8,7 +8,8 @@ import AppMessage from '@/components/AppMessage';
 
 import {
     FigButton,
-    FigFormInput
+    FigFormInput,
+    FigFormGroup
 } from '@notoursllc/figleaf';
 
 export default {
@@ -19,7 +20,8 @@ export default {
         AppOverlay,
         AppMessage,
         FigButton,
-        FigFormInput
+        FigFormInput,
+        FigFormGroup
     },
 
     props: {
@@ -265,15 +267,13 @@ export default {
                                 @onConfirm="doDataImport();">
                                 <div>
                                     <template v-if="canDoImport">
-                                        <b-form-group
-                                            id="fieldset-1"
-                                            :label="$t('Import data from an existing Data Table') + ':'"
-                                            label-for="select_data_table">
+                                        <fig-form-group>
+                                            <label slot="label" for="select_data_table">{{ $t('Import data from an existing Data Table') + ':' }}</label>
                                             <data-table-select
                                                 v-model="importFromDataTableId"
                                                 id="select_data_table"
                                                 size="sm" />
-                                        </b-form-group>
+                                        </fig-form-group>
 
                                         <app-message>
                                             <template v-slot:icon>

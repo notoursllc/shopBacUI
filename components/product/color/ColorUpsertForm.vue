@@ -12,7 +12,8 @@ import CountrySelect from '@/components/CountrySelect';
 import {
     FigButton,
     FigFormCheckbox,
-    FigFormInput
+    FigFormInput,
+    FigFormGroup
 } from '@notoursllc/figleaf';
 
 
@@ -29,7 +30,8 @@ export default {
         CountrySelect,
         FigButton,
         FigFormCheckbox,
-        FigFormInput
+        FigFormInput,
+        FigFormGroup
     },
 
     mixins: [
@@ -132,19 +134,18 @@ export default {
 
             <!-- published -->
             <b-container>
-                <b-form-group>
+                <div class="mb-3">
                     <fig-form-checkbox
                         v-model="upsertColor.published">{{ $t('Published') }}</fig-form-checkbox>
-                </b-form-group>
+                </div>
 
                 <!-- color name -->
-                <b-form-group
-                    :label="$t('Color name')"
-                    label-for="color_name">
+                <fig-form-group>
+                    <label slot="label" for="color_name">{{ $t('Color name') }}</label>
                     <fig-form-input
                         v-model="upsertColor.label"
                         id="color_name" />
-                </b-form-group>
+                </fig-form-group>
             </b-container>
         </text-card>
 
@@ -203,10 +204,10 @@ export default {
 
             <b-container>
                 <!-- requires shipping -->
-                <b-form-group>
+                <div class="mb-3">
                     <fig-form-checkbox
                         v-model="upsertColor.requires_shipping">{{ $t('This is a physical product') }}</fig-form-checkbox>
-                </b-form-group>
+                </div>
 
                 <template v-if="!upsertColor.requires_shipping">
                     {{ $t('requires_shipping_off_desc') }}
@@ -216,20 +217,19 @@ export default {
 
                     <b-row>
                         <b-col lg="12">
-                            <template v-if="upsertColor.requires_shipping">
-                                <b-form-group
-                                    :label="$t('Weight (oz)')"
-                                    label-for="sku_weight_oz"
-                                    :description="$t('Used to calculate shipping rates at checkout and label prices during fulfillment.')">
-                                    <number-input
-                                        v-model="upsertColor.weight_oz"
-                                        :step=".01"
-                                        :min="0"
-                                        class="input-number"
-                                        id="sku_weight_oz" />
-                                </b-form-group>
-                            </template>
+                            <fig-form-group v-if="upsertColor.requires_shipping">
+                                <label slot="label" for="sku_weight_oz">{{ $t('Weight (oz)') }}</label>
+                                <number-input
+                                    v-model="upsertColor.weight_oz"
+                                    :step=".01"
+                                    :min="0"
+                                    class="input-number"
+                                    id="sku_weight_oz" />
 
+                                <div slot="description">
+                                    {{ $t('Used to calculate shipping rates at checkout and label prices during fulfillment.') }}
+                                </div>
+                            </fig-form-group>
                         </b-col>
                     </b-row>
 
@@ -240,26 +240,30 @@ export default {
                     <b-row>
                         <b-col sm="12" lg="6">
                             <!-- country of origin -->
-                            <b-form-group
-                                :label="$t('Country of origin')"
-                                label-for="sku_customs_country_of_origin"
-                                :description="$t('customs_country_of_origin_desc')">
+                            <fig-form-group>
+                                <label slot="label" for="sku_customs_country_of_origin">{{ $t('Country of origin') }}</label>
                                 <country-select
                                     v-model="upsertColor.customs_country_of_origin"
                                     id="sku_customs_country_of_origin" />
-                            </b-form-group>
+
+                                <div slot="description">
+                                    {{ $t('customs_country_of_origin_desc') }}
+                                </div>
+                            </fig-form-group>
                         </b-col>
 
                         <b-col sm="12" lg="6">
                             <!-- HS code -->
-                            <b-form-group
-                                :label="$t('HS (Harmonized System) code')"
-                                label-for="sku_customs_harmonized_system_code"
-                                :description="$t('customs_hs_code_desc')">
+                            <fig-form-group>
+                                <label slot="label" for="sku_customs_harmonized_system_code">{{ $t('HS (Harmonized System) code') }}</label>
                                 <fig-form-input
                                     v-model="upsertColor.customs_harmonized_system_code"
                                     id="sku_customs_harmonized_system_code" />
-                            </b-form-group>
+
+                                <div slot="description">
+                                    {{ $t('customs_hs_code_desc') }}
+                                </div>
+                            </fig-form-group>
                         </b-col>
                     </b-row>
                 </template>

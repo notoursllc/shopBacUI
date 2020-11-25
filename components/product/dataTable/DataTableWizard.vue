@@ -9,7 +9,8 @@ import AppOverlay from '@/components/AppOverlay';
 import AppMessage from '@/components/AppMessage';
 
 import {
-    FigFormInput
+    FigFormInput,
+    FigFormGroup
 } from '@notoursllc/figleaf';
 
 export default {
@@ -21,7 +22,8 @@ export default {
         DataTableSelect,
         AppOverlay,
         AppMessage,
-        FigFormInput
+        FigFormInput,
+        FigFormGroup
     },
 
     inheritAttrs: false,
@@ -231,46 +233,43 @@ export default {
             v-if="canShowPredefinedTables && (action === 'pre' || action === 'create')" />
 
         <!-- select predefined data table  -->
-        <b-form-group
+        <fig-form-group
             v-show="canShowPredefinedTables && action === 'pre'"
-            :label="$t('Choose')"
-            label-for="input_choose_predefined"
-            class="inlineBlock mb-0 align-bottom">
+            class="inline-block mb-0 align-bottom">
+            <label slot="label" for="input_choose_predefined">{{ $t('Choose') }}</label>
             <data-table-select
                 v-model="readOnlyTableId"
                 class="width150"
                 @input="onPredefinedSelectChange"
                 id="input_choose_predefined" />
-        </b-form-group>
+        </fig-form-group>
 
         <!-- new data table name -->
-        <b-form-group
+        <fig-form-group
             v-show="action === 'create'"
-            :label="$t('Name')"
-            label-for="input_create_dt"
-            class="inlineBlock mb-0 align-bottom">
+            class="inline-block mb-0 align-bottom">
+            <label slot="label" for="input_create_dt">{{ $t('Name') }}</label>
             <fig-form-input
                 v-if="action === 'create'"
                 v-model="data_table_name"
                 @input="emitInput"
                 class="w-auto"
                 id="input_create_dt" />
-        </b-form-group>
+        </fig-form-group>
 
         <!-- table builder -->
         <div class="pt-4">
             <app-overlay :show="loading">
-                <b-form-group
+                <fig-form-group
                     v-if="action === 'create'"
-                    class="pb-2"
-                    :label="$t('Data table')"
-                    label-for="data_table">
+                    class="pb-2">
+                    <label slot="label" for="data_table">{{ $t('Data table') }}</label>
                     <table-builder
                         v-model="data_table"
                         @input="onTableBuilderChange"
                         :show-import="true"
                         id="data_table"></table-builder>
-                </b-form-group>
+                </fig-form-group>
 
                 <table-builder-view
                     v-if="action === 'pre' && readOnlyTableId"

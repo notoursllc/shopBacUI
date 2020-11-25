@@ -4,7 +4,8 @@ import AppOverlay from '@/components/AppOverlay';
 
 import {
     FigButton,
-    FigFormInput
+    FigFormInput,
+    FigFormGroup
 } from '@notoursllc/figleaf';
 
 
@@ -13,7 +14,8 @@ export default {
         TableBuilder,
         AppOverlay,
         FigButton,
-        FigFormInput
+        FigFormInput,
+        FigFormGroup
     },
 
     data() {
@@ -87,20 +89,20 @@ export default {
 <template>
     <app-overlay :show="loading">
 
-        <b-form-group
-            :label="$t('Name')+ ':'"
-            label-for="input_name">
+        <fig-form-group>
+            <label slot="label" for="input_name">{{ $t('Name')+ ':' }}</label>
             <fig-form-input
                 v-model="data.name"
                 class="width200"
                 id="input_name" />
-        </b-form-group>
+        </fig-form-group>
 
-        <b-form-group :label="$t('Data table') + ':'">
+        <fig-form-group>
+            <label slot="label">{{ $t('Data table')+ ':' }}</label>
             <table-builder
                 v-model="data.table_data"
                 :show-import="true" />
-        </b-form-group>
+        </fig-form-group>
 
         <div class="mtl">
             <fig-button
