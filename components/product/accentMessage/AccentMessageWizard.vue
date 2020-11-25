@@ -8,7 +8,8 @@ import { isUuid4 } from '@/utils/common';
 import {
     FigFormInputDate,
     FigFormInput,
-    FigFormGroup
+    FigFormGroup,
+    FigFormSelect
 } from '@notoursllc/figleaf';
 
 export default {
@@ -19,7 +20,8 @@ export default {
         AppMessage,
         FigFormInputDate,
         FigFormInput,
-        FigFormGroup
+        FigFormGroup,
+        FigFormSelect
     },
 
     inheritAttrs: false,
@@ -35,9 +37,9 @@ export default {
         return {
             loading: false,
             actionSelectOptions: [
-                { text: this.$t('None'), value: null },
-                { text: this.$t('Use pre-defined'), value: 'pre' },
-                { text: this.$t('Create new'), value: 'create' }
+                { label: this.$t('None'), value: null },
+                { label: this.$t('Use pre-defined'), value: 'pre' },
+                { label: this.$t('Create new'), value: 'create' }
             ],
             accent_message_new: null,
             accent_message_id: null,
@@ -174,11 +176,13 @@ export default {
             </app-message>
         </div>
 
-        <b-form-select
-            v-model="action"
-            :options="visibleActionSelectOptions"
-            class="widthAuto"
-            @input="onActionSelectChange" />
+        <div class="inline-block">
+            <fig-form-select
+                v-model="action"
+                :options="visibleActionSelectOptions"
+                @input="onActionSelectChange"
+                :reduce="obj => obj.value" />
+        </div>
 
         <fig-icon
             icon="arrow-right"

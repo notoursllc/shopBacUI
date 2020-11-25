@@ -18,7 +18,8 @@ import {
     FigFormCheckbox,
     FigFormInputMoney,
     FigFormInput,
-    FigButton
+    FigButton,
+    FigFormSelect
 } from '@notoursllc/figleaf';
 
 
@@ -40,7 +41,8 @@ export default {
         FigFormGroup,
         FigFormInputMoney,
         FigFormInput,
-        FigButton
+        FigButton,
+        FigFormSelect
     },
 
     props: {
@@ -60,8 +62,8 @@ export default {
             bulkEdit: {},
             bulkEditInputToggle: {},
             whenOutOfStockOptions: [
-                { text: this.$t('Continue selling'), value: true },
-                { text: this.$t('Hide'), value: false }
+                { label: this.$t('Continue selling'), value: true },
+                { label: this.$t('Hide'), value: false }
             ]
         };
     },
@@ -315,10 +317,11 @@ export default {
                             </label>
                             <span>
                                 <div v-if="bulkEdit.hasOwnProperty('visible_if_no_inventory')">
-                                    <b-form-select
+                                    <fig-form-select
                                         v-model="bulkEdit.visible_if_no_inventory"
                                         :options="whenOutOfStockOptions"
-                                        size="sm" />
+                                        size="sm"
+                                        :reduce="obj => obj.value" />
                                 </div>
                             </span>
                         </div>

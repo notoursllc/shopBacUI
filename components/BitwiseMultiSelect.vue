@@ -1,4 +1,5 @@
 <script>
+import isObject from 'lodash.isobject';
 import { FigFormSelect } from '@notoursllc/figleaf';
 
 export default {
@@ -56,7 +57,9 @@ export default {
             }
 
             valueArray.forEach(function(obj) {
-                total += obj.value;
+                if(isObject(obj)) {
+                    total += obj.value;
+                }
             });
 
             this.$emit('input', total);

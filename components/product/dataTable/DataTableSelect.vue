@@ -1,8 +1,14 @@
 <script>
+import {
+    FigFormSelect
+} from '@notoursllc/figleaf';
+
 export default {
     name: 'DataTableSelect',
 
-    inheritAttrs: false,
+    components: {
+        FigFormSelect
+    },
 
     props: {
         value: {
@@ -41,7 +47,7 @@ export default {
 
             this.selectOptions = dataTables.map(obj => {
                 return {
-                    text: obj.name,
+                    label: obj.name,
                     value: obj.id
                 };
             });
@@ -52,9 +58,9 @@ export default {
 
 
 <template>
-    <b-form-select
+    <fig-form-select
         v-model="selectedVal"
         :options="selectOptions"
-        v-bind="$attrs"
-        @input="emitInput"></b-form-select>
+        @input="emitInput"
+        :reduce="obj => obj.value" />
 </template>

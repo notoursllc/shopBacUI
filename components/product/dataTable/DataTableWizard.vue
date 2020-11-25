@@ -10,7 +10,8 @@ import AppMessage from '@/components/AppMessage';
 
 import {
     FigFormInput,
-    FigFormGroup
+    FigFormGroup,
+    FigFormSelect
 } from '@notoursllc/figleaf';
 
 export default {
@@ -23,7 +24,8 @@ export default {
         AppOverlay,
         AppMessage,
         FigFormInput,
-        FigFormGroup
+        FigFormGroup,
+        FigFormSelect
     },
 
     inheritAttrs: false,
@@ -39,9 +41,9 @@ export default {
         return {
             loading: false,
             actionSelectOptions: [
-                { text: this.$t('None'), value: null },
-                { text: this.$t('Use pre-defined'), value: 'pre' },
-                { text: this.$t('Create new'), value: 'create' }
+                { label: this.$t('None'), value: null },
+                { label: this.$t('Use pre-defined'), value: 'pre' },
+                { label: this.$t('Create new'), value: 'create' }
             ],
             action: null,
             readOnlyTableData: null,
@@ -222,11 +224,12 @@ export default {
             </app-message>
         </div>
 
-        <b-form-select
+        <fig-form-select
             v-model="action"
             :options="visibleActionSelectOptions"
             class="widthAuto"
-            @input="emitInput"></b-form-select>
+            @input="emitInput"
+            :reduce="obj => obj.value" />
 
         <fig-icon
             icon="arrow-right"

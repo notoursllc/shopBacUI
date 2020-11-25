@@ -193,8 +193,6 @@ export default {
             'BDropdownItem',
             'BDropdownItemButton',
             'BFormFile',
-            'BFormSelect',
-            'BFormSelectOption',
             'BImg',
             'BInputGroup',
             'BInputGroupText',

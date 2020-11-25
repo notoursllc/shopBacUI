@@ -1,6 +1,12 @@
 <script>
+import {
+    FigFormSelect
+} from '@notoursllc/figleaf';
+
 export default {
-    inheritAttrs: false,
+    components: {
+        FigFormSelect
+    },
 
     props: {
         value: {
@@ -43,7 +49,7 @@ export default {
                 if(Array.isArray(data)) {
                     data.forEach((obj) => {
                         options.push({
-                            text: obj.message,
+                            label: obj.message,
                             value: obj.id
                         });
                     });
@@ -65,9 +71,9 @@ export default {
 
 
 <template>
-    <b-form-select
+    <fig-form-select
         v-model="selectedVal"
         :options="options"
         @input="onChange"
-        v-bind="$attrs" />
+        :reduce="obj => obj.value" />
 </template>
