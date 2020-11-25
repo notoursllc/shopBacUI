@@ -133,13 +133,13 @@ export default {
 
 <template>
     <div>
-        <b-form-group>
+        <div class="mb-3">
             <div class="d-inline-block mr-3">
                 <fig-form-radio
                     v-model="exhibitType"
                     @input="emitInput"
                     name="exhibitType"
-                    value="IMAGE">{{ $t('Images') }}</fig-form-radio>
+                    checked-value="IMAGE">{{ $t('Images') }}</fig-form-radio>
             </div>
 
             <div class="d-inline-block">
@@ -147,9 +147,9 @@ export default {
                     v-model="exhibitType"
                     @input="emitInput"
                     name="exhibitType"
-                    value="SWATCH">{{ $t('Color swatches') }}</fig-form-radio>
+                    checked-value="SWATCH">{{ $t('Color swatches') }}</fig-form-radio>
             </div>
-        </b-form-group>
+        </div>
 
         <!--  image manager -->
         <div>
