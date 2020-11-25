@@ -184,7 +184,6 @@ export default {
 
         // importing only the stuff we are using to reduce bundle size
         components: [
-            'BBadge',
             'BCollapse',
             'BContainer',
             'BRow',

@@ -1,12 +1,23 @@
 <script>
+import {
+    FigBadge
+} from '@notoursllc/figleaf';
+
 export default {
     name: 'BooleanTag',
 
-    inheritAttrs: false,
+    components: {
+        FigBadge
+    },
 
     props: {
         value: {
             type: Boolean
+        },
+
+        pill: {
+            type: Boolean,
+            default: false
         }
     },
 
@@ -16,31 +27,15 @@ export default {
         },
 
         tagType() {
-            return this.value ? 'success' : 'danger';
+            return this.value ? 'success' : 'error';
         }
     }
 };
 </script>
 
 <template>
-    <b-badge
+    <fig-badge
         :variant="tagType"
         v-on="$listeners"
-        v-bind="$attrs"
-        pill>{{ label }}</b-badge>
+        :pill="pill">{{ label }}</fig-badge>
 </template>
-
-
-<style lang="scss">
-.badge {
-    padding: 0.35em 0.6em !important;
-}
-.badge-success {
-    background-color: #def7ec !important;
-    color: #03543f !important;
-}
-.badge-danger {
-    background-color: #fde8e8 !important;
-    color: #9b1c1c !important;
-}
-</style>
