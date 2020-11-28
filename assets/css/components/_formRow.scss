@@ -42,33 +42,3 @@
         line-height: 14px;
     }
 }
-
-.inputGroupContainer {
-    @include flexbox();
-    @include flex-direction(row);
-    @include flex-wrap(wrap);
-    @include justify-content(flex-start);
-    @include align-items(flex-start);
-}
-
-.inputGroup {
-    > label {
-        display: block;
-        margin-bottom: 2px;
-        font-size: 14px;
-    }
-}
-
-.inputGroupGrow {
-    @include flex-grow(1);
-}
-
-@media #{$small-and-down}  {
-    .inputGroupContainer {
-        display: block;
-
-        .inputGroup > div {
-            width: 100%;
-        }
-    }
-}

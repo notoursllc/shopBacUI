@@ -17,7 +17,8 @@ import {
     FigFormGroup,
     FigFormInput,
     FigFormTextarea,
-    FigButton
+    FigButton,
+    FigFormInputEndcapper
 } from '@notoursllc/figleaf';
 
 
@@ -42,7 +43,8 @@ export default {
         FigFormGroup,
         FigFormInput,
         FigFormTextarea,
-        FigButton
+        FigButton,
+        FigFormInputEndcapper
     },
 
     mixins: [
@@ -314,53 +316,43 @@ export default {
             <div slot="header">{{ $t('Search engine listing') }}</div>
 
             <b-container>
-                <b-row>
-                    <!-- page title -->
-                    <b-col lg="12">
-                        <fig-form-group class="mb-2">
-                            <label slot="label" for="product_seo_page_title">{{ $t('Page title') }}</label>
-                            <fig-form-input
-                                v-model="product.seo_page_title"
-                                maxlength="70"
-                                id="product_seo_page_title" />
-                        </fig-form-group>
-                    </b-col>
-                </b-row>
+                <!-- page title -->
+                <fig-form-group class="mb-2 block">
+                    <label slot="label" for="product_seo_page_title">{{ $t('Page title') }}</label>
+                    <fig-form-input
+                        v-model="product.seo_page_title"
+                        maxlength="70"
+                        id="product_seo_page_title" />
+                </fig-form-group>
 
-                <b-row>
-                    <!-- description -->
-                    <b-col lg="12">
-                        <fig-form-group class="mb-2">
-                            <label slot="label" for="product_seo_page_desc">{{ $t('Description') }}</label>
-                            <fig-form-textarea
-                                v-model="product.seo_page_desc"
-                                :rows="2"
-                                maxlength="320"
-                                id="product_seo_page_desc" />
-                        </fig-form-group>
-                    </b-col>
-                </b-row>
+                <!-- description -->
+                <fig-form-group class="mb-2 block">
+                    <label slot="label" for="product_seo_page_desc">{{ $t('Description') }}</label>
+                    <fig-form-textarea
+                        v-model="product.seo_page_desc"
+                        :rows="2"
+                        maxlength="320"
+                        id="product_seo_page_desc" />
+                </fig-form-group>
 
-                <b-row>
-                    <!-- URI -->
-                    <b-col lg="12">
-                        <fig-form-group class="mb-2">
-                            <label slot="label" for="product_seo_uri">{{ $t('URL and handle') }}</label>
-                            <b-input-group :prepend="`https://${domainName}/p/`">
-                                <fig-form-input
-                                    v-model="product.seo_uri"
-                                    maxlength="50"
-                                    clearable
-                                    :state="!$v.product.seo_uri.$invalid ? null : false"
-                                    id="product_seo_uri" />
-                            </b-input-group>
+                <!-- URI -->
+                <fig-form-group class="mb-2 block">
+                    <label slot="label" for="product_seo_uri">{{ $t('URL and handle') }}</label>
 
-                            <div
-                                v-if="$v.product.seo_uri.$invalid"
-                                slot="error">{{ seoUrlValidationErrorMessage }}</div>
-                        </fig-form-group>
-                    </b-col>
-                </b-row>
+                    <fig-form-input-endcapper>
+                        <template slot="prefix">{{ `https://${domainName}/p/` }}</template>
+                        <fig-form-input
+                            v-model="product.seo_uri"
+                            maxlength="50"
+                            :state="!$v.product.seo_uri.$invalid ? null : false"
+                            square-left
+                            id="product_seo_uri" />
+                    </fig-form-input-endcapper>
+
+                    <div
+                        v-if="$v.product.seo_uri.$invalid"
+                        slot="error">{{ seoUrlValidationErrorMessage }}</div>
+                </fig-form-group>
             </b-container>
 
             <div class="pvl" v-show="product.seo_page_title">

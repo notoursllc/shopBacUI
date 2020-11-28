@@ -18,6 +18,11 @@ export default {
         pill: {
             type: Boolean,
             default: false
+        },
+
+        size: {
+            type: String,
+            default: 'lg'
         }
     },
 
@@ -37,5 +42,6 @@ export default {
     <fig-badge
         :variant="tagType"
         v-on="$listeners"
-        :pill="pill">{{ label }}</fig-badge>
+        :pill="pill"
+        :size="size">{{ label }}</fig-badge>
 </template>

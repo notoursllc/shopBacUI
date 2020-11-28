@@ -1,26 +1,27 @@
 <script>
 import uuid from 'uuid';
 import {
-    BInputGroup,
-    BInputGroupAppend,
     BPopover
 } from 'bootstrap-vue';
 
 import {
     FigButton,
-    FigFormInput
+    FigFormInput,
+    FigFormInputEndcapper
 } from '@notoursllc/figleaf';
+import Button from '@notoursllc/figleaf/components/Button.vue';
 
 
 export default {
     name: 'SizeInput',
 
+    inheritAttrs: false,
+
     components: {
-        BInputGroup,
-        BInputGroupAppend,
         BPopover,
         FigButton,
-        FigFormInput
+        FigFormInput,
+        FigFormInputEndcapper
     },
 
     props: {
@@ -81,20 +82,24 @@ export default {
 
 
 <template>
-    <div class="d-inline-block">
-        <b-input-group :size="size">
+    <div class="w-full">
+
+        <fig-form-input-endcapper>
             <fig-form-input
                 v-model="selectedSize"
                 @input="emitInput"
-                :placeholder="placeholder" />
-            <b-input-group-append>
-                <fig-button
-                    variant="plain"
-                    @click="togglePopover"
-                    :id="uuid"
-                    :icon="showPopover ? 'chevron-up' : 'chevron-down'" />
-            </b-input-group-append>
-        </b-input-group>
+                :placeholder="placeholder"
+                v-bind="$attrs"
+                square-right />
+
+            <fig-button
+                slot="suffix"
+                variant="naked"
+                type="button"
+                @click="togglePopover"
+                :id="uuid"
+                :icon="showPopover ? 'chevron-up' : 'chevron-down'" />
+        </fig-form-input-endcapper>
 
         <b-popover
             :target="uuid"

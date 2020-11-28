@@ -75,6 +75,7 @@
     "Choose images": "Choose images",
     "Choose sizes": "Choose sizes",
     "Clear table": "Clear table",
+    "Collapse all": "Collapse all",
     "Collection added successfully": "Collection added successfully",
     "Collection updated successfully": "Collection updated successfully",
     "Collections": "Collections",
@@ -89,7 +90,6 @@
     "COMPANY NAME": "COMPANY NAME",
     "Company name": "Company name",
     "Compare at": "Compare at",
-    "Compare at price": "Compare at price",
     "Complete Order": "Complete Order",
     "Conditions": "Conditions",
     "Conditions of Use": "Conditions of Use",
@@ -148,6 +148,7 @@
     "Error updating item": "Error updating item",
     "Estimated tax": "Estimated tax",
     "example: Black": "example: Black",
+    "Expand all": "Expand all",
     "Expiration date": "Expiration date",
 
     "Featured images": "Featured images",
@@ -415,6 +416,7 @@
     "Use pre-defined": "Use pre-defined",
     "use this": "use this",
     "Used to calculate shipping rates at checkout and label prices during fulfillment.": "Used to calculate shipping rates at checkout and label prices during fulfillment.",
+    "Using color value": "Using color value",
 
     "Valid characters: _chars_": "Valid characters: {chars}",
     "Value": "Value",

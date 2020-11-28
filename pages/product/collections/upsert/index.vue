@@ -6,7 +6,8 @@ import {
     FigButton,
     FigFormCheckbox,
     FigFormInput,
-    FigFormTextarea
+    FigFormTextarea,
+    FigFormInputEndcapper
 } from '@notoursllc/figleaf';
 
 export default {
@@ -15,7 +16,8 @@ export default {
         FigButton,
         FigFormCheckbox,
         FigFormInput,
-        FigFormTextarea
+        FigFormTextarea,
+        FigFormInputEndcapper
     },
 
     data() {
@@ -152,11 +154,14 @@ export default {
             <div class="inputRow">
                 <label>{{ $t('URL and handle') }}:</label>
                 <span>
-                    <b-input-group :prepend="`https://${domainName}`">
+                    <fig-form-input-endcapper>
+                        <template slot="prefix">{{ `https://${domainName}` }}</template>
+
                         <fig-form-input
                             v-model="collection.seo_uri"
-                            maxlength="50" />
-                    </b-input-group>
+                            maxlength="50"
+                            square-left />
+                    </fig-form-input-endcapper>
                 </span>
             </div>
         </text-card>

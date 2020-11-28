@@ -2,9 +2,12 @@
 import isObject from 'lodash.isobject';
 import draggable from 'vuedraggable';
 import PopConfirm from '@/components/PopConfirm';
+import BooleanTag from '@/components/BooleanTag';
 import SizeInput from '@/components/product/size/SizeInput';
-import CountrySelect from '@/components/CountrySelect';
-import InputAppendCheckbox from '@/components/product/size/formInputs/InputAppendCheckbox';
+import SizeCardDetailsView from '@/components/product/size/sizeCard/SizeCardDetailsView';
+import SizeCardEditView from '@/components/product/size/sizeCard/SizeCardEditView';
+import UsingColorValueBadge from '@/components/product/size/sizeCard/UsingColorValueBadge';
+
 import {
     BTooltip,
     BPopover,
@@ -15,11 +18,14 @@ import {
 import {
     FigFormGroup,
     FigFormCheckbox,
-    FigFormInputMoney,
     FigFormInput,
     FigButton,
     FigFormSelect,
-    FigFormInputNumber
+    FigFormInputNumber,
+    FigFormInputMoney,
+    FigFormInputToggle,
+    FigFormSelectCountry,
+    FigBadge
 } from '@notoursllc/figleaf';
 
 
@@ -31,18 +37,24 @@ export default {
         BTooltip,
         BPopover,
         PopConfirm,
+        BooleanTag,
         SizeInput,
-        CountrySelect,
-        InputAppendCheckbox,
+        SizeCardDetailsView,
         BCard,
         BCardHeader,
         FigFormCheckbox,
         FigFormGroup,
-        FigFormInputMoney,
         FigFormInput,
         FigButton,
         FigFormSelect,
-        FigFormInputNumber
+        FigFormInputNumber,
+        FigFormInputMoney,
+        FigFormInputToggle,
+        FigFormSelectCountry,
+        FigBadge,
+        SizeCardDetailsView,
+        SizeCardEditView,
+        UsingColorValueBadge
     },
 
     props: {
@@ -64,7 +76,8 @@ export default {
             whenOutOfStockOptions: [
                 { label: this.$t('Continue selling'), value: true },
                 { label: this.$t('Hide'), value: false }
-            ]
+            ],
+            allOpened: false
         };
     },
 
@@ -95,7 +108,7 @@ export default {
             this.emitInput();
         },
 
-        addRow() {
+        addSize() {
             this.sizes.splice(this.sizes.length, 1, {
                 ordinal: this.sizes.length,
                 label: null,
@@ -110,9 +123,11 @@ export default {
                 track_inventory_count: true,
                 sku: null,
                 barcode: null,
-                customs_country_of_origin: null
+                customs_country_of_origin: null,
+
+                // meta data that should be removed before saving:
+                opened: true
             });
-            // this.sizes.push({});
 
             this.emitInput();
         },
@@ -127,6 +142,14 @@ export default {
 
         toggleBulkEdit() {
             this.showBulkEdit = !this.showBulkEdit;
+        },
+
+        toggleAllFormOpened() {
+            this.allOpened = !this.allOpened;
+
+            this.sizes.forEach((size) => {
+                size.opened = this.allOpened;
+            });
         },
 
         onClickApplyBulkEdit() {
@@ -161,6 +184,18 @@ export default {
                     this.$set(this.bulkEdit, k, null);
                 });
             }
+        },
+
+        getInheritValueTooltip(useColorVal) {
+            return useColorVal ? this.$t('This value is being inherited from the Color') : this.$t('Check to inherit value from the Color');
+        },
+
+        updateSize(index, obj) {
+            if(isObject(obj)) {
+                for(const prop in obj) {
+                    this.$set(this.sizes[index], prop, obj[prop]);
+                }
+            }
         }
     }
 };
@@ -172,6 +207,8 @@ export default {
         <div class="pb-2" v-if="sizes.length">
 
             <div class="d-flex flex-row align-items-center pb-2">
+
+                <!-- created button list -->
                 <div class="flex-fill">
                     <div class="d-inline-block pr-2 text-sm">{{ $t('Created') }}:</div>
                     <div class="d-inline-block">
@@ -184,7 +221,7 @@ export default {
                             <fig-button
                                 v-for="(size, idx) in sizes"
                                 :key="idx"
-                                variant="success-outline"
+                                variant="success"
                                 class="mr-2 size-btn handle"
                                 size="sm"
                                 :href="`#size-card-${idx}`">{{ size.label }}</fig-button>
@@ -192,7 +229,16 @@ export default {
                     </div>
                 </div>
 
-                <div id="header-container">
+
+                <!-- bulk edit button/popup -->
+                <div id="header-container" v-if="sizes.length > 1">
+                    <fig-button
+                        variant="plain"
+                        size="sm"
+                        @click="toggleAllFormOpened"
+                        :icon="allOpened ? 'chevron-up' : 'chevron-down'"
+                        class="mr-2">{{ allOpened ? $t('Collapse all') : $t('Expand all') }}</fig-button>
+
                     <fig-button
                         variant="plain"
                         size="sm"
@@ -212,145 +258,190 @@ export default {
 
                         <!-- price -->
                         <div class="bulk-edit-row">
-                            <label>
+                            <div class="bulk-edit-cell">
                                 <fig-form-checkbox
                                     v-model="bulkEditInputToggle.base_price"
-                                    @input="(val) => { onBulkEditRegister(['base_price', 'base_price_inherit'], val) }">
-                                    {{ $t('Price') }}
-                                </fig-form-checkbox>
-                            </label>
-                            <span>
-                                <input-append-checkbox
-                                    v-if="bulkEdit.hasOwnProperty('base_price')"
-                                    v-model="bulkEdit.base_price_inherit">
-                                    <template slot-scope="scope">
-                                        <fig-form-input-money
-                                            :disabled="scope.checked"
-                                            v-model="bulkEdit.base_price"
-                                            size="sm" />
-                                    </template>
-                                </input-append-checkbox>
-                            </span>
+                                    @input="(val) => { onBulkEditRegister(['base_price', 'base_price_inherit'], val) }"
+                                    id="bulk-edit-price" />
+                            </div>
+
+                            <div class="bulk-edit-cell pl-2">
+                                <div class="bulk-edit-label">
+                                    <label for="bulk-edit-price">{{ $t('Price') }}</label>
+                                    <fig-form-input-toggle
+                                        v-if="bulkEditInputToggle.base_price"
+                                        v-model="bulkEdit.base_price_inherit"
+                                        size="sm"
+                                        variant="success"
+                                        inverse />
+                                </div>
+
+                                <div v-if="bulkEdit.hasOwnProperty('base_price')">
+                                    <div
+                                        v-if="bulkEdit.base_price_inherit"
+                                        class="bulk-edit-noval">{{ $t('Use color value') }}</div>
+
+                                    <fig-form-input-money
+                                        v-else
+                                        v-model="bulkEdit.base_price" />
+                                </div>
+                            </div>
                         </div>
+
 
                         <!-- compare at -->
                         <div class="bulk-edit-row">
-                            <label>
+                            <div class="bulk-edit-cell">
                                 <fig-form-checkbox
                                     v-model="bulkEditInputToggle.compare_at_price"
-                                    @input="(val) => { onBulkEditRegister(['compare_at_price', 'compare_at_price_inherit'], val) }">
-                                    {{ $t('Compare at') }}
-                                </fig-form-checkbox>
-                            </label>
-                            <span>
-                                <input-append-checkbox
-                                    v-if="bulkEdit.hasOwnProperty('compare_at_price')"
-                                    v-model="bulkEdit.compare_at_price_inherit">
-                                    <template slot-scope="scope">
-                                        <fig-form-input-money
-                                            :disabled="scope.checked"
-                                            v-model="bulkEdit.compare_at_price"
-                                            size="sm" />
-                                    </template>
-                                </input-append-checkbox>
-                            </span>
+                                    @input="(val) => { onBulkEditRegister(['compare_at_price', 'compare_at_price_inherit'], val) }"
+                                    id="bulk-edit-compare-at" />
+                            </div>
+
+                            <div class="bulk-edit-cell pl-2">
+                                <div class="bulk-edit-label">
+                                    <label for="bulk-edit-compare-at">{{ $t('Compare at') }}</label>
+                                    <fig-form-input-toggle
+                                        v-if="bulkEditInputToggle.compare_at_price"
+                                        v-model="bulkEdit.compare_at_price_inherit"
+                                        variant="success"
+                                        inverse
+                                        size="sm" />
+                                </div>
+
+                                <div v-if="bulkEdit.hasOwnProperty('compare_at_price')">
+                                    <div
+                                        v-if="bulkEdit.compare_at_price_inherit"
+                                        class="bulk-edit-noval">{{ $t('Use color value') }}</div>
+
+                                    <fig-form-input-money
+                                        v-else
+                                        v-model="bulkEdit.compare_at_price" />
+                                </div>
+                            </div>
                         </div>
+
 
                         <!-- cost per item -->
                         <div class="bulk-edit-row">
-                            <label>
+                            <div class="bulk-edit-cell">
                                 <fig-form-checkbox
                                     v-model="bulkEditInputToggle.cost_price"
-                                    @input="(val) => { onBulkEditRegister(['cost_price', 'cost_price_inherit'], val) }">
-                                    {{ $t('Cost per item') }}
-                                </fig-form-checkbox>
-                            </label>
-                            <span>
-                                <input-append-checkbox
-                                    v-if="bulkEdit.hasOwnProperty('cost_price')"
-                                    v-model="bulkEdit.cost_price_inherit">
-                                    <template slot-scope="scope">
-                                        <fig-form-input-money
-                                            :disabled="scope.checked"
-                                            v-model="bulkEdit.cost_price"
-                                            size="sm" />
-                                    </template>
-                                </input-append-checkbox>
-                            </span>
+                                    @input="(val) => { onBulkEditRegister(['cost_price', 'cost_price_inherit'], val) }"
+                                    id="bulk-edit-cost_price" />
+                            </div>
+                            <div class="bulk-edit-cell pl-2">
+                                <div class="bulk-edit-label">
+                                    <label for="bulk-edit-cost_price">{{ $t('Cost per item') }}</label>
+                                    <fig-form-input-toggle
+                                        v-if="bulkEditInputToggle.cost_price"
+                                        v-model="bulkEdit.cost_price_inherit"
+                                        variant="success"
+                                        size="sm"
+                                        inverse />
+                                </div>
+
+                                <div v-if="bulkEdit.hasOwnProperty('cost_price')">
+                                    <div
+                                        v-if="bulkEdit.cost_price_inherit"
+                                        class="bulk-edit-noval">{{ $t('Use color value') }}</div>
+
+                                    <fig-form-input-money
+                                        v-else
+                                        v-model="bulkEdit.cost_price" />
+                                </div>
+                            </div>
                         </div>
+
 
                         <!-- weight -->
                         <div class="bulk-edit-row">
-                            <label>
+                            <div class="bulk-edit-cell">
                                 <fig-form-checkbox
                                     v-model="bulkEditInputToggle.weight_oz"
-                                    @input="(val) => { onBulkEditRegister(['weight_oz', 'weight_oz_inherit'], val) }">
-                                    {{ $t('Weight (oz)') }}
-                                </fig-form-checkbox>
-                            </label>
-                            <span>
-                                <input-append-checkbox
-                                    v-if="bulkEdit.hasOwnProperty('weight_oz')"
-                                    v-model="bulkEdit.weight_oz_inherit">
-                                    <template slot-scope="scope">
-                                        <fig-form-input
-                                            :disabled="scope.checked"
-                                            v-model="bulkEdit.weight_oz"
-                                            type="number"
-                                            :step=".01"
-                                            :min="0"
-                                            size="sm"
-                                            @input="emitInput" />
-                                    </template>
-                                </input-append-checkbox>
-                            </span>
+                                    @input="(val) => { onBulkEditRegister(['weight_oz', 'weight_oz_inherit'], val) }"
+                                    id="bulk-edit-weight-oz" />
+                            </div>
+
+                            <div class="bulk-edit-cell pl-2">
+                                <div class="bulk-edit-label">
+                                    <label for="bulk-edit-weight-oz">{{ $t('Weight (oz)') }}</label>
+                                    <fig-form-input-toggle
+                                        v-if="bulkEditInputToggle.weight_oz"
+                                        v-model="bulkEdit.weight_oz_inherit"
+                                        variant="success"
+                                        size="sm"
+                                        inverse />
+                                </div>
+
+                                <div v-if="bulkEdit.hasOwnProperty('weight_oz')">
+                                    <div
+                                        v-if="bulkEdit.weight_oz_inherit"
+                                        class="bulk-edit-noval">{{ $t('Use color value') }}</div>
+
+                                    <fig-form-input-number
+                                        v-else
+                                        type="number"
+                                        v-model="bulkEdit.weight_oz"
+                                        :step=".01"
+                                        :min="0" />
+                                </div>
+                            </div>
                         </div>
+
 
                         <!-- when out of stock -->
                         <div class="bulk-edit-row">
-                            <label>
+                            <div class="bulk-edit-cell">
                                 <fig-form-checkbox
                                     v-model="bulkEditInputToggle.visible_if_no_inventory"
-                                    @input="(val) => { onBulkEditRegister('visible_if_no_inventory', val) }">
-                                    {{ $t('When out of stock') }}
-                                </fig-form-checkbox>
-                            </label>
-                            <span>
+                                    @input="(val) => { onBulkEditRegister('visible_if_no_inventory', val) }" />
+                            </div>
+
+                            <div class="bulk-edit-cell pl-2">
+                                <label for="bulk-edit-visible-no-inventory">{{ $t('When out of stock') }}</label>
+
                                 <div v-if="bulkEdit.hasOwnProperty('visible_if_no_inventory')">
                                     <fig-form-select
-                                        v-model="bulkEdit.visible_if_no_inventory"
                                         :options="whenOutOfStockOptions"
-                                        size="sm"
                                         :reduce="obj => obj.value" />
                                 </div>
-                            </span>
+                            </div>
                         </div>
+
 
                         <!-- Country of origin -->
                         <div class="bulk-edit-row">
-                            <label>
+                            <div class="bulk-edit-cell">
                                 <fig-form-checkbox
                                     v-model="bulkEditInputToggle.customs_country_of_origin"
-                                    @input="(val) => { onBulkEditRegister(['customs_country_of_origin', 'customs_country_of_origin_inherit'], val) }">
-                                    {{ $t('Country of origin') }}
-                                </fig-form-checkbox>
-                            </label>
-                            <span>
-                                <input-append-checkbox
-                                    v-if="bulkEdit.hasOwnProperty('customs_country_of_origin')"
-                                    v-model="bulkEdit.customs_country_of_origin_inherit">
-                                    <template slot-scope="scope">
-                                        <country-select
-                                            size="sm"
-                                            :disabled="scope.checked"
-                                            v-model="bulkEdit.customs_country_of_origin"
-                                            :right-radius="false"
-                                            class="widthAll" />
-                                    </template>
-                                </input-append-checkbox>
-                            </span>
-                        </div>
+                                    @input="(val) => { onBulkEditRegister(['customs_country_of_origin', 'customs_country_of_origin_inherit'], val) }"
+                                    id="bulk-edit-country" />
+                            </div>
 
+                            <div class="bulk-edit-cell pl-2">
+                                <div class="bulk-edit-label">
+                                    <label for="bulk-edit-country">{{ $t('Country of origin') }}</label>
+                                    <fig-form-input-toggle
+                                        v-if="bulkEditInputToggle.customs_country_of_origin"
+                                        v-model="bulkEdit.customs_country_of_origin_inherit"
+                                        variant="success"
+                                        size="sm"
+                                        inverse />
+                                </div>
+
+                                <div v-if="bulkEdit.hasOwnProperty('customs_country_of_origin')">
+                                    <div
+                                        v-if="bulkEdit.customs_country_of_origin_inherit"
+                                        class="bulk-edit-noval">{{ $t('Use color value') }}</div>
+
+                                    <fig-form-select-country
+                                        v-else
+                                        v-model="bulkEdit.customs_country_of_origin"
+                                        class="widthAll" />
+                                </div>
+                            </div>
+                        </div>
 
                         <div class="text-center pt-2">
                             <fig-button
@@ -367,38 +458,38 @@ export default {
 
                     </b-popover>
                 </div>
-
-
             </div>
-
-
         </div>
 
 
+
+        <!-- size card list -->
         <draggable
             v-model="sizes"
             @update="emitInput"
             ghost-class="ghost"
             handle=".handle"
-            class="size-card-list"
+            class="flex flex-wrap -mx-1"
             tag="div">
-            <b-card
+
+            <!-- card -->
+            <div
+                class="my-2 px-2 w-full sm:w-full md:w-1/2 xl:w-1/3"
                 v-for="(size, index) in sizes"
-                :key="index"
-                body-class="p-0"
-                class="mb-4"
-                :id="`size-card-${index}`">
-                <b-card-header header-class="p-2">
+                :key="index">
+                <div
+                    class="bg-gray-100 border rounded-lg shadow-md"
+                    :class="{'border-red-600': !size.label, 'border-gray-200': size.label}">
 
-                    <div class="d-flex flex-row align-items-center">
-                        <div class="flex-fill">
-                            <size-input
-                                v-model="size.label"
-                                @input="emitInput"
-                                size="md"
-                                :placeholder="$t('Choose a size')"
-                                class="size-select" />
+                    <!-- button header -->
+                    <div class="flex flex-row items-center pt-1 px-3">
+                        <div class="flex-grow">
+                            <i class="handle">
+                                <fig-icon icon="dots" />
+                            </i>
+                        </div>
 
+                        <div>
                             <pop-confirm
                                 @onConfirm="removeRow(index)">
                                 {{ $t('Delete this size?') }}
@@ -408,200 +499,61 @@ export default {
                                 </i>
                             </pop-confirm>
                         </div>
-
-                        <i class="handle">
-                            <fig-icon icon="dots-vertical-double" />
-                        </i>
-                    </div>
-                </b-card-header>
-
-                <b-container class="d-flex flex-row flex-wrap">
-                    <!-- left column -->
-                    <div class="flex-fill px-3 py-2">
-                        <!-- inventory -->
-                        <fig-form-group class="mb-3">
-                            <label for="size_qty" slot="label" class="text-sm p-0">
-                                {{ $t('Inventory') }}
-                            </label>
-
-                            <fig-form-input-number
-                                v-model="size.inventory_count"
-                                :min="0"
-                                size="sm"
-                                id="size_qty" />
-
-                            <div class="pt-1">
-                                <fig-form-checkbox
-                                    v-model="size.track_inventory_count"
-                                    @input="emitInput">{{ $t('Track inventory') }}</fig-form-checkbox>
-                            </div>
-
-                            <div>
-                                <fig-form-checkbox
-                                    v-model="size.visible_if_no_inventory"
-                                    @input="emitInput">{{ $t('Hide when out of stock') }}</fig-form-checkbox>
-                            </div>
-                        </fig-form-group>
-
-                        <!-- sku -->
-                        <fig-form-group>
-                            <label for="size_sku" slot="label" class="text-sm p-0">
-                                {{ $t('SKU') }}
-                            </label>
-
-                            <fig-form-input
-                                v-model="size.sku"
-                                size="sm"
-                                @input="emitInput"
-                                id="size_sku" />
-                        </fig-form-group>
                     </div>
 
-                    <!-- middle column -->
-                    <div class="flex-fill px-3 py-2">
-                        <!-- price -->
-                        <fig-form-group class="mb-2">
-                            <label for="size_price" slot="label" class="text-sm p-0">
-                                {{ $t('Price') }}
-                            </label>
-
-                            <input-append-checkbox
-                                v-model="size.base_price_inherit">
-                                <template slot-scope="scope">
-                                    <fig-form-input-money
-                                        :disabled="scope.checked"
-                                        v-model="size.base_price"
-                                        id="size_price"
-                                        size="sm" />
-                                </template>
-                            </input-append-checkbox>
-                        </fig-form-group>
-
-                        <!-- compare at -->
-                        <fig-form-group class="mb-2">
-                            <label for="size_price_compare_at" slot="label" class="text-sm p-0">
-                                {{ $t('Compare at') }}
-                            </label>
-
-                            <input-append-checkbox
-                                v-model="size.compare_at_price_inherit">
-                                <template slot-scope="scope">
-                                    <fig-form-input-money
-                                        :disabled="scope.checked"
-                                        v-model="size.compare_at_price"
-                                        id="size_price_compare_at"
-                                        size="sm" />
-                                </template>
-                            </input-append-checkbox>
-                        </fig-form-group>
-
-                        <!-- cost per item -->
-                        <fig-form-group>
-                            <label for="size_price_cost" slot="label" class="text-sm p-0">
-                                {{ $t('Cost') }}
-                            </label>
-
-                            <input-append-checkbox
-                                v-model="size.cost_price_inherit">
-                                <template slot-scope="scope">
-                                    <fig-form-input-money
-                                        :disabled="scope.checked"
-                                        v-model="size.cost_price"
-                                        id="size_price_cost"
-                                        size="sm" />
-                                </template>
-                            </input-append-checkbox>
-                        </fig-form-group>
+                    <!-- size input -->
+                    <div class="p-3 flex items-center flex-grow">
+                        <size-input
+                            v-model="size.label"
+                            @input="emitInput"
+                            size="md"
+                            :placeholder="$t('Choose a size')"
+                            style="min-width:200px" />
                     </div>
 
-                    <!-- right column -->
-                    <div class="flex-fill px-3 py-2">
-                        <!-- weight -->
-                        <fig-form-group class="pb-2">
-                            <label for="size_weight" slot="label" class="text-sm p-0">
-                                {{ $t('Weight (oz)') }}
-                            </label>
+                    <!-- body -->
+                    <div class="text-sm border-t border-gray-200">
+                        <div class="px-2 pt-2 pb-1 text-right">
+                            <fig-button
+                                @click="$set(size, 'opened', !size.opened)"
+                                variant="ghost"
+                                :icon="size.opened ? 'chevron-up' : 'chevron-down'"
+                                size="sm" />
+                        </div>
 
-                            <input-append-checkbox
-                                v-model="size.weight_oz_inherit">
-                                <template slot-scope="scope">
-                                    <fig-form-input
-                                        :disabled="scope.checked"
-                                        v-model="size.weight_oz"
-                                        type="number"
-                                        :step=".01"
-                                        :min="0"
-                                        size="sm"
-                                        @input="emitInput"
-                                        id="size_weight" />
-                                </template>
-                            </input-append-checkbox>
-                        </fig-form-group>
+                        <div class="px-3 pb-3">
+                            <!-- details view -->
+                            <size-card-details-view
+                                v-if="!size.opened"
+                                :size="size" />
 
-                        <!-- barcode -->
-                        <fig-form-group class="pb-2">
-                            <label for="size_barcode" slot="label" class="text-sm p-0">
-                                {{ $t('Barcode') }}
-                                <i v-b-tooltip.hover.top="$t('sku_barcode_description')">
-                                    <fig-icon icon="info-circle" width="16" height="16" />
-                                </i>
-                            </label>
+                            <!-- edit view -->
+                            <size-card-edit-view
+                                v-else
+                                :size="size"
+                                @input="obj => $set(size, obj.property, obj.value)" />
+                        </div>
 
-                            <fig-form-input
-                                v-model="size.barcode"
-                                @input="emitInput"
-                                size="sm"
-                                id="size_barcode" />
-                        </fig-form-group>
-
-                        <!-- country of origin -->
-                        <fig-form-group>
-                            <label for="size_origin" slot="label" class="text-sm p-0">
-                                {{ $t('Country of origin') }}
-                                <i v-b-tooltip.hover.top="$t('customs_country_of_origin_desc')">
-                                    <fig-icon icon="info-circle" width="16" height="16" />
-                                </i>
-                            </label>
-
-                            <input-append-checkbox
-                                v-model="size.customs_country_of_origin_inherit">
-                                <template slot-scope="scope">
-                                    <country-select
-                                        :disabled="scope.checked"
-                                        v-model="size.customs_country_of_origin"
-                                        size="sm"
-                                        class="widthAll"
-                                        id="size_origin" />
-                                </template>
-                            </input-append-checkbox>
-                        </fig-form-group>
                     </div>
-
-                </b-container>
-            </b-card>
+                </div>
+            </div>
         </draggable>
 
 
-        <div>
+        <div class="mt-2">
             <fig-button
                 variant="primary"
                 size="sm"
-                @click="addRow"
+                @click="addSize"
                 icon="plus">{{ $t('Add Size') }}</fig-button>
         </div>
     </div>
 </template>
 
 
-<style lang="scss">
+<style lang="postcss">
 .handle {
     cursor: grab !important;
-}
-
-.size-select {
-    input, button {
-        border: 1px solid #2eb85c !important;
-    }
 }
 
 // zebra striping the cards to they are a bit easier to differentiate
@@ -610,16 +562,46 @@ export default {
 }
 
 .bulk-edit-row {
-    display: block;
-    padding-bottom: 5px;
+    @apply table-row;
+}
+.bulk-edit-cell {
+    @apply table-cell pb-1;
+}
+.bulk-edit-label {
+    @apply flex flex-row flex-no-wrap items-center;
+    padding-bottom: 2px;
+}
+.bulk-edit-label .fig-toggle {
+    @apply pl-2;
+}
+.bulk-edit-noval {
+    @apply text-gray-500;
+}
 
-    >label, >span {
-        display: block;
-    }
-    >label {
-        padding-right: 5px;
-        vertical-align: top;
-    }
+.size-details-row {
+    @apply table-row;
+}
+.size-details-cell {
+    @apply table-cell pb-1;
+}
+.size-details-row > label {
+    @apply font-medium pr-2 pb-1;
+}
+
+
+
+
+.formRow {
+    display: table-row;
+}
+.formRow > label {
+    padding-right: 10px;
+}
+.formRow > label,
+.formRow > span {
+    display: table-cell;
+    padding-bottom: 10px;
+    vertical-align: top;
 }
 </style>
 
