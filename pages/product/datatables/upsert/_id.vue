@@ -1,21 +1,21 @@
 <script>
 import TableBuilder from '@/components/tableBuilder/TableBuilder';
-import AppOverlay from '@/components/AppOverlay';
 
 import {
     FigButton,
     FigFormInput,
-    FigFormGroup
+    FigFormGroup,
+    FigOverlay
 } from '@notoursllc/figleaf';
 
 
 export default {
     components: {
         TableBuilder,
-        AppOverlay,
         FigButton,
         FigFormInput,
-        FigFormGroup
+        FigFormGroup,
+        FigOverlay
     },
 
     data() {
@@ -87,7 +87,7 @@ export default {
 
 
 <template>
-    <app-overlay :show="loading">
+    <fig-overlay :show="loading">
 
         <fig-form-group>
             <label slot="label" for="input_name">{{ $t('Name')+ ':' }}</label>
@@ -110,12 +110,12 @@ export default {
                 @click="onSaveClick">{{ $t('Save') }}</fig-button>
 
             <fig-button
-                variant="light"
+                variant="plain"
                 class="ml-2"
                 @click="onCancelClick">{{ $t('cancel') }}</fig-button>
         </div>
 
-    </app-overlay>
+    </fig-overlay>
 </template>
 
 

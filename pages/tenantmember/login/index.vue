@@ -1,18 +1,17 @@
 <script>
-import AppOverlay from '@/components/AppOverlay';
-
 import {
     FigButton,
-    FigFormInput
+    FigFormInput,
+    FigOverlay
 } from '@notoursllc/figleaf';
 
 export default {
     name: 'LoginPage',
 
     components: {
-        AppOverlay,
         FigButton,
-        FigFormInput
+        FigFormInput,
+        FigOverlay
     },
 
     data() {
@@ -49,7 +48,7 @@ export default {
     <div>
         <h1>Login</h1>
 
-        <app-overlay :show="loading">
+        <fig-overlay :show="loading">
             <form @submit.prevent>
                 <!-- email -->
                 <div class="inputGroup mrl mbm">
@@ -71,7 +70,7 @@ export default {
                     variant="primary"
                     @click="onSubmit">{{ $t('Submit') }}</fig-button>
             </form>
-        </app-overlay>
+        </fig-overlay>
     </div>
 </template>
 

@@ -1,6 +1,20 @@
 <script>
+import {
+    FigButton,
+    FigDropdown,
+    FigDropdownButton,
+    FigDropdownDivider
+} from '@notoursllc/figleaf';
+
 export default {
     name: 'OperationsDropdown',
+
+    components: {
+        FigButton,
+        FigDropdown,
+        FigDropdownButton,
+        FigDropdownDivider
+    },
 
     props: {
         showView: {
@@ -22,18 +36,17 @@ export default {
 </script>
 
 <template>
-    <b-dropdown
-        variant="outline-secondary"
-        size="sm"
-        toggle-class="bv-ops-dropdown">
-        <b-dropdown-item-button v-if="showView" @click="$emit('view')">{{ $t('View') }}</b-dropdown-item-button>
-        <b-dropdown-item-button v-if="showEdit" @click="$emit('edit')">{{ $t('Edit') }}</b-dropdown-item-button>
-        <b-dropdown-item-button v-if="showDelete" @click="$emit('delete')">{{ $t('Delete') }}</b-dropdown-item-button>
-    </b-dropdown>
-</template>
+    <fig-dropdown placement="bottom">
+        <span slot="toggler" slot-scope="props">
+            <fig-button
+                v-bind="props.ariaAttrs"
+                variant="plain"
+                size="sm"
+                icon="chevron-down" />
+        </span>
 
-<style lang="scss">
-.bv-ops-dropdown {
-    padding: 1px 7px !important;
-}
-</style>
+        <fig-dropdown-button v-if="showView" @click="$emit('view')">{{ $t('View') }}</fig-dropdown-button>
+        <fig-dropdown-button v-if="showEdit" @click="$emit('edit')">{{ $t('Edit') }}</fig-dropdown-button>
+        <fig-dropdown-button v-if="showDelete" @click="$emit('delete')">{{ $t('Delete') }}</fig-dropdown-button>
+    </fig-dropdown>
+</template>

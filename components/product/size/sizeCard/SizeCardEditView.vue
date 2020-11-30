@@ -11,6 +11,7 @@ import {
     FigFormInputMoney,
     FigFormInputToggle,
     FigFormSelectCountry,
+    FigTooltip
 } from '@notoursllc/figleaf';
 
 
@@ -25,7 +26,8 @@ export default Vue.extend({
         FigFormInputNumber,
         FigFormInputMoney,
         FigFormInputToggle,
-        FigFormSelectCountry
+        FigFormSelectCountry,
+        FigTooltip
     },
 
     props: {
@@ -129,10 +131,13 @@ export default Vue.extend({
         <fig-form-group class="mb-3">
             <label for="size_barcode" slot="label" class="size-card-edit-label">
                 {{ $t('Barcode') }}
-                <i class="ml-1"
-                    v-b-tooltip.hover.top="$t('sku_barcode_description')">
-                    <fig-icon icon="info-circle" width="16" height="16" />
-                </i>
+
+                <fig-tooltip placement="top">
+                    <i slot="toggler" class="ml-1">
+                        <fig-icon icon="info-circle" width="16" height="16" />
+                    </i>
+                    <div class="whitespace-no-wrap">{{ $t('sku_barcode_description') }}</div>
+                </fig-tooltip>
             </label>
 
             <fig-form-input

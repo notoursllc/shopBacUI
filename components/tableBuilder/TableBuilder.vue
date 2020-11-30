@@ -3,13 +3,16 @@ import isObject from 'lodash.isobject';
 import draggable from 'vuedraggable';
 import PopConfirm from '@/components/PopConfirm';
 import DataTableSelect from '@/components/product/dataTable/DataTableSelect';
-import AppOverlay from '@/components/AppOverlay';
 import AppMessage from '@/components/AppMessage';
 
 import {
     FigButton,
     FigFormInput,
-    FigFormGroup
+    FigFormInputEndcapper,
+    FigFormGroup,
+    FigTooltip,
+    FigPopover,
+    FigOverlay
 } from '@notoursllc/figleaf';
 
 export default {
@@ -17,11 +20,14 @@ export default {
         draggable,
         PopConfirm,
         DataTableSelect,
-        AppOverlay,
         AppMessage,
         FigButton,
         FigFormInput,
-        FigFormGroup
+        FigFormInputEndcapper,
+        FigFormGroup,
+        FigTooltip,
+        FigPopover,
+        FigOverlay
     },
 
     props: {
@@ -91,11 +97,11 @@ export default {
         },
 
         canShowLeftIcon(index) {
-            return this.tableData.columns[index - 1];
+            return !!this.tableData.columns[index - 1];
         },
 
         canShowRightIcon(index) {
-            return this.tableData.columns[index + 1];
+            return !!this.tableData.columns[index + 1];
         },
 
         onColumnMove(index, moveLeft) {
@@ -249,7 +255,7 @@ export default {
 
 <template>
     <div>
-        <app-overlay :show="loading">
+        <fig-overlay :show="loading">
             <b-table-simple
                 hover
                 responsive
@@ -288,13 +294,16 @@ export default {
                                     </template>
                                 </div>
 
-                                <fig-button
-                                    slot="reference"
-                                    variant="plain"
-                                    size="sm"
-                                    icon="import"
-                                    v-b-tooltip.hover.top="$t('Import data from an existing Data Table')"
-                                    class="border-dashed-2" />
+                                <fig-tooltip placement="top">
+                                    <fig-button
+                                        slot="reference"
+                                        variant="plain"
+                                        size="sm"
+                                        icon="import"
+                                        class="border-dashed-2" />
+                                    {{ $t('Import data from an existing Data Table') }}
+                                </fig-tooltip>
+
                             </pop-confirm>
                         </b-th>
 
@@ -304,7 +313,7 @@ export default {
                             class="th">
                             <div class="col-icon-container">
                                 <pop-confirm @onConfirm="deleteColumn(index);">
-                                    {{ $t('Delete this column?') }}
+                                    <div class="whitespace-no-wrap">{{ $t('Delete this column?') }}</div>
 
                                     <fig-button
                                         slot="reference"
@@ -316,35 +325,48 @@ export default {
                                         </template>
                                     </fig-button>
                                 </pop-confirm>
+                                <!-- <fig-popover placement="top">
+                                    <fig-button
+                                        slot="toggler"
+                                        variant="plain"
+                                        size="sm"
+                                        class="border-dashed-2">
+                                        <template slot="icon">
+                                            <fig-icon icon="trash" stroke-width="1px" /><fig-icon icon="arrow-down" />
+                                        </template>
+                                    </fig-button>
+
+                                    <div slot="header">header</div>
+                                    <div>popover content</div>
+                                    <div slot="footer" class="text-right">footer</div>
+                                </fig-popover> -->
                             </div>
 
-                            <b-input-group size="sm">
-                                <template
+                            <fig-form-input-endcapper>
+                                <fig-button
                                     v-if="canShowLeftIcon(index)"
-                                    v-slot:prepend>
-                                    <b-input-group-text
-                                        class="header-input-btn"
-                                        @click="onColumnMove(index, true)">
-                                        <fig-icon icon="arrow-left" />
-                                    </b-input-group-text>
-                                </template>
+                                    slot="prefix"
+                                    size="sm"
+                                    variant="ghost"
+                                    @click="onColumnMove(index, true)"
+                                    icon="arrow-left" />
 
                                 <fig-form-input
                                     v-model="tableData.columns[index].label"
                                     :placeholder="$t('Column label')"
-                                    size="sm"
+                                    size="md"
+                                    :square-left="canShowLeftIcon(index)"
+                                    :square-right="canShowRightIcon(index)"
                                     @input="onInputChange" />
 
-                                <template
+                                <fig-button
                                     v-if="canShowRightIcon(index)"
-                                    v-slot:append>
-                                    <b-input-group-text
-                                        class="header-input-btn"
-                                        @click="onColumnMove(index, false)">
-                                        <fig-icon icon="arrow-right" />
-                                    </b-input-group-text>
-                                </template>
-                            </b-input-group>
+                                    slot="suffix"
+                                    size="sm"
+                                    variant="ghost"
+                                    @click="onColumnMove(index, false)"
+                                    icon="arrow-right" />
+                            </fig-form-input-endcapper>
                         </b-th>
 
                         <!-- add column button -->
@@ -436,7 +458,7 @@ export default {
                     <b-td class="no-color"></b-td>
                 </b-tr>
             </b-table-simple>
-        </app-overlay>
+        </fig-overlay>
     </div>
 </template>
 

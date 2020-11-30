@@ -2,32 +2,26 @@
 import isObject from 'lodash.isobject';
 import draggable from 'vuedraggable';
 import PopConfirm from '@/components/PopConfirm';
-import BooleanTag from '@/components/BooleanTag';
-import SizeInput from '@/components/product/size/SizeInput';
+import SizeSelect from '@/components/product/size/SizeSelect';
 import SizeCardDetailsView from '@/components/product/size/sizeCard/SizeCardDetailsView';
 import SizeCardEditView from '@/components/product/size/sizeCard/SizeCardEditView';
 import UsingColorValueBadge from '@/components/product/size/sizeCard/UsingColorValueBadge';
 
 import {
     BTooltip,
-    BPopover,
-    BCard,
-    BCardHeader
+    BPopover
 } from 'bootstrap-vue';
 
 import {
-    FigFormGroup,
     FigFormCheckbox,
-    FigFormInput,
     FigButton,
     FigFormSelect,
     FigFormInputNumber,
     FigFormInputMoney,
     FigFormInputToggle,
     FigFormSelectCountry,
-    FigBadge
+    FigPopover
 } from '@notoursllc/figleaf';
-
 
 export default {
     name: 'SizeUpsertWizard',
@@ -37,21 +31,16 @@ export default {
         BTooltip,
         BPopover,
         PopConfirm,
-        BooleanTag,
-        SizeInput,
+        SizeSelect,
         SizeCardDetailsView,
-        BCard,
-        BCardHeader,
         FigFormCheckbox,
-        FigFormGroup,
-        FigFormInput,
         FigButton,
         FigFormSelect,
         FigFormInputNumber,
         FigFormInputMoney,
         FigFormInputToggle,
         FigFormSelectCountry,
-        FigBadge,
+        FigPopover,
         SizeCardDetailsView,
         SizeCardEditView,
         UsingColorValueBadge
@@ -221,7 +210,7 @@ export default {
                             <fig-button
                                 v-for="(size, idx) in sizes"
                                 :key="idx"
-                                variant="success"
+                                :variant="size.label ? 'success' : 'danger'"
                                 class="mr-2 size-btn handle"
                                 size="sm"
                                 :href="`#size-card-${idx}`">{{ size.label }}</fig-button>
@@ -243,18 +232,17 @@ export default {
                         variant="plain"
                         size="sm"
                         @click="toggleBulkEdit"
+                        ref="bulkEditBtn"
                         icon="list-check"
                         id="bulk-edit-button">{{ $t('Bulk edit') }}</fig-button>
 
-                    <b-popover
-                        target="bulk-edit-button"
-                        triggers="click"
-                        :show.sync="showBulkEdit"
-                        placement="auto"
-                        container="header-container"
-                        ref="popover">
-
-                        <template #title>{{ $t('Update all sizes') }}</template>
+                    <!-- popover for bulk edit form -->
+                    <fig-popover
+                        placement="left"
+                        :target="$refs.bulkEditBtn"
+                        :show="showBulkEdit"
+                        :offset="[0,10]">
+                        <div slot="header" style="min-width:175px">{{ $t('Update all sizes') }}</div>
 
                         <!-- price -->
                         <div class="bulk-edit-row">
@@ -277,9 +265,7 @@ export default {
                                 </div>
 
                                 <div v-if="bulkEdit.hasOwnProperty('base_price')">
-                                    <div
-                                        v-if="bulkEdit.base_price_inherit"
-                                        class="bulk-edit-noval">{{ $t('Use color value') }}</div>
+                                    <using-color-value-badge v-if="bulkEdit.base_price_inherit" />
 
                                     <fig-form-input-money
                                         v-else
@@ -310,9 +296,7 @@ export default {
                                 </div>
 
                                 <div v-if="bulkEdit.hasOwnProperty('compare_at_price')">
-                                    <div
-                                        v-if="bulkEdit.compare_at_price_inherit"
-                                        class="bulk-edit-noval">{{ $t('Use color value') }}</div>
+                                    <using-color-value-badge v-if="bulkEdit.compare_at_price_inherit" />
 
                                     <fig-form-input-money
                                         v-else
@@ -342,9 +326,7 @@ export default {
                                 </div>
 
                                 <div v-if="bulkEdit.hasOwnProperty('cost_price')">
-                                    <div
-                                        v-if="bulkEdit.cost_price_inherit"
-                                        class="bulk-edit-noval">{{ $t('Use color value') }}</div>
+                                    <using-color-value-badge v-if="bulkEdit.cost_price_inherit" />
 
                                     <fig-form-input-money
                                         v-else
@@ -375,9 +357,7 @@ export default {
                                 </div>
 
                                 <div v-if="bulkEdit.hasOwnProperty('weight_oz')">
-                                    <div
-                                        v-if="bulkEdit.weight_oz_inherit"
-                                        class="bulk-edit-noval">{{ $t('Use color value') }}</div>
+                                    <using-color-value-badge v-if="bulkEdit.weight_oz_inherit" />
 
                                     <fig-form-input-number
                                         v-else
@@ -431,9 +411,7 @@ export default {
                                 </div>
 
                                 <div v-if="bulkEdit.hasOwnProperty('customs_country_of_origin')">
-                                    <div
-                                        v-if="bulkEdit.customs_country_of_origin_inherit"
-                                        class="bulk-edit-noval">{{ $t('Use color value') }}</div>
+                                    <using-color-value-badge v-if="bulkEdit.customs_country_of_origin_inherit" />
 
                                     <fig-form-select-country
                                         v-else
@@ -443,7 +421,8 @@ export default {
                             </div>
                         </div>
 
-                        <div class="text-center pt-2">
+
+                        <div slot="footer" class="text-center">
                             <fig-button
                                 variant="primary"
                                 size="sm"
@@ -455,8 +434,8 @@ export default {
                                 size="sm"
                                 @click="onClickCancelBulkEdit">{{ $t('Cancel') }}</fig-button>
                         </div>
+                    </fig-popover>
 
-                    </b-popover>
                 </div>
             </div>
         </div>
@@ -479,7 +458,7 @@ export default {
                 :key="index">
                 <div
                     class="bg-gray-100 border rounded-lg shadow-md"
-                    :class="{'border-red-600': !size.label, 'border-gray-200': size.label}">
+                    :class="{'border-red-500': !size.label, 'border-gray-200': size.label}">
 
                     <!-- button header -->
                     <div class="flex flex-row items-center pt-1 px-3">
@@ -490,9 +469,8 @@ export default {
                         </div>
 
                         <div>
-                            <pop-confirm
-                                @onConfirm="removeRow(index)">
-                                {{ $t('Delete this size?') }}
+                            <pop-confirm @onConfirm="removeRow(index)">
+                                <div class="text-center" style="min-width:125px">{{ $t('Delete this size?') }}</div>
 
                                 <i slot="reference" class="ml-3 cursorPointer">
                                     <fig-icon icon="trash" stroke-width="1px" width="20" height="20" />
@@ -503,7 +481,7 @@ export default {
 
                     <!-- size input -->
                     <div class="p-3 flex items-center flex-grow">
-                        <size-input
+                        <size-select
                             v-model="size.label"
                             @input="emitInput"
                             size="md"
@@ -556,11 +534,6 @@ export default {
     cursor: grab !important;
 }
 
-// zebra striping the cards to they are a bit easier to differentiate
-.size-card-list .card:nth-child(odd) {
-    background-color: #f5f5f5;
-}
-
 .bulk-edit-row {
     @apply table-row;
 }
@@ -574,35 +547,4 @@ export default {
 .bulk-edit-label .fig-toggle {
     @apply pl-2;
 }
-.bulk-edit-noval {
-    @apply text-gray-500;
-}
-
-.size-details-row {
-    @apply table-row;
-}
-.size-details-cell {
-    @apply table-cell pb-1;
-}
-.size-details-row > label {
-    @apply font-medium pr-2 pb-1;
-}
-
-
-
-
-.formRow {
-    display: table-row;
-}
-.formRow > label {
-    padding-right: 10px;
-}
-.formRow > label,
-.formRow > span {
-    display: table-cell;
-    padding-bottom: 10px;
-    vertical-align: top;
-}
 </style>
-
-

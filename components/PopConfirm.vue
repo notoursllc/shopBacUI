@@ -1,15 +1,15 @@
 <script>
 import uuid from 'uuid';
-import Pop from '@/components/Pop';
 
 import {
-    FigButton
+    FigButton,
+    FigPopover
 } from '@notoursllc/figleaf';
 
 export default {
     components: {
-        Pop,
-        FigButton
+        FigButton,
+        FigPopover
     },
 
     inheritAttrs: false,
@@ -75,8 +75,10 @@ export default {
             this.hide();
         },
 
-        focusCancelButton() {
-            this.$refs[this.cancelRef].focus();
+        focusCancelButton(isVisible) {
+            if(isVisible) {
+                this.$refs[this.cancelRef].$el.focus();
+            }
         },
 
         hide() {
@@ -88,14 +90,22 @@ export default {
 
 
 <template>
-    <pop
+    <fig-popover
+        placement="top"
+        @visible="focusCancelButton"
         :ref="popoverRef"
-        @shown="focusCancelButton"
-        v-bind="$attrs"
-        v-on="$listeners">
+        v-bind="$attrs">
+
+        <template v-slot:toggler>
+            <slot name="reference"></slot>
+        </template>
+
         <slot></slot>
 
-        <div class="ptm tar" v-if="showConfirmButton || showCancelButton">
+        <div
+            v-if="showConfirmButton || showCancelButton"
+            slot="footer"
+            class="text-right">
             <fig-button
                 v-if="showCancelButton"
                 variant="link"
@@ -110,9 +120,5 @@ export default {
                 @click="onConfirmClick"
                 :ref="confirmRef">{{ confirmLabel }}</fig-button>
         </div>
-
-        <template v-slot:reference>
-            <slot name="reference"></slot>
-        </template>
-    </pop>
+    </fig-popover>
 </template>

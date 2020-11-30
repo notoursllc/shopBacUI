@@ -5,13 +5,13 @@ import { isUuid4 } from '@/utils/common';
 import TableBuilder from '@/components/tableBuilder/TableBuilder';
 import TableBuilderView from '@/components/tableBuilder/TableBuilderView';
 import DataTableSelect from '@/components/product/dataTable/DataTableSelect';
-import AppOverlay from '@/components/AppOverlay';
 import AppMessage from '@/components/AppMessage';
 
 import {
     FigFormInput,
     FigFormGroup,
-    FigFormSelect
+    FigFormSelect,
+    FigOverlay
 } from '@notoursllc/figleaf';
 
 export default {
@@ -21,11 +21,11 @@ export default {
         TableBuilder,
         TableBuilderView,
         DataTableSelect,
-        AppOverlay,
         AppMessage,
         FigFormInput,
         FigFormGroup,
-        FigFormSelect
+        FigFormSelect,
+        FigOverlay
     },
 
     inheritAttrs: false,
@@ -262,7 +262,7 @@ export default {
 
         <!-- table builder -->
         <div class="pt-4">
-            <app-overlay :show="loading">
+            <fig-overlay :show="loading">
                 <fig-form-group
                     v-if="action === 'create'"
                     class="pb-2">
@@ -277,7 +277,7 @@ export default {
                 <table-builder-view
                     v-if="action === 'pre' && readOnlyTableId"
                     :table-data="readOnlyTableData" />
-            </app-overlay>
+            </fig-overlay>
         </div>
     </div>
 </template>

@@ -184,34 +184,19 @@ export default {
 
         // importing only the stuff we are using to reduce bundle size
         components: [
-            'BCollapse',
-            'BContainer',
             'BRow',
             'BCol',
-            'BDropdown',
-            'BDropdownForm',
-            'BDropdownItem',
-            'BDropdownItemButton',
             'BFormFile',
             'BImg',
-            'BInputGroup',
-            'BInputGroupText',
-            'BInputGroupAppend',
             'BModal',
-            'BOverlay',
-            'BPopover',
-            'BTable',
-            'BTooltip'
+            'BTable'
         ],
         componentPlugins: [
-            // 'LayoutPlugin',
-            // 'FormPlugin',
-            // 'FormInputPlugin',
             'TablePlugin',
             'ModalPlugin',
             'BVModalPlugin'
         ],
-        directives: ['VBModal', 'VBPopover', 'VBToggle', 'VBTooltip', 'VBScrollspy']
+        directives: ['VBModal', 'VBScrollspy']
     },
 
     /*

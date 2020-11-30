@@ -9,7 +9,6 @@ import MetaDataBuilder from '@/components/MetaDataBuilder';
 // ImageManager: () => import('@/components/product/ImageManager'),
 import SeoPreview from '@/components/product/SeoPreview';
 import ColorTable from '@/components/product/color/ColorTable';
-import AppOverlay from '@/components/AppOverlay';
 import AppMessage from '@/components/AppMessage';
 
 import {
@@ -18,7 +17,8 @@ import {
     FigFormInput,
     FigFormTextarea,
     FigButton,
-    FigFormInputEndcapper
+    FigFormInputEndcapper,
+    FigOverlay
 } from '@notoursllc/figleaf';
 
 
@@ -37,14 +37,14 @@ export default {
         MetaDataBuilder,
         SeoPreview,
         ColorTable,
-        AppOverlay,
         AppMessage,
         FigFormCheckbox,
         FigFormGroup,
         FigFormInput,
         FigFormTextarea,
         FigButton,
-        FigFormInputEndcapper
+        FigFormInputEndcapper,
+        FigOverlay
     },
 
     mixins: [
@@ -170,7 +170,7 @@ export default {
 
 
 <template>
-    <app-overlay :show="loading">
+    <fig-overlay :show="loading">
 
         <div class="tar mbm" v-if="product.id">
             <fig-button
@@ -190,7 +190,7 @@ export default {
         <text-card class="mbl">
             <div slot="header">{{ $t('Organization') }}</div>
 
-            <b-container>
+            <div class="container mx-auto">
                 <b-row>
                     <!-- type -->
                     <b-col sm="12" md="4" lg="3">
@@ -248,7 +248,7 @@ export default {
                         </fig-form-group>
                     </b-col>
                 </b-row>
-            </b-container>
+            </div>
         </text-card>
 
 
@@ -256,7 +256,7 @@ export default {
         <text-card class="mbl">
             <div slot="header">{{ $t('Details') }}</div>
 
-            <b-container>
+            <div class="container mx-auto">
                 <b-row>
                     <!-- page title -->
                     <b-col lg="12">
@@ -296,18 +296,18 @@ export default {
                         </fig-form-group>
                     </b-col>
                 </b-row>
-            </b-container>
+            </div>
         </text-card>
 
 
         <text-card class="mbl">
             <template v-slot:header>{{ $t('Colors') }}</template>
 
-            <b-container>
+            <div class="container mx-auto">
                 <color-table
                     :colors="product.variants"
                     @change="colors => this.$set(product, 'variants', colors)" />
-            </b-container>
+            </div>
         </text-card>
 
 
@@ -315,7 +315,7 @@ export default {
         <text-card class="mbl">
             <div slot="header">{{ $t('Search engine listing') }}</div>
 
-            <b-container>
+            <div class="container mx-auto">
                 <!-- page title -->
                 <fig-form-group class="mb-2 block">
                     <label slot="label" for="product_seo_page_title">{{ $t('Page title') }}</label>
@@ -353,7 +353,7 @@ export default {
                         v-if="$v.product.seo_uri.$invalid"
                         slot="error">{{ seoUrlValidationErrorMessage }}</div>
                 </fig-form-group>
-            </b-container>
+            </div>
 
             <div class="pvl" v-show="product.seo_page_title">
                 <div class="fs11 colorGray mbs">Preview:</div>
@@ -369,7 +369,7 @@ export default {
         <text-card class="mbl">
             <div slot="header">{{ $t('Metadata') }}</div>
 
-            <b-container>
+            <div class="container mx-auto">
                 <div class="pb-3">
                     <fig-form-checkbox
                         v-model="productHasMetaData">{{ $t('Metadata_description') }}</fig-form-checkbox>
@@ -378,7 +378,7 @@ export default {
                 <meta-data-builder
                     v-if="productHasMetaData"
                     v-model="product.metadata" />
-            </b-container>
+            </div>
         </text-card>
 
 
@@ -398,5 +398,5 @@ export default {
                 </div>
             </div>
         </div>
-    </app-overlay>
+    </fig-overlay>
 </template>

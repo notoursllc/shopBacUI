@@ -2,7 +2,6 @@
 import isObject from 'lodash.isobject';
 import cloneDeep from 'lodash.clonedeep';
 import ImageManager from '@/components/product/ImageManager';
-import AppOverlay from '@/components/AppOverlay';
 import storage_mixin from '@/mixins/storage_mixin'; // TODO: not needed?
 import draggable from 'vuedraggable';
 import PopConfirm from '@/components/PopConfirm';
@@ -10,7 +9,8 @@ import PopConfirm from '@/components/PopConfirm';
 import {
     FigButton,
     FigFormInput,
-    FigFormRadio
+    FigFormRadio,
+    FigOverlay
 } from '@notoursllc/figleaf';
 
 export default {
@@ -18,12 +18,12 @@ export default {
 
     components: {
         ImageManager,
-        AppOverlay,
         draggable,
         PopConfirm,
         FigButton,
         FigFormInput,
-        FigFormRadio
+        FigFormRadio,
+        FigOverlay
     },
 
     mixins: [
@@ -153,13 +153,16 @@ export default {
 
         <!--  image manager -->
         <div>
-            <app-overlay :show="loadingImages">
+            <!-- <fig-overlay :show="loadingImages"> -->
+            <fig-overlay
+                :show="true"
+                size="lg">
                 <image-manager
                     v-show="exhibitType === 'IMAGE'"
                     v-model="selectedImages"
                     @delete="onDeleteImage"
                     :max-num-images="parseInt(imageManagerMaxImages, 10)" />
-            </app-overlay>
+            </fig-overlay>
         </div>
 
         <!-- color swatches -->

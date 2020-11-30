@@ -6,14 +6,14 @@ import PricingForm from '@/components/product/PricingForm';
 import ColorExpressionForm from '@/components/product/color/ColorExpressionForm';
 import AccentMessageWizard from '@/components/product/accentMessage/AccentMessageWizard';
 import SizeUpsertWizard from '@/components/product/size/SizeUpsertWizard';
-import CountrySelect from '@/components/CountrySelect';
 
 import {
     FigButton,
     FigFormCheckbox,
     FigFormInput,
     FigFormGroup,
-    FigFormInputNumber
+    FigFormInputNumber,
+    FigFormSelectCountry
 } from '@notoursllc/figleaf';
 
 
@@ -26,12 +26,12 @@ export default {
         ColorExpressionForm,
         AccentMessageWizard,
         SizeUpsertWizard,
-        CountrySelect,
         FigButton,
         FigFormCheckbox,
         FigFormInput,
         FigFormGroup,
-        FigFormInputNumber
+        FigFormInputNumber,
+        FigFormSelectCountry
     },
 
     mixins: [
@@ -133,7 +133,7 @@ export default {
             <template v-slot:header>{{ $t('Color info') }}</template>
 
             <!-- published -->
-            <b-container>
+            <div class="container mx-auto">
                 <div class="mb-3">
                     <fig-form-checkbox
                         v-model="upsertColor.published">{{ $t('Published') }}</fig-form-checkbox>
@@ -146,7 +146,7 @@ export default {
                         v-model="upsertColor.label"
                         id="color_name" />
                 </fig-form-group>
-            </b-container>
+            </div>
         </text-card>
 
 
@@ -154,11 +154,11 @@ export default {
         <text-card class="mb-5">
             <template v-slot:header>{{ $t('Display color using...') }}</template>
 
-            <b-container>
+            <div class="container mx-auto">
                 <color-expression-form
                     :color-model="upsertColor"
                     @input="onColorExpressionFormInput" />
-            </b-container>
+            </div>
         </text-card>
 
 
@@ -166,10 +166,10 @@ export default {
         <text-card class="mb-5">
             <template v-slot:header>{{ $t('Sizes') }}</template>
 
-            <b-container>
+            <div class="container mx-auto">
                 <size-upsert-wizard
                     v-model="upsertColor.skus" />
-            </b-container>
+            </div>
         </text-card>
 
 
@@ -177,11 +177,11 @@ export default {
         <text-card class="mb-5">
             <template v-slot:header>{{ $t('Pricing') }}</template>
 
-            <b-container>
+            <div class="container mx-auto">
                 <pricing-form
                     :data="upsertColor"
                     @input="onPricingFormInput" />
-            </b-container>
+            </div>
         </text-card>
 
 
@@ -190,11 +190,11 @@ export default {
             <template v-slot:header>{{ $t('Accent Message') }}</template>
             <template v-slot:headerSub>{{ $t('accent_message_description') }}</template>
 
-            <b-container>
+            <div class="container mx-auto">
                 <accent-message-wizard
                     :model="upsertColor"
                     @input="onAccentWizardChange" />
-            </b-container>
+            </div>
         </text-card>
 
 
@@ -202,7 +202,7 @@ export default {
         <text-card class="mb-5">
             <template v-slot:header>{{ $t('Shipping') }}</template>
 
-            <b-container>
+            <div class="container mx-auto">
                 <!-- requires shipping -->
                 <div class="mb-3">
                     <fig-form-checkbox
@@ -241,7 +241,7 @@ export default {
                             <!-- country of origin -->
                             <fig-form-group>
                                 <label slot="label" for="sku_customs_country_of_origin">{{ $t('Country of origin') }}</label>
-                                <country-select
+                                <fig-form-select-country
                                     v-model="upsertColor.customs_country_of_origin"
                                     id="sku_customs_country_of_origin" />
 
@@ -266,7 +266,7 @@ export default {
                         </b-col>
                     </b-row>
                 </template>
-            </b-container>
+            </div>
         </text-card>
 
 

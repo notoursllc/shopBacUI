@@ -83,60 +83,67 @@ export default {
                     <fig-icon icon="bv-logo" :width="60" class-name="fillWhite" />
                 </div>
 
-                <navigation-list
-                    text-color="#fff"
-                    active-text-color="#eec708"
-                    hover-background-color="rgba(255,255,255,.1)">
+                <div class="pt-3">
+                    <nuxt-link
+                        :to="{ name: 'product-list' }"
+                        tag="button"
+                        class="nav-btn font-bold focus:outline-none focus:shadow-outline">{{ $t('Products') }}</nuxt-link>
 
-                    <navigation-collapse
-                        :fuzzy-route-match="['product-']">
-                        <template slot="label">{{ $t('Products') }}</template>
+                    <div class="pl-3">
+                        <nuxt-link
+                            :to="{ name: 'product-types' }"
+                            tag="button"
+                            class="nav-btn focus:outline-none focus:shadow-outline">{{ $t('Types') }}</nuxt-link>
 
-                        <navigation-item
-                            :route="{ name: 'product-list' }"
-                            @click="menuItemClick">{{ $t('All products') }}</navigation-item>
+                        <nuxt-link
+                            :to="{ name: 'product-sub-types' }"
+                            tag="button"
+                            class="nav-btn focus:outline-none focus:shadow-outline">{{ $t('Sub-Types') }}</nuxt-link>
 
-                        <navigation-item
-                            :route="{ name: 'product-types' }"
-                            @click="menuItemClick">{{ $t('Types') }}</navigation-item>
+                        <nuxt-link
+                            :to="{ name: 'product-fit-types' }"
+                            tag="button"
+                            class="nav-btn focus:outline-none focus:shadow-outline">{{ $t('Fit Types') }}</nuxt-link>
 
-                        <navigation-item
-                            :route="{ name: 'product-sub-types' }"
-                            @click="menuItemClick">{{ $t('Sub-Types') }}</navigation-item>
+                        <nuxt-link
+                            :to="{ name: 'product-sales-channel-types' }"
+                            tag="button"
+                            class="nav-btn focus:outline-none focus:shadow-outline">{{ $t('Sales Channels') }}</nuxt-link>
 
-                        <navigation-item
-                            :route="{ name: 'product-fit-types' }"
-                            @click="menuItemClick">{{ $t('Fit Types') }}</navigation-item>
+                        <nuxt-link
+                            :to="{ name: 'product-vendors' }"
+                            tag="button"
+                            class="nav-btn focus:outline-none focus:shadow-outline">{{ $t('Vendors') }}</nuxt-link>
 
-                        <navigation-item
-                            :route="{ name: 'product-sales-channel-types' }"
-                            @click="menuItemClick">{{ $t('Sales Channels') }}</navigation-item>
+                        <nuxt-link
+                            :to="{ name: 'product-collections' }"
+                            tag="button"
+                            class="nav-btn focus:outline-none focus:shadow-outline">{{ $t('Collections') }}</nuxt-link>
 
-                        <navigation-item
-                            :route="{ name: 'product-vendors' }"
-                            @click="menuItemClick">{{ $t('Vendors') }}</navigation-item>
+                        <nuxt-link
+                            :to="{ name: 'product-datatables-list' }"
+                            tag="button"
+                            class="nav-btn focus:outline-none focus:shadow-outline">{{ $t('Data Tables') }}</nuxt-link>
 
-                        <navigation-item
-                            :route="{ name: 'product-collections' }"
-                            @click="menuItemClick">{{ $t('Collections') }}</navigation-item>
+                        <nuxt-link
+                            :to="{ name: 'product-accent-messages-list' }"
+                            tag="button"
+                            class="nav-btn focus:outline-none focus:shadow-outline">{{ $t('Accent Messages') }}</nuxt-link>
+                    </div>
 
-                        <navigation-item
-                            :route="{ name: 'product-datatables-list' }"
-                            @click="menuItemClick">{{ $t('Data Tables') }}</navigation-item>
+                    <nuxt-link
+                        :to="{ name: 'order-list' }"
+                        tag="button"
+                        class="nav-btn font-bold focus:outline-none focus:shadow-outline">{{ $t('Payments') }}</nuxt-link>
 
-                        <navigation-item
-                            :route="{ name: 'product-accent-messages-list' }"
-                            @click="menuItemClick">{{ $t('Accent Messages') }}</navigation-item>
-                    </navigation-collapse>
 
-                    <navigation-item
-                        :route="{ name: 'order-list' }"
-                        @click="menuItemClick">{{ $t('Payments') }}</navigation-item>
+                    <nuxt-link
+                        :to="{ name: 'reports' }"
+                        tag="button"
+                        class="nav-btn font-bold focus:outline-none focus:shadow-outline">{{ $t('Reports') }}</nuxt-link>
 
-                    <navigation-item
-                        :route="{ name: 'reports' }"
-                        @click="menuItemClick">{{ $t('Reports') }}</navigation-item>
-                </navigation-list>
+
+                </div>
             </aside>
 
             <div
@@ -183,6 +190,12 @@ export default {
     </div>
 </template>
 
+<style lang="postcss">
+.nav-btn {
+    @apply text-white text-sm px-3 py-2 rounded-md block w-full text-left;
+}
+</style>
+
 <style lang="scss">
 $sidenav-width: 225px;
 $header-height: 50px;
@@ -191,14 +204,6 @@ $header-height: 50px;
 @import "~assets/css/components/_mixins.scss";
 @import "~assets/css/components/_sidenav.scss";
 
-// some overrides
-.sidenav {
-    .el-navigation-item,
-    .el-submenu__title {
-        height: 30px;
-        line-height: 30px;
-    }
-}
 
 .layoutContainer {
     header, main {

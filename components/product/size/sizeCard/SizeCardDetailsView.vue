@@ -2,13 +2,18 @@
 import Vue from 'vue';
 import BooleanTag from '@/components/BooleanTag';
 import UsingColorValueBadge from '@/components/product/size/sizeCard/UsingColorValueBadge';
+import Money from '@/components/Money';
+
+import { FigCountry } from '@notoursllc/figleaf';
 
 export default Vue.extend({
     name: 'SizeCardDetailsView',
 
     components: {
         BooleanTag,
-        UsingColorValueBadge
+        UsingColorValueBadge,
+        Money,
+        FigCountry
     },
 
     props: {
@@ -71,7 +76,9 @@ export default Vue.extend({
             <label>{{ $t('Price') }}:</label>
             <div class="size-details-cell">
                 <using-color-value-badge v-if="size.base_price_inherit" />
-                <div v-else>{{ size.base_price }}</div>
+                <money
+                    v-else
+                    :cents="size.base_price" />
             </div>
         </div>
 
@@ -80,7 +87,9 @@ export default Vue.extend({
             <label>{{ $t('Compare at') }}:</label>
             <div class="size-details-cell">
                 <using-color-value-badge v-if="size.compare_at_price_inherit" />
-                <div v-else>{{ size.compare_at_price }}</div>
+                <money
+                    v-else
+                    :cents="size.compare_at_price" />
             </div>
         </div>
 
@@ -89,7 +98,9 @@ export default Vue.extend({
             <label>{{ $t('Cost') }}:</label>
             <div class="size-details-cell">
                 <using-color-value-badge v-if="size.cost_price_inherit" />
-                <div v-else>{{ size.cost_price }}</div>
+                <money
+                    v-else
+                    :cents="size.cost_price" />
             </div>
         </div>
 
@@ -107,7 +118,9 @@ export default Vue.extend({
             <label>{{ $t('Country of origin') }}:</label>
             <div class="size-details-cell">
                 <using-color-value-badge v-if="size.customs_country_of_origin_inherit" />
-                <div v-else>{{ size.customs_country_of_origin }}</div>
+                <fig-country
+                    v-else
+                    :alpha2="size.customs_country_of_origin" />
             </div>
         </div>
     </div>

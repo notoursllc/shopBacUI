@@ -2,12 +2,13 @@
 import draggable from 'vuedraggable';
 import product_mixin from '@/mixins/product_mixin';
 import PopConfirm from '@/components/PopConfirm';
-import AppOverlay from '@/components/AppOverlay';
 
 import {
     FigFormGroup,
     FigFormInput,
-    FigButton
+    FigButton,
+    FigTooltip,
+    FigOverlay
 } from '@notoursllc/figleaf';
 
 export default {
@@ -15,11 +16,12 @@ export default {
 
     components: {
         PopConfirm,
-        AppOverlay,
         draggable,
         FigFormGroup,
         FigFormInput,
-        FigButton
+        FigButton,
+        FigTooltip,
+        FigOverlay
     },
 
     mixins: [
@@ -190,8 +192,9 @@ export default {
 
 
 <template>
-    <app-overlay
+    <fig-overlay
         :show="loading"
+        size="lg"
         class="widthAll">
 
         <b-table-simple
@@ -206,9 +209,13 @@ export default {
                     <b-th class="width100"></b-th>
                     <b-th>
                         {{ $t('Alt text') }}
-                        <i class="cursorPointer" v-b-tooltip.hover :title="$t('Image_alt_text_description')">
-                            <fig-icon icon="info-circle" />
-                        </i>
+
+                        <fig-tooltip placement="top">
+                            <i slot="toggler" class="ml-1 cursorPointer">
+                                <fig-icon icon="info-circle" width="16" height="16" />
+                            </i>
+                            {{ $t('Image_alt_text_description') }}
+                        </fig-tooltip>
                     </b-th>
                     <b-th class="width100"></b-th>
                 </b-tr>
@@ -232,11 +239,11 @@ export default {
                     <!-- thumbnail -->
                     <b-td>
                         <template v-if="obj.loading">
-                            <app-overlay :show="obj.loading">
+                            <fig-overlay :show="obj.loading">
                                 <b-img
                                     v-bind="{ blank: true, width: 100, height: 75, class: 'm1' }"
                                     alt="uploading"></b-img>
-                            </app-overlay>
+                            </fig-overlay>
                         </template>
                         <template v-else>
                             <b-img
@@ -300,7 +307,7 @@ export default {
                 :src="dialogImageUrl"
                 alt=""></b-img>
         </b-modal>
-    </app-overlay>
+    </fig-overlay>
 </template>
 
 <style lang="scss">

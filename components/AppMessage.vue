@@ -26,9 +26,9 @@ export default {
         );
 
         return h(
-            'BContainer',
+            'div',
             {
-                class: ['d-flex', 'align-items-stretch', 'pr-0', 'pl-0'],
+                class: ['container', 'mx-auto', 'd-flex', 'align-items-stretch', 'pr-0', 'pl-0'],
                 on: ctx.listeners,
                 attrs: ctx.props
             },
