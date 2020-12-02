@@ -4,7 +4,8 @@ import OperationsDropdown from '@/components/OperationsDropdown';
 import AccentMessageForm from '@/components/product/accentMessage/AccentMessageForm';
 
 import {
-    FigButtonFab
+    FigButtonFab,
+    FigModal
 } from '@notoursllc/figleaf';
 
 export default {
@@ -12,8 +13,10 @@ export default {
         AppTable,
         OperationsDropdown,
         AccentMessageForm,
-        FigButtonFab
+        FigButtonFab,
+        FigModal
     },
+
 
     data() {
         return {
@@ -112,14 +115,17 @@ export default {
             </template>
         </app-table>
 
-        <b-modal
+        <fig-modal
             ref="upsert_modal"
-            size="lg"
-            :title="dialog.id ? $t('Edit Item') : $t('Add Item')"
-            hide-footer>
+            size="lg">
+            <div slot="header">
+                {{ dialog.id ? $t('Edit Item') : $t('Add Item') }}
+            </div>
+
             <accent-message-form
                 :id="dialog.id"
                 @success="onUpsertSuccess" />
-        </b-modal>
+        </fig-modal>
+
     </div>
 </template>

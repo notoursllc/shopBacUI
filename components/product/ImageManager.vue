@@ -8,7 +8,8 @@ import {
     FigFormInput,
     FigButton,
     FigTooltip,
-    FigOverlay
+    FigOverlay,
+    FigModal
 } from '@notoursllc/figleaf';
 
 export default {
@@ -21,7 +22,8 @@ export default {
         FigFormInput,
         FigButton,
         FigTooltip,
-        FigOverlay
+        FigOverlay,
+        FigModal
     },
 
     mixins: [
@@ -299,14 +301,13 @@ export default {
             </fig-form-group>
         </div>
 
-        <b-modal
+        <fig-modal
             ref="image_preview_modal"
-            size="xl"
-            hide-footer>
+            size="xl">
             <b-img
                 :src="dialogImageUrl"
                 alt=""></b-img>
-        </b-modal>
+        </fig-modal>
     </fig-overlay>
 </template>
 

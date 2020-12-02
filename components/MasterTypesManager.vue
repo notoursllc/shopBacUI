@@ -12,7 +12,8 @@ import {
     FigButtonFab,
     FigFormCheckbox,
     FigFormInput,
-    FigFormTextarea
+    FigFormTextarea,
+    FigModal
 } from '@notoursllc/figleaf';
 
 export default {
@@ -25,7 +26,8 @@ export default {
         FigButtonFab,
         FigFormCheckbox,
         FigFormInput,
-        FigFormTextarea
+        FigFormTextarea,
+        FigModal
     },
 
     props: {
@@ -85,6 +87,10 @@ export default {
                     //     ['total_inventory_count', '>', 0]
                     // ],
                     ...paramsObj
+                });
+
+                this.$errorToast({
+                    text: 'test error'
                 });
 
             }
@@ -237,11 +243,15 @@ export default {
             </template>
         </app-table>
 
-        <b-modal
+        <fig-modal
             ref="type_upsert_modal"
-            size="xl"
-            hide-footer
-            :title="form.id ? `Edit Master Type (${object})` : `Add Master Type (${object})`">
+            size="xl">
+
+            <div slot="header">
+                {{ form.id
+                    ? $t(`Edit Master Type ({name})`, {'name': object})
+                    : $t(`Add Master Type ({name})`, {'name': object}) }}
+            </div>
 
             <div class="displayTable widthAll">
                 <!-- Available -->
@@ -310,7 +320,7 @@ export default {
                     </span>
                 </div>
             </div>
-        </b-modal>
+        </fig-modal>
     </div>
 </template>
 

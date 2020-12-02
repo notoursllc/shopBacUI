@@ -7,7 +7,8 @@ import storage_mixin from '@/mixins/storage_mixin';
 import product_mixin from '@/mixins/product_mixin';
 
 import {
-    FigButton
+    FigButton,
+    FigModal
 } from '@notoursllc/figleaf';
 
 export default {
@@ -17,7 +18,8 @@ export default {
         draggable,
         PopConfirm,
         ColorUpsertForm,
-        FigButton
+        FigButton,
+        FigModal
     },
 
     mixins: [
@@ -65,11 +67,11 @@ export default {
     methods: {
         showColorUpsertModal(index) {
             this.visibleColorIndex = index;
-            this.$bvModal.show('color_upsert_form_modal');
+            this.$refs.color_upsert_form_modal.show();
         },
 
         hideColorUpsertModal() {
-            this.$bvModal.hide('color_upsert_form_modal');
+            this.$refs.color_upsert_form_modal.hide();
         },
 
         addEmptyColor() {
@@ -232,16 +234,19 @@ export default {
 
 
         <!-- color upsert form -->
-        <b-modal
-            id="color_upsert_form_modal"
+        <fig-modal
+            ref="color_upsert_form_modal"
             size="xl"
-            hide-footer
             :title="modalTitle">
+            <div slot="header">
+                {{ modalTitle }}
+            </div>
+
             <color-upsert-form
                 :color="colorList[visibleColorIndex]"
                 @done="onColorUpsertDone"
                 @cancel="onColorUpsertCancel" />
-        </b-modal>
+        </fig-modal>
 
     </div>
 </template>
