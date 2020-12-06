@@ -154,15 +154,11 @@ export default {
         <!--  image manager -->
         <div>
             <!-- <fig-overlay :show="loadingImages"> -->
-            <fig-overlay
-                :show="true"
-                size="lg">
-                <image-manager
-                    v-show="exhibitType === 'IMAGE'"
-                    v-model="selectedImages"
-                    @delete="onDeleteImage"
-                    :max-num-images="parseInt(imageManagerMaxImages, 10)" />
-            </fig-overlay>
+            <image-manager
+                v-show="exhibitType === 'IMAGE'"
+                v-model="selectedImages"
+                @delete="onDeleteImage"
+                :max-num-images="parseInt(imageManagerMaxImages, 10)" />
         </div>
 
         <!-- color swatches -->

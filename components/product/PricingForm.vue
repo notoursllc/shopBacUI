@@ -59,9 +59,9 @@ export default {
 
 <template>
     <div>
-        <b-row>
+        <div class="flex flex-wrap -mx-3 overflow-hidden">
             <!-- price -->
-            <b-col sm="12" lg="4">
+            <div class="my-3 px-3 w-full overflow-hidden sm:w-1/2 md:w-1/3 xl:w-1/4">
                 <fig-form-group>
                     <label slot="label" for="color_base_price">{{ $t('Price') }}</label>
                     <fig-form-input
@@ -70,10 +70,10 @@ export default {
                         @input="onChange"
                         id="color_base_price" />
                 </fig-form-group>
-            </b-col>
+            </div>
 
             <!-- compare at price -->
-            <b-col sm="12" lg="4">
+            <div class="my-3 px-3 w-full overflow-hidden sm:w-1/2 md:w-1/3 xl:w-1/4">
                 <fig-form-group>
                     <label slot="label" for="color_compare_at_price">{{ $t('Compare at') }}</label>
                     <fig-form-input
@@ -82,10 +82,10 @@ export default {
                         @input="onChange"
                         id="color_compare_at_price" />
                 </fig-form-group>
-            </b-col>
+            </div>
 
             <!-- cost pre item -->
-            <b-col sm="12" lg="4">
+            <div class="my-3 px-3 w-full overflow-hidden sm:w-1/2 md:w-1/3 xl:w-1/4">
                 <fig-form-group>
                     <label slot="label" for="color_cost_price">{{ $t('Cost per item') }}</label>
                     <fig-form-input
@@ -96,17 +96,15 @@ export default {
 
                     <div slot="description">{{ $t('Customers won’t see this') }}</div>
                 </fig-form-group>
-            </b-col>
-        </b-row>
+            </div>
+        </div>
 
-        <b-row>
+        <div>
             <!-- Charge tax on this product -->
-            <b-col lg="12">
-                <fig-form-checkbox
-                    v-model="form.is_taxable"
-                    @input="onChange">{{ $t('Charge tax on this product') }}</fig-form-checkbox>
-            </b-col>
-        </b-row>
+            <fig-form-checkbox
+                v-model="form.is_taxable"
+                @input="onChange">{{ $t('Charge tax on this product') }}</fig-form-checkbox>
+        </div>
     </div>
 </template>
 

@@ -9,7 +9,9 @@ import {
     FigButton,
     FigTooltip,
     FigOverlay,
-    FigModal
+    FigModal,
+    FigFormInputEndcapper,
+    FigFormInputFileButton
 } from '@notoursllc/figleaf';
 
 export default {
@@ -23,7 +25,9 @@ export default {
         FigButton,
         FigTooltip,
         FigOverlay,
-        FigModal
+        FigModal,
+        FigFormInputEndcapper,
+        FigFormInputFileButton
     },
 
     mixins: [
@@ -104,7 +108,11 @@ export default {
             return isAcceptedType;
         },
 
-        async onFileChange(files) {
+        async onFileChange(event) {
+            const files = event.target.files;
+            console.log("ON FILE CHAGNE", files)
+            console.log("ON FILE CHAGNE refs", this.$refs['file-input'])
+
             if (!files.length) {
                 return;
             }
@@ -163,7 +171,6 @@ export default {
 
             // this.createTempImages(files);
             this.emitChange();
-            this.$refs['file-input'].reset();
         },
 
         onDeleteImage(obj, index) {
@@ -182,22 +189,19 @@ export default {
             this.fileList.forEach((obj, index) => {
                 obj.ordinal = index;
             });
-        },
-
-        fileInputValueFormatter(files) {
-            const numFiles = files.length;
-            return this.$tc('_num_ images selected', numFiles, {number: numFiles});
         }
+
+        // fileInputValueFormatter(files) {
+        //     const numFiles = files.length;
+        //     return this.$tc('_num_ images selected', numFiles, {number: numFiles});
+        // }
     }
 };
 </script>
 
 
 <template>
-    <fig-overlay
-        :show="loading"
-        size="lg"
-        class="widthAll">
+    <div>
 
         <b-table-simple
             hover
@@ -285,16 +289,15 @@ export default {
 
         <div>
             <fig-form-group>
-                <b-form-file
-                    id="file-input"
+                <input
+                    v-show="numRemainingUploads > 0"
                     ref="file-input"
                     :accept="accept"
                     :multiple="true"
-                    v-show="numRemainingUploads > 0"
-                    @input="onFileChange"
+                    type="file"
                     :placeholder="$t('No file chosen')"
-                    :browse-text="$t('Choose images')"
-                    :file-name-formatter="fileInputValueFormatter"></b-form-file>
+                    id="file_input"
+                    @input="onFileChange">
 
                 <div slot="error" v-if="fileInputErrorMessage">{{ fileInputErrorMessage }}</div>
                 <div slot="description">{{ $t('You can upload num more images', {number: numRemainingUploads} ) }}</div>
@@ -308,7 +311,7 @@ export default {
                 :src="dialogImageUrl"
                 alt=""></b-img>
         </fig-modal>
-    </fig-overlay>
+    </div>
 </template>
 
 <style lang="scss">

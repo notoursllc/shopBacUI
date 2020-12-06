@@ -87,7 +87,7 @@ export default {
         }
     },
 
-    mounted() {
+    async mounted() {
         try {
             if(this.$route.params.id) {
                 this.fetchProduct();
@@ -100,6 +100,35 @@ export default {
         catch(e) {
             this.$errorToast(e.message);
         }
+
+        const msg = this.$createElement(
+            'div',
+            {
+                // class: 'border border-gray-500'
+            },
+            'vnode message that is a bit long lets sere what happens here'
+        );
+
+        // this.$showConfirm(
+        //     msg,
+        //     {
+        //         title: 'Test title'
+        //     },
+        //     'warning'
+        // )
+        // .then((confirmed) => {
+        //     console.log("promise resolved", confirmed);
+        // });
+
+        // const confirmed = await this.$showConfirm(
+        //     msg,
+        //     {
+        //         title: 'Test title'
+        //     },
+        //     'warning'
+        // );
+        // console.log("promise resolved", confirmed);
+
     },
 
     methods: {
@@ -191,9 +220,9 @@ export default {
             <div slot="header">{{ $t('Organization') }}</div>
 
             <div class="container mx-auto">
-                <b-row>
+                <div class="flex flex-wrap -mx-3 overflow-hidden">
                     <!-- type -->
-                    <b-col sm="12" md="4" lg="3">
+                    <div class="my-3 px-3 w-full overflow-hidden sm:w-1/2 md:w-1/3 xl:w-1/4">
                         <fig-form-group class="mb-2">
                             <label slot="label" for="product_type">{{ $t('Product type') }}</label>
                             <master-type-select
@@ -201,10 +230,10 @@ export default {
                                 object="product_type"
                                 id="product_type" />
                         </fig-form-group>
-                    </b-col>
+                    </div>
 
                     <!-- sub-type -->
-                    <b-col sm="12" md="4" lg="3">
+                    <div class="my-3 px-3 w-full overflow-hidden sm:w-1/2 md:w-1/3 xl:w-1/4">
                         <fig-form-group class="mb-2">
                             <label slot="label" for="product_sub_type">{{ $t('Product sub-type') }}</label>
                             <master-type-select
@@ -212,10 +241,10 @@ export default {
                                 object="product_sub_type"
                                 id="product_sub_type" />
                         </fig-form-group>
-                    </b-col>
+                    </div>
 
                     <!-- fit type -->
-                    <b-col sm="12" md="4" lg="3">
+                    <div class="my-3 px-3 w-full overflow-hidden sm:w-1/2 md:w-1/3 xl:w-1/4">
                         <fig-form-group class="mb-2">
                             <label slot="label" for="product_fit_type">{{ $t('Fit type') }}</label>
                             <master-type-select
@@ -223,10 +252,10 @@ export default {
                                 object="product_fit_type"
                                 id="product_fit_type" />
                         </fig-form-group>
-                    </b-col>
+                    </div>
 
                     <!-- sales channel -->
-                    <b-col sm="12" md="4" lg="3">
+                    <div class="my-3 px-3 w-full overflow-hidden sm:w-1/2 md:w-1/3 xl:w-1/4">
                         <fig-form-group class="mb-2">
                             <label slot="label" for="product_sales_channel_type">{{ $t('Sales channel') }}</label>
                             <master-type-select
@@ -234,10 +263,10 @@ export default {
                                 object="product_sales_channel_type"
                                 id="product_sales_channel_type" />
                         </fig-form-group>
-                    </b-col>
+                    </div>
 
                     <!-- vendor -->
-                    <b-col sm="12" md="4" lg="3">
+                    <div class="my-3 px-3 w-full overflow-hidden sm:w-1/2 md:w-1/3 xl:w-1/4">
                         <fig-form-group class="mb-2">
                             <label slot="label" for="product_vendor_type">{{ $t('Vendor') }}</label>
                             <master-type-select
@@ -246,8 +275,8 @@ export default {
                                 :multiple="false"
                                 id="product_vendor_type" />
                         </fig-form-group>
-                    </b-col>
-                </b-row>
+                    </div>
+                </div>
             </div>
         </text-card>
 
@@ -257,45 +286,39 @@ export default {
             <div slot="header">{{ $t('Details') }}</div>
 
             <div class="container mx-auto">
-                <b-row>
+                <div>
                     <!-- page title -->
-                    <b-col lg="12">
-                        <fig-form-group class="mb-2">
-                            <label slot="label" for="product_title">{{ $t('Title') }}</label>
-                            <fig-form-input
-                                v-model="product.title"
-                                maxlength="70"
-                                id="product_title" />
-                        </fig-form-group>
-                    </b-col>
-                </b-row>
+                    <fig-form-group class="mb-2">
+                        <label slot="label" for="product_title">{{ $t('Title') }}</label>
+                        <fig-form-input
+                            v-model="product.title"
+                            maxlength="70"
+                            id="product_title" />
+                    </fig-form-group>
+                </div>
 
-                <b-row>
+                <div>
                     <!-- caption -->
-                    <b-col lg="12">
-                        <fig-form-group class="mb-2">
-                            <label slot="label" for="product_caption">{{ $t('Caption') }}</label>
-                            <fig-form-input
-                                v-model="product.caption"
-                                maxlength="70"
-                                id="product_caption" />
-                        </fig-form-group>
-                    </b-col>
-                </b-row>
+                    <fig-form-group class="mb-2">
+                        <label slot="label" for="product_caption">{{ $t('Caption') }}</label>
+                        <fig-form-input
+                            v-model="product.caption"
+                            maxlength="70"
+                            id="product_caption" />
+                    </fig-form-group>
+                </div>
 
-                <b-row>
+                <div>
                     <!-- description -->
-                    <b-col lg="12">
-                        <fig-form-group class="mb-2">
-                            <label slot="label" for="product_description">{{ $t('Description') }}</label>
-                            <fig-form-textarea
-                                v-model="product.description"
-                                :rows="2"
-                                maxlength="320"
-                                id="product_description" />
-                        </fig-form-group>
-                    </b-col>
-                </b-row>
+                    <fig-form-group class="mb-2">
+                        <label slot="label" for="product_description">{{ $t('Description') }}</label>
+                        <fig-form-textarea
+                            v-model="product.description"
+                            :rows="2"
+                            maxlength="320"
+                            id="product_description" />
+                    </fig-form-group>
+                </div>
             </div>
         </text-card>
 

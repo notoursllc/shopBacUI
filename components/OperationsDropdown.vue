@@ -2,8 +2,7 @@
 import {
     FigButton,
     FigDropdown,
-    FigDropdownButton,
-    FigDropdownDivider
+    FigDropdownButton
 } from '@notoursllc/figleaf';
 
 export default {
@@ -12,8 +11,7 @@ export default {
     components: {
         FigButton,
         FigDropdown,
-        FigDropdownButton,
-        FigDropdownDivider
+        FigDropdownButton
     },
 
     props: {

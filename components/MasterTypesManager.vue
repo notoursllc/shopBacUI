@@ -1,5 +1,6 @@
 <script>
 import isObject from 'lodash.isobject';
+import debounce from 'lodash.debounce';
 import slugify from 'slugify';
 
 import OperationsDropdown from '@/components/OperationsDropdown';
@@ -88,11 +89,6 @@ export default {
                     // ],
                     ...paramsObj
                 });
-
-                this.$errorToast({
-                    text: 'test error'
-                });
-
             }
             catch(e) {
                 this.$errorToast(e.message);
@@ -103,10 +99,42 @@ export default {
             this.fetchTypes(val);
         },
 
-        async onDeleteClick(data) {
+        // async onDeleteClick(data) {
+        //     try {
+        //         console.log("IN DELETE CLICK")
+        //         const confirmed = await this.$showConfirm(
+        //             this.$t('delete_name?', {name: data.name}),
+        //             null,
+        //             'warning'
+        //         );
+
+        //         if(!confirmed) {
+        //             return;
+        //         }
+
+        //         const typeJson = await this.$api.masterTypes.delete(data.id);
+
+        //         if(!typeJson) {
+        //             throw new Error(this.$t('Master type not found'));
+        //         }
+
+        //         this.fetchTypes();
+        //         this.$successToast(
+        //             this.$t('deleted_name', { name: data.name })
+        //         );
+        //     }
+        //     catch(err) {
+        //         this.$errorToast(err.message);
+        //     }
+        // },
+
+        onDeleteClick: debounce(async function(data) {
+            console.log('I only get fired once every two seconds, max!', data)
+
             try {
-                const confirmed = await this.$confirmModal(
-                    this.$t('delete_name?', {'name': data.name}),
+                const confirmed = await this.$showConfirm(
+                    this.$t('delete_name?', {name: data.name}),
+                    null,
                     'warning'
                 );
 
@@ -128,7 +156,8 @@ export default {
             catch(err) {
                 this.$errorToast(err.message);
             }
-        },
+        }, 200),
+
 
         async onUpsertClick(data) {
             try {

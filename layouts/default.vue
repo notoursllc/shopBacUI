@@ -7,9 +7,6 @@ import NavigationCollapse from '@/components/navigationList/NavigationCollapse';
 
 export default {
     components: {
-        NavigationList,
-        NavigationItem,
-        NavigationCollapse,
         FigIconSprite
     },
 

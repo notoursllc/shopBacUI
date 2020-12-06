@@ -215,30 +215,28 @@ export default {
                 <template v-else>
                     <hr />
 
-                    <b-row>
-                        <b-col lg="4">
-                            <fig-form-group v-if="upsertColor.requires_shipping">
-                                <label slot="label" for="sku_weight_oz">{{ $t('Weight (oz)') }}</label>
-                                <fig-form-input-number
-                                    v-model="upsertColor.weight_oz"
-                                    :step=".01"
-                                    :min="0"
-                                    id="sku_weight_oz" />
+                    <div class="flex">
+                        <fig-form-group v-if="upsertColor.requires_shipping">
+                            <label slot="label" for="sku_weight_oz">{{ $t('Weight (oz)') }}</label>
+                            <fig-form-input-number
+                                v-model="upsertColor.weight_oz"
+                                :step=".01"
+                                :min="0"
+                                id="sku_weight_oz" />
 
-                                <div slot="description">
-                                    {{ $t('Used to calculate shipping rates at checkout and label prices during fulfillment.') }}
-                                </div>
-                            </fig-form-group>
-                        </b-col>
-                    </b-row>
+                            <div slot="description">
+                                {{ $t('Used to calculate shipping rates at checkout and label prices during fulfillment.') }}
+                            </div>
+                        </fig-form-group>
+                    </div>
 
                     <hr />
 
                     <h4>{{ $t('CUSTOMS INFORMATION') }}</h4>
 
-                    <b-row>
-                        <b-col sm="12" lg="6">
-                            <!-- country of origin -->
+                    <div class="flex flex-wrap -mx-2 overflow-hidden">
+                        <!-- country of origin -->
+                        <div class="my-2 px-2 w-full overflow-hidden xl:w-1/2">
                             <fig-form-group>
                                 <label slot="label" for="sku_customs_country_of_origin">{{ $t('Country of origin') }}</label>
                                 <fig-form-select-country
@@ -249,10 +247,10 @@ export default {
                                     {{ $t('customs_country_of_origin_desc') }}
                                 </div>
                             </fig-form-group>
-                        </b-col>
+                        </div>
 
-                        <b-col sm="12" lg="6">
-                            <!-- HS code -->
+                        <!-- HS code -->
+                        <div class="my-2 px-2 w-full overflow-hidden xl:w-1/2">
                             <fig-form-group>
                                 <label slot="label" for="sku_customs_harmonized_system_code">{{ $t('HS (Harmonized System) code') }}</label>
                                 <fig-form-input
@@ -263,8 +261,8 @@ export default {
                                     {{ $t('customs_hs_code_desc') }}
                                 </div>
                             </fig-form-group>
-                        </b-col>
-                    </b-row>
+                        </div>
+                    </div>
                 </template>
             </div>
         </text-card>

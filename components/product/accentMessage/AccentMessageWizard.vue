@@ -215,33 +215,34 @@ export default {
 
 
         <!-- date inputs -->
-        <div class="pt-4" v-if="action">
-            <b-row>
-                <!--  accent message begin -->
-                <b-col sm="12" lg="6">
-                    <fig-form-group>
-                        <label slot="label" for="accent_message_begin">{{ $t('Display: Start') }}</label>
-                        <fig-form-input-date
-                            v-model="accent_message_begin"
-                            @input="emitInput"
-                            id="accent_message_begin" />
-                        <div slot="description">{{ $t('accent_message_begin_desc') }}</div>
-                    </fig-form-group>
-                </b-col>
+        <div class="flex flex-wrap -mx-2 overflow-hidden" v-if="action">
 
-                <!--  accent message end -->
-                <b-col sm="12" lg="6">
-                    <fig-form-group>
-                        <label slot="label" for="accent_message_end">{{ $t('Display: End') }}</label>
-                        <fig-form-input-date
-                            v-model="accent_message_end"
-                            @input="emitInput"
-                            id="accent_message_end" />
-                        <div slot="description">{{ $t('accent_message_end_desc') }}</div>
-                    </fig-form-group>
-                </b-col>
-            </b-row>
+            <!--  accent message begin -->
+            <div class="my-2 px-2 w-full overflow-hidden xl:w-1/2">
+                <fig-form-group>
+                    <label slot="label" for="accent_message_begin">{{ $t('Display: Start') }}</label>
+                    <fig-form-input-date
+                        v-model="accent_message_begin"
+                        @input="emitInput"
+                        id="accent_message_begin" />
+                    <div slot="description">{{ $t('accent_message_begin_desc') }}</div>
+                </fig-form-group>
+            </div>
+
+            <!--  accent message end -->
+            <div class="my-2 px-2 w-full overflow-hidden xl:w-1/2">
+                <fig-form-group>
+                    <label slot="label" for="accent_message_end">{{ $t('Display: End') }}</label>
+                    <fig-form-input-date
+                        v-model="accent_message_end"
+                        @input="emitInput"
+                        id="accent_message_end" />
+                    <div slot="description">{{ $t('accent_message_end_desc') }}</div>
+                </fig-form-group>
+            </div>
+
         </div>
 
     </div>
 </template>
+

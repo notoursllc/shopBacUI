@@ -236,11 +236,8 @@ export default {
         <!-- color upsert form -->
         <fig-modal
             ref="color_upsert_form_modal"
-            size="xl"
-            :title="modalTitle">
-            <div slot="header">
-                {{ modalTitle }}
-            </div>
+            size="xl">
+            <div slot="header">{{ modalTitle }}</div>
 
             <color-upsert-form
                 :color="colorList[visibleColorIndex]"
@@ -250,43 +247,3 @@ export default {
 
     </div>
 </template>
-
-
-<style lang="scss">
-// @import "~assets/css/components/_table.scss";
-// @import "~assets/css/components/_formRow.scss";
-// @import "~assets/css/components/_mixins.scss";
-
-
-.dropdown {
-  position: relative;
-  height: 0;
-  overflow: hidden;
-  transition: height 350ms;
-
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 1rem;
-    background-image: linear-gradient(to top, white, rgba(white, 0));
-  }
-
-  &-enter,
-  &-leave-to { opacity: 0 }
-
-  &-leave,
-  &-enter-to { opacity: 1 }
-
-  &-enter-active,
-  &-leave-active {
-    position: absolute;
-    width: 100%;
-    transition: opacity 200ms ease-in-out;
-  }
-
-  &-enter-active { transition-delay: 100ms }
-}
-</style>

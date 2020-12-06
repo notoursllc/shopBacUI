@@ -91,6 +91,7 @@ export default {
         '@/plugins/notifications',
         '@/plugins/figIcon',
         '@/node_modules/@notoursllc/figleaf/components/toaster',
+        '@/node_modules/@notoursllc/figleaf/components/confirm',
         { src: '@/plugins/youtube', ssr: false },
         { src: '@/plugins/bugsnag', ssr: false }
     ],
@@ -157,46 +158,14 @@ export default {
         bootstrapCSS: false, // Or `css: false`
         bootstrapVueCSS: false, // Or `bvCSS: false`
 
-        // https://bootstrap-vue.org/docs/reference/settings#default-configuration
-        // https://getbootstrap.com/docs/4.4/utilities/borders/
-        config: {
-            BModal: {
-                buttonSize: 'md',
-                bodyBgVariant: null,
-                // bodyTextVariant: 'secondary',
-                cancelVariant: 'outline-secondary',
-                centered: true,
-                footerBgVariant: 'light',
-                footerBorderVariant: '0',
-                footerClass: 'p-1',
-                footerTextVariant: null,
-                headerBgVariant: null,
-                headerBorderVariant: null,
-                headerCloseContent: '&times;',
-                headerTextVariant: null,
-                headerCloseVariant: null,
-                hideHeaderClose: false,
-                okVariant: 'primary',
-                size: 'md',
-                titleTag: 'h6'
-            }
-        },
-
         // importing only the stuff we are using to reduce bundle size
         components: [
-            'BRow',
-            'BCol',
-            'BFormFile',
             'BImg',
-            'BModal',
             'BTable'
         ],
         componentPlugins: [
-            'TablePlugin',
-            'ModalPlugin',
-            'BVModalPlugin'
-        ],
-        directives: ['VBModal', 'VBScrollspy']
+            'TablePlugin'
+        ]
     },
 
     /*
