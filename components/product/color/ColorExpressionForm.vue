@@ -10,7 +10,10 @@ import {
     FigButton,
     FigFormInput,
     FigFormRadio,
-    FigOverlay
+    FigOverlay,
+    FigTableSimple,
+    FigTh,
+    FigTd
 } from '@notoursllc/figleaf';
 
 export default {
@@ -23,7 +26,10 @@ export default {
         FigButton,
         FigFormInput,
         FigFormRadio,
-        FigOverlay
+        FigOverlay,
+        FigTableSimple,
+        FigTh,
+        FigTd
     },
 
     mixins: [
@@ -163,53 +169,51 @@ export default {
 
         <!-- color swatches -->
         <div v-show="exhibitType === 'SWATCH'">
-            <b-table-simple
+            <fig-table-simple
+                striped
                 hover
-                small
-                responsive
-                table-class="bread-table"
                 v-if="selectedColors.length">
-                <b-thead>
-                    <b-tr>
-                        <b-th v-if="selectedColors.length > 1" class="width50"></b-th>
-                        <b-th class="swatchCell">{{ $t('Color') }}</b-th>
-                        <b-th>{{ $t('Label') }}</b-th>
-                        <b-th class="width100"></b-th>
-                    </b-tr>
-                </b-thead>
+                <template slot="head">
+                    <tr>
+                        <fig-th v-if="selectedColors.length > 1" class="width50"></fig-th>
+                        <fig-th class="swatchCell">{{ $t('Color') }}</fig-th>
+                        <fig-th>{{ $t('Label') }}</fig-th>
+                        <fig-th class="width100"></fig-th>
+                    </tr>
+                </template>
 
                 <draggable
                     v-model="selectedColors"
                     ghost-class="ghost"
                     handle=".handle"
-                    tag="b-tbody">
+                    tag="tbody">
 
                     <template v-for="(obj, index) in selectedColors">
-                        <b-tr :key="index">
+                        <tr :key="index">
                             <!-- handle -->
-                            <b-td v-if="selectedColors.length > 1" class="vam">
+                            <fig-td v-if="selectedColors.length > 1" class="vam">
                                 <i class="handle">
                                     <fig-icon icon="dots-vertical-double" />
                                 </i>
-                            </b-td>
+                            </fig-td>
 
                             <!-- color -->
-                            <b-td>
+                            <fig-td>
                                 <fig-form-input
                                     type="color"
                                     v-model="obj.swatch" />
-                            </b-td>
+                            </fig-td>
 
                             <!-- label -->
-                            <b-td class="vam">
+                            <fig-td class="vam">
                                 <fig-form-input
                                     v-model="obj.label"
                                     class="w-full"
                                     :placeholder="$t('example: Black')" />
-                            </b-td>
+                            </fig-td>
 
                             <!-- actions -->
-                            <b-td class="text-center vam">
+                            <fig-td class="text-center vam">
                                 <pop-confirm
                                     @onConfirm="onDeleteColor(index)">
                                     {{ $t('Delete this item?') }}
@@ -221,12 +225,12 @@ export default {
                                         class="ml-2"
                                         icon="trash" />
                                 </pop-confirm>
-                            </b-td>
-                        </b-tr>
+                            </fig-td>
+                        </tr>
                     </template>
 
                 </draggable>
-            </b-table-simple>
+            </fig-table-simple>
 
             <div class="pt-2">
                 <fig-button

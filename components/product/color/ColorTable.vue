@@ -8,7 +8,10 @@ import product_mixin from '@/mixins/product_mixin';
 
 import {
     FigButton,
-    FigModal
+    FigModal,
+    FigTableSimple,
+    FigTh,
+    FigTd
 } from '@notoursllc/figleaf';
 
 export default {
@@ -19,7 +22,10 @@ export default {
         PopConfirm,
         ColorUpsertForm,
         FigButton,
-        FigModal
+        FigModal,
+        FigTableSimple,
+        FigTh,
+        FigTd
     },
 
     mixins: [
@@ -137,61 +143,59 @@ export default {
 
 
 <template>
-    <div style="overflow-x:auto;">
-        <b-table-simple
+    <div>
+        <fig-table-simple
+            striped
             hover
-            small
-            responsive
-            table-class="bread-table"
             v-if="colorList.length">
-            <b-thead>
-                <b-tr>
-                    <b-th v-if="canShowGrabHandles" class="vabtm width50"></b-th>
-                    <b-th class="width50">{{ $t('Published') }}</b-th>
-                    <b-th>{{ $t('Color name') }}</b-th>
-                    <b-th>{{ $t('Price') }}</b-th>
-                    <b-th>{{ $t('Sizes') }}</b-th>
-                    <b-th>{{ $t('Images') }}</b-th>
-                    <b-th></b-th>
-                </b-tr>
-            </b-thead>
+            <template slot="head">
+                <tr>
+                    <fig-th v-if="canShowGrabHandles" class="w-12"></fig-th>
+                    <fig-th sortable prop="published">{{ $t('Published') }}</fig-th>
+                    <fig-th>{{ $t('Color name') }}</fig-th>
+                    <fig-th sortable prop="base_price">{{ $t('Price') }}</fig-th>
+                    <fig-th>{{ $t('Sizes') }}</fig-th>
+                    <fig-th>{{ $t('Images') }}</fig-th>
+                    <fig-th></fig-th>
+                </tr>
+            </template>
 
             <draggable
                 v-model="colorList"
                 handle=".handle"
                 @update="setColorOrdinals"
                 ghost-class="ghost"
-                tag="b-tbody">
-                <b-tr v-for="(color, idx) in colorList" :key="idx">
+                tag="tbody">
+                <tr v-for="(color, idx) in colorList" :key="idx">
                     <!-- drag handle -->
-                    <b-td v-show="canShowGrabHandles">
+                    <fig-td v-show="canShowGrabHandles">
                         <fig-icon
                             icon="dots-vertical-double"
                             class="handle cursorGrab" />
-                    </b-td>
+                    </fig-td>
 
                     <!-- Published -->
-                    <b-td class="text-center">
+                    <fig-td>
                         {{ color.published }}
-                    </b-td>
+                    </fig-td>
 
                     <!-- Color name -->
-                    <b-td>
+                    <fig-td>
                         {{ color.label }}
-                    </b-td>
+                    </fig-td>
 
                     <!-- Price -->
-                    <b-td>
+                    <fig-td>
                         {{ color.base_price }}
-                    </b-td>
+                    </fig-td>
 
                     <!-- Sizes -->
-                    <b-td>
+                    <fig-td>
 
-                    </b-td>
+                    </fig-td>
 
                     <!-- Images -->
-                    <b-td>
+                    <fig-td>
                         <!-- <span
                             v-for="(result, index) in getVariantThumbs(color)"
                             :key="index"
@@ -201,9 +205,9 @@ export default {
                                 class="shadow"
                                 :class="{'featured-thumb': result.is_featured}"></figure>
                         </span> -->
-                    </b-td>
+                    </fig-td>
 
-                    <b-td class="text-right">
+                    <fig-td class="text-right">
                         <fig-button
                             variant="plain"
                             class="mr-1"
@@ -218,10 +222,10 @@ export default {
                                 dotted
                                 icon="trash" />
                         </pop-confirm>
-                    </b-td>
-                </b-tr>
+                    </fig-td>
+                </tr>
             </draggable>
-        </b-table-simple>
+        </fig-table-simple>
 
 
         <div>

@@ -8,11 +8,6 @@ import SizeCardEditView from '@/components/product/size/sizeCard/SizeCardEditVie
 import UsingColorValueBadge from '@/components/product/size/sizeCard/UsingColorValueBadge';
 
 import {
-    BTooltip,
-    BPopover
-} from 'bootstrap-vue';
-
-import {
     FigFormCheckbox,
     FigButton,
     FigFormSelect,
@@ -28,8 +23,6 @@ export default {
 
     components: {
         draggable,
-        BTooltip,
-        BPopover,
         PopConfirm,
         SizeSelect,
         SizeCardDetailsView,

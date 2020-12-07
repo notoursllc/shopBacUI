@@ -12,7 +12,10 @@ import {
     FigFormGroup,
     FigTooltip,
     FigPopover,
-    FigOverlay
+    FigOverlay,
+    FigTableSimple,
+    FigTh,
+    FigTd
 } from '@notoursllc/figleaf';
 
 export default {
@@ -27,7 +30,10 @@ export default {
         FigFormGroup,
         FigTooltip,
         FigPopover,
-        FigOverlay
+        FigOverlay,
+        FigTableSimple,
+        FigTh,
+        FigTd
     },
 
     props: {
@@ -256,14 +262,14 @@ export default {
 <template>
     <div>
         <fig-overlay :show="loading">
-            <b-table-simple
+            <fig-table-simple
                 hover
                 responsive
                 table-class="table-builder-table">
-                <b-thead>
-                    <b-tr>
-                        <b-th class="grab-handle-cell no-color" v-show="canShowRowGrabHandles"></b-th>
-                        <b-th class="th vat">
+                <template slot="head">
+                    <tr>
+                        <fig-th class="grab-handle-cell no-color" v-show="canShowRowGrabHandles"></fig-th>
+                        <fig-th class="th vat">
                             <!-- import button -->
                             <pop-confirm
                                 v-if="showImport"
@@ -305,9 +311,9 @@ export default {
                                 </fig-tooltip>
 
                             </pop-confirm>
-                        </b-th>
+                        </fig-th>
 
-                        <b-th
+                        <fig-th
                             v-for="(obj, index) in tableData.columns"
                             :key="index"
                             class="th">
@@ -367,51 +373,51 @@ export default {
                                     @click="onColumnMove(index, false)"
                                     icon="arrow-right" />
                             </fig-form-input-endcapper>
-                        </b-th>
+                        </fig-th>
 
                         <!-- add column button -->
-                        <b-th class="no-color empty-column-cell">
+                        <fig-th class="no-color empty-column-cell">
                             <fig-button
                                 @click="addColumn"
                                 variant="plain"
                                 size="sm"
                                 icon="plus">{{ $t('column') }}</fig-button>
-                        </b-th>
-                    </b-tr>
-                </b-thead>
+                        </fig-th>
+                    </tr>
+                </template>
 
                 <draggable
                     v-model="tableData.rows"
                     handle=".handle"
                     ghost-class="ghost"
-                    tag="b-tbody">
-                    <b-tr v-for="(row, idx) in tableData.rows" :key="idx">
+                    tag="tbody">
+                    <tr v-for="(row, idx) in tableData.rows" :key="idx">
                         <!-- drag handle -->
-                        <b-td class="no-color grab-handle-cell" v-show="canShowRowGrabHandles">
+                        <fig-td class="no-color grab-handle-cell" v-show="canShowRowGrabHandles">
                             <i class="handle cursorGrab">
                                 <fig-icon icon="dots-vertical-double" />
                             </i>
-                        </b-td>
+                        </fig-td>
 
                         <!-- row label -->
-                        <b-td class="th">
+                        <fig-td class="th">
                             <fig-form-input
                                 v-model="row.label"
                                 size="sm"
                                 :placeholder="$t('Row label')"
                                 @input="onInputChange" />
-                        </b-td>
+                        </fig-td>
 
                         <!-- row inputs -->
-                        <b-td v-for="obj in row.cells" :key="obj.columnId">
+                        <fig-td v-for="obj in row.cells" :key="obj.columnId">
                             <fig-form-input
                                 v-model="obj.value"
                                 size="sm"
                                 @input="onInputChange" />
-                        </b-td>
+                        </fig-td>
 
                         <!-- delete button -->
-                        <b-td class="no-color empty-column-cell">
+                        <fig-td class="no-color empty-column-cell">
                             <pop-confirm @onConfirm="deleteRow(idx)">
                                 {{ $t('Delete this row?') }}
 
@@ -425,15 +431,15 @@ export default {
                                     </template>
                                 </fig-button>
                             </pop-confirm>
-                        </b-td>
-                    </b-tr>
+                        </fig-td>
+                    </tr>
                 </draggable>
 
-                <b-tr>
-                    <b-td class="no-color" v-show="canShowRowGrabHandles"></b-td>
+                <tr>
+                    <fig-td class="no-color" v-show="canShowRowGrabHandles"></fig-td>
 
                     <!-- add row button -->
-                    <b-td class="no-color empthy-row-cell" :colspan="numColumns + 1">
+                    <fig-td class="no-color empthy-row-cell" :colspan="numColumns + 1">
                         <fig-button
                             @click="addRow"
                             variant="plain"
@@ -453,11 +459,11 @@ export default {
                                 icon="trash"
                                 class="ml-3 border-dashed-2">{{ $t('Clear table') }}</fig-button>
                         </pop-confirm>
-                    </b-td>
+                    </fig-td>
 
-                    <b-td class="no-color"></b-td>
-                </b-tr>
-            </b-table-simple>
+                    <fig-td class="no-color"></fig-td>
+                </tr>
+            </fig-table-simple>
         </fig-overlay>
     </div>
 </template>

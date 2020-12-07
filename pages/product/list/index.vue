@@ -1,21 +1,25 @@
 <script>
 import product_mixin from '@/mixins/product_mixin';
-import AppTable from '@/components/AppTable';
 import OperationsDropdown from '@/components/OperationsDropdown';
 import BooleanTag from '@/components/BooleanTag';
 import Vnodes from '@/components/Vnodes';
 
 import {
-    FigButtonFab
+    FigButtonFab,
+    FigTableSimple,
+    FigTh,
+    FigTd
 } from '@notoursllc/figleaf';
 
 export default {
     components: {
-        AppTable,
         OperationsDropdown,
         BooleanTag,
         Vnodes,
-        FigButtonFab
+        FigButtonFab,
+        FigTableSimple,
+        FigTh,
+        FigTd
     },
 
     mixins: [
@@ -25,17 +29,7 @@ export default {
     data() {
         return {
             products: [],
-            productSubTypes: [],
-            tableData: {
-                headers: [
-                    { key: 'featuredImage', label: '', thClass: ['width125'] },
-                    { key: 'title', label: this.$t('Title'), sortable: true, sortDirection: 'desc' },
-                    { key: 'inventory', label: this.$t('Inventory') },
-                    { key: 'published', label: this.$t('Published'), sortable: true },
-                    { key: 'sub_type', label: this.$t('Sub Type'), sortable: true },
-                    { key: 'vendor', label: this.$t('Vendor') }
-                ]
-            }
+            productSubTypes: []
         };
     },
 
@@ -75,7 +69,10 @@ export default {
         },
 
         sortChanged(val) {
-            this.fetchProducts(val);
+            this.fetchProducts({
+                sortBy: val.by,
+                sortDesc: !val.isAsc
+            });
         },
 
         async onProductDelete(product) {
@@ -199,47 +196,60 @@ export default {
     <div>
         <fig-button-fab icon="plus" @click="goToProductUpsert()" />
 
-        <app-table
-            :items="products"
-            :fields="tableData.headers"
-            @column-sort="sortChanged">
 
-            <!-- featured image -->
-            <template v-slot:cell()="row">
-                <vnodes :vnodes="getFirstVariantImage(row.item)" />
-                <div class="fs12">{{ numPicsLabel(row.item) }}</div>
+        <fig-table-simple
+            striped
+            hover
+            @sort="sortChanged">
+            <template slot="head">
+                <tr>
+                    <fig-th></fig-th>
+                    <fig-th sortable prop="title">{{ $t('Title') }}</fig-th>
+                    <fig-th>{{ $t('Inventory') }}</fig-th>
+                    <fig-th sortable prop="published">{{ $t('Published') }}</fig-th>
+                    <fig-th sortable prop="sub_type">{{ $t('Sub Type') }}</fig-th>
+                    <fig-th>{{ $t('Vendor') }}</fig-th>
+                </tr>
             </template>
 
-            <!-- title -->
-            <template v-slot:cell(title)="row">
-                {{ row.item.title }}
-                <operations-dropdown
-                    :show-view="false"
-                    @edit="goToProductUpsert(row.item.id)"
-                    @delete="onProductDelete(row.item)"
-                    class="mls" />
-            </template>
+            <tr v-for="(prod, idx) in products" :key="idx">
+                <!-- featured image -->
+                <fig-td>
+                    <vnodes :vnodes="getFirstVariantImage(prod)" />
+                    <div class="fs12">{{ numPicsLabel(prod) }}</div>
+                </fig-td>
 
-            <!-- inventory count -->
-            <template v-slot:cell(inventory)="row">
-                {{ getInventoryCountString(row.item) }}
-            </template>
+                 <!-- title -->
+                <fig-td>
+                    {{ prod.title }}
+                    <operations-dropdown
+                        :show-view="false"
+                        @edit="goToProductUpsert(prod.id)"
+                        @delete="onProductDelete(prod)"
+                        class="mls" />
+                </fig-td>
 
-            <!-- published -->
-            <template v-slot:cell(published)="row">
-                <boolean-tag :value="row.item.published" />
-            </template>
+                <!-- inventory count -->
+                <fig-td>
+                    {{ getInventoryCountString(prod) }}
+                </fig-td>
 
-            <!-- sub-type -->
-            <template v-slot:cell(sub_type)="row">
-                {{ getSubTypeLabel(row.item.sub_type) }}
-            </template>
+                <!-- published -->
+                <fig-td>
+                    <boolean-tag :value="prod.published" />
+                </fig-td>
 
-            <!-- vendor -->
-            <template v-slot:cell(vendor)="row">
-                {{ row.item.vendor }}
-            </template>
-        </app-table>
+                <!-- sub type -->
+                <fig-td>
+                    {{ getSubTypeLabel(prod.sub_type) }}
+                </fig-td>
+
+                <!-- vendor -->
+                <fig-td>
+                    {{ prod.vendor }}
+                </fig-td>
+            </tr>
+        </fig-table-simple>
     </div>
 </template>
 

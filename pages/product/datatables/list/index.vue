@@ -1,27 +1,25 @@
 <script>
-import AppTable from '@/components/AppTable';
 import OperationsDropdown from '@/components/OperationsDropdown';
 
 import {
-    FigButtonFab
+    FigButtonFab,
+    FigTableSimple,
+    FigTh,
+    FigTd
 } from '@notoursllc/figleaf';
 
 export default {
     components: {
-        AppTable,
         OperationsDropdown,
-        FigButtonFab
+        FigButtonFab,
+        FigTableSimple,
+        FigTh,
+        FigTd
     },
 
     data() {
         return {
-            dataTables: [],
-            tableData: {
-                headers: [
-                    { key: 'name', label: this.$t('Name'), sortable: true },
-                    { key: 'updated_at', label: this.$t('Updated'), sortable: true }
-                ]
-            }
+            dataTables: []
         };
     },
 
@@ -30,7 +28,7 @@ export default {
     },
 
     methods: {
-         // will need to add pagination params in the future
+        // will need to add pagination params in the future
         async fetchData(paramsObj) {
             try {
                 this.dataTables = await this.$api.productDataTables.list(paramsObj);
@@ -41,7 +39,10 @@ export default {
         },
 
         sortChanged(val) {
-            this.fetchData(val);
+            this.fetchData({
+                sortBy: val.by,
+                sortDesc: !val.isAsc
+            });
         },
 
         async onDeleteClick(data) {
@@ -88,26 +89,34 @@ export default {
     <div>
         <fig-button-fab icon="plus" @click="onUpsertClick()" />
 
-        <app-table
-            :items="dataTables"
-            :fields="tableData.headers"
-            @column-sort="sortChanged">
 
-            <!-- name -->
-            <template v-slot:cell(name)="row">
-                {{ row.item.name }}
-                <operations-dropdown
-                    :show-view="false"
-                    @edit="onUpsertClick(row.item)"
-                    @delete="onDeleteClick(row.item)"
-                    class="mls" />
+        <fig-table-simple
+            striped
+            hover
+            @sort="sortChanged">
+            <template slot="head">
+                <tr>
+                    <fig-th sortable prop="name">{{ $t('Name') }}</fig-th>
+                    <fig-th sortable prop="updated_at">{{ $t('Updated') }}</fig-th>
+                </tr>
             </template>
 
-            <!-- updated -->
-            <template v-slot:cell(updated_at)="row">
-                {{ row.item.updated_at | format8601 }}
-            </template>
+            <tr v-for="(obj, idx) in dataTables" :key="idx">
+                <!-- name -->
+                <fig-td>
+                    {{ obj.name }}
+                    <operations-dropdown
+                        :show-view="false"
+                        @edit="onUpsertClick(obj)"
+                        @delete="onDeleteClick(obj)"
+                        class="mls" />
+                </fig-td>
 
-        </app-table>
+                <!-- updated -->
+                <fig-td>
+                    {{ obj.updated_at | format8601 }}
+                </fig-td>
+            </tr>
+        </fig-table-simple>
     </div>
 </template>

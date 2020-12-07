@@ -1,20 +1,21 @@
 <script>
+import {
+    FigTableSimple,
+    FigTh,
+    FigTd
+} from '@notoursllc/figleaf';
+
+
 export default {
     components: {
-        AppTable: () => import('@/components/AppTable')
+        FigTableSimple,
+        FigTh,
+        FigTd
     },
 
     data() {
         return {
-            products: [],
-            tableData: {
-                headers: [
-                    { key: 'updated_at', label: this.$t('Updated'), sortable: true },
-                    { key: 'updated_at', label: this.$t('Status') },
-                    { key: 'updated_at', label: this.$t('Shipping total') },
-                    { key: 'updated_at', label: this.$t('Grand total') }
-                ]
-            }
+            products: []
         };
     },
 
@@ -39,7 +40,10 @@ export default {
         },
 
         sortChanged(val) {
-            this.fetchOrders(val);
+            this.fetchOrders({
+                sortBy: val.by,
+                sortDesc: !val.isAsc
+            });
         }
     }
 };
@@ -47,41 +51,43 @@ export default {
 
 
 <template>
-    <app-table
-        :items="payments"
-        :fields="tableData.headers"
-        @column-sort="sortChanged">
-
-        <template v-slot:cell(updated_at)="row">
-            <nuxt-link
-                :to="{ name: 'order-id', params: { id: row.item.id } }"
-                tag="a">{{ row.item.updated_at | format8601 }}</nuxt-link>
+    <fig-table-simple
+        striped
+        hover
+        @sort="sortChanged">
+        <template slot="head">
+            <tr>
+                <fig-th sortable prop="updated_at">{{ $t('Updated') }}</fig-th>
+                <fig-th>{{ $t('Status') }}</fig-th>
+                <fig-th>{{ $t('Shipping total') }}</fig-th>
+                <fig-th>{{ $t('Grand total') }}</fig-th>
+            </tr>
         </template>
 
-        <!-- success -->
-        <template v-slot:cell()="row">
-            <div v-for="obj in row.item.transaction.tenders" :key="obj.id">
-                {{ obj.card_details.status }}
-            </div>
-        </template>
+        <tr v-for="(obj, idx) in payments" :key="idx">
+            <fig-td>
+                <nuxt-link
+                    :to="{ name: 'order-id', params: { id: obj.id } }"
+                    tag="a">{{ obj.updated_at | format8601 }}</nuxt-link>
+            </fig-td>
 
-        <!-- shipping total -->
-        <template v-slot:cell()="row">
-            {{ row.item.shoppingCart.shipping_total }}
-        </template>
+            <!-- success -->
+            <fig-td>
+                <div v-for="item in obj.transaction.tenders" :key="item.id">
+                    {{ item.card_details.status }}
+                </div>
+            </fig-td>
 
-        <!-- grand total -->
-        <template v-slot:cell()="row">
-            {{ row.item.shoppingCart.grand_total }}
-        </template>
-    </app-table>
+            <!-- shipping total -->
+            <fig-td>
+                {{ obj.shoppingCart.shipping_total }}
+            </fig-td>
+
+            <!-- grand total -->
+            <fig-td>
+                {{ obj.shoppingCart.grand_total }}
+            </fig-td>
+        </tr>
+    </fig-table-simple>
 </template>
 
-
-<style lang="scss">
-    @import "~assets/css/components/_table.scss";
-
-    .prodPicSmall {
-        width: 70px;
-    }
-</style>

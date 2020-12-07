@@ -6,7 +6,6 @@ import slugify from 'slugify';
 import OperationsDropdown from '@/components/OperationsDropdown';
 import BooleanTag from '@/components/BooleanTag';
 import MetaDataBuilder from '@/components/MetaDataBuilder';
-import AppTable from '@/components/AppTable';
 
 import {
     FigButton,
@@ -14,7 +13,10 @@ import {
     FigFormCheckbox,
     FigFormInput,
     FigFormTextarea,
-    FigModal
+    FigModal,
+    FigTableSimple,
+    FigTh,
+    FigTd
 } from '@notoursllc/figleaf';
 
 export default {
@@ -22,13 +24,15 @@ export default {
         OperationsDropdown,
         BooleanTag,
         MetaDataBuilder,
-        AppTable,
         FigButton,
         FigButtonFab,
         FigFormCheckbox,
         FigFormInput,
         FigFormTextarea,
-        FigModal
+        FigModal,
+        FigTableSimple,
+        FigTh,
+        FigTd
     },
 
     props: {
@@ -48,14 +52,7 @@ export default {
                 metadata: null
             },
             formHasMetaData: false,
-            types: [],
-            tableData: {
-                headers: [
-                    { key: 'name', label: this.$t('Name'), sortable: true },
-                    { key: 'slug', label: this.$t('Slug'), sortable: true },
-                    { key: 'published', label: this.$t('Published'), sortable: true }
-                ]
-            }
+            types: []
         };
     },
 
@@ -96,41 +93,13 @@ export default {
         },
 
         sortChanged(val) {
-            this.fetchTypes(val);
+            this.fetchTypes({
+                sortBy: val.by,
+                sortDesc: !val.isAsc
+            });
         },
 
-        // async onDeleteClick(data) {
-        //     try {
-        //         console.log("IN DELETE CLICK")
-        //         const confirmed = await this.$showConfirm(
-        //             this.$t('delete_name?', {name: data.name}),
-        //             null,
-        //             'warning'
-        //         );
-
-        //         if(!confirmed) {
-        //             return;
-        //         }
-
-        //         const typeJson = await this.$api.masterTypes.delete(data.id);
-
-        //         if(!typeJson) {
-        //             throw new Error(this.$t('Master type not found'));
-        //         }
-
-        //         this.fetchTypes();
-        //         this.$successToast(
-        //             this.$t('deleted_name', { name: data.name })
-        //         );
-        //     }
-        //     catch(err) {
-        //         this.$errorToast(err.message);
-        //     }
-        // },
-
         onDeleteClick: debounce(async function(data) {
-            console.log('I only get fired once every two seconds, max!', data)
-
             try {
                 const confirmed = await this.$showConfirm(
                     this.$t('delete_name?', {name: data.name}),
@@ -246,31 +215,39 @@ export default {
     <div>
         <fig-button-fab icon="plus" @click="onUpsertClick()" />
 
-        <app-table
-            :items="types"
-            :fields="tableData.headers"
-            @column-sort="sortChanged">
 
-            <!-- name -->
-            <template v-slot:cell(name)="row">
-                {{ row.item.name }}
-                <operations-dropdown
-                    :show-view="false"
-                    @edit="onUpsertClick(row.item)"
-                    @delete="onDeleteClick(row.item)"
-                    class="mls" />
+        <fig-table-simple
+            striped
+            hover
+            @sort="sortChanged">
+            <template slot="head">
+                <tr>
+                    <fig-th sortable prop="name">{{ $t('Name') }}</fig-th>
+                    <fig-th sortable prop="slug">{{ $t('Slug') }}</fig-th>
+                    <fig-th sortable prop="published">{{ $t('Published') }}</fig-th>
+                </tr>
             </template>
 
-            <!-- slug -->
-            <template v-slot:cell(slug)="row">
-                {{ row.item.slug }}
-            </template>
+            <tr v-for="(type, idx) in types" :key="idx">
+                <fig-td>
+                    {{ type.name }}
+                    <operations-dropdown
+                        :show-view="false"
+                        @edit="onUpsertClick(type)"
+                        @delete="onDeleteClick(type)"
+                        class="mls" />
+                </fig-td>
 
-            <!-- published -->
-            <template v-slot:cell(published)="row">
-                <boolean-tag :value="row.item.published" />
-            </template>
-        </app-table>
+                <fig-td>
+                    {{ type.slug }}
+                </fig-td>
+
+                <fig-td>
+                    <boolean-tag :value="type.published" />
+                </fig-td>
+            </tr>
+        </fig-table-simple>
+
 
         <fig-modal
             ref="type_upsert_modal"

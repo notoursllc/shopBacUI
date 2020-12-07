@@ -9,7 +9,7 @@
 @import "components/animations";
 @import "components/svg";
 // @import "components/minireset";
-// @import "components/bootstrap-overrides";
+
 
 // vue-select
 // https://vue-select.org/guide/css.html#scss-variables
@@ -17,111 +17,6 @@ $vs-component-line-height: 1.8;
 $vs-controls-size: .8;
 $vs-border-color: #ced4da;
 @import "vue-select/src/scss/vue-select.scss";
-
-
-// importing Bootstrap SCSS
-// Custom Bootstrap variable overrides go first
-$grid-breakpoints: (
-  xs: 0,
-  sm: 480px,
-  md: 640px,
-  lg: 992px,
-  xl: 1300px
-);
-$enable-rounded: true;
-
-
-// https://bootstrap-vue.org/docs/reference/color-variants#color-variants-and-css-class-mapping
-$white: #fff;
-$gray-100: #ebedef;
-$gray-200: #d8dbe0;
-$gray-300: #c4c9d0;
-$gray-400: #b1b7c1;
-$gray-500: #9da5b1;
-$gray-600: #8a93a2;
-$gray-700: #768192;
-$gray-800: #636f83;
-$gray-900: #4f5d73;
-$black: #000;
-
-$blue: #3399ff;
-$red: #e55353;
-$yellow: #f9b115;
-$green: #2eb85c;
-
-// Theme color default definitions
-$primary: $blue;
-$secondary: $gray-600;
-$success: $green;
-$info: $gray-500;
-$warning: $yellow;
-$danger: $red;
-$light: $gray-100;
-$dark: $gray-800;
-
-// trying to import the least amount of bootstrap stuff while I refactor to tailwind
-// @import 'bootstrap/scss/bootstrap.scss';
-@import 'bootstrap/scss/_functions.scss';
-@import 'bootstrap/scss/_variables.scss';
-@import 'bootstrap/scss/_mixins.scss';
-@import "bootstrap/scss/_root";
-// @import "bootstrap/scss/_reboot";
-// @import "bootstrap/scss/_type";
-// @import "bootstrap/scss/_images";
-// @import "bootstrap/scss/_code";
-@import "bootstrap/scss/_grid";
-@import "bootstrap/scss/_tables";
-@import "bootstrap/scss/_forms";
-// @import "bootstrap/scss/_buttons";
-@import "bootstrap/scss/_transitions";
-@import "bootstrap/scss/_dropdown";
-// @import "bootstrap/scss/_button-group";
-// @import "bootstrap/scss/_input-group";
-// @import "bootstrap/scss/_custom-forms";
-// @import "bootstrap/scss/_nav";
-// @import "bootstrap/scss/_navbar";
-// @import "bootstrap/scss/_card";
-// @import "bootstrap/scss/_breadcrumb";
-// @import "bootstrap/scss/_pagination";
-// @import "bootstrap/scss/_badge";
-// @import "bootstrap/scss/_jumbotron";
-// @import "bootstrap/scss/_alert";
-// @import "bootstrap/scss/_progress";
-// @import "bootstrap/scss/_media";
-// @import "bootstrap/scss/_list-group";
-// @import "bootstrap/scss/_close";
-// @import "bootstrap/scss/_toasts";
-@import "bootstrap/scss/_modal";
-// @import "bootstrap/scss/_tooltip";
-@import "bootstrap/scss/_popover";
-// @import "bootstrap/scss/_carousel";
-// @import "bootstrap/scss/_spinners";
-// @import "bootstrap/scss/_utilities";
-// @import "bootstrap/scss/_print";
-
-// @import "bootstrap/scss/utilities/_align";
-@import "bootstrap/scss/utilities/_background";
-// @import "bootstrap/scss/utilities/_borders";
-@import "bootstrap/scss/utilities/_clearfix";
-@import "bootstrap/scss/utilities/_display";
-// @import "bootstrap/scss/utilities/_embed";
-// @import "bootstrap/scss/utilities/_flex";
-// @import "bootstrap/scss/utilities/_float";
-// @import "bootstrap/scss/utilities/_interactions";
-// @import "bootstrap/scss/utilities/_overflow";
-// @import "bootstrap/scss/utilities/_position";
-// @import "bootstrap/scss/utilities/_screenreaders";
-// @import "bootstrap/scss/utilities/_shadows";
-// @import "bootstrap/scss/utilities/_sizing";
-// @import "bootstrap/scss/utilities/_spacing";
-// @import "bootstrap/scss/utilities/_stretched-link";
-// @import "bootstrap/scss/utilities/_text";
-// @import "bootstrap/scss/utilities/_visibility";
-
-
-@import 'bootstrap-vue/src/index.scss';
-@import "components/bootstrap-overrides";
-// end importing Bootstrap SCSS
 
 
 html {

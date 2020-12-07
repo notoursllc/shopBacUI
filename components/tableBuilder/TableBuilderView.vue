@@ -1,8 +1,21 @@
 <script>
 import isObject from 'lodash.isobject';
 
+import {
+    FigTableSimple,
+    FigTh,
+    FigTd
+} from '@notoursllc/figleaf';
+
+
 export default {
     name: 'TableBuilderView',
+
+    components: {
+        FigTableSimple,
+        FigTh,
+        FigTd
+    },
 
     props: {
         tableData: {
@@ -51,28 +64,28 @@ export default {
 
 
 <template>
-    <b-table-simple
+    <fig-table-simple
+        striped
         hover
-        responsive
         table-class="table-builder-table table-builder-details">
-        <b-thead>
-            <b-tr>
-                <b-th class="th"></b-th>
-                <b-th
+        <template slot="head">
+            <tr>
+                <fig-th class="th"></fig-th>
+                <fig-th
                     v-for="(obj, index) in cols"
                     :key="index"
                     class="th">{{ obj.label }}
-                </b-th>
-            </b-tr>
-        </b-thead>
+                </fig-th>
+            </tr>
+        </template>
 
-        <b-tbody>
-            <b-tr v-for="(row, idx) in rows" :key="idx">
-                <b-td class="th">{{ row.label }}</b-td>
-                <b-td v-for="obj in row.cells" :key="obj.columnId">{{ obj.value }}</b-td>
-            </b-tr>
-        </b-tbody>
-    </b-table-simple>
+        <tbody>
+            <tr v-for="(row, idx) in rows" :key="idx">
+                <fig-td class="th">{{ row.label }}</fig-td>
+                <fig-td v-for="obj in row.cells" :key="obj.columnId">{{ obj.value }}</fig-td>
+            </tr>
+        </tbody>
+    </fig-table-simple>
 </template>
 
 <style lang="scss">

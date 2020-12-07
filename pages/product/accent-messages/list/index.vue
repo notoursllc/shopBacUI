@@ -1,22 +1,25 @@
 <script>
-import AppTable from '@/components/AppTable';
 import OperationsDropdown from '@/components/OperationsDropdown';
 import AccentMessageForm from '@/components/product/accentMessage/AccentMessageForm';
 
 import {
     FigButtonFab,
-    FigModal
+    FigModal,
+    FigTableSimple,
+    FigTh,
+    FigTd
 } from '@notoursllc/figleaf';
 
 export default {
     components: {
-        AppTable,
         OperationsDropdown,
         AccentMessageForm,
         FigButtonFab,
-        FigModal
+        FigModal,
+        FigTableSimple,
+        FigTh,
+        FigTd
     },
-
 
     data() {
         return {
@@ -24,11 +27,6 @@ export default {
                 id: null
             },
             messages: [],
-            tableData: {
-                headers: [
-                    { key: 'message', label: this.$t('Accent Message'), sortable: true }
-                ]
-            },
             tableSort: {sortBy: 'message', sortDesc: false}
         };
     },
@@ -53,7 +51,10 @@ export default {
         },
 
         sortChanged(val) {
-            this.tableSort = val;
+            this.tableSort = {
+                sortBy: val.by,
+                sortDesc: !val.isAsc
+            };
             this.fetchData(this.tableSort);
         },
 
@@ -100,20 +101,29 @@ export default {
     <div>
         <fig-button-fab icon="plus" @click="onUpsertClick()" />
 
-        <app-table
-            :items="messages"
-            :fields="tableData.headers"
-            @column-sort="sortChanged">
 
-            <template v-slot:cell(message)="row">
-                {{ row.item.message }}
-                <operations-dropdown
-                    :show-view="false"
-                    @edit="onUpsertClick(row.item.id)"
-                    @delete="deleteType(row.item)"
-                    class="mls" />
+        <fig-table-simple
+            striped
+            hover
+            @sort="sortChanged">
+            <template slot="head">
+                <tr>
+                    <fig-th sortable prop="message">{{ $t('Accent Message') }}</fig-th>
+                </tr>
             </template>
-        </app-table>
+
+            <tr v-for="(obj, idx) in messages" :key="idx">
+                <fig-td>
+                    {{ obj.message }}
+                    <operations-dropdown
+                        :show-view="false"
+                        @edit="onUpsertClick(obj.id)"
+                        @delete="deleteType(obj)"
+                        class="mls" />
+                </fig-td>
+            </tr>
+        </fig-table-simple>
+
 
         <fig-modal
             ref="upsert_modal"

@@ -1,29 +1,27 @@
 <script>
-import AppTable from '@/components/AppTable';
 import OperationsDropdown from '@/components/OperationsDropdown';
 import BooleanTag from '@/components/BooleanTag';
 
 import {
-    FigButtonFab
+    FigButtonFab,
+    FigTableSimple,
+    FigTh,
+    FigTd
 } from '@notoursllc/figleaf';
 
 export default {
     components: {
-        AppTable,
         OperationsDropdown,
         BooleanTag,
-        FigButtonFab
+        FigButtonFab,
+        FigTableSimple,
+        FigTh,
+        FigTd
     },
 
     data() {
         return {
-            collections: [],
-            tableData: {
-                headers: [
-                    { key: 'name', label: this.$t('Name'), sortable: true },
-                    { key: 'published', label: this.$t('Published'), sortable: true }
-                ]
-            }
+            collections: []
         };
     },
 
@@ -42,7 +40,10 @@ export default {
         },
 
         sortChanged(val) {
-            this.fetchCollections(val);
+            this.fetchCollections({
+                sortBy: val.by,
+                sortDesc: !val.isAsc
+            });
         },
 
         async onDeleteCollection(data) {
@@ -85,25 +86,34 @@ export default {
     <div>
         <fig-button-fab icon="plus" @click="goToCollectionUpsert()" />
 
-        <app-table
-            :items="collections"
-            :fields="tableData.headers"
-            @column-sort="sortChanged">
 
-            <!-- title -->
-            <template v-slot:cell(name)="row">
-                {{ row.item.name }}
-                <operations-dropdown
-                    :show-view="false"
-                    @edit="goToCollectionUpsert(row.item.id)"
-                    @delete="onDeleteCollection(row.item)"
-                    class="mls" />
+        <fig-table-simple
+            striped
+            hover
+            @sort="sortChanged">
+            <template slot="head">
+                <tr>
+                    <fig-th sortable prop="name">{{ $t('Name') }}</fig-th>
+                    <fig-th sortable prop="published">{{ $t('Published') }}</fig-th>
+                </tr>
             </template>
 
-            <!-- published -->
-            <template v-slot:cell(published)="row">
-                <boolean-tag :value="row.item.published" />
-            </template>
-        </app-table>
+            <tr v-for="(obj, idx) in collections" :key="idx">
+                <!-- name -->
+                <fig-td>
+                    {{ obj.name }}
+                    <operations-dropdown
+                        :show-view="false"
+                        @edit="goToCollectionUpsert(obj.id)"
+                        @delete="onDeleteCollection(obj)"
+                        class="mls" />
+                </fig-td>
+
+                <!-- published -->
+                <fig-td>
+                    <boolean-tag :value="obj.published" />
+                </fig-td>
+            </tr>
+        </fig-table-simple>
     </div>
 </template>

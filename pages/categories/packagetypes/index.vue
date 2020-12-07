@@ -1,18 +1,22 @@
 <script>
 import shipping_mixin from '@/mixins/shipping_mixin';
 import OperationsDropdown from '@/components/OperationsDropdown';
-import AppTable from '@/components/AppTable';
 
 import {
-    FigButtonFab
+    FigButtonFab,
+    FigTableSimple,
+    FigTh,
+    FigTd
 } from '@notoursllc/figleaf';
 
 export default {
     components: {
         OperationsDropdown,
-        AppTable,
         // ShippingPackageTypeUpsertForm: () => import('@/components/shipping/ShippingPackageTypeUpsertForm')
-        FigButtonFab
+        FigButtonFab,
+        FigTableSimple,
+        FigTh,
+        FigTd
     },
 
     mixins: [
@@ -25,17 +29,7 @@ export default {
                 show: false,
                 packageTypeId: null
             },
-            shippingPackageTypes: [],
-            tableData: {
-                headers: [
-                    { key: 'label', label: this.$t('Label'), sortable: true },
-                    { key: 'length', label: this.$t('Length'), sortable: true },
-                    { key: 'width', label: this.$t('Width'), sortable: true },
-                    { key: 'height', label: this.$t('Height'), sortable: true },
-                    { key: 'distance_unit', label: this.$t('Distance Unit'), sortable: true },
-                    { key: 'weight', label: this.$t('Weight (oz)'), sortable: true }
-                ]
-            }
+            shippingPackageTypes: []
         };
     },
 
@@ -54,7 +48,10 @@ export default {
         },
 
         sortChanged(val) {
-            this.fetchPackageTypes(val);
+            this.fetchPackageTypes({
+                sortBy: val.by,
+                sortDesc: !val.isAsc
+            });
         },
 
         async deleteType(data) {
@@ -100,57 +97,57 @@ export default {
     <div>
         <fig-button-fab icon="plus" @click="onUpsertClick()" />
 
-        <app-table
-            :items="shippingPackageTypes"
-            :fields="tableData.headers"
-            @column-sort="sortChanged">
 
-            <!-- label -->
-            <template v-slot:cell(label)="row">
-                {{ row.item.label }}
-                <operations-dropdown
-                    :show-view="false"
-                    @edit="onUpsertClick(row.item.id)"
-                    @delete="deleteType(row.item)"
-                    class="mls" />
+        <fig-table-simple
+            striped
+            hover
+            @sort="sortChanged">
+            <template slot="head">
+                <tr>
+                    <fig-th sortable prop="label">{{ $t('Label') }}</fig-th>
+                    <fig-th sortable prop="length">{{ $t('Length') }}</fig-th>
+                    <fig-th sortable prop="width">{{ $t('Width') }}</fig-th>
+                    <fig-th sortable prop="height">{{ $t('Height') }}</fig-th>
+                    <fig-th sortable prop="distance_unit">{{ $t('Distance Unit') }}</fig-th>
+                    <fig-th sortable prop="weight">{{ $t('Weight (oz)') }}</fig-th>
+                </tr>
             </template>
 
-            <!-- length -->
-            <template v-slot:cell(length)="row">
-                {{ row.item.length }}
-            </template>
+            <tr v-for="(obj, idx) in shippingPackageTypes" :key="idx">
+                <fig-td>
+                    {{ obj.label }}
+                    <operations-dropdown
+                        :show-view="false"
+                        @edit="onUpsertClick(obj.id)"
+                        @delete="deleteType(obj)"
+                        class="mls" />
+                </fig-td>
 
-            <!-- width -->
-            <template v-slot:cell(width)="row">
-                {{ row.item.width }}
-            </template>
+                <!-- length -->
+                <fig-td>
+                    {{ obj.length }}
+                </fig-td>
 
-            <!-- height -->
-            <template v-slot:cell(height)="row">
-                {{ row.item.height }}
-            </template>
+                <!-- width -->
+                <fig-td>
+                    {{ obj.width }}
+                </fig-td>
 
-            <!-- distance unit -->
-            <template v-slot:cell(distance_unit)="row">
-                {{ row.item.distance_unit }}
-            </template>
+                <!-- height -->
+                <fig-td>
+                    {{ obj.height }}
+                </fig-td>
 
-            <!-- weight -->
-            <template v-slot:cell(weight)="row">
-                {{ row.item.weight }}
-            </template>
-        </app-table>
+                <!-- distance_unit -->
+                <fig-td>
+                    {{ obj.distance_unit }}
+                </fig-td>
 
-        <!-- <el-dialog
-            :visible.sync="dialog.show"
-            :destroy-on-close="true"
-            width="95%"
-            top="5vh"> -->
-            <!-- <shipping-package-type-upsert-form
-                :id="dialog.packageTypeId"
-                @success="onUpsertSuccess"
-                @cancel="dialog.show = false" /> -->
-        <!-- </el-dialog> -->
-
+                <!-- weight -->
+                <fig-td>
+                    {{ obj.weight }}
+                </fig-td>
+            </tr>
+        </fig-table-simple>
     </div>
 </template>

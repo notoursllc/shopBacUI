@@ -10,8 +10,9 @@ import {
     FigTooltip,
     FigOverlay,
     FigModal,
-    FigFormInputEndcapper,
-    FigFormInputFileButton
+    FigTableSimple,
+    FigTh,
+    FigTd
 } from '@notoursllc/figleaf';
 
 export default {
@@ -26,8 +27,9 @@ export default {
         FigTooltip,
         FigOverlay,
         FigModal,
-        FigFormInputEndcapper,
-        FigFormInputFileButton
+        FigTableSimple,
+        FigTh,
+        FigTd
     },
 
     mixins: [
@@ -203,17 +205,17 @@ export default {
 <template>
     <div>
 
-        <b-table-simple
+        <fig-table-simple
             hover
             small
             responsive
             v-if="fileList.length"
             table-class="bread-table mbl">
-            <b-thead>
-                <b-tr>
-                    <b-th v-if="fileList.length > 1" class="width50"></b-th>
-                    <b-th class="width100"></b-th>
-                    <b-th>
+            <template slot="head">
+                <tr>
+                    <fig-th v-if="fileList.length > 1" class="width50"></fig-th>
+                    <fig-th class="width100"></fig-th>
+                    <fig-th>
                         {{ $t('Alt text') }}
 
                         <fig-tooltip placement="top">
@@ -222,55 +224,53 @@ export default {
                             </i>
                             {{ $t('Image_alt_text_description') }}
                         </fig-tooltip>
-                    </b-th>
-                    <b-th class="width100"></b-th>
-                </b-tr>
-            </b-thead>
+                    </fig-th>
+                    <fig-th class="width100"></fig-th>
+                </tr>
+            </template>
 
             <draggable
                 v-model="fileList"
                 ghost-class="ghost"
                 handle=".handle"
                 @update="setOrdinals"
-                tag="b-tbody">
+                tag="tbody">
 
-                <b-tr v-for="(obj, index) in fileList" :key="index">
+                <tr v-for="(obj, index) in fileList" :key="index">
                     <!-- handle -->
-                    <b-td v-if="fileList.length > 1" class="vam">
+                    <fig-td v-if="fileList.length > 1" class="vam">
                         <i class="handle">
                             <fig-icon icon="dots-vertical-double" />
                         </i>
-                    </b-td>
+                    </fig-td>
 
                     <!-- thumbnail -->
-                    <b-td>
+                    <fig-td>
                         <template v-if="obj.loading">
                             <fig-overlay :show="obj.loading">
-                                <b-img
-                                    v-bind="{ blank: true, width: 100, height: 75, class: 'm1' }"
-                                    alt="uploading"></b-img>
+                                loading...
                             </fig-overlay>
                         </template>
                         <template v-else>
-                            <b-img
+                            <img
                                 :src="obj.media.url"
                                 class="cursorPointer"
                                 @click="onPreview(obj.url)"
-                                :alt="obj.alt_text"></b-img>
+                                :alt="obj.alt_text">
                         </template>
-                    </b-td>
+                    </fig-td>
 
                     <!-- alt text -->
-                    <b-td class="vam">
+                    <fig-td class="vam">
                         <fig-form-input
                             v-model="obj.alt_text"
                             class="widthAll"
                             placeholder="Image alt text"
                             @input="emitChange" />
-                    </b-td>
+                    </fig-td>
 
                     <!-- actions -->
-                    <b-td class="text-center vam">
+                    <fig-td class="text-center vam">
                         <pop-confirm
                             @onConfirm="onDeleteImage(obj, index)"
                             v-if="!obj.loading">
@@ -282,10 +282,10 @@ export default {
                                 dotted
                                 icon="trash" />
                         </pop-confirm>
-                    </b-td>
-                </b-tr>
+                    </fig-td>
+                </tr>
             </draggable>
-        </b-table-simple>
+        </fig-table-simple>
 
         <div>
             <fig-form-group>
@@ -307,9 +307,9 @@ export default {
         <fig-modal
             ref="image_preview_modal"
             size="xl">
-            <b-img
+            <img
                 :src="dialogImageUrl"
-                alt=""></b-img>
+                alt="">
         </fig-modal>
     </div>
 </template>

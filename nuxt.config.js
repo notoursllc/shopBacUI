@@ -70,7 +70,6 @@ export default {
     ** Global CSS
     */
     css: [
-        'element-ui/lib/theme-chalk/index.css',
         '@/assets/css/base.scss'
     ],
 
@@ -83,7 +82,6 @@ export default {
         '@/plugins/api.js',
         '@/plugins/http',
         '@/plugins/i18n.js',
-        '@/plugins/element-ui',
         '@/plugins/vuelidate',
         '@/plugins/format8601',
         '@/plugins/prettyJson',
@@ -121,8 +119,6 @@ export default {
     ** Nuxt.js modules
     */
     modules: [
-        // Doc: https://bootstrap-vue.js.org
-        'bootstrap-vue/nuxt',
         '@nuxt/http',
         '@nuxtjs/axios'
     ],
@@ -150,30 +146,11 @@ export default {
     },
 
     /*
-    * Disabling automatic inclusion of bootstrap's compiled CSS files
-    * so we can import the SCSS files ourselves in base.scss
-    * https://bootstrap-vue.org/docs
-    */
-    bootstrapVue: {
-        bootstrapCSS: false, // Or `css: false`
-        bootstrapVueCSS: false, // Or `bvCSS: false`
-
-        // importing only the stuff we are using to reduce bundle size
-        components: [
-            'BImg',
-            'BTable'
-        ],
-        componentPlugins: [
-            'TablePlugin'
-        ]
-    },
-
-    /*
     ** Build configuration
     ** See https://nuxtjs.org/api/configuration-build/
     */
     build: {
-        transpile: [/^element-ui/],
+        // transpile: [/^element-ui/],
 
         /*
         ** You can extend webpack config here
