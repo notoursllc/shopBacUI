@@ -51,14 +51,14 @@ export default {
         <fig-overlay :show="loading">
             <form @submit.prevent>
                 <!-- email -->
-                <div class="inputGroup mrl mbm">
+                <div class="inputGroup mr-5 mb-3">
                     <label>{{ $t('Email address') }}</label>
                     <fig-form-input
                         v-model="userInfo.email" />
                 </div>
 
                 <!-- password -->
-                <div class="inputGroup mrl mbm">
+                <div class="inputGroup mr-5 mb-3">
                     <label>{{ $t('Password') }}</label>
                     <!-- TODO: create password input component -->
                     <fig-form-input

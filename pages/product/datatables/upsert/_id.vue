@@ -93,7 +93,7 @@ export default {
             <label slot="label" for="input_name">{{ $t('Name')+ ':' }}</label>
             <fig-form-input
                 v-model="data.name"
-                class="width200"
+                class="w-52"
                 id="input_name" />
         </fig-form-group>
 
@@ -104,7 +104,7 @@ export default {
                 :show-import="true" />
         </fig-form-group>
 
-        <div class="mtl">
+        <div class="mt-5">
             <fig-button
                 variant="primary"
                 @click="onSaveClick">{{ $t('Save') }}</fig-button>

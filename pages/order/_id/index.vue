@@ -81,7 +81,7 @@ export default {
 <template>
     <div>
         <!-- alert -->
-        <div class="mbm" v-if="showShippoWarning">
+        <div class="mb-3" v-if="showShippoWarning">
             <el-alert
                 title="A Shippo order has not yet been created for this payment"
                 type="warning"
@@ -90,7 +90,7 @@ export default {
             </el-alert>
         </div>
 
-        <div class="tar mbl">
+        <div class="text-right mb-5">
             <el-button type="primary"
                         @click="modalIsActive = true">VIEW JSON</el-button>
         </div>
@@ -169,22 +169,22 @@ export default {
             <div class="g-spec-content">
                 <div class="formRow">
                     <label>Subtotal:</label>
-                    <span class="mono tar">{{ $n(payment.shoppingCart.sub_total, 'currency') }}</span>
+                    <span class="font-mono text-right">{{ $n(payment.shoppingCart.sub_total, 'currency') }}</span>
                 </div>
 
                 <div class="formRow">
                     <label>Shipping:</label>
-                    <span class="mono tar">{{ $n(payment.shoppingCart.shipping_total, 'currency') }}</span>
+                    <span class="font-mono text-right">{{ $n(payment.shoppingCart.shipping_total, 'currency') }}</span>
                 </div>
 
                 <div class="formRow">
                     <label>Estimated tax:</label>
-                    <span class="mono tar">{{ $n(payment.shoppingCart.sales_tax, 'currency') }}</span>
+                    <span class="font-mono text-right">{{ $n(payment.shoppingCart.sales_tax, 'currency') }}</span>
                 </div>
 
                 <div class="formRow">
                     <label>Order total:</label>
-                    <span class="mono tar">{{ $n(payment.shoppingCart.grand_total, 'currency') }}</span>
+                    <span class="font-mono text-right">{{ $n(payment.shoppingCart.grand_total, 'currency') }}</span>
                 </div>
             </div>
         </div>

@@ -164,7 +164,7 @@ export default {
                     <div class="cart-item-footer-cell">
                         <label>
                             {{ $t('Quantity') }}:
-                            <span class="fs12" v-if="showQuantityWarning"><product-quantity-warning :max="getProductQuantityMaxValue(data.variants.size, data.product)" /></span>
+                            <span class="text-xs" v-if="showQuantityWarning"><product-quantity-warning :max="getProductQuantityMaxValue(data.variants.size, data.product)" /></span>
                         </label>
                         <span>
                             <template v-if="editMode">
@@ -190,8 +190,8 @@ export default {
                     width="200"
                     trigger="click"
                     placement="bottom-start">
-                    <div class="tac">{{ $t('Remove this item?') }}</div>
-                    <div class="tac mtm">
+                    <div class="text-center">{{ $t('Remove this item?') }}</div>
+                    <div class="text-center mt-3">
                         <el-button
                             type="primary"
                             size="mini"
@@ -203,7 +203,7 @@ export default {
                             @click="onConfirmDeleteCancel">{{ $t('cancel') }}</el-button>
                     </div>
 
-                    <span class="cursorPointer" slot="reference">
+                    <span class="cursor-pointer" slot="reference">
                         <el-tooltip
                             effect="light"
                             :content="$t('Remove item from cart')"
@@ -230,28 +230,28 @@ export default {
 
                 <template slot="info">
                     <!-- title -->
-                    <div class="fs20 pbm">{{ data.product.title }}</div>
+                    <div class="text-xl pb-3">{{ data.product.title }}</div>
 
                     <!-- description -->
-                    <div class="pbl fs16 wordBreakBreakWord">{{ data.product.description_long }}</div>
+                    <div class="pb-5 text-base break-normal">{{ data.product.description_long }}</div>
 
                     <!-- price -->
-                    <div class="fs20">
+                    <div class="text-xl">
                         <product-price :product="data.product" />
                     </div>
 
                     <hr/>
 
-                    <div class="displayTable">
+                    <div class="table">
                         <!-- size -->
                         <div class="formRow">
-                            <label class="nowrap fwb">{{ $t('Size') }}:</label>
+                            <label class="whitespace-nowrap font-semibold">{{ $t('Size') }}:</label>
                             <span>{{ $t(data.variants.size) }}</span>
                         </div>
 
                         <!-- quantity -->
                         <div class="formRow">
-                            <label class="nowrap fwb">{{ $t('Quantity') }}:</label>
+                            <label class="whitespace-nowrap font-semibold">{{ $t('Quantity') }}:</label>
                             <span>{{ data.qty }}</span>
                         </div>
                     </div>

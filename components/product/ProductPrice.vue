@@ -43,13 +43,13 @@ export default {
 
 
 <template>
-    <div class="inlineBlock">
+    <div class="inline-block">
         <div v-if="salePrice && basePrice && showStrikethrough">
-            <div class="colorGrayLighter strikethrough mrs basePrice" :class="{ 'inlineBlock': !stacked }">{{ basePrice }}</div>
-            <div class="inlineBlock">{{ salePrice }}</div>
+            <div class="text-gray-500 line-through mr-1 basePrice" :class="{ 'inline-block': !stacked }">{{ basePrice }}</div>
+            <div class="inline-block">{{ salePrice }}</div>
         </div>
-        <div v-else-if="salePrice" class="inlineBlock">{{ salePrice }}</div>
-        <div v-else class="inlineBlock">{{ basePrice }}</div>
+        <div v-else-if="salePrice" class="inline-block">{{ salePrice }}</div>
+        <div v-else class="inline-block">{{ basePrice }}</div>
     </div>
 </template>
 

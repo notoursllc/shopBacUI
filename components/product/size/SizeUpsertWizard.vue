@@ -188,12 +188,12 @@ export default {
     <div>
         <div class="pb-2" v-if="sizes.length">
 
-            <div class="d-flex flex-row align-items-center pb-2">
+            <div class="flex flex-row items-center pb-2">
 
                 <!-- created button list -->
-                <div class="flex-fill">
-                    <div class="d-inline-block pr-2 text-sm">{{ $t('Created') }}:</div>
-                    <div class="d-inline-block">
+                <div class="flex-grow">
+                    <div class="inline-block pr-2 text-sm">{{ $t('Created') }}:</div>
+                    <div class="inline-block">
                         <draggable
                             v-model="sizes"
                             @update="emitInput"
@@ -409,7 +409,7 @@ export default {
                                     <fig-form-select-country
                                         v-else
                                         v-model="bulkEdit.customs_country_of_origin"
-                                        class="widthAll" />
+                                        class="w-full" />
                                 </div>
                             </div>
                         </div>
@@ -465,7 +465,7 @@ export default {
                             <pop-confirm @onConfirm="removeRow(index)">
                                 <div class="text-center" style="min-width:125px">{{ $t('Delete this size?') }}</div>
 
-                                <i slot="reference" class="ml-3 cursorPointer">
+                                <i slot="reference" class="ml-3 cursor-pointer">
                                     <fig-icon icon="trash" stroke-width="1px" width="20" height="20" />
                                 </i>
                             </pop-confirm>

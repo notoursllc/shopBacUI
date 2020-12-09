@@ -59,9 +59,9 @@ export default {
 
 <template>
     <div>
-        <div class="flex flex-wrap -mx-3 overflow-hidden">
+        <div class="flex flex-wrap -mx-3">
             <!-- price -->
-            <div class="my-3 px-3 w-full overflow-hidden sm:w-1/2 md:w-1/3 xl:w-1/4">
+            <div class="my-3 px-3 w-full sm:w-1/2 md:w-1/3 xl:w-1/4">
                 <fig-form-group>
                     <label slot="label" for="color_base_price">{{ $t('Price') }}</label>
                     <fig-form-input
@@ -73,7 +73,7 @@ export default {
             </div>
 
             <!-- compare at price -->
-            <div class="my-3 px-3 w-full overflow-hidden sm:w-1/2 md:w-1/3 xl:w-1/4">
+            <div class="my-3 px-3 w-full sm:w-1/2 md:w-1/3 xl:w-1/4">
                 <fig-form-group>
                     <label slot="label" for="color_compare_at_price">{{ $t('Compare at') }}</label>
                     <fig-form-input
@@ -85,7 +85,7 @@ export default {
             </div>
 
             <!-- cost pre item -->
-            <div class="my-3 px-3 w-full overflow-hidden sm:w-1/2 md:w-1/3 xl:w-1/4">
+            <div class="my-3 px-3 w-full sm:w-1/2 md:w-1/3 xl:w-1/4">
                 <fig-form-group>
                     <label slot="label" for="color_cost_price">{{ $t('Cost per item') }}</label>
                     <fig-form-input

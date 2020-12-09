@@ -175,10 +175,10 @@ export default {
                 v-if="selectedColors.length">
                 <template slot="head">
                     <tr>
-                        <fig-th v-if="selectedColors.length > 1" class="width50"></fig-th>
+                        <fig-th v-if="selectedColors.length > 1" class="w-14"></fig-th>
                         <fig-th class="swatchCell">{{ $t('Color') }}</fig-th>
                         <fig-th>{{ $t('Label') }}</fig-th>
-                        <fig-th class="width100"></fig-th>
+                        <fig-th class="w-24"></fig-th>
                     </tr>
                 </template>
 
@@ -191,7 +191,7 @@ export default {
                     <template v-for="(obj, index) in selectedColors">
                         <tr :key="index">
                             <!-- handle -->
-                            <fig-td v-if="selectedColors.length > 1" class="vam">
+                            <fig-td v-if="selectedColors.length > 1" class="align-middle">
                                 <i class="handle">
                                     <fig-icon icon="dots-vertical-double" />
                                 </i>
@@ -205,7 +205,7 @@ export default {
                             </fig-td>
 
                             <!-- label -->
-                            <fig-td class="vam">
+                            <fig-td class="align-middle">
                                 <fig-form-input
                                     v-model="obj.label"
                                     class="w-full"
@@ -213,7 +213,7 @@ export default {
                             </fig-td>
 
                             <!-- actions -->
-                            <fig-td class="text-center vam">
+                            <fig-td class="text-center align-middle">
                                 <pop-confirm
                                     @onConfirm="onDeleteColor(index)">
                                     {{ $t('Delete this item?') }}
@@ -240,7 +240,7 @@ export default {
                     icon="plus"
                     :disabled="numRemainingColors <= 0">{{ $t('Add swatch') }}</fig-button>
 
-                <div class="text-muted fs14 pt-2">{{ $t('You can add up to {number} swatches', {number: maxSelectedColors} ) }}</div>
+                <div class="text-muted text-sm pt-2">{{ $t('You can add up to {number} swatches', {number: maxSelectedColors} ) }}</div>
             </div>
         </div>
     </div>

@@ -119,7 +119,7 @@ export default {
                         :show-view="false"
                         @edit="onUpsertClick(obj.id)"
                         @delete="deleteType(obj)"
-                        class="mls" />
+                        class="ml-1" />
                 </fig-td>
             </tr>
         </fig-table-simple>

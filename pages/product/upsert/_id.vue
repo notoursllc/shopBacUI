@@ -1,4 +1,5 @@
 <script>
+import Vue from 'vue';
 import { required } from 'vuelidate/lib/validators';
 import product_mixin from '@/mixins/product_mixin';
 import shipping_mixin from '@/mixins/shipping_mixin';
@@ -18,7 +19,9 @@ import {
     FigFormTextarea,
     FigButton,
     FigFormInputEndcapper,
-    FigOverlay
+    FigOverlay,
+    FigCol,
+    FigRow
 } from '@notoursllc/figleaf';
 
 
@@ -30,7 +33,7 @@ const urlValidator = (value) => {
 };
 
 
-export default {
+export default Vue.extend({
     components: {
         MasterTypeSelect,
         TextCard,
@@ -44,7 +47,9 @@ export default {
         FigFormTextarea,
         FigButton,
         FigFormInputEndcapper,
-        FigOverlay
+        FigOverlay,
+        FigCol,
+        FigRow
     },
 
     mixins: [
@@ -194,14 +199,14 @@ export default {
             window.open(routeData.href, '_blank');
         }
     }
-};
+});
 </script>
 
 
 <template>
     <fig-overlay :show="loading">
 
-        <div class="tar mbm" v-if="product.id">
+        <div class="text-right mb-3" v-if="product.id">
             <fig-button
                 variant="plain"
                 @click="goToStore(product.seo_uri)"
@@ -209,20 +214,20 @@ export default {
         </div>
 
         <!-- published-->
-        <div class="mbl">
+        <div class="mb-5">
             <fig-form-checkbox
                 v-model="product.published">{{ $t('This product is available for purchase') }}</fig-form-checkbox>
         </div>
 
 
         <!-- Organization -->
-        <text-card class="mbl">
+        <text-card class="mb-5">
             <div slot="header">{{ $t('Organization') }}</div>
 
             <div class="container mx-auto">
-                <div class="flex flex-wrap -mx-3 overflow-hidden">
+                <fig-row sm="1/2" md="1/3" lg="1/4" xl="1/5" default="full" default-gap="1" sm-gap="2" key="org">
                     <!-- type -->
-                    <div class="my-3 px-3 w-full overflow-hidden sm:w-1/2 md:w-1/3 xl:w-1/4">
+                    <fig-col>
                         <fig-form-group class="mb-2">
                             <label slot="label" for="product_type">{{ $t('Product type') }}</label>
                             <master-type-select
@@ -230,10 +235,10 @@ export default {
                                 object="product_type"
                                 id="product_type" />
                         </fig-form-group>
-                    </div>
+                    </fig-col>
 
                     <!-- sub-type -->
-                    <div class="my-3 px-3 w-full overflow-hidden sm:w-1/2 md:w-1/3 xl:w-1/4">
+                    <fig-col>
                         <fig-form-group class="mb-2">
                             <label slot="label" for="product_sub_type">{{ $t('Product sub-type') }}</label>
                             <master-type-select
@@ -241,10 +246,10 @@ export default {
                                 object="product_sub_type"
                                 id="product_sub_type" />
                         </fig-form-group>
-                    </div>
+                    </fig-col>
 
                     <!-- fit type -->
-                    <div class="my-3 px-3 w-full overflow-hidden sm:w-1/2 md:w-1/3 xl:w-1/4">
+                    <fig-col>
                         <fig-form-group class="mb-2">
                             <label slot="label" for="product_fit_type">{{ $t('Fit type') }}</label>
                             <master-type-select
@@ -252,10 +257,10 @@ export default {
                                 object="product_fit_type"
                                 id="product_fit_type" />
                         </fig-form-group>
-                    </div>
+                    </fig-col>
 
                     <!-- sales channel -->
-                    <div class="my-3 px-3 w-full overflow-hidden sm:w-1/2 md:w-1/3 xl:w-1/4">
+                    <fig-col>
                         <fig-form-group class="mb-2">
                             <label slot="label" for="product_sales_channel_type">{{ $t('Sales channel') }}</label>
                             <master-type-select
@@ -263,10 +268,10 @@ export default {
                                 object="product_sales_channel_type"
                                 id="product_sales_channel_type" />
                         </fig-form-group>
-                    </div>
+                    </fig-col>
 
                     <!-- vendor -->
-                    <div class="my-3 px-3 w-full overflow-hidden sm:w-1/2 md:w-1/3 xl:w-1/4">
+                    <fig-col>
                         <fig-form-group class="mb-2">
                             <label slot="label" for="product_vendor_type">{{ $t('Vendor') }}</label>
                             <master-type-select
@@ -275,55 +280,57 @@ export default {
                                 :multiple="false"
                                 id="product_vendor_type" />
                         </fig-form-group>
-                    </div>
-                </div>
+                    </fig-col>
+                </fig-row>
             </div>
         </text-card>
 
 
         <!-- Details -->
-        <text-card class="mbl">
+        <text-card class="mb-5">
             <div slot="header">{{ $t('Details') }}</div>
 
             <div class="container mx-auto">
-                <div>
-                    <!-- page title -->
-                    <fig-form-group class="mb-2">
-                        <label slot="label" for="product_title">{{ $t('Title') }}</label>
-                        <fig-form-input
-                            v-model="product.title"
-                            maxlength="70"
-                            id="product_title" />
-                    </fig-form-group>
-                </div>
+                <fig-row sm="1/3" md="1/3" default="full" default-gap="1" sm-gap="2" key="details">
+                    <fig-col>
+                        <!-- page title -->
+                        <fig-form-group class="mb-2">
+                            <label slot="label" for="product_title">{{ $t('Title') }}</label>
+                            <fig-form-input
+                                v-model="product.title"
+                                maxlength="70"
+                                id="product_title" />
+                        </fig-form-group>
+                    </fig-col>
 
-                <div>
-                    <!-- caption -->
-                    <fig-form-group class="mb-2">
-                        <label slot="label" for="product_caption">{{ $t('Caption') }}</label>
-                        <fig-form-input
-                            v-model="product.caption"
-                            maxlength="70"
-                            id="product_caption" />
-                    </fig-form-group>
-                </div>
+                    <fig-col>
+                        <!-- caption -->
+                        <fig-form-group class="mb-2">
+                            <label slot="label" for="product_caption">{{ $t('Caption') }}</label>
+                            <fig-form-input
+                                v-model="product.caption"
+                                maxlength="70"
+                                id="product_caption" />
+                        </fig-form-group>
+                    </fig-col>
 
-                <div>
-                    <!-- description -->
-                    <fig-form-group class="mb-2">
-                        <label slot="label" for="product_description">{{ $t('Description') }}</label>
-                        <fig-form-textarea
-                            v-model="product.description"
-                            :rows="2"
-                            maxlength="320"
-                            id="product_description" />
-                    </fig-form-group>
-                </div>
+                    <fig-col>
+                        <!-- description -->
+                        <fig-form-group class="mb-2">
+                            <label slot="label" for="product_description">{{ $t('Description') }}</label>
+                            <fig-form-textarea
+                                v-model="product.description"
+                                :rows="2"
+                                maxlength="320"
+                                id="product_description" />
+                        </fig-form-group>
+                    </fig-col>
+                </fig-row>
             </div>
         </text-card>
 
 
-        <text-card class="mbl">
+        <text-card class="mb-5">
             <template v-slot:header>{{ $t('Colors') }}</template>
 
             <div class="container mx-auto">
@@ -335,51 +342,59 @@ export default {
 
 
         <!-- SEO -->
-        <text-card class="mbl">
+        <text-card class="mb-5">
             <div slot="header">{{ $t('Search engine listing') }}</div>
 
             <div class="container mx-auto">
-                <!-- page title -->
-                <fig-form-group class="mb-2 block">
-                    <label slot="label" for="product_seo_page_title">{{ $t('Page title') }}</label>
-                    <fig-form-input
-                        v-model="product.seo_page_title"
-                        maxlength="70"
-                        id="product_seo_page_title" />
-                </fig-form-group>
+                <fig-row md="1/2" default="full" default-gap="1" sm-gap="2" key="seo">
+                    <!-- page title -->
+                    <fig-col>
+                        <fig-form-group class="mb-2 block">
+                            <label slot="label" for="product_seo_page_title">{{ $t('Page title') }}</label>
+                            <fig-form-input
+                                v-model="product.seo_page_title"
+                                maxlength="70"
+                                id="product_seo_page_title" />
+                        </fig-form-group>
+                    </fig-col>
 
-                <!-- description -->
-                <fig-form-group class="mb-2 block">
-                    <label slot="label" for="product_seo_page_desc">{{ $t('Description') }}</label>
-                    <fig-form-textarea
-                        v-model="product.seo_page_desc"
-                        :rows="2"
-                        maxlength="320"
-                        id="product_seo_page_desc" />
-                </fig-form-group>
+                    <!-- description -->
+                    <fig-col>
+                        <fig-form-group class="mb-2 block">
+                            <label slot="label" for="product_seo_page_desc">{{ $t('Description') }}</label>
+                            <fig-form-textarea
+                                v-model="product.seo_page_desc"
+                                :rows="2"
+                                maxlength="320"
+                                id="product_seo_page_desc" />
+                        </fig-form-group>
+                    </fig-col>
 
-                <!-- URI -->
-                <fig-form-group class="mb-2 block">
-                    <label slot="label" for="product_seo_uri">{{ $t('URL and handle') }}</label>
+                    <!-- URI -->
+                    <fig-col>
+                        <fig-form-group class="mb-2 block">
+                            <label slot="label" for="product_seo_uri">{{ $t('URL and handle') }}</label>
 
-                    <fig-form-input-endcapper>
-                        <template slot="prefix">{{ `https://${domainName}/p/` }}</template>
-                        <fig-form-input
-                            v-model="product.seo_uri"
-                            maxlength="50"
-                            :state="!$v.product.seo_uri.$invalid ? null : false"
-                            square-left
-                            id="product_seo_uri" />
-                    </fig-form-input-endcapper>
+                            <fig-form-input-endcapper>
+                                <template slot="prefix">{{ `https://${domainName}/p/` }}</template>
+                                <fig-form-input
+                                    v-model="product.seo_uri"
+                                    maxlength="50"
+                                    :state="!$v.product.seo_uri.$invalid ? null : false"
+                                    square-left
+                                    id="product_seo_uri" />
+                            </fig-form-input-endcapper>
 
-                    <div
-                        v-if="$v.product.seo_uri.$invalid"
-                        slot="error">{{ seoUrlValidationErrorMessage }}</div>
-                </fig-form-group>
+                            <div
+                                v-if="$v.product.seo_uri.$invalid"
+                                slot="error">{{ seoUrlValidationErrorMessage }}</div>
+                        </fig-form-group>
+                    </fig-col>
+                </fig-row>
             </div>
 
-            <div class="pvl" v-show="product.seo_page_title">
-                <div class="fs11 colorGray mbs">Preview:</div>
+            <div class="py-5" v-show="product.seo_page_title">
+                <div class="text-xs text-gray-700 mb-1">{{ $t('Preview') }}:</div>
                 <seo-preview
                     :title="product.seo_page_title"
                     :description="product.seo_page_desc"
@@ -389,7 +404,7 @@ export default {
 
 
         <!-- Metadata -->
-        <text-card class="mbl">
+        <text-card class="mb-5">
             <div slot="header">{{ $t('Metadata') }}</div>
 
             <div class="container mx-auto">
@@ -413,7 +428,7 @@ export default {
                 :disabled="$v.product.$invalid">{{ $t('Save') }}</fig-button>
 
             <div class="pt-2 text-danger" v-show="$v.product.$invalid">
-                <div class="inlineBlock">
+                <div class="inline-block">
                     <app-message>
                         <fig-icon slot="icon" icon="alert-circle" variant="danger" />
                         {{ $t('Please fix the errors above before saving') }}

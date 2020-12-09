@@ -196,7 +196,7 @@ export default {
                 <accent-message-select
                     v-model="accent_message_id"
                     @input="emitInput"
-                    class="width150"
+                    class="w-36"
                     id="input_choose_message" />
             </fig-form-group>
 
@@ -208,7 +208,7 @@ export default {
                     v-if="action === 'create'"
                     v-model="accent_message_new"
                     @input="emitInput"
-                    class="widthAuto"
+                    class="w-auto"
                     id="input_create_message" />
             </fig-form-group>
         </div>
@@ -218,7 +218,7 @@ export default {
         <div class="flex flex-wrap -mx-2 overflow-hidden" v-if="action">
 
             <!--  accent message begin -->
-            <div class="my-2 px-2 w-full overflow-hidden xl:w-1/2">
+            <div class="my-2 px-2 w-full xl:w-1/2">
                 <fig-form-group>
                     <label slot="label" for="accent_message_begin">{{ $t('Display: Start') }}</label>
                     <fig-form-input-date
@@ -230,7 +230,7 @@ export default {
             </div>
 
             <!--  accent message end -->
-            <div class="my-2 px-2 w-full overflow-hidden xl:w-1/2">
+            <div class="my-2 px-2 w-full xl:w-1/2">
                 <fig-form-group>
                     <label slot="label" for="accent_message_end">{{ $t('Display: End') }}</label>
                     <fig-form-input-date

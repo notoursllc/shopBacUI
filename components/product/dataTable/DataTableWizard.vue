@@ -227,7 +227,7 @@ export default {
         <fig-form-select
             v-model="action"
             :options="visibleActionSelectOptions"
-            class="widthAuto"
+            class="w-auto"
             @input="emitInput"
             :reduce="obj => obj.value" />
 
@@ -242,7 +242,7 @@ export default {
             <label slot="label" for="input_choose_predefined">{{ $t('Choose') }}</label>
             <data-table-select
                 v-model="readOnlyTableId"
-                class="width150"
+                class="w-36"
                 @input="onPredefinedSelectChange"
                 id="input_choose_predefined" />
         </fig-form-group>

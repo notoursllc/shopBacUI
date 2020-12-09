@@ -14,8 +14,8 @@ export default {
     <div>
         <pre style="overflow-x:scroll">{{ product | formatJson }}</pre>
 
-        <div class="mtl">
-            <div v-for="pic in product.pics" :key="pic.id" class="inlineBlock mrl vat prodPic">
+        <div class="mt-5">
+            <div v-for="pic in product.pics" :key="pic.id" class="inline-block mr-5 align-top prodPic">
                 <img :src="pic.url">
                 <div>{{ pic.url }}</div>
             </div>

@@ -109,7 +109,7 @@ export default {
                         :show-view="false"
                         @edit="onUpsertClick(obj)"
                         @delete="onDeleteClick(obj)"
-                        class="mls" />
+                        class="ml-1" />
                 </fig-td>
 
                 <!-- updated -->

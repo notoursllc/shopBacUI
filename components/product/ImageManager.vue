@@ -210,22 +210,24 @@ export default {
             small
             responsive
             v-if="fileList.length"
-            table-class="bread-table mbl">
+            table-class="bread-table mb-5">
             <template slot="head">
                 <tr>
-                    <fig-th v-if="fileList.length > 1" class="width50"></fig-th>
-                    <fig-th class="width100"></fig-th>
+                    <fig-th v-if="fileList.length > 1" class="w-14"></fig-th>
+                    <fig-th class="w-24"></fig-th>
                     <fig-th>
-                        {{ $t('Alt text') }}
+                        <div class="flex items-center">
+                            {{ $t('Alt text') }}
 
-                        <fig-tooltip placement="top">
-                            <i slot="toggler" class="ml-1 cursorPointer">
-                                <fig-icon icon="info-circle" width="16" height="16" />
-                            </i>
-                            {{ $t('Image_alt_text_description') }}
-                        </fig-tooltip>
+                            <fig-tooltip placement="top">
+                                <span slot="toggler" class="ml-2 cursor-pointer">
+                                    <fig-icon icon="info-circle" width="18" height="18" />
+                                </span>
+                                {{ $t('Image_alt_text_description') }}
+                            </fig-tooltip>
+                        </div>
                     </fig-th>
-                    <fig-th class="width100"></fig-th>
+                    <fig-th class="w-24"></fig-th>
                 </tr>
             </template>
 
@@ -238,7 +240,7 @@ export default {
 
                 <tr v-for="(obj, index) in fileList" :key="index">
                     <!-- handle -->
-                    <fig-td v-if="fileList.length > 1" class="vam">
+                    <fig-td v-if="fileList.length > 1" class="align-middle">
                         <i class="handle">
                             <fig-icon icon="dots-vertical-double" />
                         </i>
@@ -254,23 +256,23 @@ export default {
                         <template v-else>
                             <img
                                 :src="obj.media.url"
-                                class="cursorPointer"
+                                class="cursor-pointer"
                                 @click="onPreview(obj.url)"
                                 :alt="obj.alt_text">
                         </template>
                     </fig-td>
 
                     <!-- alt text -->
-                    <fig-td class="vam">
+                    <fig-td class="align-middle">
                         <fig-form-input
                             v-model="obj.alt_text"
-                            class="widthAll"
+                            class="w-full"
                             placeholder="Image alt text"
                             @input="emitChange" />
                     </fig-td>
 
                     <!-- actions -->
-                    <fig-td class="text-center vam">
+                    <fig-td class="text-center align-middle">
                         <pop-confirm
                             @onConfirm="onDeleteImage(obj, index)"
                             v-if="!obj.loading">

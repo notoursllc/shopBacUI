@@ -106,7 +106,7 @@ export default {
                         :show-view="false"
                         @edit="goToCollectionUpsert(obj.id)"
                         @delete="onDeleteCollection(obj)"
-                        class="mls" />
+                        class="ml-1" />
                 </fig-td>
 
                 <!-- published -->

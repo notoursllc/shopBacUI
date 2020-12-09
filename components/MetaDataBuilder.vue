@@ -122,7 +122,7 @@ export default {
                 <div class="meta-row" v-for="(obj, index) in newdata" :key="index">
                     <div class="meta-row-fields">
                         <!-- drag handle -->
-                        <div class="meta-row-handle cursorGrab" v-if="canSortRows">
+                        <div class="meta-row-handle cursor-grab" v-if="canSortRows">
                             <fig-icon icon="dots-vertical-double" />
                         </div>
 

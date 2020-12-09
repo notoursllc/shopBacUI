@@ -405,18 +405,18 @@ export default {
             <div class="g-spec">
                 <div class="g-spec-label">Parcels</div>
                 <div class="g-spec-content">
-                    <div class="mbl">
+                    <div class="mb-5">
                         <el-button @click="showParcelCartItems = !showParcelCartItems">TOGGLE CART ITEMS</el-button>
                         <el-button @click="addParcel">ADD PARCEL</el-button>
                     </div>
 
                     <div v-for="(obj, index) in labelForm.shipment.parcels"
                         :key="index"
-                        class="parcel pam inlineBlock">
+                        class="parcel p-3 inline-block">
                         <div>
                             Parcel # {{ index + 1 }}:&nbsp;&nbsp;<a @click="removeParcel(index)">(remove)</a>
                         </div>
-                        <div class="pam">
+                        <div class="p-3">
                             <!-- Length -->
                             <div class="formRow">
                                 <label>Length:</label>
@@ -459,7 +459,7 @@ export default {
                         </div>
                     </div>
 
-                    <div v-if="showParcelCartItems" class="pam">
+                    <div v-if="showParcelCartItems" class="p-3">
                         <tree-view
                             :data="payment.shoppingCart.cart_items"
                             :options="{maxDepth: 2}" />

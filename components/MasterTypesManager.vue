@@ -235,7 +235,7 @@ export default {
                         :show-view="false"
                         @edit="onUpsertClick(type)"
                         @delete="onDeleteClick(type)"
-                        class="mls" />
+                        class="ml-1" />
                 </fig-td>
 
                 <fig-td>
@@ -259,10 +259,10 @@ export default {
                     : $t(`Add Master Type ({name})`, {'name': object}) }}
             </div>
 
-            <div class="displayTable widthAll">
+            <div class="table w-full">
                 <!-- Available -->
                 <div class="formRow">
-                    <label class="width100">{{ $t('Published') }}:</label>
+                    <label class="w-24">{{ $t('Published') }}:</label>
                     <span>
                         <fig-form-checkbox
                             v-model="form.published" />
@@ -282,8 +282,8 @@ export default {
                     <label>{{ $t('Slug') }}:</label>
                     <span>
                         <fig-form-input v-model="form.slug" />
-                        <div class="fs12" v-show="slugIdea">
-                            <span class="colorGrayLighter">{{ $t('Suggestion') }}:</span>&nbsp;&nbsp;{{ slugIdea }}&nbsp;
+                        <div class="text-xs" v-show="slugIdea">
+                            <span class="text-gray-500">{{ $t('Suggestion') }}:</span>&nbsp;&nbsp;{{ slugIdea }}&nbsp;
                             (<a @click="onUseSlugSuggestion" class="underlineDotted">{{ $t('use this') }}</a>)
                         </div>
                     </span>
@@ -305,7 +305,7 @@ export default {
                     <span>
                         <fig-form-checkbox
                             v-model="formHasMetaData">{{ $t('This item has additional meta data') }}</fig-form-checkbox>
-                        <div class="mtm" v-show="formHasMetaData">
+                        <div class="mt-3" v-show="formHasMetaData">
                             <meta-data-builder v-model="form.metadata" />
                         </div>
                     </span>
@@ -314,11 +314,11 @@ export default {
                 <!-- buttons -->
                 <div class="formRow">
                     <label></label>
-                    <span class="ptl">
+                    <span class="pt-5">
                         <fig-button
                             variant="primary"
                             @click="onUpsertFormSave"
-                            class="mrm">{{ $t('Save') }}</fig-button>
+                            class="mr-3">{{ $t('Save') }}</fig-button>
 
                         <fig-button
                             variant="plain"

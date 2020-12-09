@@ -234,9 +234,9 @@ export default {
 
                     <h4>{{ $t('CUSTOMS INFORMATION') }}</h4>
 
-                    <div class="flex flex-wrap -mx-2 overflow-hidden">
+                    <div class="flex flex-wrap -mx-2">
                         <!-- country of origin -->
-                        <div class="my-2 px-2 w-full overflow-hidden xl:w-1/2">
+                        <div class="my-2 px-2 w-full xl:w-1/2">
                             <fig-form-group>
                                 <label slot="label" for="sku_customs_country_of_origin">{{ $t('Country of origin') }}</label>
                                 <fig-form-select-country
@@ -250,7 +250,7 @@ export default {
                         </div>
 
                         <!-- HS code -->
-                        <div class="my-2 px-2 w-full overflow-hidden xl:w-1/2">
+                        <div class="my-2 px-2 w-full xl:w-1/2">
                             <fig-form-group>
                                 <label slot="label" for="sku_customs_harmonized_system_code">{{ $t('HS (Harmonized System) code') }}</label>
                                 <fig-form-input
@@ -268,7 +268,7 @@ export default {
         </text-card>
 
 
-        <div class="tac">
+        <div class="text-center">
             <fig-button
                 variant="primary"
                 @click="onClickDone">{{ $t('Done') }}</fig-button>

@@ -1,14 +1,10 @@
 @charset "UTF-8";
 
-@import "components/normalize";
-@import "components/prefixer";
+// @import "components/normalize";
+// @import "components/prefixer";
 @import "components/variables";
-@import "components/objects";
 @import "components/mixins";
-// @import "components/element-ui-overrides";
 @import "components/animations";
-@import "components/svg";
-// @import "components/minireset";
 
 
 // vue-select
@@ -23,41 +19,29 @@ html {
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   min-width: 300px;
-  overflow-x: hidden;
-  overflow-y: scroll;
   text-rendering: optimizeLegibility;
 }
 
-html,
 body {
-    height: 100%;
-    padding: 0;
-    margin: 0;
-    background-color: #fafafa;
-}
-
-body {
-  color: $colorGrayDarker;
   font-size: 16px;
-  font-weight: $weight-normal;
-  line-height: 1.5;
 }
 
-body,
-button,
-input,
-select,
-textarea {
-  font-family: $family-sans-serif
-}
+// body,
+// button,
+// input,
+// select,
+// textarea {
+//   font-family: $family-sans-serif
+// }
+
 
 a {
-  color: $colorBlue;
+  color: #3083cc;
   cursor: pointer;
   text-decoration: none;
 
   &:hover {
-    color: $colorBlue;
+    color: #3083cc;
     text-decoration: underline;
   }
 }
@@ -68,47 +52,6 @@ hr {
   display: block;
   height: 1px;
   margin: 1.5rem 0;
-}
-
-label {
-    margin-bottom: 0;
-
-    &.required:after {
-        color: #b31703 !important;
-        content: " *"
-    }
-}
-
-svg {
-  display: inline-block;
-//   vertical-align: baseline;
-//   margin-bottom: -2px;
-}
-
-.fade-enter-active, .fade-leave-active {
-    transition: opacity .35s;
-}
-.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-    opacity: 0;
-}
-
-/**
- * Clearfix helper
- * Used to contain floats: h5bp.com/q
- */
- .clearfix::before,
- .clearfix::after {
-   content: "";
-   display: table;
-}
-
- .clearfix::after {
-   clear: both;
-}
-
-ul.disc {
-    list-style-type: disc;
-    list-style-position: outside;
 }
 
 [v-cloak] {
@@ -138,13 +81,9 @@ ul.disc {
 }
 
 
-.form-validation-error {
-    color: $colorRed;
-    font-size: 12px;
-}
-
-
-
+.border-dashed-2 { border-style: dotted !important; border-width: 2px !important; }
+.underlineDotted { border-bottom: 1px dotted !important }
+.underlineDotted:hover { text-decoration: none !important; border-bottom: 0!important; }
 
 
 .player {
@@ -173,69 +112,6 @@ ul.disc {
       }
     }
 }
-
-
-[role="alert"] {
-    color: $colorRed;
-}
-
-.g-spec,
-.g-spec-locked {
-    display: block;
-
-    &.no-zebra {
-        background-color: inherit !important;
-    }
-
-    .g-spec-label {
-        color: #6f6f6f;
-        font-size: 16px;
-        display: block;
-        padding: 10px 20px;
-        border-right: 0;
-        border-bottom: 1px solid $borderColorGray;
-        vertical-align: top;
-        font-weight: 600;
-        word-wrap: break-word;
-
-        &.no-line {
-            border: 0 !important;
-        }
-    }
-
-    .g-spec-content {
-        display: block;
-        padding: 10px 20px 10px 40px;
-        vertical-align: top;
-    }
-}
-
-@media #{$medium-and-up} {
-    .g-spec {
-        display: table-row;
-
-        &:nth-child(even) {
-            background-color: $bgGrayZebra;
-        }
-
-        .g-spec-label {
-            font-size: 18px;
-            display: table-cell;
-            padding: 20px;
-            border-right: 1px solid $borderColorGray;
-            border-bottom: 0;
-            vertical-align: top;
-        }
-
-        .g-spec-content {
-            display: table-cell;
-            padding: 20px;
-            vertical-align: top;
-        }
-    }
-}
-
-
 
 .grow {
    @include grow()

@@ -90,7 +90,7 @@ export default {
 
 <template>
     <div>
-        <text-card class="mbl">
+        <text-card class="mb-5">
             <div slot="header">{{ $t('General Info') }}</div>
 
             <!-- Available -->
@@ -167,7 +167,7 @@ export default {
         </text-card>
 
         <!-- buttons -->
-        <div class="ptl">
+        <div class="pt-5">
             <fig-button
                 variant="primary"
                 @click="onFormSave"

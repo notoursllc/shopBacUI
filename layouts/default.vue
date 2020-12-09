@@ -76,8 +76,8 @@ export default {
 
         <div class="sidenav-container">
             <aside class="sidenav" :class="{'sidenav-fixed': $store.state.ui.sidebarOpened}">
-                <div class="sidenav-header ptm">
-                    <fig-icon icon="bv-logo" :width="60" class-name="fillWhite" />
+                <div class="sidenav-header pt-3">
+                    <fig-icon icon="bv-logo" :width="60" style="fill: #fff;" />
                 </div>
 
                 <div class="pt-3">
@@ -151,7 +151,7 @@ export default {
 
         <header role="banner" class="header" :class="{'sidenav-opened': $store.state.ui.sidebarOpened}">
             <div class="header-container">
-                <i class="colorGrayLighter fs20 cursorPointer"
+                <i class="text-gray-500 text-xl cursor-pointer"
                    aria-hidden="true"
                    @click="$store.dispatch('ui/toggleSidebar')">toggle sidebar</i>
 
@@ -163,7 +163,7 @@ export default {
                                 <el-button
                                     type="text"
                                     @click="logout"
-                                    class="colorBlack">{{ $t('LOGOUT') }}</el-button>
+                                    class="text-black">{{ $t('LOGOUT') }}</el-button>
                             </template> -->
                             <!-- <template v-else> -->
                                 <nuxt-link

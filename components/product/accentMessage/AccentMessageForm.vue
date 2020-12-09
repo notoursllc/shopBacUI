@@ -79,7 +79,7 @@ export default {
         <!-- buttons -->
         <div class="formRow">
             <label></label>
-            <span class="ptl">
+            <span class="pt-5">
                 <fig-button
                     variant="primary"
                     @click="onFormSave">{{ $t('Save') }}</fig-button>

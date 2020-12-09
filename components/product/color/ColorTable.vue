@@ -171,7 +171,7 @@ export default {
                     <fig-td v-show="canShowGrabHandles">
                         <fig-icon
                             icon="dots-vertical-double"
-                            class="handle cursorGrab" />
+                            class="handle cursor-grab" />
                     </fig-td>
 
                     <!-- Published -->

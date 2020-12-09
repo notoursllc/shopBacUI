@@ -269,7 +269,7 @@ export default {
                 <template slot="head">
                     <tr>
                         <fig-th class="grab-handle-cell no-color" v-show="canShowRowGrabHandles"></fig-th>
-                        <fig-th class="th vat">
+                        <fig-th class="th align-top">
                             <!-- import button -->
                             <pop-confirm
                                 v-if="showImport"
@@ -394,7 +394,7 @@ export default {
                     <tr v-for="(row, idx) in tableData.rows" :key="idx">
                         <!-- drag handle -->
                         <fig-td class="no-color grab-handle-cell" v-show="canShowRowGrabHandles">
-                            <i class="handle cursorGrab">
+                            <i class="handle cursor-grab">
                                 <fig-icon icon="dots-vertical-double" />
                             </i>
                         </fig-td>

@@ -216,7 +216,7 @@ export default {
                 <!-- featured image -->
                 <fig-td>
                     <vnodes :vnodes="getFirstVariantImage(prod)" />
-                    <div class="fs12">{{ numPicsLabel(prod) }}</div>
+                    <div class="text-xs">{{ numPicsLabel(prod) }}</div>
                 </fig-td>
 
                  <!-- title -->
@@ -226,7 +226,7 @@ export default {
                         :show-view="false"
                         @edit="goToProductUpsert(prod.id)"
                         @delete="onProductDelete(prod)"
-                        class="mls" />
+                        class="ml-1" />
                 </fig-td>
 
                 <!-- inventory count -->
