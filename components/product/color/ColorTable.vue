@@ -228,7 +228,7 @@ export default {
         </fig-table-simple>
 
 
-        <div>
+        <div class="pt-4">
             <fig-button
                 variant="primary"
                 size="sm"

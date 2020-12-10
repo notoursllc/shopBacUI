@@ -176,41 +176,48 @@ export default {
             </app-message>
         </div>
 
-        <div class="inline-block">
-            <fig-form-select
-                v-model="action"
-                :options="visibleActionSelectOptions"
-                @input="onActionSelectChange"
-                :reduce="obj => obj.value" />
-        </div>
 
-        <fig-icon
-            icon="arrow-right"
-            v-if="action === 'pre' || action === 'create'" />
+        <div class="flex flex-row items-end mb-3 w-full">
+            <div>
+                <fig-form-select
+                    class="min-w-max"
+                    v-model="action"
+                    :options="visibleActionSelectOptions"
+                    :clearable="false"
+                    @input="onActionSelectChange"
+                    :reduce="obj => obj.value" />
+            </div>
 
+            <div class="px-1 pb-2">
+                <fig-icon
+                    icon="arrow-right"
+                    v-if="action === 'pre' || action === 'create'" />
+            </div>
 
-        <div class="inline-block mb-0 align-bottom">
-            <!-- select predefined accent message  -->
-            <fig-form-group v-show="canShowPredefinedMessages && action === 'pre'">
-                <label slot="label" for="input_choose_message">{{ $t('Choose') }}</label>
-                <accent-message-select
-                    v-model="accent_message_id"
-                    @input="emitInput"
-                    class="w-36"
-                    id="input_choose_message" />
-            </fig-form-group>
+            <div>
+                <!-- select predefined accent message  -->
+                <fig-form-group v-show="canShowPredefinedMessages && action === 'pre'">
+                    <label slot="label" for="input_choose_message">{{ $t('Choose') }}</label>
+                    <accent-message-select
+                        v-model="accent_message_id"
+                        :clearable="false"
+                        @input="emitInput"
+                        class="w-36"
+                        id="input_choose_message" />
+                </fig-form-group>
 
-            <!-- new message input -->
-            <fig-form-group
-                v-show="action === 'create'">
-                <label slot="label" for="input_create_message">{{ $t('New message') }}</label>
-                <fig-form-input
-                    v-if="action === 'create'"
-                    v-model="accent_message_new"
-                    @input="emitInput"
-                    class="w-auto"
-                    id="input_create_message" />
-            </fig-form-group>
+                <!-- new message input -->
+                <fig-form-group
+                    v-show="action === 'create'">
+                    <label slot="label" for="input_create_message">{{ $t('New message') }}</label>
+                    <fig-form-input
+                        v-if="action === 'create'"
+                        v-model="accent_message_new"
+                        @input="emitInput"
+                        class="w-auto"
+                        id="input_create_message" />
+                </fig-form-group>
+            </div>
         </div>
 
 
