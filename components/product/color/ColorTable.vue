@@ -110,11 +110,17 @@ export default {
                 this.emitChange();
 
                 if(color.id) {
-                    this.$successToast(this.$t('Color deleted successfully'));
+                    this.$successToast({
+                        title: this.$t('Success'),
+                        text: this.$t('Color deleted successfully')
+                    });
                 }
             }
             catch(e) {
-                this.$errorToast(e.message);
+                this.$errorToast({
+                    title: this.$t('Error'),
+                    text: e.message
+                });
             }
         },
 

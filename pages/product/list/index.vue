@@ -45,8 +45,11 @@ export default {
             try {
                 this.products = await this.$api.products.list(paramsObj);
             }
-            catch(err) {
-                this.$errorToast(err.message);
+            catch(e) {
+                this.$errorToast({
+                    title: this.$t('Error'),
+                    text: e.message
+                });
             }
         },
 
@@ -87,11 +90,19 @@ export default {
 
             try {
                 await this.$api.products.delete(product.id);
-                this.$successToast(`"${product.title}" deleted successfully`);
+
+                this.$successToast({
+                    title: this.$t('Success'),
+                    text: `"${product.title}" deleted`
+                });
+
                 this.fetchProducts();
             }
             catch(e) {
-                this.$errorToast(e.message);
+                this.$errorToast({
+                    title: this.$t('Error'),
+                    text: e.message
+                });
             }
         },
 

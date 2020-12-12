@@ -110,11 +110,19 @@ export default {
             try {
                 this.loadingImages = true;
                 await this.$api.productSkus.deleteImage(id); //TODO
-                this.$successToast(this.$t('Image deleted successfully'));
+
+                this.$successToast({
+                    title: this.$t('Success'),
+                    text: this.$t('Image deleted successfully')
+                });
+
                 this.emitInput();
             }
             catch(e) {
-                this.$errorToast(e.message);
+                this.$errorToast({
+                    title: this.$t('Error'),
+                    text: e.message
+                });
             }
 
             this.loadingImages = false;

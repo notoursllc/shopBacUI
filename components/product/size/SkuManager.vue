@@ -84,17 +84,35 @@ export default Vue.extend({
                 }
             },
             immediate: true
+        },
+
+        sizes: {
+            handler(newVal) {
+                console.log("SIZES CHANGE");
+                this.emitInput();
+            },
+            deep: true
         }
     },
 
     methods: {
         emitInput() {
-            this.$emit('input', this.sizes);
+            // each size has an 'opened' property that needs to be removed before emitting
+            const cleanSizes = [];
+
+            if(Array.isArray(this.sizes)) {
+                this.sizes.forEach((size) => {
+                    const copy = {...size};
+                    delete copy.opened;
+                    cleanSizes.push(copy);
+                });
+            }
+
+            this.$emit('input', cleanSizes);
         },
 
         removeRow(index) {
             this.sizes.splice(index, 1);
-            this.emitInput();
         },
 
         addSize() {
@@ -115,8 +133,6 @@ export default Vue.extend({
                 // meta data that should be removed before saving:
                 opened: true
             });
-
-            this.emitInput();
         },
 
         toggleBulkEdit() {
@@ -136,13 +152,9 @@ export default Vue.extend({
                 this.sizes.forEach((size) => {
                     this.$set(size, key, this.bulkEdit[key]);
                 });
-
-                this.emitInput();
             }
 
-            Vue.nextTick(() => {
-                this.toggleBulkEdit();
-            });
+            this.toggleBulkEdit();
         },
 
         onBulkEditRegister(key, val) {
@@ -179,7 +191,7 @@ export default Vue.extend({
 
 <template>
     <div>
-        <div class="pb-2" v-if="sizes.length">
+        <div class="pb-4" v-if="sizes.length">
 
             <div class="flex flex-row items-center pb-2">
 
@@ -189,7 +201,6 @@ export default Vue.extend({
                     <div class="inline-block">
                         <draggable
                             v-model="sizes"
-                            @update="emitInput"
                             ghost-class="ghost"
                             handle=".size-btn"
                             tag="div">
@@ -208,6 +219,13 @@ export default Vue.extend({
                 <!-- bulk edit button/popup -->
                 <!-- <div id="header-container" v-if="sizes.length > 1"> -->
                 <div id="header-container">
+                    <fig-button
+                        variant="primary"
+                        size="sm"
+                        @click="addSize"
+                        icon="plus"
+                        class="mr-2">{{ $t('Add Size') }}</fig-button>
+
                     <fig-button
                         variant="plain"
                         size="sm"
@@ -429,14 +447,12 @@ export default Vue.extend({
         </div>
 
 
-
         <!-- size card list -->
         <draggable
             v-model="sizes"
-            @update="emitInput"
             ghost-class="ghost"
             handle=".handle"
-            class="flex flex-wrap -mx-1"
+            class="flex flex-wrap -mx-1 mb-4"
             tag="div">
 
             <!-- card -->
@@ -471,7 +487,6 @@ export default Vue.extend({
                     <div class="p-3 flex items-center flex-grow">
                         <size-select
                             v-model="size.label"
-                            @input="emitInput"
                             size="md"
                             :placeholder="$t('Choose a size')"
                             style="min-width:200px" />
@@ -755,13 +770,15 @@ export default Vue.extend({
         </draggable>
 
 
-        <div class="mt-2">
+        <div>
             <fig-button
                 variant="primary"
                 size="sm"
                 @click="addSize"
-                icon="plus">{{ $t('Add Size') }}</fig-button>
+                icon="plus"
+                class="mr-2">{{ $t('Add Size') }}</fig-button>
         </div>
+
     </div>
 </template>
 

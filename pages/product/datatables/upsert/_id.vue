@@ -46,7 +46,10 @@ export default {
                 this.data = data;
             }
             catch(e) {
-                this.$errorToast(e.message);
+                this.$errorToast({
+                    title: this.$t('Error'),
+                    text: e.message
+                });
             }
 
             this.loading = false;
@@ -62,15 +65,20 @@ export default {
                     throw new Error('Error updating Data Table');
                 }
 
-                const title = p.id ? this.$t('Data Table updated successfully') : this.$t('Data Table added successfully');
-                this.$successToast(`${title}: ${p.title}`);
+                this.$successToast({
+                    title: p.id ? this.$t('Data Table updated successfully') : this.$t('Data Table added successfully'),
+                    text: p.title
+                });
 
                 this.$router.push({
                     name: 'product-datatables-list'
                 });
             }
             catch(e) {
-                this.$errorToast(e.message);
+                this.$errorToast({
+                    title: this.$t('Error'),
+                    text: e.message
+                });
             }
 
             this.loading = false;

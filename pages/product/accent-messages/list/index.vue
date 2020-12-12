@@ -46,7 +46,10 @@ export default {
                 this.messages = data;
             }
             catch(e) {
-                this.$errorToast(e.message);
+                this.$errorToast({
+                    title: this.$t('Error'),
+                    text: e.message
+                });
             }
         },
 
@@ -76,10 +79,17 @@ export default {
                 }
 
                 this.init();
-                this.$successToast(this.$t('item_deleted_label', {label: data.message}));
+
+                this.$successToast({
+                    title: this.$t('Success'),
+                    text: this.$t('item_deleted_label', {label: data.message})
+                });
             }
             catch(e) {
-                this.$errorToast(e.message);
+                this.$errorToast({
+                    title: this.$t('Error'),
+                    text: e.message
+                });
             }
         },
 

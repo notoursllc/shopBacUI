@@ -62,7 +62,10 @@ export default {
                 });
             }
             catch(e) {
-                this.$errorToast(e.message);
+                this.$errorToast({
+                    title: this.$t('Error'),
+                    text: e.message
+                });
             }
         }
     }

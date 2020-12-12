@@ -33,8 +33,11 @@ export default {
             try {
                 this.dataTables = await this.$api.productDataTables.list(paramsObj);
             }
-            catch(err) {
-                this.$errorToast(err.message);
+            catch(e) {
+                this.$errorToast({
+                    title: this.$t('Error'),
+                    text: e.message
+                });
             }
         },
 
@@ -67,8 +70,11 @@ export default {
                     this.$t('deleted_name', { name: data.name })
                 );
             }
-            catch(err) {
-                this.$errorToast(err.message);
+            catch(e) {
+                this.$errorToast({
+                    title: this.$t('Error'),
+                    text: e.message
+                });
             }
         },
 

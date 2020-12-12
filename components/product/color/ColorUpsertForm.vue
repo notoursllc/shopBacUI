@@ -5,7 +5,7 @@ import TextCard from '@/components/TextCard';
 import PricingForm from '@/components/product/PricingForm';
 import ColorExpressionForm from '@/components/product/color/ColorExpressionForm';
 import AccentMessageWizard from '@/components/product/accentMessage/AccentMessageWizard';
-import SizeUpsertWizard from '@/components/product/size/SizeUpsertWizard';
+import SkuManager from '@/components/product/size/SkuManager';
 
 import {
     FigButton,
@@ -25,7 +25,7 @@ export default {
         PricingForm,
         ColorExpressionForm,
         AccentMessageWizard,
-        SizeUpsertWizard,
+        SkuManager,
         FigButton,
         FigFormCheckbox,
         FigFormInput,
@@ -82,10 +82,17 @@ export default {
             try {
                 this.loadingImages = true;
                 await this.$api.productSkus.deleteImage(id); // TODO
-                this.$successToast(this.$t('Image deleted successfully'));
+
+                this.$successToast({
+                    title: this.$t('Success'),
+                    text: this.$t('Image deleted successfully')
+                });
             }
             catch(e) {
-                this.$errorToast(e.message);
+                this.$errorToast({
+                    title: this.$t('Error'),
+                    text: e.message
+                });
             }
 
             this.loadingImages = false;
@@ -120,6 +127,10 @@ export default {
                 this.$set(this.upsertColor, 'exhibitType', data.exhibitType);
                 this.$set(this.upsertColor, 'exhibits', [ ...data.exhibits ]);
             }
+        },
+
+        onSkusChange(skus) {
+            this.upsertColor.skus = Array.isArray(skus) ? [...skus] : [];
         }
     }
 };
@@ -167,8 +178,9 @@ export default {
             <template v-slot:header>{{ $t('Sizes') }}</template>
 
             <div class="container mx-auto">
-                <size-upsert-wizard
-                    v-model="upsertColor.skus" />
+                <sku-manager
+                    :value="upsertColor.skus"
+                    @input="onSkusChange" />
             </div>
         </text-card>
 

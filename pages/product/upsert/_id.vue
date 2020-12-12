@@ -103,7 +103,10 @@ export default Vue.extend({
             }
         }
         catch(e) {
-            this.$errorToast(e.message);
+            this.$errorToast({
+                title: this.$t('Error'),
+                text: e.message
+            });
         }
 
         const msg = this.$createElement(
@@ -152,7 +155,10 @@ export default Vue.extend({
                 this.product = product;
             }
             catch(e) {
-                this.$errorToast(e.message);
+                this.$errorToast({
+                    title: this.$t('Error'),
+                    text: e.message
+                });
             }
 
             this.loading = false;
@@ -168,12 +174,18 @@ export default Vue.extend({
                     throw new Error('Error updating product');
                 }
 
-                const title = p.id ? this.$t('Product updated successfully') : this.$t('Product added successfully');
-                this.$successToast(`${title}: ${p.title}`);
+                this.$successToast({
+                    title: p.id ? this.$t('Product updated successfully') : this.$t('Product added successfully'),
+                    text: p.title
+                });
+
                 this.goToProductList();
             }
             catch(e) {
-                this.$errorToast(e.message);
+                this.$errorToast({
+                    title: this.$t('Error'),
+                    text: e.message
+                });
             }
 
             this.loading = false;

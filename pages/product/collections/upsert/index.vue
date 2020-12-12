@@ -52,7 +52,10 @@ export default {
                 }
             }
             catch(e) {
-                this.$errorToast(e.message);
+                this.$errorToast({
+                    title: this.$t('Error'),
+                    text: e.message
+                });
             }
         },
 
@@ -62,7 +65,10 @@ export default {
                 this.collection.value = getNextAvailableTypeValue(collections);
             }
             catch(e) {
-                this.$errorToast(e.message);
+                this.$errorToast({
+                    title: this.$t('Error'),
+                    text: e.message
+                });
             }
         },
 
@@ -74,13 +80,19 @@ export default {
                     throw new Error(this.$t('Error updating Collection'));
                 }
 
-                const title = collection.id ? this.$t('Collection updated successfully') : this.$t('Collection added successfully');
-                this.$successToast(`${title}: ${collection.name}`);
+                this.$successToast({
+                    title: collection.id ? this.$t('Collection updated successfully') : this.$t('Collection added successfully'),
+                    text: collection.name
+                });
+
                 this.goToProductCollectionList();
 
             }
             catch(e) {
-                this.$errorToast(e.message);
+                this.$errorToast({
+                    title: this.$t('Error'),
+                    text: e.message
+                });
             }
         }
     }

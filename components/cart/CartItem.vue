@@ -73,7 +73,10 @@ export default {
                 loadingInstance.close();
             }
             catch(err) {
-                this.$errorToast();
+                this.$errorToast({
+                    title: this.$t('Error'),
+                    text: err.message
+                });
 
                 this.$bugsnag.notify(err, {
                     request: {
@@ -93,7 +96,10 @@ export default {
                 loadingInstance.close();
             }
             catch(err) {
-                this.$errorToast();
+                this.$errorToast({
+                    title: this.$t('Error'),
+                    text: err.message
+                });
 
                 this.$bugsnag.notify(err, {
                     request: { deleteItem: { id: this.data.id } }

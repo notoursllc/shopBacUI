@@ -194,7 +194,11 @@ export default {
 
             }
             catch(err) {
-                this.$errorToast(err.message);
+                this.$errorToast({
+                    title: this.$t('Error'),
+                    text: err.message
+                });
+
                 this.$bugsnag.notify(err);
             }
         }

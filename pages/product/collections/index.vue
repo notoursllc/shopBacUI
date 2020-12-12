@@ -35,7 +35,10 @@ export default {
                 this.collections = await this.$api.productCollections.list(paramsObj);
             }
             catch(e) {
-                this.$errorToast(e.message);
+                this.$errorToast({
+                    title: this.$t('Error'),
+                    text: e.message
+                });
             }
         },
 
@@ -64,10 +67,16 @@ export default {
                 }
 
                 this.fetchCollections();
-                this.$successToast(this.$t('deleted_name', {'name': data.name}));
+                this.$successToast({
+                    title: this.$t('Success'),
+                    text: this.$t('deleted_name', {name: data.name})
+                });
             }
             catch(e) {
-                this.$errorToast(e.message);
+                this.$errorToast({
+                    title: this.$t('Error'),
+                    text: e.message
+                });
             }
         },
 

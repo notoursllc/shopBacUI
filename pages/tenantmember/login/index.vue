@@ -37,7 +37,11 @@ export default {
             }
             catch(e) {
                 this.$store.dispatch('ui/logout');
-                this.$errorToast(e.message);
+
+                this.$errorToast({
+                    title: this.$t('Error'),
+                    text: e.message
+                });
             }
         }
     }

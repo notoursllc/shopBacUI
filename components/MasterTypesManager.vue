@@ -88,7 +88,10 @@ export default {
                 });
             }
             catch(e) {
-                this.$errorToast(e.message);
+                this.$errorToast({
+                    title: this.$t('Error'),
+                    text: e.message
+                });
             }
         },
 
@@ -118,12 +121,18 @@ export default {
                 }
 
                 this.fetchTypes();
-                this.$successToast(
-                    this.$t('deleted_name', { name: data.name })
-                );
+
+                this.$successToast({
+                    title: this.$t('Success'),
+                    text: this.$t('deleted_name', { name: data.name })
+                });
+
             }
             catch(err) {
-                this.$errorToast(err.message);
+                this.$errorToast({
+                    title: this.$t('Error'),
+                    text: err.message
+                });
             }
         }, 200),
 
@@ -156,7 +165,10 @@ export default {
                 this.showDialog();
             }
             catch(e) {
-                this.$errorToast(e.message);
+                this.$errorToast({
+                    title: this.$t('Error'),
+                    text: e.message
+                });
             }
         },
 
@@ -182,16 +194,19 @@ export default {
                     throw new Error(this.$t('Error updating Master Type'));
                 }
 
-                this.$successToast(
-                    this.$t(this.form.id ? 'updated_name' : 'added_name', { name: mt.name }),
-                    null,
-                    { hideOthers: true }
-                );
+                this.$successToast({
+                    title: this.$t('Success'),
+                    text: this.$t(this.form.id ? 'updated_name' : 'added_name', { name: mt.name })
+                });
+
                 this.showDialog(false);
                 this.fetchTypes();
             }
             catch(e) {
-                this.$errorToast(e.message);
+                this.$errorToast({
+                    title: this.$t('Error'),
+                    text: e.message
+                });
             }
         },
 

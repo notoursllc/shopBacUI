@@ -224,7 +224,10 @@ export default {
                 this.tableData = data.table_data;
             }
             catch(e) {
-                this.$errorToast(e.message);
+                this.$errorToast({
+                    title: this.$t('Error'),
+                    text: e.message
+                });
             }
 
             this.loading = false;
@@ -239,7 +242,10 @@ export default {
                 this.canDoImport = results.length;
             }
             catch(e) {
-                this.$errorToast(e.message);
+                this.$errorToast({
+                    title: this.$t('Error'),
+                    text: e.message
+                });
             }
         },
 
