@@ -7,9 +7,8 @@ import shipping_mixin from '@/mixins/shipping_mixin';
 import MasterTypeSelect from '@/components/MasterTypeSelect';
 import TextCard from '@/components/TextCard';
 import MetaDataBuilder from '@/components/MetaDataBuilder';
-// ImageManager: () => import('@/components/product/ImageManager'),
 import SeoPreview from '@/components/product/SeoPreview';
-import ColorTable from '@/components/product/color/ColorTable';
+import VariantTable from '@/components/product/variant/VariantTable';
 import AppMessage from '@/components/AppMessage';
 
 import {
@@ -39,7 +38,7 @@ export default Vue.extend({
         TextCard,
         MetaDataBuilder,
         SeoPreview,
-        ColorTable,
+        VariantTable,
         AppMessage,
         FigFormCheckbox,
         FigFormGroup,
@@ -346,8 +345,8 @@ export default Vue.extend({
             <template v-slot:header>{{ $t('Colors') }}</template>
 
             <div class="container mx-auto">
-                <color-table
-                    :colors="product.variants"
+                <variant-table
+                    :value="product.variants"
                     @change="colors => this.$set(product, 'variants', colors)" />
             </div>
         </text-card>

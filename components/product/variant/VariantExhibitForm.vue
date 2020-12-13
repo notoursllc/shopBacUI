@@ -17,7 +17,7 @@ import {
 } from '@notoursllc/figleaf';
 
 export default {
-    name: 'ColorExpressionForm',
+    name: 'VariantExhibitForm',
 
     components: {
         ImageManager,
@@ -37,7 +37,7 @@ export default {
     ],
 
     props: {
-        colorModel: {
+        variant: {
             type: Object,
             default: () => {
                 return {};
@@ -63,7 +63,7 @@ export default {
     },
 
     watch: {
-        colorModel: {
+        variant: {
             handler(newVal) {
                 if(isObject(newVal)) {
                     this.exhibitType = newVal.exhibitType;
@@ -147,7 +147,7 @@ export default {
 
 <template>
     <div>
-        <div class="mb-3">
+        <div class="mb-5">
             <div class="d-inline-block mr-3">
                 <fig-form-radio
                     v-model="exhibitType"

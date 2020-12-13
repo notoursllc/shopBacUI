@@ -1,6 +1,7 @@
 import queryString from 'query-string';
 import isObject from 'lodash.isobject';
 import cloneDeep from 'lodash.clonedeep';
+import { variants } from '@notoursllc/figleaf/tailwind.config';
 
 
 function stripRelations(data) {
@@ -99,6 +100,23 @@ export default ($http) => ({
             }
         });
         return data;
+    },
+
+
+    /***********
+     * Variants
+     ***********/
+    variants: {
+
+        async delete(id) {
+            const { data } = await $http.$delete('/product/variant', {
+                params: {
+                    id
+                }
+            });
+            return data;
+        }
+
     }
 
 });

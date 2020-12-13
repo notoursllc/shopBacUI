@@ -3,7 +3,7 @@ import isObject from 'lodash.isobject';
 import storage_mixin from '@/mixins/storage_mixin'; // TODO: not needed?
 import TextCard from '@/components/TextCard';
 import PricingForm from '@/components/product/PricingForm';
-import ColorExpressionForm from '@/components/product/color/ColorExpressionForm';
+import VariantExhibitForm from '@/components/product/variant/VariantExhibitForm';
 import AccentMessageWizard from '@/components/product/accentMessage/AccentMessageWizard';
 import SkuManager from '@/components/product/size/SkuManager';
 
@@ -23,7 +23,7 @@ export default {
     components: {
         TextCard,
         PricingForm,
-        ColorExpressionForm,
+        VariantExhibitForm,
         AccentMessageWizard,
         SkuManager,
         FigButton,
@@ -39,7 +39,7 @@ export default {
     ],
 
     props: {
-        color: {
+        value: {
             type: Object,
             default: () => {
                 return {};
@@ -49,7 +49,7 @@ export default {
 
     data: function() {
         return {
-            upsertColor: {
+            variant: {
                 skus: [
                     { label: null }
                 ]
@@ -60,14 +60,14 @@ export default {
     },
 
     watch: {
-        color: {
+        value: {
             handler(newVal) {
                 if(isObject(newVal)) {
-                    this.upsertColor = Object.assign({}, newVal);
+                    this.variant = Object.assign({}, newVal);
                     return;
                 }
 
-                this.upsertColor = {
+                this.variant = {
                     skus: [
                         { label: null }
                     ]
@@ -99,14 +99,14 @@ export default {
         },
 
         onAccentWizardChange(obj) {
-            this.$set(this.upsertColor, 'accent_message_id', obj.accent_message_id);
-            this.$set(this.upsertColor, 'accent_message_begin', obj.accent_message_begin);
-            this.$set(this.upsertColor, 'accent_message_end', obj.accent_message_end);
+            this.$set(this.variant, 'accent_message_id', obj.accent_message_id);
+            this.$set(this.variant, 'accent_message_begin', obj.accent_message_begin);
+            this.$set(this.variant, 'accent_message_end', obj.accent_message_end);
         },
 
         onClickDone() {
             this.$emit('done', {
-                ...this.upsertColor
+                ...this.variant
             });
         },
 
@@ -117,20 +117,20 @@ export default {
         onPricingFormInput(obj) {
             if(isObject(obj)) {
                 for(const key in obj) {
-                    this.$set(this.upsertColor, key, obj[key]);
+                    this.$set(this.variant, key, obj[key]);
                 }
             }
         },
 
         onColorExpressionFormInput(data) {
             if(isObject(data)) {
-                this.$set(this.upsertColor, 'exhibitType', data.exhibitType);
-                this.$set(this.upsertColor, 'exhibits', [ ...data.exhibits ]);
+                this.$set(this.variant, 'exhibitType', data.exhibitType);
+                this.$set(this.variant, 'exhibits', [ ...data.exhibits ]);
             }
         },
 
         onSkusChange(skus) {
-            this.upsertColor.skus = Array.isArray(skus) ? [...skus] : [];
+            this.variant.skus = Array.isArray(skus) ? [...skus] : [];
         }
     }
 };
@@ -147,15 +147,15 @@ export default {
             <div class="container mx-auto">
                 <div class="mb-3">
                     <fig-form-checkbox
-                        v-model="upsertColor.published">{{ $t('Published') }}</fig-form-checkbox>
+                        v-model="variant.published">{{ $t('Published') }}</fig-form-checkbox>
                 </div>
 
                 <!-- color name -->
                 <fig-form-group>
-                    <label slot="label" for="color_name">{{ $t('Color name') }}</label>
+                    <label slot="label" for="variant_name">{{ $t('Color name') }}</label>
                     <fig-form-input
-                        v-model="upsertColor.label"
-                        id="color_name" />
+                        v-model="variant.label"
+                        id="variant_name" />
                 </fig-form-group>
             </div>
         </text-card>
@@ -166,8 +166,8 @@ export default {
             <template v-slot:header>{{ $t('Display color using...') }}</template>
 
             <div class="container mx-auto">
-                <color-expression-form
-                    :color-model="upsertColor"
+                <variant-exhibit-form
+                    :variant="variant"
                     @input="onColorExpressionFormInput" />
             </div>
         </text-card>
@@ -179,7 +179,7 @@ export default {
 
             <div class="container mx-auto">
                 <sku-manager
-                    :value="upsertColor.skus"
+                    :value="variant.skus"
                     @input="onSkusChange" />
             </div>
         </text-card>
@@ -191,7 +191,7 @@ export default {
 
             <div class="container mx-auto">
                 <pricing-form
-                    :data="upsertColor"
+                    :data="variant"
                     @input="onPricingFormInput" />
             </div>
         </text-card>
@@ -204,7 +204,7 @@ export default {
 
             <div class="container mx-auto">
                 <accent-message-wizard
-                    :model="upsertColor"
+                    :model="variant"
                     @input="onAccentWizardChange" />
             </div>
         </text-card>
@@ -218,20 +218,20 @@ export default {
                 <!-- requires shipping -->
                 <div class="mb-3">
                     <fig-form-checkbox
-                        v-model="upsertColor.requires_shipping">{{ $t('This is a physical product') }}</fig-form-checkbox>
+                        v-model="variant.requires_shipping">{{ $t('This is a physical product') }}</fig-form-checkbox>
                 </div>
 
-                <template v-if="!upsertColor.requires_shipping">
+                <template v-if="!variant.requires_shipping">
                     {{ $t('requires_shipping_off_desc') }}
                 </template>
                 <template v-else>
                     <hr />
 
                     <div class="flex">
-                        <fig-form-group v-if="upsertColor.requires_shipping">
+                        <fig-form-group v-if="variant.requires_shipping">
                             <label slot="label" for="sku_weight_oz">{{ $t('Weight (oz)') }}</label>
                             <fig-form-input-number
-                                v-model="upsertColor.weight_oz"
+                                v-model="variant.weight_oz"
                                 :step=".01"
                                 :min="0"
                                 id="sku_weight_oz" />
@@ -252,7 +252,7 @@ export default {
                             <fig-form-group>
                                 <label slot="label" for="sku_customs_country_of_origin">{{ $t('Country of origin') }}</label>
                                 <fig-form-select-country
-                                    v-model="upsertColor.customs_country_of_origin"
+                                    v-model="variant.customs_country_of_origin"
                                     id="sku_customs_country_of_origin" />
 
                                 <div slot="description">
@@ -266,7 +266,7 @@ export default {
                             <fig-form-group>
                                 <label slot="label" for="sku_customs_harmonized_system_code">{{ $t('HS (Harmonized System) code') }}</label>
                                 <fig-form-input
-                                    v-model="upsertColor.customs_harmonized_system_code"
+                                    v-model="variant.customs_harmonized_system_code"
                                     id="sku_customs_harmonized_system_code" />
 
                                 <div slot="description">

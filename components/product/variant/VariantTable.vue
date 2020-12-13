@@ -2,7 +2,7 @@
 import isObject from 'lodash.isobject';
 import draggable from 'vuedraggable';
 import PopConfirm from '@/components/PopConfirm';
-import ColorUpsertForm from '@/components/product/color/ColorUpsertForm';
+import VariantForm from '@/components/product/variant/VariantForm';
 import storage_mixin from '@/mixins/storage_mixin';
 import product_mixin from '@/mixins/product_mixin';
 
@@ -20,7 +20,7 @@ export default {
     components: {
         draggable,
         PopConfirm,
-        ColorUpsertForm,
+        VariantForm,
         FigButton,
         FigModal,
         FigTableSimple,
@@ -34,7 +34,7 @@ export default {
     ],
 
     props: {
-        colors: {
+        value: {
             type: Array,
             default: function() {
                 return [];
@@ -44,72 +44,66 @@ export default {
 
     data: function() {
         return {
-            colorList: [],
+            variants: [],
             visibleColorIndex: null
         };
     },
 
     computed: {
         canShowGrabHandles() {
-            return Array.isArray(this.colorList) && this.colorList.length > 1;
+            return Array.isArray(this.variants) && this.variants.length > 1;
         },
 
         modalTitle() {
-            return isObject(this.colorList[this.visibleColorIndex]) && this.colorList[this.visibleColorIndex].label
-                ? this.$t('Edit color: _color_', {color: this.colorList[this.visibleColorIndex].label})
+            return isObject(this.variants[this.visibleColorIndex]) && this.variants[this.visibleColorIndex].label
+                ? this.$t('Edit color: _color_', {color: this.variants[this.visibleColorIndex].label})
                 : this.$t('Add a new Color');
         }
     },
 
     watch: {
-        colors: {
+        value: {
             handler: function(newVal) {
-                this.colorList = newVal || [];
+                this.variants = newVal || [];
             },
             immediate: true
         }
     },
 
     methods: {
-        showColorUpsertModal(index) {
+        showModal(index) {
             this.visibleColorIndex = index;
             this.$refs.color_upsert_form_modal.show();
         },
 
-        hideColorUpsertModal() {
+        hideModal() {
             this.$refs.color_upsert_form_modal.hide();
         },
 
         addEmptyColor() {
-            this.colorList.push({
-                published: true,
-                label: null,
-                ordinal: this.colorList.length
-            });
-
-            this.showColorUpsertModal(this.colorList.length - 1);
+            this.showModal(null);
         },
 
         setColorOrdinals() {
-            this.colorList.forEach((obj, index) => {
+            this.variants.forEach((obj, index) => {
                 obj.ordinal = index;
             });
             this.emitChange();
         },
 
-        async deleteColor(index) {
+        async deleteVariant(index) {
             try {
-                const color = this.colorList[index];
+                const variant = this.variants[index];
 
-                // Only delete the skus that are persisted in the DB (which have an id)
-                if(color.id) {
-                    await this.$api.productColors.delete(color.id); // TODO
+                // Only delete the variants that are persisted in the DB (which have an id)
+                if(variant.id) {
+                    await this.$api.products.variants.delete(variant.id);
                 }
 
-                this.colorList.splice(index, 1);
+                this.variants.splice(index, 1);
                 this.emitChange();
 
-                if(color.id) {
+                if(variant.id) {
                     this.$successToast({
                         title: this.$t('Success'),
                         text: this.$t('Color deleted successfully')
@@ -124,23 +118,20 @@ export default {
             }
         },
 
-        onColorUpsertDone(colorData) {
-            this.$set(this.colorList, this.visibleColorIndex, colorData);
+        onUpsertDone(colorData) {
+            this.$set(this.variants, this.visibleColorIndex, colorData);
             this.emitChange();
-            this.hideColorUpsertModal();
+            this.hideModal();
         },
 
-        onColorUpsertCancel() {
-            this.hideColorUpsertModal();
-        },
-
-        onEditBtnClick(index) {
-            this.showColorUpsertModal(index);
+        onUpsertCancel() {
+            this.visibleColorIndex = null;
+            this.hideModal();
         },
 
         emitChange() {
             this.$emit('change', [
-                ...this.colorList
+                ...this.variants
             ]);
         }
     }
@@ -153,7 +144,7 @@ export default {
         <fig-table-simple
             striped
             hover
-            v-if="colorList.length">
+            v-if="variants.length">
             <template slot="head">
                 <tr>
                     <fig-th v-if="canShowGrabHandles" class="w-12"></fig-th>
@@ -167,12 +158,12 @@ export default {
             </template>
 
             <draggable
-                v-model="colorList"
+                v-model="variants"
                 handle=".handle"
                 @update="setColorOrdinals"
                 ghost-class="ghost"
                 tag="tbody">
-                <tr v-for="(color, idx) in colorList" :key="idx">
+                <tr v-for="(color, idx) in variants" :key="idx">
                     <!-- drag handle -->
                     <fig-td v-show="canShowGrabHandles">
                         <fig-icon
@@ -217,9 +208,9 @@ export default {
                         <fig-button
                             variant="plain"
                             class="mr-1"
-                            @click="onEditBtnClick(idx)">{{ $t('Edit') }}</fig-button>
+                            @click="showModal(idx)">{{ $t('Edit') }}</fig-button>
 
-                        <pop-confirm @onConfirm="deleteColor(idx)">
+                        <pop-confirm @onConfirm="deleteVariant(idx)">
                             {{ $t('Delete this row?') }}
 
                             <fig-button
@@ -249,10 +240,10 @@ export default {
             size="xl">
             <div slot="header">{{ modalTitle }}</div>
 
-            <color-upsert-form
-                :color="colorList[visibleColorIndex]"
-                @done="onColorUpsertDone"
-                @cancel="onColorUpsertCancel" />
+            <variant-form
+                :value="variants[visibleColorIndex]"
+                @done="onUpsertDone"
+                @cancel="onUpsertCancel" />
         </fig-modal>
 
     </div>

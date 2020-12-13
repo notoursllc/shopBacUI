@@ -12,7 +12,9 @@ import {
     FigModal,
     FigTableSimple,
     FigTh,
-    FigTd
+    FigTd,
+    FigCol,
+    FigRow
 } from '@notoursllc/figleaf';
 
 export default {
@@ -29,7 +31,9 @@ export default {
         FigModal,
         FigTableSimple,
         FigTh,
-        FigTd
+        FigTd,
+        FigCol,
+        FigRow
     },
 
     mixins: [
@@ -97,12 +101,18 @@ export default {
             this.$refs.image_preview_modal.show();
         },
 
-        filesAreAcceptedTypes(files) {
+        /**
+         * Checks to see if every File in FileList is of the accepted file type
+         *
+         * https://developer.mozilla.org/en-US/docs/Web/API/FileList
+         * @returns boolean
+         */
+        filesAreAcceptedTypes(FileList) {
             const acceptedTypes = this.accept.split(',').map((type) => { return type.trim() });
             let isAcceptedType = true;
 
-            for (let i = 0; i < files.length; i++) {
-                if (acceptedTypes.indexOf(files[i].type) === -1) {
+            for (let i=0; i<FileList.length; i++) {
+                if (acceptedTypes.indexOf(FileList[i].type) === -1) {
                     isAcceptedType = false;
                 }
             }
@@ -111,37 +121,41 @@ export default {
         },
 
         async onFileChange(event) {
+            // event.target.files is a FileList object
+            // https://developer.mozilla.org/en-US/docs/Web/API/FileList
             const files = event.target.files;
-            console.log("ON FILE CHAGNE", files)
-            console.log("ON FILE CHAGNE refs", this.$refs['file-input'])
+            const numUploadedFiles = files.length;
+
+            console.log("ON FILE CHAGNE", files);
+            console.log("ON FILE CHAGNE refs", this.$refs['file-input']);
 
             if (!files.length) {
                 return;
             }
 
-            if(!this.filesAreAcceptedTypes(files)) {
-                throw new Error(this.$t('File type not allowed'));
-            }
+            try {
+                if(!this.filesAreAcceptedTypes(files)) {
+                    throw new Error(this.$t('File type not allowed'));
+                }
 
-            const imageOverage = (this.fileList.length + files.length) - this.maxNumImages;
+                const imageOverage = (this.fileList.length + numUploadedFiles) - this.maxNumImages;
 
-            if(imageOverage > 0) {
-                const numRemaining = this.maxNumImages - this.fileList.length;
-                this.fileInputErrorMessage = numRemaining === 1
-                    ? this.$t('You can choose only one more image')
-                    : this.$t('You can choose only _num_ more images', {number: numRemaining});
-                return;
-            }
+                if(imageOverage > 0) {
+                    const numRemaining = this.maxNumImages - this.fileList.length;
+                    this.fileInputErrorMessage = numRemaining === 1
+                        ? this.$t('You can choose only one more image')
+                        : this.$t('You can choose only _num_ more images', {number: numRemaining});
+                    return;
+                }
 
-            this.fileInputErrorMessage = '';
+                this.fileInputErrorMessage = '';
 
-            if(Array.isArray(files)) {
                 const resizePromises = [];
                 const newFileListIndexes = [];
 
-                files.forEach((file) => {
+                for (let i=0; i<numUploadedFiles; i++) {
                     resizePromises.push(
-                        this.$api.media.postImage(file)
+                        this.$api.media.postImage(files[i])
                     );
 
                     newFileListIndexes.push(this.fileList.length);
@@ -157,7 +171,7 @@ export default {
                             url: null
                         }
                     });
-                });
+                }
 
                 const responses = await Promise.all(resizePromises);
                 // console.log("RESPONSES", responses);
@@ -169,10 +183,16 @@ export default {
                     this.fileList[fileListIndex].media.url = this.prodmix_getSmallestSkuImageMediaUrl(res);
                     this.fileList[fileListIndex].loading = false;
                 });
-            }
 
-            // this.createTempImages(files);
-            this.emitChange();
+                // this.createTempImages(files);
+                this.emitChange();
+            }
+            catch(e) {
+                this.$errorToast({
+                    title: this.$t('Error'),
+                    text: e.message
+                });
+            }
         },
 
         onDeleteImage(obj, index) {
@@ -205,6 +225,25 @@ export default {
 <template>
     <div>
 
+        <!-- upload form -->
+        <div class="mb-4">
+            <fig-form-group>
+                <input
+                    v-show="numRemainingUploads > 0"
+                    ref="file-input"
+                    :accept="accept"
+                    :multiple="true"
+                    type="file"
+                    :placeholder="$t('No file chosen')"
+                    id="file_input"
+                    @input="onFileChange">
+
+                <div slot="error" v-if="fileInputErrorMessage">{{ fileInputErrorMessage }}</div>
+                <div slot="description">{{ $t('You can upload num more images', {number: numRemainingUploads} ) }}</div>
+            </fig-form-group>
+        </div>
+
+        <!-- image table -->
         <fig-table-simple
             hover
             small
@@ -213,7 +252,7 @@ export default {
             table-class="bread-table mb-5">
             <template slot="head">
                 <tr>
-                    <fig-th v-if="fileList.length > 1" class="w-14"></fig-th>
+                    <fig-th v-if="fileList.length > 1" class="w-5"></fig-th>
                     <fig-th class="w-24"></fig-th>
                     <fig-th>
                         <div class="flex items-center">
@@ -289,22 +328,6 @@ export default {
             </draggable>
         </fig-table-simple>
 
-        <div>
-            <fig-form-group>
-                <input
-                    v-show="numRemainingUploads > 0"
-                    ref="file-input"
-                    :accept="accept"
-                    :multiple="true"
-                    type="file"
-                    :placeholder="$t('No file chosen')"
-                    id="file_input"
-                    @input="onFileChange">
-
-                <div slot="error" v-if="fileInputErrorMessage">{{ fileInputErrorMessage }}</div>
-                <div slot="description">{{ $t('You can upload num more images', {number: numRemainingUploads} ) }}</div>
-            </fig-form-group>
-        </div>
 
         <fig-modal
             ref="image_preview_modal"
