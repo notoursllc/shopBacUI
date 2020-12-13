@@ -65,7 +65,7 @@ export default {
 
 
         async deleteShippingLabel() {
-            const confirmed = await this.$confirmModal(
+            const confirmed = await this.$showConfirm(
                 this.$t('Delete this shipping label?'),
                 'warning'
             );
@@ -80,7 +80,7 @@ export default {
 
 
         async buyShippingLabel() {
-            const confirmed = await this.$confirmModal(
+            const confirmed = await this.$showConfirm(
                 this.$t('Purchase a shipping label from Shippo?'),
                 'warning'
             );
@@ -143,7 +143,7 @@ export default {
 
 
         async removeParcel(index) {
-            const confirmed = await this.$confirmModal(
+            const confirmed = await this.$showConfirm(
                 `Remove Parcel #${index + 1}?`,
                 'warning'
             );

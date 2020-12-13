@@ -1,6 +1,5 @@
 <script>
 import isObject from 'lodash.isobject';
-import debounce from 'lodash.debounce';
 import slugify from 'slugify';
 
 import OperationsDropdown from '@/components/OperationsDropdown';
@@ -102,11 +101,10 @@ export default {
             });
         },
 
-        onDeleteClick: debounce(async function(data) {
+        async onDeleteClick(data) {
             try {
                 const confirmed = await this.$showConfirm(
                     this.$t('delete_name?', {name: data.name}),
-                    null,
                     'warning'
                 );
 
@@ -134,7 +132,7 @@ export default {
                     text: err.message
                 });
             }
-        }, 200),
+        },
 
 
         async onUpsertClick(data) {

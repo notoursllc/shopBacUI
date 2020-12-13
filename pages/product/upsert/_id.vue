@@ -91,7 +91,7 @@ export default Vue.extend({
         }
     },
 
-    async mounted() {
+    mounted() {
         try {
             if(this.$route.params.id) {
                 this.fetchProduct();
@@ -108,35 +108,6 @@ export default Vue.extend({
                 text: e.message
             });
         }
-
-        const msg = this.$createElement(
-            'div',
-            {
-                // class: 'border border-gray-500'
-            },
-            'vnode message that is a bit long lets sere what happens here'
-        );
-
-        // this.$showConfirm(
-        //     msg,
-        //     {
-        //         title: 'Test title'
-        //     },
-        //     'warning'
-        // )
-        // .then((confirmed) => {
-        //     console.log("promise resolved", confirmed);
-        // });
-
-        // const confirmed = await this.$showConfirm(
-        //     msg,
-        //     {
-        //         title: 'Test title'
-        //     },
-        //     'warning'
-        // );
-        // console.log("promise resolved", confirmed);
-
     },
 
     methods: {

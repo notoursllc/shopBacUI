@@ -51,8 +51,8 @@ export default {
         },
 
         async onDeleteCollection(data) {
-            const confirmed = await this.$confirmModal(
-                this.$t('delete_name?', {'name': data.name}),
+            const confirmed = await this.$showConfirm(
+                this.$t('delete_name?', {name: data.name}),
                 'warning'
             );
 

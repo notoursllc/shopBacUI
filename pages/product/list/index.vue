@@ -81,8 +81,8 @@ export default {
         },
 
         async onProductDelete(product) {
-            const confirmed = await this.$confirmModal(
-                `Delete product "${product.title}"?`,
+            const confirmed = await this.$showConfirm(
+                this.$t('delete_name?', {name: product.title}),
                 'warning'
             );
 

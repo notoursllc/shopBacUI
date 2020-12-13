@@ -58,8 +58,8 @@ export default {
         },
 
         async deleteType(data) {
-            const confirmed = await this.$confirmModal(
-                `Remove this package type? "${data.label}"`,
+            const confirmed = await this.$showConfirm(
+                this.$t('delete_name?', {name: data.label}),
                 'warning'
             );
 

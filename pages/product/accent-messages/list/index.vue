@@ -63,7 +63,7 @@ export default {
         },
 
         async deleteType(data) {
-            const confirmed = await this.$confirmModal(
+            const confirmed = await this.$showConfirm(
                 this.$t('remove_label?', {label: data.message}),
                 'warning'
             );

@@ -1,4 +1,6 @@
 <script>
+import debounce from 'lodash.debounce';
+
 import {
     FigButton,
     FigDropdown,
@@ -29,6 +31,20 @@ export default {
             type: Boolean,
             default: true
         }
+    },
+
+    methods: {
+        onDelete: debounce(function() {
+            this.$emit('delete');
+        }, 200),
+
+        onEdit: debounce(function() {
+            this.$emit('edit');
+        }, 200),
+
+        onView: debounce(function() {
+            this.$emit('view');
+        }, 200)
     }
 };
 </script>
@@ -43,8 +59,8 @@ export default {
                 icon="chevron-down" />
         </span>
 
-        <fig-dropdown-button v-if="showView" @click="$emit('view')">{{ $t('View') }}</fig-dropdown-button>
-        <fig-dropdown-button v-if="showEdit" @click="$emit('edit')">{{ $t('Edit') }}</fig-dropdown-button>
-        <fig-dropdown-button v-if="showDelete" @click="$emit('delete')">{{ $t('Delete') }}</fig-dropdown-button>
+        <fig-dropdown-button v-if="showView" @click="onView">{{ $t('View') }}</fig-dropdown-button>
+        <fig-dropdown-button v-if="showEdit" @click="onEdit">{{ $t('Edit') }}</fig-dropdown-button>
+        <fig-dropdown-button v-if="showDelete" @click="onDelete">{{ $t('Delete') }}</fig-dropdown-button>
     </fig-dropdown>
 </template>

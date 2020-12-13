@@ -8,12 +8,15 @@ export default (context) => {
     // });
     // console.log(context.app.nuxt)
 
-    Vue.prototype.$showConfirm = function(message, config, variant) {
-
-        // if(store.state.ui.confirmOpen) {
-        //     return;
-        // }
-
+    /**
+     * Show the confirm dialog
+     *
+     * @param String,VNode message
+     * @param String variant  String
+     * @param {*} config
+     * @return Promise
+     */
+    Vue.prototype.$showConfirm = function(message, variant, config) {
         const cfg = Object.assign(
             {},
             {
