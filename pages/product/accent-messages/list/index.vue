@@ -33,6 +33,7 @@ export default {
 
     created() {
         this.init();
+        this.$store.dispatch('ui/title', this.$t('Product accent messages'));
     },
 
     methods: {

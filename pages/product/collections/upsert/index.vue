@@ -28,6 +28,8 @@ export default {
     },
 
     async mounted() {
+        this.$store.dispatch('ui/title', this.$t('Product collections'));
+
         if(this.$route.params.id) {
             this.fetchCollection(this.$route.params.id);
         }

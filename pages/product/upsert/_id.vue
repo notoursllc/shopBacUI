@@ -99,6 +99,7 @@ export default Vue.extend({
             else {
                 // setting some defaults:
                 this.product.published = true;
+                this.$store.dispatch('ui/title', this.$t('Add product'));
             }
         }
         catch(e) {
@@ -152,6 +153,7 @@ export default Vue.extend({
 
                 this.productHasMetaData = !!product.metadata;
                 this.product = product;
+                this.$store.dispatch('ui/title', this.$t('Product: {name}', { name: product.title }));
             }
             catch(e) {
                 this.$errorToast({

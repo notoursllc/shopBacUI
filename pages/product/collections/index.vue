@@ -27,6 +27,7 @@ export default {
 
     created() {
         this.fetchCollections();
+        this.$store.dispatch('ui/title', this.$t('Product collections'));
     },
 
     methods: {

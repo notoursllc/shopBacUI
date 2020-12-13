@@ -34,6 +34,8 @@ export default {
     },
 
     async created() {
+        this.$store.dispatch('ui/title', this.$t('Products'));
+
         await Promise.all([
             this.fetchProducts(),
             this.fetchProductSubTypes()

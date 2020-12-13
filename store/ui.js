@@ -1,5 +1,3 @@
-'use strict';
-
 const domainName = 'goBreadVan.com';
 
 // This doens't need to be reactive, so not in state
@@ -11,7 +9,8 @@ export const state = () => ({
     isMobile: false,
     locales: ['en', 'fr'],
     locale: 'en',
-    visibleToasts: []
+    visibleToasts: [],
+    pageTitle: null
 });
 
 export const mutations = {
@@ -68,6 +67,10 @@ export const mutations = {
 
     LOGOUT: (state) => {
         state.isAuthenticated = false;
+    },
+
+    PAGE_TITLE: (state, title) => {
+        state.pageTitle = title;
     }
 };
 
@@ -110,6 +113,10 @@ export const actions = {
 
     logout({ commit }) {
         commit('LOGOUT');
+    },
+
+    title({ commit }, title) {
+        commit('PAGE_TITLE', title);
     }
 };
 

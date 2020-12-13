@@ -1,13 +1,20 @@
 <script>
 import { mapState } from 'vuex';
-import FigIconSprite from '@notoursllc/figleaf/components/icon/FigIconSprite';
 import NavigationList from '@/components/navigationList/NavigationList';
 import NavigationItem from '@/components/navigationList/NavigationItem';
 import NavigationCollapse from '@/components/navigationList/NavigationCollapse';
 
+import {
+    FigIconSprite,
+    FigVictoryIcon,
+    FigButton
+} from '@notoursllc/figleaf';
+
 export default {
     components: {
-        FigIconSprite
+        FigIconSprite,
+        FigVictoryIcon,
+        FigButton
     },
 
     computed: {
@@ -19,6 +26,10 @@ export default {
 
         isLoggedIn() {
             return this.$store.state.ui.isAuthenticated;
+        },
+
+        pageTitle() {
+            return this.$store.state.ui.pageTitle;
         }
     },
 
@@ -77,113 +88,118 @@ export default {
         <fig-icon-sprite />
         <fig-toaster />
 
-        <div class="sidenav-container">
-            <aside class="sidenav" :class="{'sidenav-fixed': $store.state.ui.sidebarOpened}">
-                <div class="sidenav-header pt-3">
-                    <fig-icon icon="bv-logo" :width="60" style="fill: #fff;" />
+        <div class="h-full">
+            <aside
+                class="sidenav fixed m-0 left-0 top-0 h-full p-2 overflow-y-auto z-10 duration-500 text-gray-600 bg-gray-100 border-r border-gray-200 font-semibold"
+                :class="{'sidenav-fixed': $store.state.ui.sidebarOpened}">
+                <div class="flex items-center justify-center">
+                    <fig-victory-icon :width="60" :height="40" fill="#434190" />
                 </div>
 
                 <div class="pt-3">
                     <nuxt-link
                         :to="{ name: 'product-list' }"
                         tag="button"
-                        class="nav-btn font-bold focus:outline-none focus:shadow-outline">{{ $t('Products') }}</nuxt-link>
+                        class="nav-btn font-bold">
+                        <fig-icon icon="triangle-square-circle" :width="22" :height="22" :stroke-width="1" />{{ $t('Products') }}
+                    </nuxt-link>
 
                     <div class="pl-3">
                         <nuxt-link
                             :to="{ name: 'product-types' }"
                             tag="button"
-                            class="nav-btn focus:outline-none focus:shadow-outline">{{ $t('Types') }}</nuxt-link>
+                            class="nav-btn">{{ $t('Types') }}</nuxt-link>
 
                         <nuxt-link
                             :to="{ name: 'product-sub-types' }"
                             tag="button"
-                            class="nav-btn focus:outline-none focus:shadow-outline">{{ $t('Sub-Types') }}</nuxt-link>
+                            class="nav-btn">{{ $t('Sub-Types') }}</nuxt-link>
 
                         <nuxt-link
                             :to="{ name: 'product-fit-types' }"
                             tag="button"
-                            class="nav-btn focus:outline-none focus:shadow-outline">{{ $t('Fit Types') }}</nuxt-link>
+                            class="nav-btn">{{ $t('Fit Types') }}</nuxt-link>
 
                         <nuxt-link
                             :to="{ name: 'product-sales-channel-types' }"
                             tag="button"
-                            class="nav-btn focus:outline-none focus:shadow-outline">{{ $t('Sales Channels') }}</nuxt-link>
+                            class="nav-btn">{{ $t('Sales Channels') }}</nuxt-link>
 
                         <nuxt-link
                             :to="{ name: 'product-vendors' }"
                             tag="button"
-                            class="nav-btn focus:outline-none focus:shadow-outline">{{ $t('Vendors') }}</nuxt-link>
+                            class="nav-btn">{{ $t('Vendors') }}</nuxt-link>
 
                         <nuxt-link
                             :to="{ name: 'product-collections' }"
                             tag="button"
-                            class="nav-btn focus:outline-none focus:shadow-outline">{{ $t('Collections') }}</nuxt-link>
+                            class="nav-btn">{{ $t('Collections') }}</nuxt-link>
 
                         <nuxt-link
                             :to="{ name: 'product-datatables-list' }"
                             tag="button"
-                            class="nav-btn focus:outline-none focus:shadow-outline">{{ $t('Data Tables') }}</nuxt-link>
+                            class="nav-btn">{{ $t('Data Tables') }}</nuxt-link>
 
                         <nuxt-link
                             :to="{ name: 'product-accent-messages-list' }"
                             tag="button"
-                            class="nav-btn focus:outline-none focus:shadow-outline">{{ $t('Accent Messages') }}</nuxt-link>
+                            class="nav-btn">{{ $t('Accent Messages') }}</nuxt-link>
                     </div>
 
                     <nuxt-link
                         :to="{ name: 'order-list' }"
                         tag="button"
-                        class="nav-btn font-bold focus:outline-none focus:shadow-outline">{{ $t('Payments') }}</nuxt-link>
+                        class="nav-btn font-bold">
+                        <fig-icon icon="credit-card" :width="22" :height="22" :stroke-width="1" />{{ $t('Payments') }}
+                    </nuxt-link>
 
 
                     <nuxt-link
                         :to="{ name: 'reports' }"
                         tag="button"
-                        class="nav-btn font-bold focus:outline-none focus:shadow-outline">{{ $t('Reports') }}</nuxt-link>
-
-
+                        class="nav-btn font-bold">
+                        <fig-icon icon="chart-bar" :width="22" :height="22" :stroke-width="1" />{{ $t('Reports') }}
+                    </nuxt-link>
                 </div>
             </aside>
 
             <div
-                class="sidenav-overlay"
+                class="sidenav-overlay z-10 fixed inset-0 opacity-0 md:opacity-100 h-screen hidden bg-gray-700 bg-opacity-25"
                 v-if="$store.state.ui.sidebarOpened"
                 @click="$store.dispatch('ui/closeSidebar')"></div>
         </div>
 
-        <header role="banner" class="header" :class="{'sidenav-opened': $store.state.ui.sidebarOpened}">
-            <div class="header-container">
-                <i class="text-gray-500 text-xl cursor-pointer"
-                   aria-hidden="true"
-                   @click="$store.dispatch('ui/toggleSidebar')">toggle sidebar</i>
+        <header
+            role="banner"
+            class="header flex flex-row flex-nowrap w-full px-6 py-3 bg-gray-100 relative text-gray-700 border-b border-gray-200"
+            :class="{'sidenav-opened': $store.state.ui.sidebarOpened}">
+            <fig-button
+                v-if="!$store.state.ui.sidebarOpened"
+                :aria-hidden="!$store.state.ui.sidebarOpened"
+                variant="plain"
+                icon="chevrons-right"
+                size="sm"
+                class="mr-2"
+                @click="$store.dispatch('ui/toggleSidebar')" />
 
-                <nav class="navigation">
-                    <ul class="navigation-list">
-                        <li v-if="!isLoggedIn">
-                            <!-- <template v-if="$auth.loggedIn">
-                                {{ $auth.user.email }}
-                                <el-button
-                                    type="text"
-                                    @click="logout"
-                                    class="text-black">{{ $t('LOGOUT') }}</el-button>
-                            </template> -->
-                            <!-- <template v-else> -->
-                                <nuxt-link
-                                    :to="{ name: 'tenantmember-login' }"
-                                    tag="a">{{ $t('Login') }}</nuxt-link>
-                            <!-- </template> -->
-                        </li>
-                        <li v-else>
-                            <a @click="logout">Logout</a>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
+            <div class="pl-5 max-w-md truncate">{{ pageTitle }}</div>
+
+            <nav class="navigation p-0 flex flex-grow items-center justify-end">
+                <ul class="navigation-list">
+                    <li v-if="!isLoggedIn">
+                        <nuxt-link
+                            :to="{ name: 'tenantmember-login' }"
+                            tag="a">{{ $t('Login') }}</nuxt-link>
+                    </li>
+                    <li v-else>
+                        <a @click="logout">Logout</a>
+                    </li>
+                </ul>
+            </nav>
         </header>
 
         <main :class="{'sidenav-opened': $store.state.ui.sidebarOpened}">
-            <div class="mainContent">
+            <div class="p-5 pb-24">
                 <nuxt />
             </div>
         </main>
@@ -192,9 +208,27 @@ export default {
 
 <style lang="postcss">
 .nav-btn {
-    @apply text-white text-sm px-3 py-2 rounded-md block w-full text-left;
+    @apply text-sm px-3 py-2 rounded-sm w-full text-left flex flex-row items-center;
+}
+.nav-btn > svg {
+    @apply mr-1;
+}
+.nav-btn:focus {
+    @apply outline-none shadow-outline
+}
+
+.nav-btn.nuxt-link-active,
+.nav-btn.nuxt-link-exact-active {
+  @apply text-indigo-800;
+  background: #e6e0ee;
 }
 </style>
+
+<style lang="postcss" scoped>
+
+</style>
+
+
 
 <style lang="scss">
 $sidenav-width: 225px;
@@ -202,109 +236,41 @@ $header-height: 50px;
 
 @import "~assets/css/components/_variables.scss";
 @import "~assets/css/components/_mixins.scss";
-@import "~assets/css/components/_sidenav.scss";
 
 
-.layoutContainer {
-    header, main {
+.layoutContainer header,
+.layoutContainer main {
+    transition: .5s;
+}
+
+@media #{$large-and-up} {
+    .sidenav-opened {
+        padding-left: $sidenav-width;
         transition: .5s;
     }
+}
 
-    .mainContent {
-        padding: 20px 20px 100px 20px; // need some bottom padding to accommodate FAB buttons
+.sidenav {
+    width: $sidenav-width;
+    transform: translateX(-105%);
+}
+
+.sidenav-fixed {
+    transform: translateX(0);
+    transition: .5s;
+}
+
+// Fixed Sidenav hide on smaller
+@media #{$medium-and-down} {
+    .sidenav.sidenav-fixed {
+        // transform: translateX(-105%);
+        z-index: 999;
     }
 
-    .header {
-        background-color: #fff;
-        position: relative;
-        color: #333;
-        line-height: $header-height;
-    }
-
-    .header-container {
-        @include flexbox();
-        @include flex-wrap(nowrap);
-        @include flex-direction(row);
-        padding: 0 20px;
-    }
-
-    .navigation {
-        background-color: white;
-        padding: 0;
-        color: #010101;
-        width: auto;
-        @include order(2);
-        @include flex-grow(2);
-        @include align-items(center);
-        @include justify-content(flex-end);
-        @include flexbox();
+    .sidenav-overlay {
+        opacity: 1;
+        display: block;
     }
 }
 
-
-.nav-menu-bar-container {
-    > .nav-navigation-item > label {
-        font-weight: 700;
-    }
-}
-
-.nav-menu-bar {
-    border: 0;
-    list-style: none;
-    position: relative;
-    margin: 0;
-    padding: 0;
-    display: block;
-
-    .nav-navigation-item {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-
-        label * {
-            vertical-align: middle;
-        }
-
-        label {
-            height: 30px;
-            line-height: 30px;
-            padding: 0 20px;
-            font-size: 14px;
-            position: relative;
-            white-space: nowrap;
-            cursor: pointer;
-            box-sizing: border-box;
-            transition: border-color .3s, background-color .3s, color .3s;
-            display: block;
-
-            .nav-navigation-item-arrow {
-                position: absolute;
-                top: 50%;
-                right: 20px;
-                margin-top: -7px;
-                transition: transform .3s;
-                font-size: 12px;
-                line-height: 1;
-                display: inline-block;
-            }
-        }
-
-        &.not-collapsed > label .nav-navigation-item-arrow {
-            transform: rotateZ(180deg);
-        }
-    }
-
-    .nav-navigation-item > .nav-menu-bar {
-        margin-left: 10px;
-    }
-
-    label.not-collapsed .nav-navigation-item-arrow {
-        transform: rotateZ(180deg);
-    }
-
-    .not-collapsed:focus,
-    .collapsed:focus {
-        outline: none;
-    }
-}
 </style>
