@@ -2,16 +2,20 @@
 import {
     FigButton,
     FigFormInput,
-    FigOverlay
+    FigOverlay,
+    FigVictoryIcon
 } from '@notoursllc/figleaf';
 
 export default {
     name: 'LoginPage',
 
+    layout: 'login',
+
     components: {
         FigButton,
         FigFormInput,
-        FigOverlay
+        FigOverlay,
+        FigVictoryIcon
     },
 
     data() {
@@ -26,6 +30,8 @@ export default {
 
     methods: {
         async onSubmit() {
+            this.loading = true;
+
             try {
                 await this.$api.tenantMembers.login(this.userInfo);
 
@@ -43,6 +49,8 @@ export default {
                     text: e.message
                 });
             }
+
+            this.loading = false;
         }
     }
 };
@@ -50,35 +58,43 @@ export default {
 
 <template>
     <div>
-        <h1>Login</h1>
+
+        <div>
+            <div class="flex items-center justify-center">
+                <fig-victory-icon :width="100" :height="60" fill="#4e4e4f" />
+            </div>
+
+            <h2 class="mt-1 text-center text-3xl font-medium text-gray-800">
+                Sign in to your account
+            </h2>
+        </div>
 
         <fig-overlay :show="loading">
-            <form @submit.prevent>
-                <!-- email -->
-                <div class="inputGroup mr-5 mb-3">
-                    <label>{{ $t('Email address') }}</label>
+            <form class="mt-8 space-y-4" @submit.prevent="onSubmit">
+                <div>
                     <fig-form-input
-                        v-model="userInfo.email" />
+                        v-model="userInfo.email"
+                        :placeholder="$t('Email address')" />
                 </div>
 
-                <!-- password -->
-                <div class="inputGroup mr-5 mb-3">
-                    <label>{{ $t('Password') }}</label>
-                    <!-- TODO: create password input component -->
+                <div>
                     <fig-form-input
                         v-model="userInfo.password"
+                        :placeholder="$t('Password')"
                         type="password" />
                 </div>
 
-                <fig-button
-                    variant="primary"
-                    @click="onSubmit">{{ $t('Submit') }}</fig-button>
+                <div>
+                    <fig-button
+                        type="submit"
+                        variant="primary"
+                        icon="lock"
+                        size="md"
+                        block
+                        @click="onSubmit">{{ $t('Sign in') }}</fig-button>
+                </div>
             </form>
         </fig-overlay>
+
     </div>
 </template>
-
-
-<style lang="scss" scoped>
-@import "~assets/css/components/_formRow.scss";
-</style>
