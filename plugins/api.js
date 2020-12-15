@@ -5,6 +5,7 @@ import Payments from '@/api/payments';
 import Products from '@/api/products';
 import ProductCollections from '@/api/product_collections';
 import ProductAccentMessages from '@/api/product_accent_messages';
+import ProductColorSwatches from '@/api/product_color_swatches';
 import ProductDataTables from '@/api/product_data_tables';
 import Shipping from '@/api/shipping';
 import Storage from '@/api/storage';
@@ -22,6 +23,7 @@ export default (context, inject) => {
         products: Products(context.$axios),
         productCollections: ProductCollections(context.$axios),
         productAccentMessages: ProductAccentMessages(context.$axios),
+        productColorSwatches: ProductColorSwatches(context.$axios),
         productDataTables: ProductDataTables(context.$axios),
         shipping: Shipping(context.$axios),
         storage: Storage(context.$axios),

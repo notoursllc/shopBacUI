@@ -144,11 +144,10 @@ export default {
 
                                 <fig-button
                                     slot="reference"
-                                    class="ml-2"
+                                    class="ml-4"
                                     variant="plain"
-                                    dotted>foo
-                                    <!-- <fig-icon slot="icon" icon="trash" width="18" height="18" /> -->
-                                </fig-button>
+                                    icon="trash"
+                                    dotted />
                             </pop-confirm>
                         </div>
                     </div>
@@ -159,9 +158,8 @@ export default {
         <div class="metaDataFooter">
             <fig-button
                 @click="addNewItem"
-                variant="plain">
-                <fig-icon icon="plus" width="18" height="18" />&nbsp;{{ $t('New item') }}
-            </fig-button>
+                variant="plain"
+                icon="plus">{{ $t('New item') }}</fig-button>
         </div>
     </div>
 </template>

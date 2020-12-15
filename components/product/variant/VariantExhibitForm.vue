@@ -5,6 +5,7 @@ import ImageManager from '@/components/product/ImageManager';
 import storage_mixin from '@/mixins/storage_mixin'; // TODO: not needed?
 import draggable from 'vuedraggable';
 import PopConfirm from '@/components/PopConfirm';
+import ColorSwatchInput from '@/components/product/ColorSwatchInput';
 
 import {
     FigButton,
@@ -23,6 +24,7 @@ export default {
         ImageManager,
         draggable,
         PopConfirm,
+        ColorSwatchInput,
         FigButton,
         FigFormInput,
         FigFormRadio,
@@ -139,6 +141,36 @@ export default {
                 swatch: '#000000'
             });
             this.emitInput();
+        },
+
+        onColorSwatchChange(index, data) {
+            this.$set(this.selectedColors[index], 'swatch', data.hex);
+            this.$set(this.selectedColors[index], 'label', data.label);
+        },
+
+        async onSaveSwatchToPreDefined(index) {
+            try {
+                const data = this.selectedColors[index];
+                const response = await this.$api.productColorSwatches.upsert({
+                    hex: data.swatch,
+                    label: data.label
+                });
+
+                if(!response) {
+                    throw new Error(this.$t('Error adding swatch'));
+                }
+
+                this.$successToast({
+                    title: this.$t('Success'),
+                    text: this.$t('Swatch added successfully: {hex}', {hex: data.swatch})
+                });
+            }
+            catch(e) {
+                this.$errorToast({
+                    title: this.$t('Error'),
+                    text: e.message
+                });
+            }
         }
     }
 };
@@ -148,7 +180,7 @@ export default {
 <template>
     <div>
         <div class="mb-5">
-            <div class="d-inline-block mr-3">
+            <div class="inline mr-3">
                 <fig-form-radio
                     v-model="exhibitType"
                     @input="emitInput"
@@ -156,7 +188,7 @@ export default {
                     checked-value="IMAGE">{{ $t('Images') }}</fig-form-radio>
             </div>
 
-            <div class="d-inline-block">
+            <div class="inline">
                 <fig-form-radio
                     v-model="exhibitType"
                     @input="emitInput"
@@ -177,6 +209,7 @@ export default {
 
         <!-- color swatches -->
         <div v-show="exhibitType === 'SWATCH'">
+            {{ selectedColors }}
             <fig-table-simple
                 striped
                 hover
@@ -207,9 +240,9 @@ export default {
 
                             <!-- color -->
                             <fig-td>
-                                <fig-form-input
-                                    type="color"
-                                    v-model="obj.swatch" />
+                                <color-swatch-input
+                                    :value="obj.swatch"
+                                    @input="(data) => onColorSwatchChange(index, data)" />
                             </fig-td>
 
                             <!-- label -->
@@ -222,17 +255,32 @@ export default {
 
                             <!-- actions -->
                             <fig-td class="text-center align-middle">
-                                <pop-confirm
-                                    @onConfirm="onDeleteColor(index)">
-                                    {{ $t('Delete this item?') }}
+                                <div class="flex items-center">
+                                    <pop-confirm
+                                        @onConfirm="onDeleteColor(index)">
+                                        {{ $t('Delete this item?') }}
 
-                                    <fig-button
-                                        slot="reference"
-                                        variant="plain"
-                                        dotted
-                                        class="ml-2"
-                                        icon="trash" />
-                                </pop-confirm>
+                                        <fig-button
+                                            slot="reference"
+                                            variant="plain"
+                                            dotted
+                                            class="ml-2"
+                                            icon="trash" />
+                                    </pop-confirm>
+
+                                    <pop-confirm
+                                        @onConfirm="onSaveSwatchToPreDefined(index)">
+                                        {{ $t('Save to your pre-defined color swatches?') }}
+
+                                        <fig-button
+                                            v-if="obj.label && obj.swatch"
+                                            slot="reference"
+                                            variant="plain"
+                                            dotted
+                                            class="ml-2"
+                                            icon="floppy" />
+                                    </pop-confirm>
+                                </div>
                             </fig-td>
                         </tr>
                     </template>

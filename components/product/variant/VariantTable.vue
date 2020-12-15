@@ -56,7 +56,7 @@ export default {
 
         modalTitle() {
             return isObject(this.variants[this.visibleColorIndex]) && this.variants[this.visibleColorIndex].label
-                ? this.$t('Edit color: _color_', {color: this.variants[this.visibleColorIndex].label})
+                ? this.$t('Edit color: {color}', {color: this.variants[this.visibleColorIndex].label})
                 : this.$t('Add a new Color');
         }
     },

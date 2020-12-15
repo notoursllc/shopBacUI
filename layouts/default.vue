@@ -144,6 +144,11 @@ export default {
                             :to="{ name: 'product-accent-messages-list' }"
                             tag="button"
                             class="nav-btn">{{ $t('Accent Messages') }}</nuxt-link>
+
+                        <nuxt-link
+                            :to="{ name: 'product-color-swatch-types' }"
+                            tag="button"
+                            class="nav-btn">{{ $t('Color swatches') }}</nuxt-link>
                     </div>
 
                     <nuxt-link
