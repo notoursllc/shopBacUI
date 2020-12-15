@@ -119,7 +119,8 @@ export default {
         },
 
         onUpsertDone(colorData) {
-            this.$set(this.variants, this.visibleColorIndex, colorData);
+            const variantsIndex = this.visibleColorIndex === null ? this.variants.length : this.visibleColorIndex;
+            this.$set(this.variants, variantsIndex, colorData);
             this.emitChange();
             this.hideModal();
         },
