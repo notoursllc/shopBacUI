@@ -206,7 +206,7 @@ export default Vue.extend({
 
         <!-- Organization -->
         <text-card class="mb-5">
-            <div slot="header">{{ $t('Organization') }}</div>
+            <div slot="header" class="brand-purple">{{ $t('Organization') }}</div>
 
             <div class="container mx-auto">
                 <fig-row sm="1/2" md="1/3" lg="1/4" xl="1/5" default="full" default-gap="1" sm-gap="2" key="org">
@@ -272,7 +272,7 @@ export default Vue.extend({
 
         <!-- Details -->
         <text-card class="mb-5">
-            <div slot="header">{{ $t('Details') }}</div>
+            <div slot="header" class="brand-purple">{{ $t('Details') }}</div>
 
             <div class="container mx-auto">
                 <fig-row sm="1/3" md="1/3" default="full" default-gap="1" sm-gap="2" key="details">
@@ -315,7 +315,7 @@ export default Vue.extend({
 
 
         <text-card class="mb-5">
-            <template v-slot:header>{{ $t('Colors') }}</template>
+            <div slot="header" class="brand-purple">{{ $t('Colors') }}</div>
 
             <div class="container mx-auto">
                 <variant-table
@@ -327,7 +327,7 @@ export default Vue.extend({
 
         <!-- SEO -->
         <text-card class="mb-5">
-            <div slot="header">{{ $t('Search engine listing') }}</div>
+            <div slot="header" class="brand-purple">{{ $t('Search engine listing') }}</div>
 
             <div class="container mx-auto">
                 <fig-row md="1/2" default="full" default-gap="1" sm-gap="2" key="seo">
@@ -389,7 +389,7 @@ export default Vue.extend({
 
         <!-- Metadata -->
         <text-card class="mb-5">
-            <div slot="header">{{ $t('Metadata') }}</div>
+            <div slot="header" class="brand-purple">{{ $t('Metadata') }}</div>
 
             <div class="container mx-auto">
                 <div class="pb-3">
