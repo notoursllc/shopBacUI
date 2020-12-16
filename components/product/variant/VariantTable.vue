@@ -3,6 +3,7 @@ import isObject from 'lodash.isobject';
 import draggable from 'vuedraggable';
 import PopConfirm from '@/components/PopConfirm';
 import VariantForm from '@/components/product/variant/VariantForm';
+import BooleanTag from '@/components/BooleanTag';
 import storage_mixin from '@/mixins/storage_mixin';
 import product_mixin from '@/mixins/product_mixin';
 
@@ -11,7 +12,8 @@ import {
     FigModal,
     FigTableSimple,
     FigTh,
-    FigTd
+    FigTd,
+    FigBadge
 } from '@notoursllc/figleaf';
 
 export default {
@@ -21,11 +23,13 @@ export default {
         draggable,
         PopConfirm,
         VariantForm,
+        BooleanTag,
         FigButton,
         FigModal,
         FigTableSimple,
         FigTh,
-        FigTd
+        FigTd,
+        FigBadge
     },
 
     mixins: [
@@ -58,6 +62,30 @@ export default {
             return isObject(this.variants[this.visibleColorIndex]) && this.variants[this.visibleColorIndex].label
                 ? this.$t('Edit color: {color}', {color: this.variants[this.visibleColorIndex].label})
                 : this.$t('Add a new Color');
+        },
+
+        /*
+        * This computed property is needed so the array of skus in each variant
+        * is reactive, allowing for the display of sizes for each variant
+        */
+        variantSizes() {
+            const allSizes = [];
+
+            this.variants.forEach((obj) => {
+                if(Array.isArray(obj.skus)) {
+                    const skuSizes = [];
+
+                    obj.skus.forEach((sku) => {
+                        if(sku.label) {
+                            skuSizes.push(sku.label);
+                        }
+                    });
+
+                    allSizes.push(skuSizes);
+                }
+            });
+
+            return allSizes;
         }
     },
 
@@ -149,11 +177,11 @@ export default {
             <template slot="head">
                 <tr>
                     <fig-th v-if="canShowGrabHandles" class="w-12"></fig-th>
-                    <fig-th sortable prop="published">{{ $t('Published') }}</fig-th>
                     <fig-th>{{ $t('Color name') }}</fig-th>
                     <fig-th sortable prop="base_price">{{ $t('Price') }}</fig-th>
                     <fig-th>{{ $t('Sizes') }}</fig-th>
                     <fig-th>{{ $t('Images') }}</fig-th>
+                    <fig-th sortable prop="published">{{ $t('Published') }}</fig-th>
                     <fig-th></fig-th>
                 </tr>
             </template>
@@ -172,11 +200,6 @@ export default {
                             class="handle cursor-grab" />
                     </fig-td>
 
-                    <!-- Published -->
-                    <fig-td>
-                        {{ color.published }}
-                    </fig-td>
-
                     <!-- Color name -->
                     <fig-td>
                         {{ color.label }}
@@ -189,7 +212,11 @@ export default {
 
                     <!-- Sizes -->
                     <fig-td>
-
+                        <span v-for="(label, labelIndex) in variantSizes[idx]" :key="labelIndex">
+                            <fig-badge
+                                variant="light"
+                                class="mr-1 mb-1">{{ label }}</fig-badge>
+                        </span>
                     </fig-td>
 
                     <!-- Images -->
@@ -203,6 +230,11 @@ export default {
                                 class="shadow"
                                 :class="{'featured-thumb': result.is_featured}"></figure>
                         </span> -->
+                    </fig-td>
+
+                    <!-- Published -->
+                    <fig-td>
+                        <boolean-tag :value="color.published" />
                     </fig-td>
 
                     <fig-td class="text-right">

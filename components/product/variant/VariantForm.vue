@@ -130,7 +130,7 @@ export default {
         },
 
         onSkusChange(skus) {
-            this.variant.skus = Array.isArray(skus) ? [...skus] : [];
+            this.$set(this.variant, 'skus', Array.isArray(skus) ? skus : []);
         }
     }
 };

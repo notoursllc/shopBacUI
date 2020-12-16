@@ -142,7 +142,6 @@ export default {
 
         <!-- color swatches -->
         <div v-show="exhibitType === 'SWATCH'">
-            {{ selectedColors }}
             <color-swatch-table
                 :value="selectedColors"
                 @input="onColorSwatchChange" />

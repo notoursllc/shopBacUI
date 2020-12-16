@@ -58,7 +58,7 @@ export default Vue.extend({
 
     data: function() {
         return {
-            sizes: [],
+            sizes: Array.isArray(this.value) ? this.value : [],
             showBulkEdit: false,
             showBulkEditInputs: {},
             bulkEdit: {},
@@ -71,24 +71,8 @@ export default Vue.extend({
     },
 
     watch: {
-        value: {
-            handler(newVal) {
-                if(Array.isArray(newVal)) {
-                    // mapping the value into a new array
-                    this.sizes = [
-                        ...newVal
-                    ];
-                }
-                else {
-                    this.sizes = [];
-                }
-            },
-            immediate: true
-        },
-
         sizes: {
             handler(newVal) {
-                console.log("SIZES CHANGE");
                 this.emitInput();
             },
             deep: true
@@ -153,7 +137,6 @@ export default Vue.extend({
                     this.$set(size, key, this.bulkEdit[key]);
                 });
             }
-
             this.toggleBulkEdit();
         },
 
