@@ -141,7 +141,7 @@ export default {
     <div>
         <!-- General info -->
         <text-card class="mb-5">
-            <template v-slot:header>{{ $t('Color info') }}</template>
+            <div slot="header" class="brand-purple">{{ $t('Color info') }}</div>
 
             <!-- published -->
             <div class="container mx-auto">
@@ -163,7 +163,7 @@ export default {
 
         <!-- Color expression -->
         <text-card class="mb-5">
-            <template v-slot:header>{{ $t('Display color using...') }}</template>
+            <div slot="header" class="brand-purple">{{ $t('Display color using...') }}</div>
 
             <div class="container mx-auto">
                 <variant-exhibit-form
@@ -175,7 +175,7 @@ export default {
 
         <!-- Sizes -->
         <text-card class="mb-5">
-            <template v-slot:header>{{ $t('Sizes') }}</template>
+            <div slot="header" class="brand-purple">{{ $t('Sizes') }}</div>
 
             <div class="container mx-auto">
                 <sku-manager
@@ -187,7 +187,7 @@ export default {
 
         <!-- pricing -->
         <text-card class="mb-5">
-            <template v-slot:header>{{ $t('Pricing') }}</template>
+            <div slot="header" class="brand-purple">{{ $t('Pricing') }}</div>
 
             <div class="container mx-auto">
                 <pricing-form
@@ -199,7 +199,7 @@ export default {
 
         <!-- accent message -->
         <text-card class="mb-5">
-            <template v-slot:header>{{ $t('Accent Message') }}</template>
+            <div slot="header" class="brand-purple">{{ $t('Accent Message') }}</div>
             <template v-slot:headerSub>{{ $t('accent_message_description') }}</template>
 
             <div class="container mx-auto">
@@ -212,7 +212,7 @@ export default {
 
         <!-- shipping -->
         <text-card class="mb-5">
-            <template v-slot:header>{{ $t('Shipping') }}</template>
+            <div slot="header" class="brand-purple">{{ $t('Shipping') }}</div>
 
             <div class="container mx-auto">
                 <!-- requires shipping -->
