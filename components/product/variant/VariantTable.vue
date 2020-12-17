@@ -4,6 +4,7 @@ import draggable from 'vuedraggable';
 import PopConfirm from '@/components/PopConfirm';
 import VariantForm from '@/components/product/variant/VariantForm';
 import BooleanTag from '@/components/BooleanTag';
+import ColorSwatch from '@/components/product/colorSwatch/ColorSwatch';
 import storage_mixin from '@/mixins/storage_mixin';
 import product_mixin from '@/mixins/product_mixin';
 
@@ -24,6 +25,7 @@ export default {
         PopConfirm,
         VariantForm,
         BooleanTag,
+        ColorSwatch,
         FigButton,
         FigModal,
         FigTableSimple,
@@ -86,6 +88,49 @@ export default {
             });
 
             return allSizes;
+        },
+
+        variantColors() {
+            const all = [];
+
+            this.variants.forEach((obj) => {
+                if(Array.isArray(obj.exhibits)) {
+                    const swatches = [];
+
+                    obj.exhibits.forEach((obj) => {
+                        if(obj.swatch) {
+                            swatches.push(obj);
+                        }
+                    });
+
+                    all.push(swatches);
+                }
+            });
+
+            return all;
+        },
+
+        variantImages() {
+            const all = [];
+
+            this.variants.forEach((obj) => {
+                if(Array.isArray(obj.exhibits)) {
+                    const images = [];
+
+                    obj.exhibits.forEach((obj) => {
+                        if(obj.media) {
+                            images.push({
+                                url: obj.media.url,
+                                alt_text: obj.alt_text
+                            });
+                        }
+                    });
+
+                    all.push(images);
+                }
+            });
+
+            return all;
         }
     },
 
@@ -180,7 +225,7 @@ export default {
                     <fig-th>{{ $t('Color name') }}</fig-th>
                     <fig-th sortable prop="base_price">{{ $t('Price') }}</fig-th>
                     <fig-th>{{ $t('Sizes') }}</fig-th>
-                    <fig-th>{{ $t('Images') }}</fig-th>
+                    <fig-th>{{ $t('Images / Colors') }}</fig-th>
                     <fig-th sortable prop="published">{{ $t('Published') }}</fig-th>
                     <fig-th></fig-th>
                 </tr>
@@ -219,17 +264,33 @@ export default {
                         </span>
                     </fig-td>
 
-                    <!-- Images -->
+                    <!-- Images / color swatches -->
                     <fig-td>
-                        <!-- <span
-                            v-for="(result, index) in getVariantThumbs(color)"
-                            :key="index"
-                            class="variant-thumb">
-                            <figure
-                                :style="`background-image:url(${result.url});`"
-                                class="shadow"
-                                :class="{'featured-thumb': result.is_featured}"></figure>
-                        </span> -->
+                        <div class="flex items-center">
+                            <!-- swatches -->
+                            <div
+                                v-for="(obj, objIndex) in variantColors[idx]"
+                                :key="objIndex"
+                                class="mr-2">
+                                <color-swatch
+                                    :hex="obj.swatch"
+                                    :label="obj.label"
+                                    size="md"
+                                    class="align-bottom"
+                                    tooltip />
+                            </div>
+
+                            <!-- images -->
+                            <div
+                                v-for="(obj, objIndex) in variantImages[idx]"
+                                :key="objIndex"
+                                class="mr-2">
+                                <figure
+                                    :style="`background-image:url(${obj.url});`"
+                                    class="shadow variant-thumb"
+                                    :class="{'featured-thumb': objIndex === 0}"></figure>
+                            </div>
+                        </div>
                     </fig-td>
 
                     <!-- Published -->
@@ -243,7 +304,7 @@ export default {
                             class="mr-1"
                             @click="showModal(idx)">{{ $t('Edit') }}</fig-button>
 
-                        <pop-confirm @onConfirm="deleteVariant(idx)">
+                        <pop-confirm @onConfirm="deleteVariant(idx)" class="align-bottom">
                             {{ $t('Delete this row?') }}
 
                             <fig-button
@@ -281,3 +342,12 @@ export default {
 
     </div>
 </template>
+
+
+<style scoped>
+.variant-thumb {
+    width: 40px;
+    height: 40px;
+    @apply bg-cover bg-no-repeat;
+}
+</style>

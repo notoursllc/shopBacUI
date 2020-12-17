@@ -90,7 +90,7 @@ export default {
 
         <div class="h-full">
             <aside
-                class="sidenav fixed m-0 left-0 top-0 h-full p-2 overflow-y-auto z-10 duration-500 text-gray-600 bg-gray-100 border-r border-gray-200 font-semibold"
+                class="sidenav shadow fixed m-0 left-0 top-0 h-full p-2 overflow-y-auto z-10 duration-500 text-gray-600 bg-white font-semibold"
                 :class="{'sidenav-fixed': $store.state.ui.sidebarOpened}">
                 <div class="flex items-center justify-center">
                     <fig-victory-icon :width="60" :height="40" fill="#434190" />
@@ -176,7 +176,7 @@ export default {
 
         <header
             role="banner"
-            class="header flex flex-row flex-nowrap w-full px-6 py-3 bg-gray-100 relative text-gray-700 border-b border-gray-200"
+            class="header flex flex-row flex-nowrap w-full px-6 py-3 bg-white relative text-gray-700 border-b border-gray-200"
             :class="{'sidenav-opened': $store.state.ui.sidebarOpened}">
             <fig-button
                 v-if="!$store.state.ui.sidebarOpened"

@@ -57,7 +57,7 @@ export default {
     head: {
         htmlAttrs: {
             lang: 'en',
-            class: 'text-gray-600 bg-gray-50 h-full p-0 m-0 overflow-x-hidden overflow-y-scroll'
+            class: 'text-gray-600 h-full p-0 m-0 overflow-x-hidden overflow-y-scroll'
         },
         title: process.env.npm_package_name || '',
         meta: [
@@ -69,7 +69,7 @@ export default {
             { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
         ],
         bodyAttrs: {
-            class: 'bg-gray-50 h-full p-0 m-0 font-normal'
+            class: 'h-full p-0 m-0 font-normal'
         }
     },
 
