@@ -5,6 +5,7 @@ import PopConfirm from '@/components/PopConfirm';
 import VariantForm from '@/components/product/variant/VariantForm';
 import BooleanTag from '@/components/BooleanTag';
 import ColorSwatch from '@/components/product/colorSwatch/ColorSwatch';
+import Money from '@/components/Money';
 import storage_mixin from '@/mixins/storage_mixin';
 import product_mixin from '@/mixins/product_mixin';
 
@@ -26,6 +27,7 @@ export default {
         VariantForm,
         BooleanTag,
         ColorSwatch,
+        Money,
         FigButton,
         FigModal,
         FigTableSimple,
@@ -252,7 +254,7 @@ export default {
 
                     <!-- Price -->
                     <fig-td>
-                        {{ color.base_price }}
+                        <money :cents="color.base_price" />
                     </fig-td>
 
                     <!-- Sizes -->

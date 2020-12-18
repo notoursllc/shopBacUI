@@ -4,11 +4,20 @@ import Vue from 'vue';
 export default Vue.extend({
     name: 'Money',
 
-    props: ['cents'],
+    props: {
+        cents: {
+            type: [String, Number],
+            default: 0
+        }
+    },
 
     computed: {
         dinero: function() {
-            return this.cents ? parseInt(this.cents, 10)/100 : 0;
+            const val = parseInt(this.cents, 10);
+            if(!isNaN(val) && val > 0) {
+                return val/100;
+            }
+            return 0;
         }
     }
 });
