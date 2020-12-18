@@ -90,10 +90,10 @@ export default {
 
         <div class="h-full">
             <aside
-                class="sidenav shadow fixed m-0 left-0 top-0 h-full p-2 overflow-y-auto z-10 duration-500 text-gray-600 bg-white font-semibold"
+                class="sidenav border-r border-white fixed m-0 left-0 top-0 h-full p-2 overflow-y-auto z-10 duration-500 text-gray-50 bg-gray-500 font-semibold"
                 :class="{'sidenav-fixed': $store.state.ui.sidebarOpened}">
                 <div class="flex items-center justify-center">
-                    <fig-victory-icon :width="60" :height="40" fill="#434190" />
+                    <fig-victory-icon :width="60" :height="40" fill="#fff" />
                 </div>
 
                 <div class="pt-3">
@@ -101,7 +101,7 @@ export default {
                         :to="{ name: 'product-list' }"
                         tag="button"
                         class="nav-btn font-bold">
-                        <fig-icon icon="triangle-square-circle" :width="22" :height="22" :stroke-width="1" />{{ $t('Products') }}
+                        <fig-icon icon="triangle-square-circle" :width="22" :height="22" :stroke-width="1" stroke="#000" />{{ $t('Products') }}
                     </nuxt-link>
 
                     <div class="pl-3">
@@ -155,7 +155,7 @@ export default {
                         :to="{ name: 'order-list' }"
                         tag="button"
                         class="nav-btn font-bold">
-                        <fig-icon icon="credit-card" :width="22" :height="22" :stroke-width="1" />{{ $t('Payments') }}
+                        <fig-icon icon="credit-card" :width="22" :height="22" :stroke-width="1" stroke="#000" />{{ $t('Payments') }}
                     </nuxt-link>
 
 
@@ -163,7 +163,7 @@ export default {
                         :to="{ name: 'reports' }"
                         tag="button"
                         class="nav-btn font-bold">
-                        <fig-icon icon="chart-bar" :width="22" :height="22" :stroke-width="1" />{{ $t('Reports') }}
+                        <fig-icon icon="chart-bar" :width="22" :height="22" :stroke-width="1" stroke="#000" />{{ $t('Reports') }}
                     </nuxt-link>
                 </div>
             </aside>
@@ -204,7 +204,7 @@ export default {
         </header>
 
         <main :class="{'sidenav-opened': $store.state.ui.sidebarOpened}">
-            <div class="p-5 pb-24">
+            <div class="pt-5 lg:px-10 md:px-6 sm:px-4 pb-24">
                 <nuxt />
             </div>
         </main>
@@ -213,7 +213,7 @@ export default {
 
 <style lang="postcss">
 .nav-btn {
-    @apply text-sm px-3 py-2 rounded-sm w-full text-left flex flex-row items-center;
+    @apply text-sm px-3 py-2 rounded-md w-full text-left flex flex-row items-center;
 }
 .nav-btn > svg {
     @apply mr-1;
@@ -224,8 +224,7 @@ export default {
 
 .nav-btn.nuxt-link-active,
 .nav-btn.nuxt-link-exact-active {
-  @apply text-indigo-800;
-  background: #e6e0ee;
+  @apply text-white bg-pink-700 shadow-inner;
 }
 </style>
 
