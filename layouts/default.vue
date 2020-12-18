@@ -98,10 +98,10 @@ export default {
 
                 <div class="pt-3">
                     <nuxt-link
-                        :to="{ name: 'product-list' }"
+                        :to="{ name: 'product' }"
                         tag="button"
                         class="nav-btn font-bold">
-                        <fig-icon icon="triangle-square-circle" :width="22" :height="22" :stroke-width="1" stroke="#000" />{{ $t('Products') }}
+                        <fig-icon icon="triangle-square-circle" :width="22" :height="22" :stroke-width="1" stroke="#fff" />{{ $t('Products') }}
                     </nuxt-link>
 
                     <div class="pl-3">
@@ -155,7 +155,7 @@ export default {
                         :to="{ name: 'order-list' }"
                         tag="button"
                         class="nav-btn font-bold">
-                        <fig-icon icon="credit-card" :width="22" :height="22" :stroke-width="1" stroke="#000" />{{ $t('Payments') }}
+                        <fig-icon icon="credit-card" :width="22" :height="22" :stroke-width="1" stroke="#fff" />{{ $t('Payments') }}
                     </nuxt-link>
 
 
@@ -163,7 +163,7 @@ export default {
                         :to="{ name: 'reports' }"
                         tag="button"
                         class="nav-btn font-bold">
-                        <fig-icon icon="chart-bar" :width="22" :height="22" :stroke-width="1" stroke="#000" />{{ $t('Reports') }}
+                        <fig-icon icon="chart-bar" :width="22" :height="22" :stroke-width="1" stroke="#fff" />{{ $t('Reports') }}
                     </nuxt-link>
                 </div>
             </aside>

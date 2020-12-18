@@ -38,7 +38,7 @@ export default {
                 this.$store.dispatch('ui/login');
 
                 this.$router.push({
-                    name: 'product-list'
+                    name: 'product'
                 });
             }
             catch(e) {
