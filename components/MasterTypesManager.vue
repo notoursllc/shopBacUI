@@ -1,4 +1,5 @@
 <script>
+import draggable from 'vuedraggable';
 import isObject from 'lodash.isobject';
 import slugify from 'slugify';
 
@@ -15,11 +16,13 @@ import {
     FigModal,
     FigTableSimple,
     FigTh,
-    FigTd
+    FigTd,
+    FigOverlay
 } from '@notoursllc/figleaf';
 
 export default {
     components: {
+        draggable,
         OperationsDropdown,
         BooleanTag,
         MetaDataBuilder,
@@ -31,7 +34,8 @@ export default {
         FigModal,
         FigTableSimple,
         FigTh,
-        FigTd
+        FigTd,
+        FigOverlay
     },
 
     props: {
@@ -51,7 +55,9 @@ export default {
                 metadata: null
             },
             formHasMetaData: false,
-            types: []
+            types: [],
+            updatingSortOrder: false,
+            loading: false
         };
     },
 
@@ -76,6 +82,15 @@ export default {
 
     methods: {
         async fetchTypes(paramsObj) {
+            this.loading = true;
+
+            if(!isObject(paramsObj)) {
+                paramsObj = {};
+            }
+
+            paramsObj.sortBy = paramsObj.sortBy || 'ordinal';
+            paramsObj.sortDesc = paramsObj.hasOwnProperty('sortDesc') ? paramsObj.sortDesc : false;
+
             try {
                 this.types = await this.$api.masterTypes.list({
                     where: ['object', '=', this.object],
@@ -92,6 +107,8 @@ export default {
                     text: e.message
                 });
             }
+
+            this.loading = false;
         },
 
         sortChanged(val) {
@@ -218,6 +235,43 @@ export default {
 
         onUseSlugSuggestion() {
             this.form.slug = this.slugIdea;
+        },
+
+        setOrdinals() {
+            this.updatingSortOrder = true;
+
+            this.types.forEach((obj, index) => {
+                obj.ordinal = index;
+            });
+        },
+
+        async saveOrdinals() {
+            this.loading = true;
+
+            try {
+                await this.$api.masterTypes.ordinals({
+                    ordinals: this.types.map(
+                        (obj) => {
+                            return { id: obj.id, ordinal: obj.ordinal };
+                        }
+                    )
+                });
+
+                this.updatingSortOrder = false;
+
+                this.$successToast({
+                    title: this.$t('Success'),
+                    text: this.$t('Sort order updated')
+                });
+            }
+            catch(e) {
+                this.$errorToast({
+                    title: this.$t('Error'),
+                    text: e.message
+                });
+            }
+
+            this.loading = false;
         }
     }
 };
@@ -228,38 +282,68 @@ export default {
     <div>
         <fig-button-fab icon="plus" @click="onUpsertClick()" />
 
+        <div
+            v-if="updatingSortOrder"
+            class="mb-4">
+            <fig-button
+                variant="primary"
+                size="sm"
+                @click="saveOrdinals"
+                :disabled="loading">{{ $t('Save sorting changes') }}</fig-button>
+        </div>
 
-        <fig-table-simple
-            striped
-            hover
-            @sort="sortChanged">
-            <template slot="head">
-                <tr>
-                    <fig-th sortable prop="name">{{ $t('Name') }}</fig-th>
-                    <fig-th sortable prop="slug">{{ $t('Slug') }}</fig-th>
-                    <fig-th sortable prop="published">{{ $t('Published') }}</fig-th>
-                </tr>
-            </template>
+        <fig-overlay :show="loading">
+            <fig-table-simple
+                striped
+                hover
+                @sort="sortChanged">
+                <template slot="head">
+                    <tr>
+                        <fig-th v-if="types.length > 1" class="handle-cell"></fig-th>
+                        <fig-th sortable prop="name">{{ $t('Name') }}</fig-th>
+                        <fig-th sortable prop="slug">{{ $t('Slug') }}</fig-th>
+                        <fig-th sortable prop="published">{{ $t('Published') }}</fig-th>
+                    </tr>
+                </template>
 
-            <tr v-for="(type, idx) in types" :key="idx">
-                <fig-td>
-                    {{ type.name }}
-                    <operations-dropdown
-                        :show-view="false"
-                        @edit="onUpsertClick(type)"
-                        @delete="onDeleteClick(type)"
-                        class="ml-1" />
-                </fig-td>
+                <draggable
+                    v-model="types"
+                    ghost-class="ghost"
+                    handle=".handle"
+                    @update="setOrdinals"
+                    tag="tbody">
 
-                <fig-td>
-                    {{ type.slug }}
-                </fig-td>
+                    <tr
+                        v-for="(type, idx) in types"
+                        :key="idx">
+                        <!-- handle -->
+                        <fig-td v-if="types.length > 1" class="align-middle">
+                            <i class="handle">
+                                <fig-icon icon="dots-vertical-double" />
+                            </i>
+                        </fig-td>
 
-                <fig-td>
-                    <boolean-tag :value="type.published" />
-                </fig-td>
-            </tr>
-        </fig-table-simple>
+                        <fig-td>
+                            {{ type.name }}
+                            <operations-dropdown
+                                :show-view="false"
+                                @edit="onUpsertClick(type)"
+                                @delete="onDeleteClick(type)"
+                                class="ml-1" />
+                        </fig-td>
+
+                        <fig-td>
+                            {{ type.slug }}
+                        </fig-td>
+
+                        <fig-td>
+                            <boolean-tag :value="type.published" />
+                        </fig-td>
+                    </tr>
+
+                </draggable>
+            </fig-table-simple>
+        </fig-overlay>
 
 
         <fig-modal
@@ -344,7 +428,6 @@ export default {
 </template>
 
 <style lang="scss">
-@import "~assets/css/components/_table.scss";
 @import "~assets/css/components/_formRow.scss";
 
 .formContainer {
@@ -357,5 +440,12 @@ export default {
     .formRow > span {
         width: 100%;
     }
+}
+
+.handle-cell {
+    width: 30px;
+}
+.handle {
+    cursor: grab;
 }
 </style>

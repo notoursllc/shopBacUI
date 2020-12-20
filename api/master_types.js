@@ -33,6 +33,12 @@ export default ($http) => ({
     },
 
 
+    async ordinals(data) {
+        const response = await $http.$put('/master_types/ordinal', data);
+        return response.data;
+    },
+
+
     async delete(id) {
         const response = await $http.$delete('/master_type', {
             params: {
