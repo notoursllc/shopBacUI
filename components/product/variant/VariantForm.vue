@@ -7,6 +7,7 @@ import ImageManager from '@/components/product/ImageManager';
 import ColorSwatchTable from '@/components/product/colorSwatch/ColorSwatchTable';
 import AccentMessageWizard from '@/components/product/accentMessage/AccentMessageWizard';
 import SkuManager from '@/components/product/size/SkuManager';
+import MasterTypeSelect from '@/components/MasterTypeSelect';
 
 import {
     FigButton,
@@ -14,7 +15,9 @@ import {
     FigFormInput,
     FigFormGroup,
     FigFormInputNumber,
-    FigFormSelectCountry
+    FigFormSelectCountry,
+    FigCol,
+    FigRow
 } from '@notoursllc/figleaf';
 
 
@@ -28,12 +31,15 @@ export default {
         ColorSwatchTable,
         AccentMessageWizard,
         SkuManager,
+        MasterTypeSelect,
         FigButton,
         FigFormCheckbox,
         FigFormInput,
         FigFormGroup,
         FigFormInputNumber,
-        FigFormSelectCountry
+        FigFormSelectCountry,
+        FigCol,
+        FigRow
     },
 
     mixins: [
@@ -150,13 +156,30 @@ export default {
                         v-model="variant.published">{{ $t('Published') }}</fig-form-checkbox>
                 </div>
 
-                <!-- color name -->
-                <fig-form-group>
-                    <label slot="label" for="variant_name">{{ $t('Color name') }}</label>
-                    <fig-form-input
-                        v-model="variant.label"
-                        id="variant_name" />
-                </fig-form-group>
+                <fig-row sm="1/2" md="1/3" lg="1/4" xl="1/5" default="full" default-gap="1" sm-gap="2" key="org">
+
+                    <!-- color name -->
+                    <fig-col>
+                        <fig-form-group>
+                            <label slot="label" for="variant_name">{{ $t('Color name') }}</label>
+                            <fig-form-input
+                                v-model="variant.label"
+                                id="variant_name" />
+                        </fig-form-group>
+                    </fig-col>
+
+                    <!-- basic color type -->
+                    <fig-col>
+                        <fig-form-group class="mb-2">
+                            <label slot="label" for="product_basic_color_type">{{ $t('Basic color') }}</label>
+                            <master-type-select
+                                v-model="variant.basic_color_type"
+                                object="product_basic_color_type"
+                                id="product_basic_color_type" />
+                            <template slot="description">{{ $t('Used for product searches') }}</template>
+                        </fig-form-group>
+                    </fig-col>
+                </fig-row>
             </div>
         </text-card>
 

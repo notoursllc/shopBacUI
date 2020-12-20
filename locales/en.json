@@ -44,6 +44,7 @@
     "Attributes": "Attributes",
 
     "Barcode": "Barcode",
+    "Basic color": "Basic color",
     "Basic color types": "Basic color types",
     "Billing address": "Billing address",
     "Bulk edit": "Bulk edit",
@@ -440,6 +441,7 @@
     "Use of Cookies": "Use of Cookies",
     "Use pre-defined": "Use pre-defined",
     "use this": "use this",
+    "Used for product searches": "Used for product searches",
     "Used to calculate shipping rates at checkout and label prices during fulfillment.": "Used to calculate shipping rates at checkout and label prices during fulfillment.",
     "Using color value": "Using color value",
 
