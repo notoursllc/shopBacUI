@@ -54,6 +54,7 @@ module.exports = {
     'no-multiple-empty-lines': OFF,
     'no-new-object': ERROR,
     'no-plusplus': OFF,
+    'no-prototype-builtins': OFF,
     'no-spaced-func': ERROR,
     'no-ternary': OFF,
     'no-undefined': OFF,
