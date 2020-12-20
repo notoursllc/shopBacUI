@@ -232,17 +232,6 @@ export default Vue.extend({
                         </fig-form-group>
                     </fig-col>
 
-                    <!-- fit type -->
-                    <fig-col>
-                        <fig-form-group class="mb-2">
-                            <label slot="label" for="product_fit_type">{{ $t('Fit type') }}</label>
-                            <master-type-select
-                                v-model="product.fit_type"
-                                object="product_fit_type"
-                                id="product_fit_type" />
-                        </fig-form-group>
-                    </fig-col>
-
                     <!-- sales channel -->
                     <fig-col>
                         <fig-form-group class="mb-2">
@@ -263,6 +252,60 @@ export default Vue.extend({
                                 object="product_vendor_type"
                                 :multiple="false"
                                 id="product_vendor_type" />
+                        </fig-form-group>
+                    </fig-col>
+                </fig-row>
+            </div>
+        </text-card>
+
+
+        <!-- Style attributes -->
+        <text-card class="mb-5">
+            <div slot="header">{{ $t('Style') }}</div>
+
+            <div class="container mx-auto">
+                <fig-row sm="1/2" md="1/3" lg="1/4" xl="1/5" default="full" default-gap="1" sm-gap="2" key="org">
+                    <!-- gender -->
+                    <fig-col>
+                        <fig-form-group class="mb-2">
+                            <label slot="label" for="product_gender_type">{{ $t('Gender') }}</label>
+                            <master-type-select
+                                v-model="product.gender_type"
+                                object="product_gender_type"
+                                id="product_gender_type" />
+                        </fig-form-group>
+                    </fig-col>
+
+                    <!-- fit -->
+                    <fig-col>
+                        <fig-form-group class="mb-2">
+                            <label slot="label" for="product_fit_type">{{ $t('Fit') }}</label>
+                            <master-type-select
+                                v-model="product.fit_type"
+                                object="product_fit_type"
+                                id="product_fit_type" />
+                        </fig-form-group>
+                    </fig-col>
+
+                    <!-- sleeve -->
+                    <fig-col>
+                        <fig-form-group class="mb-2">
+                            <label slot="label" for="product_sleeve_length_type">{{ $t('Sleeve') }}</label>
+                            <master-type-select
+                                v-model="product.sleeve_length_type"
+                                object="product_sleeve_length_type"
+                                id="product_sleeve_length_type" />
+                        </fig-form-group>
+                    </fig-col>
+
+                    <!-- feature -->
+                    <fig-col>
+                        <fig-form-group class="mb-2">
+                            <label slot="label" for="product_feature_type">{{ $t('Feature') }}</label>
+                            <master-type-select
+                                v-model="product.feature_type"
+                                object="product_feature_type"
+                                id="product_feature_type" />
                         </fig-form-group>
                     </fig-col>
                 </fig-row>
@@ -375,14 +418,15 @@ export default Vue.extend({
                         </fig-form-group>
                     </fig-col>
                 </fig-row>
-            </div>
 
-            <div class="py-5" v-show="product.seo_page_title">
-                <div class="text-xs text-gray-700 mb-1">{{ $t('Preview') }}:</div>
-                <seo-preview
-                    :title="product.seo_page_title"
-                    :description="product.seo_page_desc"
-                    :uri="product.seo_uri" />
+
+                <div class="py-5" v-show="product.seo_page_title">
+                    <div class="text-xs text-gray-700 mb-1">{{ $t('Preview') }}:</div>
+                    <seo-preview
+                        :title="product.seo_page_title"
+                        :description="product.seo_page_desc"
+                        :uri="product.seo_uri" />
+                </div>
             </div>
         </text-card>
 

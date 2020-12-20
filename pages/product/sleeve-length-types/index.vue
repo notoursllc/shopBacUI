@@ -5,12 +5,12 @@ export default {
     },
 
     created() {
-        this.$store.dispatch('ui/title', this.$t('Fit types'));
+        this.$store.dispatch('ui/title', this.$t('Sleeve length types'));
     }
 };
 </script>
 
 
 <template>
-    <master-types-manager object="product_fit_type" />
+    <master-types-manager object="product_sleeve_length_type" />
 </template>

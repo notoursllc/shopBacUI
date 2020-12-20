@@ -1,3 +1,4 @@
+
 <script>
 export default {
     components: {
@@ -5,12 +6,12 @@ export default {
     },
 
     created() {
-        this.$store.dispatch('ui/title', this.$t('Fit types'));
+        this.$store.dispatch('ui/title', this.$t('Feature types'));
     }
 };
 </script>
 
 
 <template>
-    <master-types-manager object="product_fit_type" />
+    <master-types-manager object="product_feature_type" />
 </template>

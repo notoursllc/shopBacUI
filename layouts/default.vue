@@ -116,11 +116,6 @@ export default {
                             class="nav-btn">{{ $t('Sub-Types') }}</nuxt-link>
 
                         <nuxt-link
-                            :to="{ name: 'product-fit-types' }"
-                            tag="button"
-                            class="nav-btn">{{ $t('Fit Types') }}</nuxt-link>
-
-                        <nuxt-link
                             :to="{ name: 'product-sales-channel-types' }"
                             tag="button"
                             class="nav-btn">{{ $t('Sales Channels') }}</nuxt-link>
@@ -134,6 +129,31 @@ export default {
                             :to="{ name: 'product-collections' }"
                             tag="button"
                             class="nav-btn">{{ $t('Collections') }}</nuxt-link>
+
+                        <nuxt-link
+                            :to="{ name: 'product-gender-types' }"
+                            tag="button"
+                            class="nav-btn">{{ $t('Gender Types') }}</nuxt-link>
+
+                        <nuxt-link
+                            :to="{ name: 'product-basic-color-types' }"
+                            tag="button"
+                            class="nav-btn">{{ $t('Basic color types') }}</nuxt-link>
+
+                        <nuxt-link
+                            :to="{ name: 'product-feature-types' }"
+                            tag="button"
+                            class="nav-btn">{{ $t('Feature types') }}</nuxt-link>
+
+                        <nuxt-link
+                            :to="{ name: 'product-fit-types' }"
+                            tag="button"
+                            class="nav-btn">{{ $t('Fit types') }}</nuxt-link>
+
+                        <nuxt-link
+                            :to="{ name: 'product-sleeve-length-types' }"
+                            tag="button"
+                            class="nav-btn">{{ $t('Sleeve length types') }}</nuxt-link>
 
                         <nuxt-link
                             :to="{ name: 'product-datatables-list' }"

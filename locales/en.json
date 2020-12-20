@@ -44,6 +44,7 @@
     "Attributes": "Attributes",
 
     "Barcode": "Barcode",
+    "Basic color types": "Basic color types",
     "Billing address": "Billing address",
     "Bulk edit": "Bulk edit",
     "Buttons": "Buttons",
@@ -157,6 +158,8 @@
     "Expand all": "Expand all",
     "Expiration date": "Expiration date",
 
+    "Feature": "Feature",
+    "Feature types": "Feature types",
     "Featured images": "Featured images",
     "Fit type": "Fit type",
     "footer_cart_secure": "Our cart is protected by 256-bit encrypted connection and we never store your card details.",
@@ -165,12 +168,12 @@
     "Finding your security code": "Finding your security code",
     "FIRST NAME": "FIRST NAME",
     "First name": "First name",
-    "Fit Types": "Fit Types",
-    "FIT_TYPE_BOYS": "Boys",
-    "FIT_TYPE_GIRLS": "Girls",
-    "FIT_TYPE_MENS": "Mens",
-    "FIT_TYPE_WOMENS": "Womens",
+    "Fit": "Fit",
+    "Fit types": "Fit types",
 
+
+    "Gender": "Gender",
+    "Gender Types": "Gender Types",
     "General Info": "General Info",
 
     "HATS": "HATS",
@@ -382,6 +385,7 @@
     "accent_message_begin_desc": "The accent message will be displayed on this date",
     "accent_message_end_desc": "The accent message will be hidden on this date",
     "Sleeve": "Sleeve",
+    "Sleeve length types": "Sleeve length types",
     "Sleeve measurement": "Sleeve measurement",
     "sleeve_measurement_description": "The sleeve length is measured from the shoulder seam to the end of the sleeve.",
     "Slug": "Slug",
@@ -391,6 +395,7 @@
     "State/Province/Region": "State/Province/Region",
     "Stay in checkout": "Stay in checkout",
     "STREET ADDRESS": "STREET ADDRESS",
+    "Style": "Style",
     "Sub Type": "Sub Type",
     "Sub-Types": "Sub-Types",
     "Submit": "Submit",

@@ -5,12 +5,12 @@ export default {
     },
 
     created() {
-        this.$store.dispatch('ui/title', this.$t('Fit types'));
+        this.$store.dispatch('ui/title', this.$t('Gender Types'));
     }
 };
 </script>
 
 
 <template>
-    <master-types-manager object="product_fit_type" />
+    <master-types-manager object="product_gender_type" />
 </template>
