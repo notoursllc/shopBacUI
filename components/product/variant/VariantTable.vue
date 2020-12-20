@@ -92,14 +92,14 @@ export default {
             return allSizes;
         },
 
-        variantColors() {
+        variantSwatches() {
             const all = [];
 
             this.variants.forEach((obj) => {
-                if(Array.isArray(obj.exhibits)) {
+                if(Array.isArray(obj.swatches)) {
                     const swatches = [];
 
-                    obj.exhibits.forEach((obj) => {
+                    obj.swatches.forEach((obj) => {
                         if(obj.swatch) {
                             swatches.push(obj);
                         }
@@ -116,10 +116,10 @@ export default {
             const all = [];
 
             this.variants.forEach((obj) => {
-                if(Array.isArray(obj.exhibits)) {
+                if(Array.isArray(obj.images)) {
                     const images = [];
 
-                    obj.exhibits.forEach((obj) => {
+                    obj.images.forEach((obj) => {
                         if(obj.media) {
                             images.push({
                                 url: obj.media.url,
@@ -227,7 +227,8 @@ export default {
                     <fig-th>{{ $t('Color name') }}</fig-th>
                     <fig-th sortable prop="base_price">{{ $t('Price') }}</fig-th>
                     <fig-th>{{ $t('Sizes') }}</fig-th>
-                    <fig-th>{{ $t('Images / Colors') }}</fig-th>
+                    <fig-th>{{ $t('Images') }}</fig-th>
+                    <fig-th>{{ $t('Swatch') }}</fig-th>
                     <fig-th sortable prop="published">{{ $t('Published') }}</fig-th>
                     <fig-th></fig-th>
                 </tr>
@@ -266,22 +267,9 @@ export default {
                         </span>
                     </fig-td>
 
-                    <!-- Images / color swatches -->
+                    <!-- Images -->
                     <fig-td>
                         <div class="flex items-center">
-                            <!-- swatches -->
-                            <div
-                                v-for="(obj, objIndex) in variantColors[idx]"
-                                :key="objIndex"
-                                class="mr-2">
-                                <color-swatch
-                                    :hex="obj.swatch"
-                                    :label="obj.label"
-                                    size="md"
-                                    class="align-bottom"
-                                    tooltip />
-                            </div>
-
                             <!-- images -->
                             <div
                                 v-for="(obj, objIndex) in variantImages[idx]"
@@ -293,6 +281,13 @@ export default {
                                     :class="{'featured-thumb': objIndex === 0}"></figure>
                             </div>
                         </div>
+                    </fig-td>
+
+                    <!-- Swatch -->
+                    <fig-td class="text-center">
+                        <color-swatch
+                            :swatches="variantSwatches[idx]"
+                            tooltip />
                     </fig-td>
 
                     <!-- Published -->

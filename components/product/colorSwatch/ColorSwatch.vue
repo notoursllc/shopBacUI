@@ -1,6 +1,5 @@
 <script>
 import Vue from 'vue';
-import { colorLuminance } from '@/utils/common';
 
 import {
     FigTooltip
@@ -14,14 +13,11 @@ export default Vue.extend({
     },
 
     props: {
-        hex: {
-            type: String,
-            required: true
-        },
-
-        label: {
-            type: String,
-            default: ''
+        swatches: {
+            type: Array,
+            default: () => {
+                return [];
+            }
         },
 
         size: {
@@ -38,21 +34,43 @@ export default Vue.extend({
         }
     },
 
-    data: function() {
-        return {
-
-        };
-    },
-
     computed: {
         classNames() {
-            const classes = ['rounded-full'];
+            const classes = [
+                'rounded-full',
+                'inline-block'
+            ];
 
             classes.push(
                 `swatch-${this.size}`
             );
 
             return classes;
+        },
+
+        bgStyle() {
+            const style = [];
+
+            const numSwatches = this.swatches.length;
+
+            if(numSwatches) {
+                style.push(
+                    'background: linear-gradient(90deg'
+                );
+
+                const basePercentage = Math.floor(100 / numSwatches);
+
+                this.swatches.forEach((obj, index) => {
+                    const endPercent = basePercentage * (index + 1);
+
+                    style.push(
+                        `${obj.swatch} ${basePercentage * index}%`,
+                        `${obj.swatch} ${endPercent === 99 ? 100 : endPercent}%`
+                    );
+                });
+            }
+
+            return style.join(',');
         }
     },
 
@@ -61,13 +79,25 @@ export default Vue.extend({
             'div',
             {
                 class: this.classNames,
-                style: `background:${this.hex}`
+                style: this.bgStyle
             },
             []
         );
 
 
         if(this.tooltip) {
+            const ttContent = [];
+
+            this.swatches.forEach((obj) => {
+                ttContent.push(
+                    h(
+                        'div',
+                        {},
+                        obj.label
+                    )
+                );
+            });
+
             return h(
                 'FigTooltip',
                 {
@@ -83,7 +113,7 @@ export default Vue.extend({
                         },
                         [ swatch ]
                     ),
-                    this.label
+                    ttContent
                 ]
             );
         }

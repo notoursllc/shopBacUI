@@ -3,7 +3,8 @@ import isObject from 'lodash.isobject';
 import storage_mixin from '@/mixins/storage_mixin'; // TODO: not needed?
 import TextCard from '@/components/TextCard';
 import PricingForm from '@/components/product/PricingForm';
-import VariantExhibitForm from '@/components/product/variant/VariantExhibitForm';
+import ImageManager from '@/components/product/ImageManager';
+import ColorSwatchTable from '@/components/product/colorSwatch/ColorSwatchTable';
 import AccentMessageWizard from '@/components/product/accentMessage/AccentMessageWizard';
 import SkuManager from '@/components/product/size/SkuManager';
 
@@ -23,7 +24,8 @@ export default {
     components: {
         TextCard,
         PricingForm,
-        VariantExhibitForm,
+        ImageManager,
+        ColorSwatchTable,
         AccentMessageWizard,
         SkuManager,
         FigButton,
@@ -68,6 +70,7 @@ export default {
                 }
 
                 this.variant = {
+                    published: true,
                     skus: [
                         { label: null }
                     ]
@@ -122,15 +125,12 @@ export default {
             }
         },
 
-        onColorExpressionFormInput(data) {
-            if(isObject(data)) {
-                this.$set(this.variant, 'exhibitType', data.exhibitType);
-                this.$set(this.variant, 'exhibits', [ ...data.exhibits ]);
-            }
-        },
-
         onSkusChange(skus) {
             this.$set(this.variant, 'skus', Array.isArray(skus) ? skus : []);
+        },
+
+        onColorSwatchChange(data) {
+            this.variant.swatches = data;
         }
     }
 };
@@ -161,14 +161,26 @@ export default {
         </text-card>
 
 
-        <!-- Color expression -->
+        <!-- Color images -->
         <text-card class="mb-5">
-            <div slot="header">{{ $t('Display color using...') }}</div>
-
+            <div slot="header">{{ $t('Color images') }}</div>
             <div class="container mx-auto">
-                <variant-exhibit-form
-                    :variant="variant"
-                    @input="onColorExpressionFormInput" />
+                <image-manager
+                    v-model="variant.images"
+                    @delete="onDeleteImage"
+                    :max-num-images="parseInt(imageManagerMaxImages, 10)" />
+            </div>
+        </text-card>
+
+
+        <!-- Color swatches -->
+        <text-card class="mb-5">
+            <div slot="header">{{ $t('Color swatches') }}</div>
+            <div slot="headerSub">({{ $t('optional') }})</div>
+            <div class="container mx-auto">
+                <color-swatch-table
+                    :value="variant.swatches"
+                    @input="onColorSwatchChange" />
             </div>
         </text-card>
 
