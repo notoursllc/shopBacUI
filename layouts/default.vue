@@ -223,8 +223,8 @@ export default {
             </nav>
         </header>
 
-        <main :class="{'sidenav-opened': $store.state.ui.sidebarOpened}">
-            <div class="pt-5 lg:px-10 md:px-6 sm:px-4 pb-24">
+        <main class="pb-24" :class="{'sidenav-opened': $store.state.ui.sidebarOpened}">
+            <div class="lg:p-10 md:p-6 sm:p-4">
                 <nuxt />
             </div>
         </main>
