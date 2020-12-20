@@ -4,7 +4,8 @@ import isObject from 'lodash.isobject';
 import {
     FigFormGroup,
     FigFormCheckbox,
-    FigFormInput
+    FigFormInput,
+    FigFormInputMoney
 } from '@notoursllc/figleaf';
 
 
@@ -14,7 +15,8 @@ export default {
     components: {
         FigFormGroup,
         FigFormCheckbox,
-        FigFormInput
+        FigFormInput,
+        FigFormInputMoney
     },
 
     props: {
@@ -64,8 +66,7 @@ export default {
             <div class="my-3 px-3 w-full sm:w-1/2 md:w-1/3 xl:w-1/4">
                 <fig-form-group>
                     <label slot="label" for="color_base_price">{{ $t('Price') }}</label>
-                    <fig-form-input
-                        type="money"
+                    <fig-form-input-money
                         v-model="form.base_price"
                         @input="onChange"
                         id="color_base_price" />
@@ -76,8 +77,7 @@ export default {
             <div class="my-3 px-3 w-full sm:w-1/2 md:w-1/3 xl:w-1/4">
                 <fig-form-group>
                     <label slot="label" for="color_compare_at_price">{{ $t('Compare at') }}</label>
-                    <fig-form-input
-                        type="money"
+                    <fig-form-input-money
                         v-model="form.compare_at_price"
                         @input="onChange"
                         id="color_compare_at_price" />
@@ -88,8 +88,7 @@ export default {
             <div class="my-3 px-3 w-full sm:w-1/2 md:w-1/3 xl:w-1/4">
                 <fig-form-group>
                     <label slot="label" for="color_cost_price">{{ $t('Cost per item') }}</label>
-                    <fig-form-input
-                        type="money"
+                    <fig-form-input-money
                         v-model="form.cost_price"
                         @input="onChange"
                         id="color_cost_price" />
