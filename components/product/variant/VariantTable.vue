@@ -284,10 +284,12 @@ export default {
                     </fig-td>
 
                     <!-- Swatch -->
-                    <fig-td class="text-center">
-                        <color-swatch
-                            :swatches="variantSwatches[idx]"
-                            tooltip />
+                    <fig-td>
+                        <div class="flex items-center justify-center">
+                            <color-swatch
+                                :swatches="variantSwatches[idx]"
+                                :tooltip="true" />
+                        </div>
                     </fig-td>
 
                     <!-- Published -->
