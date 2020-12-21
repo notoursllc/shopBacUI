@@ -1,4 +1,5 @@
 <script>
+import isObject from 'lodash.isobject';
 import product_mixin from '@/mixins/product_mixin';
 import OperationsDropdown from '@/components/OperationsDropdown';
 import BooleanTag from '@/components/BooleanTag';
@@ -29,17 +30,15 @@ export default {
     data() {
         return {
             products: [],
-            productSubTypes: []
+            masterTypes: {}
         };
     },
 
-    async created() {
+    created() {
         this.$store.dispatch('ui/title', this.$t('Products'));
 
-        await Promise.all([
-            this.fetchProducts(),
-            this.fetchProductSubTypes()
-        ]);
+        this.fetchProducts();
+        this.fetchMasterTypes();
     },
 
     methods: {
@@ -55,22 +54,34 @@ export default {
             }
         },
 
-        async fetchProductSubTypes() {
-            this.productSubTypes = await this.$api.masterTypes.all({
-                where: ['object', '=', 'product_sub_type']
-            });
+        async fetchMasterTypes() {
+            const masterTypes = await this.$api.masterTypes.all();
+            const groupedTypes = {};
+
+            if(Array.isArray(masterTypes)) {
+                masterTypes.forEach((obj) => {
+                    if(!groupedTypes.hasOwnProperty(obj.object)) {
+                        groupedTypes[obj.object] = [];
+                    }
+                    groupedTypes[obj.object].push(obj);
+                });
+            }
+
+            this.masterTypes = groupedTypes;
         },
 
-        getSubTypeLabel(value) {
-            const values = [];
+        getMasterTypeLabel(object, value) {
+            const labels = [];
 
-            this.productSubTypes.forEach((obj) => {
-                if(value & obj.value) {
-                    values.push(obj.name);
-                }
-            });
+            if(Array.isArray(this.masterTypes[object])) {
+                this.masterTypes[object].forEach((obj) => {
+                    if(value & obj.value) {
+                        labels.push(obj.name);
+                    }
+                });
+            }
 
-            return values.join(', ');
+            return labels.join(', ');
         },
 
         sortChanged(val) {
@@ -141,44 +152,24 @@ export default {
                 );
             }
 
-            return this.$t('n_in_stock', { numInventory: totalInventoryCount })
+            return this.$t('n_in_stock', { numInventory: totalInventoryCount });
         },
 
 
-        getFirstVariantImage(product) {
+        getCoverImage(product) {
             let url = null;
             let altText = null;
-            let smallestWidth = 0;
 
-            // To make sure we only get the first published image
-            let publishedImage = null;
+            if(Array.isArray(product.variants)) {
+                for(let i=0, l=product.variants.length; i<l; i++) {
+                    const variant = product.variants[i];
 
-            if(Array.isArray(product.skus)) {
-                product.skus.forEach((sku) => {
-                    if(Array.isArray(sku.images)) {
-                        sku.images.forEach((img) => {
-                            if(!publishedImage && img.published) {
-                                publishedImage = img;
-
-                                // the first published image is the baseline.
-                                smallestWidth = publishedImage.width;
-                                url = publishedImage.image_url;
-                                altText = publishedImage.alt_text;
-
-                                // now check to see if any of it's variants are smaller
-                                if(Array.isArray(publishedImage.variants)) {
-                                    publishedImage.variants.forEach((variant) => {
-                                        if(variant.width < smallestWidth) {
-                                            smallestWidth = variant.width;
-                                            url = variant.image_url;
-                                            // NOTE: variants do not have a separate alt_text property
-                                        }
-                                    });
-                                }
-                            }
-                        });
+                    if(Array.isArray(variant.images) && isObject(variant.images[0].media)) {
+                        url = variant.images[0].media.url;
+                        altText = variant.images[0].alt_text;
+                        break;
                     }
-                });
+                }
             }
 
             if(url) {
@@ -197,8 +188,15 @@ export default {
         },
 
         numPicsLabel(product) {
-            const numPublishedPics = this.getNumPublishedPics(product);
-            return this.$tc('n_pictures', numPublishedPics, { num: numPublishedPics });
+            let numPics = 0;
+
+            if(Array.isArray(product.variants)) {
+                product.variants.forEach((variant) => {
+                    numPics += Array.isArray(variant.images) ? variant.images.length : 0;
+                });
+            }
+
+            return this.$tc('n_pictures', numPics, { num: numPics });
         }
     }
 };
@@ -221,18 +219,20 @@ export default {
                     <fig-th>{{ $t('Inventory') }}</fig-th>
                     <fig-th sortable prop="published">{{ $t('Published') }}</fig-th>
                     <fig-th sortable prop="sub_type">{{ $t('Sub Type') }}</fig-th>
-                    <fig-th>{{ $t('Vendor') }}</fig-th>
+                    <fig-th sortable prop="gender_type">{{ $t('Gender') }}</fig-th>
                 </tr>
             </template>
 
             <tr v-for="(prod, idx) in products" :key="idx">
                 <!-- featured image -->
-                <fig-td>
-                    <vnodes :vnodes="getFirstVariantImage(prod)" />
+                <fig-td class="text-center">
+                    <div class="inline-block">
+                        <vnodes :vnodes="getCoverImage(prod)" />
+                    </div>
                     <div class="text-xs">{{ numPicsLabel(prod) }}</div>
                 </fig-td>
 
-                 <!-- title -->
+                <!-- title -->
                 <fig-td>
                     {{ prod.title }}
                     <operations-dropdown
@@ -254,12 +254,12 @@ export default {
 
                 <!-- sub type -->
                 <fig-td>
-                    {{ getSubTypeLabel(prod.sub_type) }}
+                    {{ getMasterTypeLabel('product_sub_type', prod.sub_type) }}
                 </fig-td>
 
-                <!-- vendor -->
+                <!-- gender -->
                 <fig-td>
-                    {{ prod.vendor }}
+                    {{ getMasterTypeLabel('product_gender_type', prod.gender_type) }}
                 </fig-td>
             </tr>
         </fig-table-simple>
