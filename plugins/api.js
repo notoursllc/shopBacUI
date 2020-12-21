@@ -14,6 +14,17 @@ import TenantMembers from '@/api/tenant_members';
 
 export default (context, inject) => {
 
+    context.$axios.onError((error) => {
+        const errorCode = parseInt(error.response && error.response.status);
+
+        switch(errorCode) {
+            case 401:
+                window.location = '/tenantmember/login';
+                break;
+        }
+    });
+
+
     // Initialize API repositories
     const repositories = {
         cart: Cart(context.$axios),
