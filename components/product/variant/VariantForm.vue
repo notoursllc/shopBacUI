@@ -58,6 +58,7 @@ export default {
     data: function() {
         return {
             variant: {
+                published: true,
                 skus: [
                     { label: null }
                 ]
@@ -71,7 +72,7 @@ export default {
         value: {
             handler(newVal) {
                 if(isObject(newVal)) {
-                    this.variant = Object.assign({}, newVal);
+                    this.variant = Object.assign({ published: true }, newVal);
                     return;
                 }
 
@@ -145,17 +146,18 @@ export default {
 
 <template>
     <div>
+
+        <!-- published -->
+        <div class="container mb-5">
+            <fig-form-checkbox
+                v-model="variant.published">{{ $t('Published') }}</fig-form-checkbox>
+        </div>
+
         <!-- General info -->
         <text-card class="mb-5">
             <div slot="header">{{ $t('Color info') }}</div>
 
-            <!-- published -->
             <div class="container mx-auto">
-                <div class="mb-3">
-                    <fig-form-checkbox
-                        v-model="variant.published">{{ $t('Published') }}</fig-form-checkbox>
-                </div>
-
                 <fig-row sm="1/2" md="1/3" lg="1/4" xl="1/5" default="full" default-gap="1" sm-gap="2" key="org">
 
                     <!-- color name -->
