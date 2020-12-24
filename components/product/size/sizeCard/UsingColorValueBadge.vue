@@ -1,20 +1,20 @@
 <script>
 import Vue from 'vue';
-import { FigBadge } from '@notoursllc/figleaf';
+import { FigTag } from '@notoursllc/figleaf';
 
 export default Vue.extend({
     name: 'UsingColorValueBadge',
 
     components: {
-        FigBadge
+        FigTag
     }
 });
 </script>
 
 
 <template>
-    <fig-badge
+    <fig-tag
         size="sm"
         variant="light"
-        pill>{{ $t('Using color value') }}</fig-badge>
+        pill>{{ $t('Using color value') }}</fig-tag>
 </template>

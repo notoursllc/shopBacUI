@@ -1,13 +1,13 @@
 <script>
 import {
-    FigBadge
+    FigTag
 } from '@notoursllc/figleaf';
 
 export default {
     name: 'BooleanTag',
 
     components: {
-        FigBadge
+        FigTag
     },
 
     props: {
@@ -39,9 +39,9 @@ export default {
 </script>
 
 <template>
-    <fig-badge
+    <fig-tag
         :variant="tagType"
         v-on="$listeners"
         :pill="pill"
-        :size="size">{{ label }}</fig-badge>
+        :size="size">{{ label }}</fig-tag>
 </template>
