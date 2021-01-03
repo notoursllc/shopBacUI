@@ -19,6 +19,7 @@ export default {
         };
     },
 
+/*
     async asyncData({ params, store, app }) {
         const payments = await app.$api.payments.list.call(app, {
             // where: ['is_available', '=', true],
@@ -33,6 +34,7 @@ export default {
             payments
         };
     },
+*/
 
     methods: {
         async fetchOrders(paramsObj) {

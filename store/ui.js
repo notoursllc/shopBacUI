@@ -34,7 +34,7 @@ export const mutations = {
         const { innerWidth } = window;
         const isDesktop = innerWidth > 1024;
         state.isMobile = !isDesktop;
-        state.sidebarOpened = isDesktop;
+        // state.sidebarOpened = isDesktop;
     },
 
     SET_LANG(state, locale) {
