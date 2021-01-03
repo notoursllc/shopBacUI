@@ -126,8 +126,8 @@ export default {
             const files = event.target.files;
             const numUploadedFiles = files.length;
 
-            console.log("ON FILE CHAGNE", files);
-            console.log("ON FILE CHAGNE refs", this.$refs['file-input']);
+            // console.log("ON FILE CHAGNE", files);
+            // console.log("ON FILE CHAGNE refs", this.$refs['file-input']);
 
             if (!files.length) {
                 return;
@@ -161,15 +161,14 @@ export default {
                     newFileListIndexes.push(this.fileList.length);
                     const newOrdinal = this.fileList.length;
 
+                    // this adds a new entry to the table so the user can see a loading
+                    // indicator for the new image(s)
                     this.fileList.push({
                         id: null,
-                        media_id: null,
                         alt_text: null,
                         ordinal: newOrdinal,
-                        loading: true,
-                        media: {
-                            url: null
-                        }
+                        variants: [],
+                        loading: true
                     });
                 }
 
@@ -179,8 +178,8 @@ export default {
                 responses.forEach((res, index) => {
                     const fileListIndex = newFileListIndexes[index];
 
-                    this.fileList[fileListIndex].media_id = res.id;
-                    this.fileList[fileListIndex].media.url = this.prodmix_getSmallestSkuImageMediaUrl(res);
+                    this.fileList[fileListIndex].id = res.id;
+                    this.fileList[fileListIndex].variants = res.variants;
                     this.fileList[fileListIndex].loading = false;
                 });
 
@@ -259,9 +258,9 @@ export default {
                             {{ $t('Alt text') }}
 
                             <fig-tooltip placement="top">
-                                <span slot="toggler" class="ml-2 cursor-pointer">
-                                    <fig-icon icon="info-circle" width="18" height="18" />
-                                </span>
+                                <div slot="toggler" class="ml-1 cursor-pointer">
+                                    <fig-icon icon="info-circle" width="20" height="20" />
+                                </div>
                                 {{ $t('Image_alt_text_description') }}
                             </fig-tooltip>
                         </div>
@@ -287,18 +286,13 @@ export default {
 
                     <!-- thumbnail -->
                     <fig-td>
-                        <template v-if="obj.loading">
-                            <fig-overlay :show="obj.loading">
-                                loading...
-                            </fig-overlay>
-                        </template>
-                        <template v-else>
+                        <fig-overlay :show="obj.loading">
                             <img
-                                :src="obj.media.url"
+                                :src="prodmix_getSmallestImageVariant(obj.variants)"
                                 class="cursor-pointer"
-                                @click="onPreview(obj.url)"
+                                @click="onPreview(obj)"
                                 :alt="obj.alt_text">
-                        </template>
+                        </fig-overlay>
                     </fig-td>
 
                     <!-- alt text -->

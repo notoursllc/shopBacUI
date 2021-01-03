@@ -15,7 +15,7 @@ import {
     FigTableSimple,
     FigTh,
     FigTd,
-    FigBadge
+    FigTag
 } from '@notoursllc/figleaf';
 
 export default {
@@ -33,7 +33,7 @@ export default {
         FigTableSimple,
         FigTh,
         FigTd,
-        FigBadge
+        FigTag
     },
 
     mixins: [
@@ -66,74 +66,31 @@ export default {
             return isObject(this.variants[this.visibleColorIndex]) && this.variants[this.visibleColorIndex].label
                 ? this.$t('Edit color: {color}', {color: this.variants[this.visibleColorIndex].label})
                 : this.$t('Add a new Color');
-        },
+        }
 
         /*
         * This computed property is needed so the array of skus in each variant
         * is reactive, allowing for the display of sizes for each variant
         */
-        variantSizes() {
-            const allSizes = [];
+        // variantSizes() {
+        //     const allSizes = [];
 
-            this.variants.forEach((obj) => {
-                if(Array.isArray(obj.skus)) {
-                    const skuSizes = [];
+        //     this.variants.forEach((obj) => {
+        //         if(Array.isArray(obj.skus)) {
+        //             const skuSizes = [];
 
-                    obj.skus.forEach((sku) => {
-                        if(sku.label) {
-                            skuSizes.push(sku.label);
-                        }
-                    });
+        //             obj.skus.forEach((sku) => {
+        //                 if(sku.label) {
+        //                     skuSizes.push(sku.label);
+        //                 }
+        //             });
 
-                    allSizes.push(skuSizes);
-                }
-            });
+        //             allSizes.push(skuSizes);
+        //         }
+        //     });
 
-            return allSizes;
-        },
-
-        variantSwatches() {
-            const all = [];
-
-            this.variants.forEach((obj) => {
-                if(Array.isArray(obj.swatches)) {
-                    const swatches = [];
-
-                    obj.swatches.forEach((obj) => {
-                        if(obj.swatch) {
-                            swatches.push(obj);
-                        }
-                    });
-
-                    all.push(swatches);
-                }
-            });
-
-            return all;
-        },
-
-        variantImages() {
-            const all = [];
-
-            this.variants.forEach((obj) => {
-                if(Array.isArray(obj.images)) {
-                    const images = [];
-
-                    obj.images.forEach((obj) => {
-                        if(obj.media) {
-                            images.push({
-                                url: obj.media.url,
-                                alt_text: obj.alt_text
-                            });
-                        }
-                    });
-
-                    all.push(images);
-                }
-            });
-
-            return all;
-        }
+        //     return allSizes;
+        // }
     },
 
     watch: {
@@ -209,6 +166,51 @@ export default {
             this.$emit('change', [
                 ...this.variants
             ]);
+        },
+
+        getVariantImages(index) {
+            const variant = this.variants[index];
+            const urls = [];
+
+            if(Array.isArray(variant.images)) {
+                variant.images.forEach((obj) => {
+                    urls.push(
+                        this.prodmix_getSmallestImageVariant(obj.variants)
+                    );
+                });
+            }
+
+            return urls;
+        },
+
+        getVariantSwatches(index) {
+            const variant = this.variants[index];
+            const swatches = [];
+
+            if(Array.isArray(variant.swatches)) {
+                variant.swatches.forEach((obj) => {
+                    if(obj.swatch) {
+                        swatches.push(obj);
+                    }
+                });
+            }
+
+            return swatches;
+        },
+
+        getVariantSizes(index) {
+            const variant = this.variants[index];
+            const sizes = [];
+
+            if(Array.isArray(variant.skus)) {
+                variant.skus.forEach((sku) => {
+                    if(sku.label) {
+                        sizes.push(sku.label);
+                    }
+                });
+            }
+
+            return sizes;
         }
     }
 };
@@ -260,10 +262,10 @@ export default {
 
                     <!-- Sizes -->
                     <fig-td>
-                        <span v-for="(label, labelIndex) in variantSizes[idx]" :key="labelIndex">
-                            <fig-badge
+                        <span v-for="(label, labelIndex) in getVariantSizes(idx)" :key="labelIndex">
+                            <fig-tag
                                 variant="light"
-                                class="mr-1 mb-1">{{ label }}</fig-badge>
+                                class="mr-1 mb-1">{{ label }}</fig-tag>
                         </span>
                     </fig-td>
 
@@ -272,11 +274,11 @@ export default {
                         <div class="flex items-center">
                             <!-- images -->
                             <div
-                                v-for="(obj, objIndex) in variantImages[idx]"
+                                v-for="(url, objIndex) in getVariantImages(idx)"
                                 :key="objIndex"
                                 class="mr-2">
                                 <figure
-                                    :style="`background-image:url(${obj.url});`"
+                                    :style="`background-image:url(${url});`"
                                     class="shadow variant-thumb"
                                     :class="{'featured-thumb': objIndex === 0}"></figure>
                             </div>
@@ -287,7 +289,7 @@ export default {
                     <fig-td>
                         <div class="flex items-center justify-center">
                             <color-swatch
-                                :swatches="variantSwatches[idx]"
+                                :swatches="getVariantSwatches(idx)"
                                 :tooltip="true" />
                         </div>
                     </fig-td>

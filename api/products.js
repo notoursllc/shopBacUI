@@ -1,7 +1,6 @@
 import queryString from 'query-string';
 import isObject from 'lodash.isobject';
 import cloneDeep from 'lodash.clonedeep';
-import { variants } from '@notoursllc/figleaf/tailwind.config';
 
 
 function stripRelations(data) {
@@ -10,12 +9,13 @@ function stripRelations(data) {
     delete data.deleted_at;
     delete data.total_inventory_count;
 
-    if(Array.isArray(data.skus)) {
-        data.skus.forEach((sku) => {
-            delete sku.is_displayable;
+    if(Array.isArray(data.variants)) {
+        data.variants.forEach((variant) => {
+            delete variant.is_displayable;
+            delete variant.total_inventory_count;
 
-            if(Array.isArray(sku.images)) {
-                sku.images.forEach((img) => {
+            if(Array.isArray(variant.images)) {
+                variant.images.forEach((img) => {
                     delete img.loading;
                     delete img.media;
                 });

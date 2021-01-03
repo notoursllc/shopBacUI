@@ -126,6 +126,22 @@ export default {
             }
 
             return smallestUrl;
+        },
+
+        prodmix_getSmallestImageVariant(variants) {
+            let smallestWidth = 9999;
+            let smallestUrl;
+
+            if(Array.isArray(variants)) {
+                variants.forEach((variant) => {
+                    if(variant.width < smallestWidth) {
+                        smallestWidth = variant.width;
+                        smallestUrl = variant.url;
+                    }
+                });
+            }
+
+            return smallestUrl;
         }
     }
 };
