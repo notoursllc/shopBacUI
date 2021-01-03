@@ -221,27 +221,27 @@ export default {
                         <nuxt-link
                             :to="{ name: 'product-gender-types' }"
                             tag="button"
-                            class="subnav-btn">{{ $t('Gender Types') }}</nuxt-link>
+                            class="subnav-btn">{{ $t('Genders') }}</nuxt-link>
 
                         <nuxt-link
                             :to="{ name: 'product-basic-color-types' }"
                             tag="button"
-                            class="subnav-btn">{{ $t('Basic color types') }}</nuxt-link>
+                            class="subnav-btn">{{ $t('Basic colors') }}</nuxt-link>
 
                         <nuxt-link
                             :to="{ name: 'product-feature-types' }"
                             tag="button"
-                            class="subnav-btn">{{ $t('Feature types') }}</nuxt-link>
+                            class="subnav-btn">{{ $t('Product features') }}</nuxt-link>
 
                         <nuxt-link
                             :to="{ name: 'product-fit-types' }"
                             tag="button"
-                            class="subnav-btn">{{ $t('Fit types') }}</nuxt-link>
+                            class="subnav-btn">{{ $t('Fits') }}</nuxt-link>
 
                         <nuxt-link
                             :to="{ name: 'product-sleeve-length-types' }"
                             tag="button"
-                            class="subnav-btn">{{ $t('Sleeve length types') }}</nuxt-link>
+                            class="subnav-btn">{{ $t('Sleeve lengths') }}</nuxt-link>
 
                         <nuxt-link
                             :to="{ name: 'product-datatables-list' }"

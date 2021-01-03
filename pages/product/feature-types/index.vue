@@ -6,7 +6,7 @@ export default {
     },
 
     created() {
-        this.$store.dispatch('ui/title', this.$t('Feature types'));
+        this.$store.dispatch('ui/title', this.$t('Product features'));
     }
 };
 </script>

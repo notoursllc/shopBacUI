@@ -5,7 +5,7 @@ export default {
     },
 
     created() {
-        this.$store.dispatch('ui/title', this.$t('Sleeve length types'));
+        this.$store.dispatch('ui/title', this.$t('Sleeve lengths'));
     }
 };
 </script>

@@ -6,7 +6,7 @@ export default {
     },
 
     created() {
-        this.$store.dispatch('ui/title', this.$t('Basic color types'));
+        this.$store.dispatch('ui/title', this.$t('Basic colors'));
     }
 };
 </script>

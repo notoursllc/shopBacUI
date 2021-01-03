@@ -5,7 +5,7 @@ export default {
     },
 
     created() {
-        this.$store.dispatch('ui/title', this.$t('Gender Types'));
+        this.$store.dispatch('ui/title', this.$t('Genders'));
     }
 };
 </script>

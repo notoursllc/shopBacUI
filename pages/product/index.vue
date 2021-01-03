@@ -164,8 +164,8 @@ export default {
                 for(let i=0, l=product.variants.length; i<l; i++) {
                     const variant = product.variants[i];
 
-                    if(Array.isArray(variant.images) && isObject(variant.images[0].media)) {
-                        url = variant.images[0].media.url;
+                    if(Array.isArray(variant.images) && isObject(variant.images[0])) {
+                        url = this.prodmix_getSmallestImageVariant(variant.images[0].variants);
                         altText = variant.images[0].alt_text;
                         break;
                     }

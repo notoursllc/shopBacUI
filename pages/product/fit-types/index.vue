@@ -5,7 +5,7 @@ export default {
     },
 
     created() {
-        this.$store.dispatch('ui/title', this.$t('Fit types'));
+        this.$store.dispatch('ui/title', this.$t('Fits'));
     }
 };
 </script>
