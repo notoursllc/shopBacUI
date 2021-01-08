@@ -241,7 +241,7 @@ export default {
                         <nuxt-link
                             :to="{ name: 'product-sleeve-length-types' }"
                             tag="button"
-                            class="subnav-btn">{{ $t('Sleeve lengths') }}</nuxt-link>
+                            class="subnav-btn">{{ $t('Sleeve length') }}</nuxt-link>
 
                         <nuxt-link
                             :to="{ name: 'product-datatables-list' }"
