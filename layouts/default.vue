@@ -114,15 +114,15 @@ export default {
         <fig-toaster />
 
         <!-- left icon gutter -->
-        <div class="flex flex-col flex-none w-16 bg-gray-300">
+        <div class="gutter">
             <div class="flex flex-col justify-center">
                 <!-- logo -->
                 <nuxt-link
                     :to="{ name: 'product' }"
                     tag="button"
-                    class="flex justify-center pb-4 pt-3 w-full"
+                    class="gutter-btn-logo "
                     @click.native="onGutterNavClick('products')">
-                    <fig-victory-icon :width="44" :height="30" fill="#000" />
+                    <fig-victory-icon :width="44" :height="30" fill="#fff" />
                 </nuxt-link>
 
                 <!-- products -->
@@ -315,16 +315,32 @@ export default {
 
 
 <style lang="postcss">
-.gutter-btn {
+.gutter {
+    @apply flex flex-col flex-none w-16;
+    background: rgb(40, 52, 71);
+}
+.gutter-btn,
+.gutter-btn-logo {
     @apply flex justify-center py-4 w-full;
 }
 .gutter-btn.nuxt-link-active,
 .gutter-btn.nuxt-link-exact-active {
-  @apply bg-gray-100;
+  background: #3d4f6b;
+}
+
+.gutter-btn svg {
+    stroke: #a8bfe3;
+}
+.gutter-btn.nuxt-link-active svg {
+    stroke: #fff;
+}
+.gutter-btn-logo {
+    background: #242932;
 }
 
 .subnav {
-    @apply flex-none w-56 bg-gray-100 px-4 py-4 overflow-y-auto;
+    @apply flex-none w-56 px-4 py-4 overflow-y-auto text-blue-900;
+    background: #dbe3ef;
 }
 .subnav-btn {
     @apply text-left py-1;
@@ -339,13 +355,11 @@ export default {
     width: 0;
     transform: scale(0);
 }
-
 .slide-leave,
 .slide-enter-to {
     @apply w-56;
     transform: scale(1);
 }
-
 .slide-enter-active {
     transition: all .3s ease-in;
 }
