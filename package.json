@@ -17,6 +17,7 @@
     "@notoursllc/figleaf": "^0.1.68",
     "@nuxt/http": "^0.5.2",
     "@nuxtjs/axios": "^5.12.2",
+    "@nuxtjs/tailwindcss": "^3.4.2",
     "js-cookie": "^2.2.1",
     "lodash.clonedeep": "^4.5.0",
     "lodash.debounce": "^4.0.8",
