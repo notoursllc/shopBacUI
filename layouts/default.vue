@@ -185,7 +185,7 @@ export default {
                 class="subnav">
 
                 <template v-if="selectedGutter === 'products'">
-                    <div class="text-lg font-bold">{{ $t('Products') }}</div>
+                    <div class="subnav-title">{{ $t('Products') }}</div>
 
                     <div class="mt-5 flex flex-col justify-start text-sm">
                         <nuxt-link
@@ -262,7 +262,7 @@ export default {
 
                 <!-- reports sub nav -->
                 <template v-if="selectedGutter === 'reports'">
-                    <div class="text-lg font-bold">{{ $t('Reports') }}</div>
+                    <div class="subnav-title">{{ $t('Reports') }}</div>
 
                     <div class="mt-5 flex flex-col justify-start text-sm">
                         <nuxt-link
@@ -339,12 +339,19 @@ export default {
 }
 
 .subnav {
-    @apply flex-none w-56 px-4 py-4 overflow-y-auto text-blue-900;
+    @apply flex-none w-56 px-2 py-4 overflow-y-auto text-blue-900;
     background: #dbe3ef;
 }
-.subnav-btn {
-    @apply text-left py-1;
+.subnav-title {
+    @apply text-lg font-bold px-2;
 }
+.subnav-btn {
+    @apply text-left py-1 rounded-sm px-2;
+}
+.subnav-btn.nuxt-link-exact-active {
+    background: #eaf0f9;
+}
+
 
 .slide-leave-active {
     transition: all .2s ease-out;
