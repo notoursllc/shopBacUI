@@ -116,82 +116,85 @@ export default {
         <!-- left icon gutter -->
         <div class="gutter">
             <div class="flex flex-col justify-center">
+
                 <!-- logo -->
                 <nuxt-link
                     :to="{ name: 'product' }"
                     tag="button"
-                    class="gutter-btn-logo "
+                    class="gutter-btn-logo"
                     @click.native="onGutterNavClick('products')">
                     <fig-victory-icon :width="44" :height="30" fill="#fff" />
                 </nuxt-link>
 
-                <!-- products -->
-                <nuxt-link
-                    :to="{ name: 'product' }"
-                    tag="button"
-                    class="gutter-btn"
-                    @click.native="onGutterNavClick('products')">
-                    <fig-tooltip placement="right">
-                        <fig-icon
-                            slot="toggler"
-                            icon="triangle-square-circle"
-                            :width="30"
-                            :height="30"
-                            :stroke-width="1.5" />
-                        {{ $t('Products') }}
-                    </fig-tooltip>
-                </nuxt-link>
+                <div class="p-2 text-center">
+                    <!-- products -->
+                    <nuxt-link
+                        :to="{ name: 'product' }"
+                        tag="button"
+                        class="gutter-btn"
+                        @click.native="onGutterNavClick('products')">
+                        <fig-tooltip placement="right">
+                            <fig-icon
+                                slot="toggler"
+                                icon="triangle-square-circle"
+                                :width="28"
+                                :height="28"
+                                :stroke-width="1.5" />
+                            {{ $t('Products') }}
+                        </fig-tooltip>
+                    </nuxt-link>
 
-                <!-- master types -->
-                <nuxt-link
-                    :to="{ name: 'global' }"
-                    tag="button"
-                    class="gutter-btn"
-                    @click.native="onGutterNavClick('global')">
-                    <fig-tooltip placement="right">
-                        <fig-icon
-                            slot="toggler"
-                            icon="world"
-                            :width="30"
-                            :height="30"
-                            :stroke-width="1.5" />
-                        {{ $t('Global values') }}
-                    </fig-tooltip>
-                </nuxt-link>
+                    <!-- master types -->
+                    <nuxt-link
+                        :to="{ name: 'global' }"
+                        tag="button"
+                        class="gutter-btn"
+                        @click.native="onGutterNavClick('global')">
+                        <fig-tooltip placement="right">
+                            <fig-icon
+                                slot="toggler"
+                                icon="world"
+                                :width="28"
+                                :height="28"
+                                :stroke-width="1.5" />
+                            {{ $t('Global values') }}
+                        </fig-tooltip>
+                    </nuxt-link>
 
-                <!-- payments -->
-                <nuxt-link
-                    :to="{ name: 'order-list' }"
-                    tag="button"
-                    class="gutter-btn"
-                    @click.native="onGutterNavClick('payments')">
-                    <fig-tooltip placement="right">
-                        <fig-icon
-                            slot="toggler"
-                            icon="credit-card"
-                            :width="30"
-                            :height="30"
-                            :stroke-width="1.5" />
-                        {{ $t('Payments') }}
-                    </fig-tooltip>
-                </nuxt-link>
+                    <!-- payments -->
+                    <nuxt-link
+                        :to="{ name: 'order-list' }"
+                        tag="button"
+                        class="gutter-btn"
+                        @click.native="onGutterNavClick('payments')">
+                        <fig-tooltip placement="right">
+                            <fig-icon
+                                slot="toggler"
+                                icon="credit-card"
+                                :width="28"
+                                :height="28"
+                                :stroke-width="1.5" />
+                            {{ $t('Payments') }}
+                        </fig-tooltip>
+                    </nuxt-link>
 
-                <!-- reports -->
-                <nuxt-link
-                    :to="{ name: 'reports' }"
-                    tag="button"
-                    class="gutter-btn"
-                    @click.native="onGutterNavClick('reports')">
-                    <fig-tooltip placement="right">
-                        <fig-icon
-                            slot="toggler"
-                            icon="chart-bar"
-                            :width="30"
-                            :height="30"
-                            :stroke-width="1.5" />
-                        {{ $t('Reports') }}
-                    </fig-tooltip>
-                </nuxt-link>
+                    <!-- reports -->
+                    <nuxt-link
+                        :to="{ name: 'reports' }"
+                        tag="button"
+                        class="gutter-btn"
+                        @click.native="onGutterNavClick('reports')">
+                        <fig-tooltip placement="right">
+                            <fig-icon
+                                slot="toggler"
+                                icon="chart-bar"
+                                :width="28"
+                                :height="28"
+                                :stroke-width="1.5" />
+                            {{ $t('Reports') }}
+                        </fig-tooltip>
+                    </nuxt-link>
+                </div>
             </div>
         </div>
 
@@ -301,9 +304,9 @@ export default {
 
 
         <!-- main content -->
-        <div class="flex-auto bg-white shadow-lg overflow-auto">
+        <div class="main-content">
             <!-- header -->
-            <div class="flex items-center justify-between px-4 py-3 border-b border-gray-200 shadow-sm">
+            <div class="flex items-center justify-between px-4 py-3 border-b border-gray-200 shadow-sm bg-white">
                 <div class="flex items-center">
                     <!-- hamburger -->
                     <fig-button
@@ -342,11 +345,14 @@ export default {
 <style lang="postcss">
 .gutter {
     @apply flex flex-col flex-none w-16;
-    background: rgb(40, 52, 71);
+    background: #232b38;
 }
-.gutter-btn,
+
 .gutter-btn-logo {
-    @apply flex justify-center py-4 w-full;
+    @apply flex justify-center py-4 w-full bg-purple-700;
+}
+.gutter-btn {
+    @apply flex justify-center rounded p-2 my-2;
 }
 .gutter-btn.nuxt-link-active,
 .gutter-btn.nuxt-link-exact-active {
@@ -354,29 +360,28 @@ export default {
 }
 
 .gutter-btn svg {
-    stroke: #a8bfe3;
+    stroke: #c5c7c9;
 }
 .gutter-btn.nuxt-link-active svg {
     stroke: #fff;
 }
-.gutter-btn-logo {
-    background: #242932;
-}
 
 .subnav {
-    @apply flex-none w-56 px-2 py-4 overflow-y-auto text-blue-900;
-    background: #dbe3ef;
+    @apply flex-none w-56 px-2 py-4 overflow-y-auto bg-gray-50 border-r border-gray-200;
 }
 .subnav-title {
-    @apply text-lg font-bold px-2;
+    @apply text-base font-bold px-2;
 }
 .subnav-btn {
     @apply text-left py-1 rounded-sm px-2;
 }
 .subnav-btn.nuxt-link-exact-active {
-    background: #eaf0f9;
+    @apply bg-gray-200;
 }
 
+.main-content {
+    @apply flex-auto bg-gray-50 shadow-lg overflow-auto;
+}
 
 .slide-leave-active {
     transition: all .2s ease-out;
