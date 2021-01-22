@@ -38,7 +38,7 @@ export default {
         },
 
         subNavVisible() {
-            if (['products', 'reports'].includes(this.selectedGutter)) {
+            if (['products', 'global', 'reports'].includes(this.selectedGutter)) {
                 if(this.sidebarOpened === false) {
                     return false;
                 }
@@ -49,7 +49,7 @@ export default {
         },
 
         canShowHamburger() {
-            return ['products', 'reports'].includes(this.selectedGutter);
+            return ['products', 'global', 'reports'].includes(this.selectedGutter);
         }
     },
 
@@ -142,6 +142,23 @@ export default {
                     </fig-tooltip>
                 </nuxt-link>
 
+                <!-- master types -->
+                <nuxt-link
+                    :to="{ name: 'global' }"
+                    tag="button"
+                    class="gutter-btn"
+                    @click.native="onGutterNavClick('global')">
+                    <fig-tooltip placement="right">
+                        <fig-icon
+                            slot="toggler"
+                            icon="world"
+                            :width="30"
+                            :height="30"
+                            :stroke-width="1.5" />
+                        {{ $t('Global values') }}
+                    </fig-tooltip>
+                </nuxt-link>
+
                 <!-- payments -->
                 <nuxt-link
                     :to="{ name: 'order-list' }"
@@ -192,73 +209,81 @@ export default {
                             :to="{ name: 'product' }"
                             tag="button"
                             class="subnav-btn">{{ $t('Product list') }}</nuxt-link>
+                    </div>
+                </template>
 
+                <!-- global sub nav -->
+                <template v-if="selectedGutter === 'global'">
+                    <div class="subnav-title">{{ $t('Global values') }}</div>
+
+                    <div class="mt-5 flex flex-col justify-start text-sm">
                         <nuxt-link
-                            :to="{ name: 'product-types' }"
+                            :to="{ name: 'global-types' }"
                             tag="button"
                             class="subnav-btn">{{ $t('Types') }}</nuxt-link>
 
                         <nuxt-link
-                            :to="{ name: 'product-sub-types' }"
+                            :to="{ name: 'global-sub-types' }"
                             tag="button"
                             class="subnav-btn">{{ $t('Sub-Types') }}</nuxt-link>
 
                         <nuxt-link
-                            :to="{ name: 'product-sales-channel-types' }"
+                            :to="{ name: 'global-sales-channel-types' }"
                             tag="button"
                             class="subnav-btn">{{ $t('Sales Channels') }}</nuxt-link>
 
                         <nuxt-link
-                            :to="{ name: 'product-vendors' }"
+                            :to="{ name: 'global-vendors' }"
                             tag="button"
                             class="subnav-btn">{{ $t('Vendors') }}</nuxt-link>
 
                         <nuxt-link
-                            :to="{ name: 'product-collections' }"
+                            :to="{ name: 'global-collections' }"
                             tag="button"
                             class="subnav-btn">{{ $t('Collections') }}</nuxt-link>
 
                         <nuxt-link
-                            :to="{ name: 'product-gender-types' }"
+                            :to="{ name: 'global-gender-types' }"
                             tag="button"
                             class="subnav-btn">{{ $t('Genders') }}</nuxt-link>
 
                         <nuxt-link
-                            :to="{ name: 'product-basic-color-types' }"
+                            :to="{ name: 'global-basic-color-types' }"
                             tag="button"
                             class="subnav-btn">{{ $t('Basic colors') }}</nuxt-link>
 
                         <nuxt-link
-                            :to="{ name: 'product-feature-types' }"
+                            :to="{ name: 'global-feature-types' }"
                             tag="button"
                             class="subnav-btn">{{ $t('Product features') }}</nuxt-link>
 
                         <nuxt-link
-                            :to="{ name: 'product-fit-types' }"
+                            :to="{ name: 'global-fit-types' }"
                             tag="button"
                             class="subnav-btn">{{ $t('Fits') }}</nuxt-link>
 
                         <nuxt-link
-                            :to="{ name: 'product-sleeve-length-types' }"
+                            :to="{ name: 'global-sleeve-length-types' }"
                             tag="button"
                             class="subnav-btn">{{ $t('Sleeve length') }}</nuxt-link>
 
                         <nuxt-link
-                            :to="{ name: 'product-datatables-list' }"
+                            :to="{ name: 'global-datatables-list' }"
                             tag="button"
                             class="subnav-btn">{{ $t('Data Tables') }}</nuxt-link>
 
                         <nuxt-link
-                            :to="{ name: 'product-accent-messages-list' }"
+                            :to="{ name: 'global-accent-messages-list' }"
                             tag="button"
                             class="subnav-btn">{{ $t('Accent Messages') }}</nuxt-link>
 
                         <nuxt-link
-                            :to="{ name: 'product-color-swatch-types' }"
+                            :to="{ name: 'global-color-swatch-types' }"
                             tag="button"
                             class="subnav-btn">{{ $t('Color swatches') }}</nuxt-link>
                     </div>
                 </template>
+
 
                 <!-- reports sub nav -->
                 <template v-if="selectedGutter === 'reports'">
