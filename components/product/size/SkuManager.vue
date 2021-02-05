@@ -7,6 +7,7 @@ import SizeSelect from '@/components/product/size/SizeSelect';
 import UsingColorValueBadge from '@/components/product/size/sizeCard/UsingColorValueBadge';
 import Money from '@/components/Money';
 import BooleanTag from '@/components/BooleanTag';
+import OperationsDropdown from '@/components/OperationsDropdown';
 
 import {
     FigFormCheckbox,
@@ -19,8 +20,12 @@ import {
     FigPopover,
     FigFormGroup,
     FigFormInput,
+    FigTag,
     FigTooltip,
-    FigCountry
+    FigCountry,
+    FigTableSimple,
+    FigTh,
+    FigTd
 } from '@notoursllc/figleaf';
 
 export default Vue.extend({
@@ -40,11 +45,16 @@ export default Vue.extend({
         FigPopover,
         FigFormGroup,
         FigFormInput,
+        FigTag,
         FigTooltip,
         FigCountry,
+        FigTableSimple,
+        FigTh,
+        FigTd,
         UsingColorValueBadge,
         Money,
-        BooleanTag
+        BooleanTag,
+        OperationsDropdown
     },
 
     props: {
@@ -66,7 +76,7 @@ export default Vue.extend({
                 { label: this.$t('Continue selling'), value: true },
                 { label: this.$t('Hide'), value: false }
             ],
-            allOpened: false
+            isDetailsView: false
         };
     },
 
@@ -87,7 +97,6 @@ export default Vue.extend({
             if(Array.isArray(this.sizes)) {
                 this.sizes.forEach((size) => {
                     const copy = {...size};
-                    delete copy.opened;
                     cleanSizes.push(copy);
                 });
             }
@@ -113,22 +122,11 @@ export default Vue.extend({
                 sku: null,
                 barcode: null,
                 customs_country_of_origin: null,
-
-                // meta data that should be removed before saving:
-                opened: true
             });
         },
 
         toggleBulkEdit() {
             this.showBulkEdit = !this.showBulkEdit;
-        },
-
-        toggleAllFormOpened() {
-            this.allOpened = !this.allOpened;
-
-            this.sizes.forEach((size) => {
-                size.opened = this.allOpened;
-            });
         },
 
         onClickApplyBulkEdit() {
@@ -176,32 +174,10 @@ export default Vue.extend({
     <div>
         <div class="pb-4" v-if="sizes.length">
 
-            <div class="flex flex-row items-center pb-2">
+            <div class="pb-2">
 
-                <!-- created button list -->
-                <div class="flex-grow">
-                    <div class="inline-block pr-2 text-sm">{{ $t('Created') }}:</div>
-                    <div class="inline-block">
-                        <draggable
-                            v-model="sizes"
-                            ghost-class="ghost"
-                            handle=".size-btn"
-                            tag="div">
-                            <fig-button
-                                v-for="(size, idx) in sizes"
-                                :key="idx"
-                                :variant="size.label ? 'success' : 'danger'"
-                                class="mr-2 size-btn handle"
-                                size="sm"
-                                :href="`#size-card-${idx}`">{{ size.label }}</fig-button>
-                        </draggable>
-                    </div>
-                </div>
-
-
-                <!-- bulk edit button/popup -->
                 <!-- <div id="header-container" v-if="sizes.length > 1"> -->
-                <div id="header-container">
+                <div id="header-container" class="text-right">
                     <fig-button
                         variant="primary"
                         size="sm"
@@ -212,9 +188,12 @@ export default Vue.extend({
                     <fig-button
                         variant="plain"
                         size="sm"
-                        @click="toggleAllFormOpened"
-                        :icon="allOpened ? 'chevron-up' : 'chevron-down'"
-                        class="mr-2">{{ allOpened ? $t('Collapse all') : $t('Expand all') }}</fig-button>
+                        @click="isDetailsView = !isDetailsView"
+                        :icon="isDetailsView ? 'edit' : 'columns'"
+                        class="mr-2">
+                        <template v-if="isDetailsView">{{ $t('Edit Sizes') }}</template>
+                        <template v-else>{{ $t('Show list view') }}</template>
+                    </fig-button>
 
                     <fig-button
                         variant="plain"
@@ -431,161 +410,178 @@ export default Vue.extend({
 
 
         <!-- size card list -->
-        <draggable
-            v-model="sizes"
-            ghost-class="ghost"
-            handle=".handle"
-            class="flex flex-wrap -mx-1 mb-4"
-            tag="div">
+        <fig-table-simple
+            v-if="isDetailsView"
+            striped
+            hover>
+            <template slot="head">
+                <tr>
+                    <fig-th v-if="sizes.length > 1" class="handle-cell"></fig-th>
+                    <fig-th>{{ $t('Size') }}</fig-th>
+                    <fig-th>{{ $t('Inventory') }}</fig-th>
+                    <fig-th>{{ $t('Price') }}</fig-th>
+                    <fig-th>{{ $t('Compare at') }}</fig-th>
+                    <fig-th>{{ $t('Cost') }}</fig-th>
+                    <fig-th>{{ $t('Weight (oz)') }}</fig-th>
+                    <fig-th>{{ $t('SKU') }}</fig-th>
+                    <fig-th>{{ $t('Barcode') }}</fig-th>
+                    <fig-th class="text-center">{{ $t('Track inventory') }}</fig-th>
+                    <fig-th class="text-center">{{ $t('Hide when out of stock') }}</fig-th>
+                    <fig-th>{{ $t('Country of origin') }}</fig-th>
+                </tr>
+            </template>
 
-            <!-- card -->
-            <div
-                class="my-2 px-2 w-full sm:w-full md:w-1/2 xl:w-1/3"
-                v-for="(size, index) in sizes"
-                :key="index">
+            <draggable
+                v-model="sizes"
+                ghost-class="ghost"
+                handle=".handle"
+                tag="tbody">
+
+                <tr
+                    v-for="(size, index) in sizes"
+                    :key="index">
+
+                    <!-- handle -->
+                    <fig-td v-if="sizes.length > 1" class="align-middle">
+                        <i class="handle">
+                            <fig-icon icon="dots-vertical-double" />
+                        </i>
+                    </fig-td>
+
+                    <!-- size -->
+                    <fig-td class="font-semibold">
+                        {{ size.label }}
+                    </fig-td>
+
+                    <!-- inventory -->
+                    <fig-td class="text-sm">
+                        {{ size.inventory_count }}
+                    </fig-td>
+
+                    <!-- Price -->
+                    <fig-td class="text-sm text-right">
+                        <money
+                            v-if="size.base_price !== null"
+                            :cents="size.base_price" />
+                    </fig-td>
+
+                    <!-- Compare at -->
+                    <fig-td class="text-sm text-right">
+                        <money
+                            v-if="size.compare_at_price !== null"
+                            :cents="size.compare_at_price" />
+                        <div
+                            v-else
+                            class="text-gray-400">({{ $t('default') }})</div>
+                    </fig-td>
+
+                    <!-- Cost -->
+                    <fig-td class="text-sm text-right">
+                        <money
+                            v-if="size.cost_price !== null"
+                            :cents="size.cost_price" />
+                        <div
+                            v-else
+                            class="text-gray-400">({{ $t('default') }})</div>
+                    </fig-td>
+
+                    <!-- Weight -->
+                    <fig-td class="text-sm text-right">
+                        <div v-if="size.weight_oz !== null">{{ size.weight_oz }}</div>
+                        <div
+                            v-else
+                            class="text-gray-400">({{ $t('default') }})</div>
+                    </fig-td>
+
+                    <!-- SKU -->
+                    <fig-td class="text-sm">
+                        {{ size.sku }}
+                    </fig-td>
+
+                    <!-- Barcode -->
+                    <fig-td class="text-sm">
+                        {{ size.barcode }}
+                    </fig-td>
+
+                    <!-- Track inventory -->
+                    <fig-td class="text-center">
+                        <boolean-tag
+                            :value="size.track_inventory_count"
+                            size="sm"
+                            pill />
+                    </fig-td>
+
+                    <!-- Hide when out of stock -->
+                    <fig-td class="text-center">
+                        <boolean-tag
+                            :value="size.visible_if_no_inventory"
+                            size="sm"
+                            pill />
+                    </fig-td>
+
+                    <!-- Country of origin -->
+                    <fig-td class="text-sm">
+                        <fig-country
+                            v-if="size.customs_country_of_origin !== null"
+                            :alpha2="size.customs_country_of_origin" />
+                        <div
+                            v-else
+                            class="text-gray-400">({{ $t('default') }})</div>
+                    </fig-td>
+                </tr>
+
+            </draggable>
+        </fig-table-simple>
+
+        <!-- EDIT VIEW (cards) -->
+        <template v-else>
+            <draggable
+                v-model="sizes"
+                ghost-class="ghost"
+                handle=".handle"
+                class="flex flex-wrap -mx-1 mb-4"
+                tag="div">
+
+                <!-- card -->
                 <div
-                    class="bg-gray-100 border rounded-lg shadow-md"
-                    :class="{'border-red-500': !size.label, 'border-gray-200': size.label}">
+                    class="my-2 px-2 w-full sm:w-full md:w-1/2 xl:w-1/3"
+                    v-for="(size, index) in sizes"
+                    :key="index">
+                    <div
+                        class="bg-gray-100 border rounded-lg shadow-md"
+                        :class="{'border-red-500': !size.label, 'border-gray-200': size.label}">
 
-                    <!-- button header -->
-                    <div class="flex flex-row items-center pt-1 px-3">
-                        <div class="flex-grow">
-                            <i class="handle">
-                                <fig-icon icon="dots" />
-                            </i>
-                        </div>
-
-                        <div>
-                            <pop-confirm @onConfirm="removeRow(index)">
-                                <div class="text-center" style="min-width:125px">{{ $t('Delete this size?') }}</div>
-
-                                <i slot="reference" class="ml-3 cursor-pointer">
-                                    <fig-icon icon="trash" stroke-width="1px" width="20" height="20" />
+                        <!-- button header -->
+                        <div class="flex flex-row items-center pt-1 px-3">
+                            <div class="flex-grow">
+                                <i class="handle">
+                                    <fig-icon icon="dots" />
                                 </i>
-                            </pop-confirm>
-                        </div>
-                    </div>
+                            </div>
 
-                    <!-- size input -->
-                    <div class="p-3 flex items-center flex-grow">
-                        <size-select
-                            v-model="size.label"
-                            size="md"
-                            :placeholder="$t('Choose a size')"
-                            style="min-width:200px" />
-                    </div>
+                            <div>
+                                <pop-confirm @onConfirm="removeRow(index)">
+                                    <div class="text-center" style="min-width:125px">{{ $t('Delete this size?') }}</div>
 
-                    <!-- body -->
-                    <div class="text-sm border-t border-gray-200">
-                        <div class="px-2 pt-2 pb-1 text-right">
-                            <fig-button
-                                @click="$set(size, 'opened', !size.opened)"
-                                variant="ghost"
-                                :icon="size.opened ? 'chevron-up' : 'chevron-down'"
-                                size="sm" />
+                                    <i slot="reference" class="cursor-pointer">
+                                        <fig-icon icon="trash" stroke-width="1px" width="20" height="20" />
+                                    </i>
+                                </pop-confirm>
+                            </div>
                         </div>
 
-                        <div class="px-3 pb-3">
+                        <!-- size input -->
+                        <div class="p-3 flex items-center flex-grow">
+                            <size-select
+                                v-model="size.label"
+                                size="md"
+                                :placeholder="$t('Choose a size')"
+                                style="min-width:200px" />
+                        </div>
 
-                            <!------------- DETAILS VIEW ------------->
-                            <template v-if="!size.opened">
-                                <!-- inventory -->
-                                <div class="size-details-row">
-                                    <label>{{ $t('Inventory') }}:</label>
-                                    <div class="size-details-cell">{{ size.inventory_count }}</div>
-                                </div>
-
-                                <!-- Track inventory -->
-                                <div class="size-details-row">
-                                    <label>{{ $t('Track inventory') }}:</label>
-                                    <div class="size-details-cell">
-                                        <boolean-tag
-                                            :value="size.track_inventory_count"
-                                            size="sm"
-                                            pill />
-                                    </div>
-                                </div>
-
-                                <!-- Hide when out of stock -->
-                                <div class="size-details-row">
-                                    <label>{{ $t('Hide when out of stock') }}:</label>
-                                    <div class="size-details-cell">
-                                        <boolean-tag
-                                            :value="size.visible_if_no_inventory"
-                                            size="sm"
-                                            pill />
-                                    </div>
-                                </div>
-
-                                <!-- SKU -->
-                                <div class="size-details-row">
-                                    <label>{{ $t('SKU') }}:</label>
-                                    <div class="size-details-cell">{{ size.sku }}</div>
-                                </div>
-
-                                <!-- Barcode -->
-                                <div class="size-details-row">
-                                    <label>{{ $t('Barcode') }}:</label>
-                                    <div class="size-details-cell">{{ size.barcode }}</div>
-                                </div>
-
-                                <!-- Price -->
-                                <div class="size-details-row">
-                                    <label>{{ $t('Price') }}:</label>
-                                    <div class="size-details-cell">
-                                        <using-color-value-badge v-if="size.base_price === null" />
-                                        <money
-                                            v-else
-                                            :cents="size.base_price" />
-                                    </div>
-                                </div>
-
-                                <!-- Compare at -->
-                                <div class="size-details-row">
-                                    <label>{{ $t('Compare at') }}:</label>
-                                    <div class="size-details-cell">
-                                        <using-color-value-badge v-if="size.compare_at_price === null" />
-                                        <money
-                                            v-else
-                                            :cents="size.compare_at_price" />
-                                    </div>
-                                </div>
-
-                                <!-- Cost -->
-                                <div class="size-details-row">
-                                    <label>{{ $t('Cost') }}:</label>
-                                    <div class="size-details-cell">
-                                        <using-color-value-badge v-if="size.cost_price === null" />
-                                        <money
-                                            v-else
-                                            :cents="size.cost_price" />
-                                    </div>
-                                </div>
-
-                                <!-- Weight -->
-                                <div class="size-details-row">
-                                    <label>{{ $t('Weight (oz)') }}:</label>
-                                    <div class="size-details-cell">
-                                        <using-color-value-badge v-if="size.weight_oz === null" />
-                                        <div v-else>{{ size.weight_oz }}</div>
-                                    </div>
-                                </div>
-
-                                <!-- Country of origin -->
-                                <div class="size-details-row">
-                                    <label>{{ $t('Country of origin') }}:</label>
-                                    <div class="size-details-cell">
-                                        <using-color-value-badge v-if="size.customs_country_of_origin === null" />
-                                        <fig-country
-                                            v-else
-                                            :alpha2="size.customs_country_of_origin" />
-                                    </div>
-                                </div>
-                            </template>
-
-
-                            <!------------- EDIT VIEW ------------->
-                            <template v-else>
+                        <!-- body -->
+                        <div class="text-sm border-t border-gray-200">
+                            <div class="px-3 pb-3">
                                 <!-- Inventory -->
                                 <div class="mb-3">
                                     <fig-form-group class="mb-1">
@@ -627,14 +623,16 @@ export default Vue.extend({
                                 <!-- barcode -->
                                 <fig-form-group class="mb-3">
                                     <label for="size_barcode" slot="label" class="size-card-edit-label">
-                                        {{ $t('Barcode') }}
+                                        <div class="flex items-center">
+                                            <div class="mr-1">{{ $t('Barcode') }}</div>
 
-                                        <fig-tooltip placement="top">
-                                            <i slot="toggler" class="ml-1">
-                                                <fig-icon icon="info-circle" width="16" height="16" />
-                                            </i>
-                                            <div class="whitespace-no-wrap">{{ $t('sku_barcode_description') }}</div>
-                                        </fig-tooltip>
+                                            <fig-tooltip placement="top">
+                                                <i slot="toggler">
+                                                    <fig-icon icon="info-circle" width="16" height="16" />
+                                                </i>
+                                                <div class="whitespace-no-wrap">{{ $t('sku_barcode_description') }}</div>
+                                            </fig-tooltip>
+                                        </div>
                                     </label>
 
                                     <fig-form-input
@@ -654,10 +652,8 @@ export default Vue.extend({
                                             @input="(val) => onToggleChange(index, 'base_price', val)" />
                                     </label>
 
-                                    <using-color-value-badge v-if="size.base_price === null" />
-
                                     <fig-form-input-money
-                                        v-else
+                                        v-if="size.base_price !== null"
                                         v-model="size.base_price"
                                         id="size_price" />
                                 </fig-form-group>
@@ -674,10 +670,8 @@ export default Vue.extend({
                                             @input="(val) => onToggleChange(index, 'compare_at_price', val)" />
                                     </label>
 
-                                    <using-color-value-badge v-if="size.compare_at_price === null" />
-
                                     <fig-form-input-money
-                                        v-else
+                                        v-if="size.compare_at_price !== null"
                                         v-model="size.compare_at_price"
                                         id="size_price_compare_at" />
                                 </fig-form-group>
@@ -694,10 +688,8 @@ export default Vue.extend({
                                             @input="(val) => onToggleChange(index, 'cost_price', val)" />
                                     </label>
 
-                                    <using-color-value-badge v-if="size.cost_price === null" />
-
                                     <fig-form-input-money
-                                        v-else
+                                        v-if="size.cost_price !== null"
                                         v-model="size.cost_price"
                                         id="size_price_cost" />
                                 </fig-form-group>
@@ -714,10 +706,8 @@ export default Vue.extend({
                                             @input="(val) => onToggleChange(index, 'weight_oz', val)" />
                                     </label>
 
-                                    <using-color-value-badge v-if="size.weight_oz === null" />
-
                                     <fig-form-input-number
-                                        v-else
+                                        v-if="size.weight_oz !== null"
                                         v-model="size.weight_oz"
                                         :step=".01"
                                         :min="0"
@@ -737,30 +727,18 @@ export default Vue.extend({
                                             @input="(val) => onToggleChange(index, 'customs_country_of_origin', val)" />
                                     </label>
 
-                                    <using-color-value-badge v-if="size.customs_country_of_origin === null" />
-
                                     <fig-form-select-country
-                                        v-else
+                                        v-if="size.customs_country_of_origin !== null"
                                         v-model="size.customs_country_of_origin"
                                         id="size_origin" />
                                 </fig-form-group>
-                            </template>
-                        </div>
+                            </div>
 
+                        </div>
                     </div>
                 </div>
-            </div>
-        </draggable>
-
-
-        <div>
-            <fig-button
-                variant="primary"
-                size="sm"
-                @click="addSize"
-                icon="plus"
-                class="mr-2">{{ $t('Add Size') }}</fig-button>
-        </div>
+            </draggable>
+        </template>
 
     </div>
 </template>

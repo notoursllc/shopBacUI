@@ -4,8 +4,9 @@ import isObject from 'lodash.isobject';
 import {
     FigFormGroup,
     FigFormCheckbox,
-    FigFormInput,
-    FigFormInputMoney
+    FigFormInputMoney,
+    FigCol,
+    FigRow
 } from '@notoursllc/figleaf';
 
 
@@ -15,8 +16,9 @@ export default {
     components: {
         FigFormGroup,
         FigFormCheckbox,
-        FigFormInput,
-        FigFormInputMoney
+        FigFormInputMoney,
+        FigCol,
+        FigRow
     },
 
     props: {
@@ -60,50 +62,53 @@ export default {
 
 
 <template>
-    <div>
-        <div class="flex flex-wrap -mx-3">
-            <!-- price -->
-            <div class="my-3 px-3 w-full sm:w-1/2 md:w-1/3 xl:w-1/4">
-                <fig-form-group>
-                    <label slot="label" for="color_base_price">{{ $t('Price') }}</label>
-                    <fig-form-input-money
-                        v-model="form.base_price"
-                        @input="onChange"
-                        id="color_base_price" />
-                </fig-form-group>
-            </div>
+    <fig-row sm="1/2" md="1/3" lg="1/4" xl="1/5" default="full" default-gap="1" sm-gap="2" key="org">
 
-            <!-- compare at price -->
-            <div class="my-3 px-3 w-full sm:w-1/2 md:w-1/3 xl:w-1/4">
-                <fig-form-group>
-                    <label slot="label" for="color_compare_at_price">{{ $t('Compare at') }}</label>
-                    <fig-form-input-money
-                        v-model="form.compare_at_price"
-                        @input="onChange"
-                        id="color_compare_at_price" />
-                </fig-form-group>
-            </div>
+        <!-- price -->
+        <fig-col>
+            <fig-form-group>
+                <label slot="label" for="color_base_price">{{ $t('Price') }}</label>
+                <fig-form-input-money
+                    v-model="form.base_price"
+                    @input="onChange"
+                    id="color_base_price" />
+            </fig-form-group>
+        </fig-col>
 
-            <!-- cost pre item -->
-            <div class="my-3 px-3 w-full sm:w-1/2 md:w-1/3 xl:w-1/4">
-                <fig-form-group>
-                    <label slot="label" for="color_cost_price">{{ $t('Cost per item') }}</label>
-                    <fig-form-input-money
-                        v-model="form.cost_price"
-                        @input="onChange"
-                        id="color_cost_price" />
+        <!-- compare at price -->
+        <fig-col>
+            <fig-form-group>
+                <label slot="label" for="color_compare_at_price">{{ $t('Compare at') }}</label>
+                <fig-form-input-money
+                    v-model="form.compare_at_price"
+                    @input="onChange"
+                    id="color_compare_at_price" />
+            </fig-form-group>
+        </fig-col>
 
-                    <div slot="description">{{ $t('Customers won’t see this') }}</div>
-                </fig-form-group>
-            </div>
-        </div>
+        <!-- cost per item -->
+        <fig-col>
+            <fig-form-group>
+                <label slot="label" for="color_cost_price">{{ $t('Cost per item') }}</label>
+                <fig-form-input-money
+                    v-model="form.cost_price"
+                    @input="onChange"
+                    id="color_cost_price" />
 
-        <div>
-            <!-- Charge tax on this product -->
-            <fig-form-checkbox
-                v-model="form.is_taxable"
-                @input="onChange">{{ $t('Charge tax on this product') }}</fig-form-checkbox>
-        </div>
-    </div>
+                <div slot="description">{{ $t('Customers won’t see this') }}</div>
+            </fig-form-group>
+        </fig-col>
+
+        <!-- charge tax on this item -->
+        <fig-col>
+            <fig-form-group>
+                <label slot="label">{{ $t('Charge tax on this item') }}</label>
+                <fig-form-checkbox
+                    v-model="form.is_taxable"
+                    @input="onChange"></fig-form-checkbox>
+            </fig-form-group>
+        </fig-col>
+
+    </fig-row>
 </template>
 

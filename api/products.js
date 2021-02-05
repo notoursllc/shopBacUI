@@ -20,6 +20,13 @@ function stripRelations(data) {
                     delete img.media;
                 });
             }
+
+            if(Array.isArray(variant.skus)) {
+                variant.skus.forEach((img) => {
+                    delete img.final_price;
+                });
+            }
+
         });
     }
 }

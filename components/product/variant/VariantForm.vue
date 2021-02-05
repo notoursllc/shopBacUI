@@ -215,6 +215,12 @@ export default {
             <div slot="header">{{ $t('Sizes') }}</div>
 
             <div class="container mx-auto">
+                <pricing-form
+                    :data="variant"
+                    @input="onPricingFormInput" />
+
+                <hr />
+
                 <sku-manager
                     :value="variant.skus"
                     @input="onSkusChange" />
@@ -223,7 +229,7 @@ export default {
 
 
         <!-- pricing -->
-        <text-card class="mb-5">
+        <!-- <text-card class="mb-5">
             <div slot="header">{{ $t('Pricing') }}</div>
 
             <div class="container mx-auto">
@@ -231,7 +237,7 @@ export default {
                     :data="variant"
                     @input="onPricingFormInput" />
             </div>
-        </text-card>
+        </text-card> -->
 
 
         <!-- accent message -->

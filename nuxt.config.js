@@ -81,11 +81,14 @@ export default {
     ],
 
     /*
-    ** Plugins to load before mounting the App
-    ** https://nuxtjs.org/guide/plugins
+    * Plugins to load before mounting the App
+    * https://nuxtjs.org/guide/plugins
+    *
+    * Naming your plugin 'xxx.client.js' will make it execute only on the client-side.
+    * https://nuxtjs.org/guide/plugins/#name-conventional-plugin
     */
     plugins: [
-        '@/plugins/bugsnag',
+        '@/plugins/bugsnag.client.js',
         '@/plugins/api.js',
         '@/plugins/http',
         '@/plugins/i18n.js',
@@ -96,9 +99,8 @@ export default {
         '@/plugins/notifications',
         '@/plugins/figIcon',
         '@/node_modules/@notoursllc/figleaf/components/toaster',
-        '@/node_modules/@notoursllc/figleaf/components/confirm',
-        { src: '@/plugins/youtube', ssr: false },
-        { src: '@/plugins/bugsnag', ssr: false }
+        '@/node_modules/@notoursllc/figleaf/components/confirm'
+        // { src: '@/plugins/youtube', ssr: false },
     ],
 
     /*

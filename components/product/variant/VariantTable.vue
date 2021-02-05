@@ -1,10 +1,10 @@
 <script>
 import isObject from 'lodash.isobject';
 import draggable from 'vuedraggable';
-import PopConfirm from '@/components/PopConfirm';
 import VariantForm from '@/components/product/variant/VariantForm';
 import BooleanTag from '@/components/BooleanTag';
 import ColorSwatch from '@/components/product/colorSwatch/ColorSwatch';
+import OperationsDropdown from '@/components/OperationsDropdown';
 import Money from '@/components/Money';
 import storage_mixin from '@/mixins/storage_mixin';
 import product_mixin from '@/mixins/product_mixin';
@@ -23,10 +23,10 @@ export default {
 
     components: {
         draggable,
-        PopConfirm,
         VariantForm,
         BooleanTag,
         ColorSwatch,
+        OperationsDropdown,
         Money,
         FigButton,
         FigModal,
@@ -123,32 +123,43 @@ export default {
             this.emitChange();
         },
 
-        async deleteVariant(index) {
+        async onDeleteClick(index) {
             try {
-                const variant = this.variants[index];
+                const variantToDelete = this.variants[index];
+
+                const confirmed = await this.$showConfirm(
+                    this.$t('delete_name?', {name: variantToDelete.label}),
+                    'warning'
+                );
+
+                if(!confirmed) {
+                    return;
+                }
 
                 // Only delete the variants that are persisted in the DB (which have an id)
-                if(variant.id) {
-                    await this.$api.products.variants.delete(variant.id);
+                if(variantToDelete.id) {
+                    await this.$api.products.variants.delete(variantToDelete.id);
                 }
 
                 this.variants.splice(index, 1);
                 this.emitChange();
 
-                if(variant.id) {
+                if(variantToDelete.id) {
                     this.$successToast({
                         title: this.$t('Success'),
                         text: this.$t('Color deleted successfully')
                     });
                 }
             }
-            catch(e) {
+            catch(err) {
                 this.$errorToast({
                     title: this.$t('Error'),
-                    text: e.message
+                    text: err.message
                 });
             }
         },
+
+
 
         onUpsertDone(colorData) {
             const variantsIndex = this.visibleColorIndex === null ? this.variants.length : this.visibleColorIndex;
@@ -232,7 +243,6 @@ export default {
                     <fig-th>{{ $t('Images') }}</fig-th>
                     <fig-th>{{ $t('Swatch') }}</fig-th>
                     <fig-th sortable prop="published">{{ $t('Published') }}</fig-th>
-                    <fig-th></fig-th>
                 </tr>
             </template>
 
@@ -253,6 +263,11 @@ export default {
                     <!-- Color name -->
                     <fig-td>
                         {{ color.label }}
+                        <operations-dropdown
+                            :show-view="false"
+                            @edit="showModal(idx)"
+                            @delete="onDeleteClick(idx)"
+                            class="ml-1" />
                     </fig-td>
 
                     <!-- Price -->
@@ -297,23 +312,6 @@ export default {
                     <!-- Published -->
                     <fig-td>
                         <boolean-tag :value="color.published" />
-                    </fig-td>
-
-                    <fig-td class="text-right">
-                        <fig-button
-                            variant="plain"
-                            class="mr-1"
-                            @click="showModal(idx)">{{ $t('Edit') }}</fig-button>
-
-                        <pop-confirm @onConfirm="deleteVariant(idx)" class="align-bottom">
-                            {{ $t('Delete this row?') }}
-
-                            <fig-button
-                                slot="reference"
-                                variant="plain"
-                                dotted
-                                icon="trash" />
-                        </pop-confirm>
                     </fig-td>
                 </tr>
             </draggable>
