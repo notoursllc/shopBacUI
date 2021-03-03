@@ -84,8 +84,19 @@ export default Vue.extend({
 
         variant: {
             handler(newVal) {
-                this.skus = isObject(newVal) ? newVal.skus : [];
-            }
+                if(isObject(newVal)) {
+                    this.skus = newVal.skus;
+
+                    // also set the defaults
+                    for(const key in this.defaults) {
+                        this.defaults[key] = newVal[key];
+                    }
+                }
+                else {
+                    this.skus = [];
+                }
+            },
+            immediate: true
         }
     },
 
@@ -104,7 +115,6 @@ export default Vue.extend({
         },
 
         emitDefaultsInput() {
-            console.log("EMIT DEFAULTS", this.defaults)
             this.$emit('defaults', this.defaults);
         },
 
