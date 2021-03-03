@@ -2,11 +2,10 @@
 import isObject from 'lodash.isobject';
 import storage_mixin from '@/mixins/storage_mixin'; // TODO: not needed?
 import TextCard from '@/components/TextCard';
-import PricingForm from '@/components/product/PricingForm';
 import ImageManager from '@/components/product/ImageManager';
 import ColorSwatchTable from '@/components/product/colorSwatch/ColorSwatchTable';
 import AccentMessageWizard from '@/components/product/accentMessage/AccentMessageWizard';
-import SkuManager from '@/components/product/size/SkuManager';
+import VariantSkuTable from '@/components/product/variant/VariantSkuTable';
 import MasterTypeSelect from '@/components/MasterTypeSelect';
 
 import {
@@ -14,7 +13,6 @@ import {
     FigFormCheckbox,
     FigFormInput,
     FigFormGroup,
-    FigFormInputNumber,
     FigFormSelectCountry,
     FigCol,
     FigRow
@@ -26,17 +24,15 @@ export default {
 
     components: {
         TextCard,
-        PricingForm,
         ImageManager,
         ColorSwatchTable,
         AccentMessageWizard,
-        SkuManager,
+        VariantSkuTable,
         MasterTypeSelect,
         FigButton,
         FigFormCheckbox,
         FigFormInput,
         FigFormGroup,
-        FigFormInputNumber,
         FigFormSelectCountry,
         FigCol,
         FigRow
@@ -124,7 +120,7 @@ export default {
             this.$emit('cancel');
         },
 
-        onPricingFormInput(obj) {
+        onVariantDefaultsChange(obj) {
             if(isObject(obj)) {
                 for(const key in obj) {
                     this.$set(this.variant, key, obj[key]);
@@ -147,13 +143,22 @@ export default {
 <template>
     <div>
 
-        <!-- published -->
-        <div class="container mb-5">
-            <fig-form-checkbox
-                v-model="variant.published">{{ $t('Published') }}</fig-form-checkbox>
-        </div>
-
         <!-- General info -->
+        <text-card class="mb-5">
+            <div class="mb-2">
+                <!-- published -->
+                <fig-form-checkbox
+                    v-model="variant.published">{{ $t('Published') }}</fig-form-checkbox>
+            </div>
+
+            <div>
+                <!-- is taxable -->
+                <fig-form-checkbox
+                    v-model="variant.is_taxable">{{ $t('Charge tax on this item') }}</fig-form-checkbox>
+            </div>
+        </text-card>
+
+        <!-- Color info -->
         <text-card class="mb-5">
             <div slot="header">{{ $t('Color info') }}</div>
 
@@ -213,31 +218,13 @@ export default {
         <!-- Sizes -->
         <text-card class="mb-5">
             <div slot="header">{{ $t('Sizes') }}</div>
-
             <div class="container mx-auto">
-                <pricing-form
-                    :data="variant"
-                    @input="onPricingFormInput" />
-
-                <hr />
-
-                <sku-manager
-                    :value="variant.skus"
-                    @input="onSkusChange" />
+                <variant-sku-table
+                    :variant="variant"
+                    @input="onSkusChange"
+                    @defaults="onVariantDefaultsChange" />
             </div>
         </text-card>
-
-
-        <!-- pricing -->
-        <!-- <text-card class="mb-5">
-            <div slot="header">{{ $t('Pricing') }}</div>
-
-            <div class="container mx-auto">
-                <pricing-form
-                    :data="variant"
-                    @input="onPricingFormInput" />
-            </div>
-        </text-card> -->
 
 
         <!-- accent message -->
@@ -268,23 +255,6 @@ export default {
                     {{ $t('requires_shipping_off_desc') }}
                 </template>
                 <template v-else>
-                    <hr />
-
-                    <div class="flex">
-                        <fig-form-group v-if="variant.requires_shipping">
-                            <label slot="label" for="sku_weight_oz">{{ $t('Weight (oz)') }}</label>
-                            <fig-form-input-number
-                                v-model="variant.weight_oz"
-                                :step=".01"
-                                :min="0"
-                                id="sku_weight_oz" />
-
-                            <div slot="description">
-                                {{ $t('Used to calculate shipping rates at checkout and label prices during fulfillment.') }}
-                            </div>
-                        </fig-form-group>
-                    </div>
-
                     <hr />
 
                     <h4>{{ $t('CUSTOMS INFORMATION') }}</h4>

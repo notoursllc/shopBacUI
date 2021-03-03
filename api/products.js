@@ -11,6 +11,7 @@ function stripRelations(data) {
 
     if(Array.isArray(data.variants)) {
         data.variants.forEach((variant) => {
+            delete variant.display_price;
             delete variant.is_displayable;
             delete variant.total_inventory_count;
 
@@ -22,8 +23,9 @@ function stripRelations(data) {
             }
 
             if(Array.isArray(variant.skus)) {
-                variant.skus.forEach((img) => {
-                    delete img.final_price;
+                variant.skus.forEach((sku) => {
+                    delete sku.final_price;
+                    delete sku.display_price;
                 });
             }
 

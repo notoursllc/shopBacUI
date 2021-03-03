@@ -67,5 +67,6 @@ export default {
         :placeholder="placeholder"
         @input="emitInput"
         :size="size"
+        v-bind="$attrs"
         class="w-full" />
 </template>
