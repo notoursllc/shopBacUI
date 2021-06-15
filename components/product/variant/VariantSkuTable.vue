@@ -55,7 +55,7 @@ export default Vue.extend({
 
     data: function() {
         return {
-            skus: Array.isArray(this.variant.skus) ? this.variant.skus: [],
+            skus: Array.isArray(this.variant.skus) ? this.variant.skus : [],
             showBulkEdit: false,
             showBulkEditInputs: {},
             bulkEdit: {},
@@ -66,10 +66,10 @@ export default Vue.extend({
             isDetailsView: false,
             defaults: {
                 base_price: 0,
+                sale_price: 0,
                 compare_at_price: 0,
                 cost_price: 0,
-                weight_oz: 0,
-                max_cart_qty: 0
+                weight_oz: 0
             }
         };
     },
@@ -137,17 +137,12 @@ export default Vue.extend({
                 track_inventory_count: true,
                 sku: null,
                 barcode: null,
-                customs_country_of_origin: null,
-                max_cart_qty: null
+                customs_country_of_origin: null
             });
         },
 
         onToggleChange(index, prop, val) {
             this.$set(this.skus[index], prop, !val ? null : '');
-        },
-
-        onMaxCartQtyChecked(index, checked) {
-            this.skus[index].max_cart_qty = checked ? null : 10;
         },
 
         toggleDetailsView() {
@@ -160,7 +155,7 @@ export default Vue.extend({
 
 <template>
     <div>
-        <div id="header-container" class="text-right pb-4">
+        <div id="header-container" class="flex items-center justify-end pb-4">
             <fig-button
                 variant="primary"
                 size="sm"
@@ -169,7 +164,7 @@ export default Vue.extend({
                 class="mr-2">{{ $t('Add Size') }}</fig-button>
 
             <fig-button
-                v-if="skus.length"
+                v-if="skus && skus.length"
                 variant="plain"
                 size="sm"
                 @click="toggleDetailsView"
@@ -182,12 +177,14 @@ export default Vue.extend({
             hover>
             <template slot="head">
                 <tr>
-                    <fig-th rowspan="2" v-if="skus.length > 1" class="handle-cell align-top"></fig-th>
+                    <fig-th rowspan="2" v-if="skus && skus.length > 1" class="handle-cell align-top"></fig-th>
                     <fig-th rowspan="2">{{ $t('Size') }}</fig-th>
                     <fig-th rowspan="2">{{ $t('Inventory') }}</fig-th>
                     <fig-th rowspan="2">{{ $t('SKU') }}</fig-th>
                     <fig-th rowspan="2">{{ $t('Barcode') }}</fig-th>
                     <fig-th>{{ $t('Price') }}</fig-th>
+                    <fig-th>{{ $t('Sale price') }}</fig-th>
+                    <fig-th rowspan="2">{{ $t('Is on sale') }}</fig-th>
                     <fig-th>{{ $t('Compare at') }}</fig-th>
                     <fig-th>{{ $t('Cost') }}</fig-th>
                     <fig-th>
@@ -200,18 +197,6 @@ export default Vue.extend({
                                 width="16"
                                 height="16" />
                             {{ $t('Used to calculate shipping rates at checkout and label prices during fulfillment.') }}
-                        </fig-tooltip>
-                    </fig-th>
-                    <fig-th class="text-center">
-                        {{ $t('Max cart qty') }}
-                        <fig-tooltip placement="top">
-                            <fig-icon
-                                slot="toggler"
-                                class="ml-1 cursor-pointer"
-                                icon="info-circle"
-                                width="16"
-                                height="16" />
-                            {{ $t('max_cart_qty_description') }}
                         </fig-tooltip>
                     </fig-th>
                     <fig-th rowspan="2" class="text-center">{{ $t('Track inventory') }}</fig-th>
@@ -230,6 +215,19 @@ export default Vue.extend({
                         <fig-form-input-money
                             v-else
                             v-model="defaults.base_price"
+                            size="sm"
+                            @input="emitDefaultsInput" />
+                    </fig-th>
+
+                    <!-- sale price -->
+                    <fig-th>
+                        <div class="text-xs">{{ $t('default') }}:</div>
+                        <money
+                            v-if="isDetailsView"
+                            :cents="defaults.sale_price" />
+                        <fig-form-input-money
+                            v-else
+                            v-model="defaults.sale_price"
                             size="sm"
                             @input="emitDefaultsInput" />
                     </fig-th>
@@ -268,19 +266,6 @@ export default Vue.extend({
                             v-else
                             v-model="defaults.weight_oz"
                             :step=".01"
-                            :min="0"
-                            controls-right
-                            size="sm"
-                            @input="emitDefaultsInput" />
-                    </fig-th>
-
-                    <!-- max cart qty -->
-                    <fig-th>
-                        <div class="text-xs">{{ $t('default') }}:</div>
-                        <template v-if="isDetailsView">{{ $n(defaults.max_cart_qty) }}</template>
-                        <fig-form-input-number
-                            v-else
-                            v-model="defaults.max_cart_qty"
                             :min="0"
                             controls-right
                             size="sm"
@@ -368,6 +353,40 @@ export default Vue.extend({
                         </template>
                     </fig-td>
 
+                    <!-- Sale price -->
+                    <fig-td class="text-sm text-right align-top">
+                        <money
+                            v-if="isDetailsView"
+                            :cents="sku.sale_price" />
+                        <template v-else>
+                            <fig-form-input-money
+                                v-if="sku.sale_price !== null"
+                                v-model="sku.sale_price"
+                                size="sm"
+                                id="size_price" />
+
+                            <fig-form-input-toggle
+                                :value="sku.sale_price !== null"
+                                size="sm"
+                                variant="success"
+                                class="mt-2"
+                                @input="(val) => onToggleChange(index, 'sale_price', val)" />
+                        </template>
+                    </fig-td>
+
+                    <!-- Is on sale -->
+                    <fig-td class="text-center align-top">
+                        <fig-boolean-tag
+                            v-if="isDetailsView"
+                            :bool="sku.is_on_sale"
+                            :true-label="$t('Yes')"
+                            :false-label="$t('No')"
+                            size="sm" />
+                        <fig-form-checkbox
+                            v-else
+                            v-model="sku.is_on_sale" />
+                    </fig-td>
+
                     <!-- Compare at -->
                     <fig-td class="text-sm text-right align-top">
                         <money
@@ -429,28 +448,6 @@ export default Vue.extend({
                                 variant="success"
                                 class="mt-2"
                                 @input="(val) => onToggleChange(index, 'weight_oz', val)" />
-                        </template>
-                    </fig-td>
-
-                    <!-- Max cart qty -->
-                    <fig-td class="text-sm align-top text-right">
-                        <template v-if="isDetailsView">{{ $n(sku.max_cart_qty) }}</template>
-                        <template v-else>
-                            <fig-form-input-number
-                                v-if="sku.max_cart_qty !== null"
-                                v-model="sku.max_cart_qty"
-                                :disabled="sku.max_cart_qty === null"
-                                controls-right
-                                :min="0"
-                                size="sm"
-                                id="max_cart_qty" />
-
-                            <fig-form-input-toggle
-                                :value="sku.max_cart_qty !== null"
-                                size="sm"
-                                variant="success"
-                                class="mt-2"
-                                @input="(val) => onToggleChange(index, 'max_cart_qty', val)" />
                         </template>
                     </fig-td>
 

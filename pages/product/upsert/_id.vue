@@ -16,6 +16,7 @@ import {
     FigFormGroup,
     FigFormInput,
     FigFormTextarea,
+    FigFormSelectCountry,
     FigButton,
     FigFormInputEndcapper,
     FigOverlay,
@@ -44,6 +45,7 @@ export default Vue.extend({
         FigFormGroup,
         FigFormInput,
         FigFormTextarea,
+        FigFormSelectCountry,
         FigButton,
         FigFormInputEndcapper,
         FigOverlay,
@@ -259,7 +261,7 @@ export default Vue.extend({
         </text-card>
 
 
-        <!-- Style attributes -->
+        <!-- Style -->
         <text-card class="mb-5">
             <div slot="header">{{ $t('Style') }}</div>
 
@@ -357,6 +359,7 @@ export default Vue.extend({
         </text-card>
 
 
+        <!-- Colors -->
         <text-card class="mb-5">
             <div slot="header">{{ $t('Colors') }}</div>
 
@@ -364,6 +367,59 @@ export default Vue.extend({
                 <variant-table
                     :value="product.variants"
                     @change="colors => this.$set(product, 'variants', colors)" />
+            </div>
+        </text-card>
+
+
+        <!-- shipping -->
+        <text-card class="mb-5">
+            <div slot="header">{{ $t('Shipping') }}</div>
+
+            <div class="container mx-auto">
+                <!-- requires shipping -->
+                <div class="mb-3">
+                    <fig-form-checkbox
+                        v-model="product.requires_shipping">{{ $t('This is a physical product') }}</fig-form-checkbox>
+                </div>
+
+                <template v-if="!product.requires_shipping">
+                    {{ $t('requires_shipping_off_desc') }}
+                </template>
+                <template v-else>
+                    <hr />
+
+                    <h4>{{ $t('CUSTOMS INFORMATION') }}</h4>
+
+                    <div class="flex flex-wrap -mx-2">
+                        <!-- country of origin -->
+                        <div class="my-2 px-2 w-full xl:w-1/2">
+                            <fig-form-group>
+                                <label slot="label" for="product_customs_country_of_origin">{{ $t('Country of origin') }}</label>
+                                <fig-form-select-country
+                                    v-model="product.customs_country_of_origin"
+                                    id="product_customs_country_of_origin" />
+
+                                <div slot="description">
+                                    {{ $t('customs_country_of_origin_desc') }}
+                                </div>
+                            </fig-form-group>
+                        </div>
+
+                        <!-- HS code -->
+                        <div class="my-2 px-2 w-full xl:w-1/2">
+                            <fig-form-group>
+                                <label slot="label" for="product_customs_harmonized_system_code">{{ $t('HS (Harmonized System) code') }}</label>
+                                <fig-form-input
+                                    v-model="product.customs_harmonized_system_code"
+                                    id="product_customs_harmonized_system_code" />
+
+                                <div slot="description">
+                                    {{ $t('customs_hs_code_desc') }}
+                                </div>
+                            </fig-form-group>
+                        </div>
+                    </div>
+                </template>
             </div>
         </text-card>
 

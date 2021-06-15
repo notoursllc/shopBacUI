@@ -325,7 +325,7 @@ export default {
                             class="th">
                             <div class="col-icon-container">
                                 <pop-confirm @onConfirm="deleteColumn(index);">
-                                    <div class="whitespace-no-wrap">{{ $t('Delete this column?') }}</div>
+                                    <div class="whitespace-nowrap">{{ $t('Delete this column?') }}</div>
 
                                     <fig-button
                                         slot="reference"

@@ -217,8 +217,6 @@
     "Material": "Material",
     "MATERIAL_TYPE_COTTON": "Cotton",
     "MATERIAL_TYPE_TRI_BLEND": "Tri-Blend",
-    "max_cart_qty_description": "The maximum number of items that users can add to their cart for this size",
-    "Max cart qty": "Max cart qty",
     "Metadata": "Metadata",
     "Metadata_description": "This product has additional meta data that you can use for your own purposes",
     "more": "more",
@@ -339,6 +337,7 @@
     "row": "row",
     "Row label": "Row label",
 
+    "Sale price": "Sale price",
     "Sales channel": "Sales channel",
     "Sales Channels": "Sales Channels",
     "Same as shipping address": "Same as shipping address",

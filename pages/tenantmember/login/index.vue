@@ -74,14 +74,16 @@ export default {
                 <div>
                     <fig-form-input
                         v-model="userInfo.email"
-                        :placeholder="$t('Email address')" />
+                        :placeholder="$t('Email address')"
+                        size="lg" />
                 </div>
 
                 <div>
                     <fig-form-input
                         v-model="userInfo.password"
                         :placeholder="$t('Password')"
-                        type="password" />
+                        type="password"
+                        size="lg" />
                 </div>
 
                 <div>

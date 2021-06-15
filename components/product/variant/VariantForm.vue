@@ -245,55 +245,28 @@ export default {
             <div slot="header">{{ $t('Shipping') }}</div>
 
             <div class="container mx-auto">
-                <!-- requires shipping -->
-                <div class="mb-3">
-                    <fig-form-checkbox
-                        v-model="variant.requires_shipping">{{ $t('This is a physical product') }}</fig-form-checkbox>
-                </div>
+                <h4>{{ $t('CUSTOMS INFORMATION') }}</h4>
 
-                <template v-if="!variant.requires_shipping">
-                    {{ $t('requires_shipping_off_desc') }}
-                </template>
-                <template v-else>
-                    <hr />
+                <div class="flex flex-wrap -mx-2">
+                    <!-- country of origin -->
+                    <div class="my-2 px-2 w-full xl:w-1/2">
+                        <fig-form-group>
+                            <label slot="label" for="sku_customs_country_of_origin">{{ $t('Country of origin') }}</label>
+                            <fig-form-select-country
+                                v-model="variant.customs_country_of_origin"
+                                id="sku_customs_country_of_origin" />
 
-                    <h4>{{ $t('CUSTOMS INFORMATION') }}</h4>
-
-                    <div class="flex flex-wrap -mx-2">
-                        <!-- country of origin -->
-                        <div class="my-2 px-2 w-full xl:w-1/2">
-                            <fig-form-group>
-                                <label slot="label" for="sku_customs_country_of_origin">{{ $t('Country of origin') }}</label>
-                                <fig-form-select-country
-                                    v-model="variant.customs_country_of_origin"
-                                    id="sku_customs_country_of_origin" />
-
-                                <div slot="description">
-                                    {{ $t('customs_country_of_origin_desc') }}
-                                </div>
-                            </fig-form-group>
-                        </div>
-
-                        <!-- HS code -->
-                        <div class="my-2 px-2 w-full xl:w-1/2">
-                            <fig-form-group>
-                                <label slot="label" for="sku_customs_harmonized_system_code">{{ $t('HS (Harmonized System) code') }}</label>
-                                <fig-form-input
-                                    v-model="variant.customs_harmonized_system_code"
-                                    id="sku_customs_harmonized_system_code" />
-
-                                <div slot="description">
-                                    {{ $t('customs_hs_code_desc') }}
-                                </div>
-                            </fig-form-group>
-                        </div>
+                            <div slot="description">
+                                {{ $t('customs_country_of_origin_desc') }}
+                            </div>
+                        </fig-form-group>
                     </div>
-                </template>
+                </div>
             </div>
         </text-card>
 
 
-        <div class="text-center">
+        <div class="flex items-center justify-center">
             <fig-button
                 variant="primary"
                 @click="onClickDone">{{ $t('Done') }}</fig-button>
