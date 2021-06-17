@@ -1,9 +1,11 @@
 <script>
+import { FigFormSelectBitwise } from '@notoursllc/figleaf';
+
 export default {
     name: 'MasterTypeSelect',
 
     components: {
-        BitwiseMultiSelect: () => import('@/components/BitwiseMultiSelect')
+        FigFormSelectBitwise
     },
 
     props: {
@@ -18,6 +20,11 @@ export default {
         },
 
         multiple: {
+            type: Boolean,
+            default: true
+        },
+
+        clearable: {
             type: Boolean,
             default: true
         }
@@ -76,9 +83,10 @@ export default {
 
 
 <template>
-    <bitwise-multi-select
+    <fig-form-select-bitwise
         v-model="selectedVal"
         :options="selectOptions"
         :multiple="multiple"
+        :clearable="clearable"
         @input="emitChange" />
 </template>

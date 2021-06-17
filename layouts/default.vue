@@ -256,6 +256,11 @@ export default {
                             class="subnav-btn">{{ $t('Basic colors') }}</nuxt-link>
 
                         <nuxt-link
+                            :to="{ name: 'global-size-types' }"
+                            tag="button"
+                            class="subnav-btn">{{ $t('Sizes') }}</nuxt-link>
+
+                        <nuxt-link
                             :to="{ name: 'global-feature-types' }"
                             tag="button"
                             class="subnav-btn">{{ $t('Product features') }}</nuxt-link>

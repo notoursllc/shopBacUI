@@ -1,10 +1,8 @@
 <script>
 import isObject from 'lodash.isobject';
 import draggable from 'vuedraggable';
-import PopConfirm from '@/components/PopConfirm';
 import DataTableSelect from '@/components/product/dataTable/DataTableSelect';
 import AppMessage from '@/components/AppMessage';
-
 import {
     FigButton,
     FigFormInput,
@@ -15,13 +13,13 @@ import {
     FigOverlay,
     FigTableSimple,
     FigTh,
-    FigTd
+    FigTd,
+    FigPopConfirm
 } from '@notoursllc/figleaf';
 
 export default {
     components: {
         draggable,
-        PopConfirm,
         DataTableSelect,
         AppMessage,
         FigButton,
@@ -33,7 +31,8 @@ export default {
         FigOverlay,
         FigTableSimple,
         FigTh,
-        FigTd
+        FigTd,
+        FigPopConfirm
     },
 
     props: {
@@ -277,12 +276,12 @@ export default {
                         <fig-th class="grab-handle-cell no-color" v-show="canShowRowGrabHandles"></fig-th>
                         <fig-th class="th align-top">
                             <!-- import button -->
-                            <pop-confirm
+                            <fig-pop-confirm
                                 v-if="showImport"
                                 :confirm-button-label="$t('Import')"
                                 :show-confirm-button="!!canDoImport"
                                 :cancel-button-label="!canDoImport ? $t('OK') : ''"
-                                @onConfirm="doDataImport();">
+                                @confirm="doDataImport();">
                                 <div>
                                     <template v-if="canDoImport">
                                         <fig-form-group>
@@ -315,8 +314,7 @@ export default {
                                         class="border-dashed-2" />
                                     {{ $t('Import data from an existing Data Table') }}
                                 </fig-tooltip>
-
-                            </pop-confirm>
+                            </fig-pop-confirm>
                         </fig-th>
 
                         <fig-th
@@ -324,7 +322,7 @@ export default {
                             :key="index"
                             class="th">
                             <div class="col-icon-container">
-                                <pop-confirm @onConfirm="deleteColumn(index);">
+                                <fig-pop-confirm @confirm="deleteColumn(index);">
                                     <div class="whitespace-nowrap">{{ $t('Delete this column?') }}</div>
 
                                     <fig-button
@@ -336,7 +334,7 @@ export default {
                                             <fig-icon icon="trash" stroke-width="1px" /><fig-icon icon="arrow-down" />
                                         </template>
                                     </fig-button>
-                                </pop-confirm>
+                                </fig-pop-confirm>
                                 <!-- <fig-popover placement="top">
                                     <fig-button
                                         slot="toggler"
@@ -424,7 +422,7 @@ export default {
 
                         <!-- delete button -->
                         <fig-td class="no-color empty-column-cell">
-                            <pop-confirm @onConfirm="deleteRow(idx)">
+                            <fig-pop-confirm @confirm="deleteRow(idx)">
                                 {{ $t('Delete this row?') }}
 
                                 <fig-button
@@ -436,7 +434,7 @@ export default {
                                         <fig-icon icon="arrow-left" /><fig-icon icon="trash" stroke-width="1px" />
                                     </template>
                                 </fig-button>
-                            </pop-confirm>
+                            </fig-pop-confirm>
                         </fig-td>
                     </tr>
                 </draggable>
@@ -452,7 +450,7 @@ export default {
                             size="sm"
                             icon="plus">{{ $t('row') }}</fig-button>
 
-                        <pop-confirm @onConfirm="clearTable()">
+                        <fig-pop-confirm @confirm="clearTable()">
                             <app-message>
                                 <fig-icon slot="icon" icon="alert-circle" />
                                 {{ $t('Are you sure you want to remove all data from this table?') }}
@@ -464,7 +462,7 @@ export default {
                                 size="sm"
                                 icon="trash"
                                 class="ml-3 border-dashed-2">{{ $t('Clear table') }}</fig-button>
-                        </pop-confirm>
+                        </fig-pop-confirm>
                     </fig-td>
 
                     <fig-td class="no-color"></fig-td>

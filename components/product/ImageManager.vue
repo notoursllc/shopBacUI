@@ -1,7 +1,6 @@
 <script>
 import draggable from 'vuedraggable';
 import product_mixin from '@/mixins/product_mixin';
-import PopConfirm from '@/components/PopConfirm';
 
 import {
     FigFormGroup,
@@ -14,14 +13,14 @@ import {
     FigTh,
     FigTd,
     FigCol,
-    FigRow
+    FigRow,
+    FigPopConfirm
 } from '@notoursllc/figleaf';
 
 export default {
     name: 'ImageManager',
 
     components: {
-        PopConfirm,
         draggable,
         FigFormGroup,
         FigFormInput,
@@ -33,7 +32,8 @@ export default {
         FigTh,
         FigTd,
         FigCol,
-        FigRow
+        FigRow,
+        FigPopConfirm
     },
 
     mixins: [
@@ -306,8 +306,8 @@ export default {
 
                     <!-- actions -->
                     <fig-td class="text-center align-middle">
-                        <pop-confirm
-                            @onConfirm="onDeleteImage(obj, index)"
+                        <fig-pop-confirm
+                            @confirm="onDeleteImage(obj, index)"
                             v-if="!obj.loading">
                             {{ $t('Delete this item?') }}
 
@@ -316,7 +316,7 @@ export default {
                                 variant="plain"
                                 dotted
                                 icon="trash" />
-                        </pop-confirm>
+                        </fig-pop-confirm>
                     </fig-td>
                 </tr>
             </draggable>

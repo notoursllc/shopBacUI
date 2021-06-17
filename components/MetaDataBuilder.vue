@@ -1,16 +1,16 @@
 <script>
 import draggable from 'vuedraggable';
-import PopConfirm from '@/components/PopConfirm';
 import {
     FigButton,
-    FigFormInput
+    FigFormInput,
+    FigPopConfirm
 } from '@notoursllc/figleaf';
 
 
 export default {
     components: {
         draggable,
-        PopConfirm,
+        FigPopConfirm,
         FigButton,
         FigFormInput
     },
@@ -139,7 +139,7 @@ export default {
                                 @input="onInputChange"
                                 :placeholder="valuePlaceholder" />
 
-                            <pop-confirm @onConfirm="onClickDeleteRow(index)">
+                            <fig-pop-confirm @confirm="onClickDeleteRow(index)">
                                 {{ $t('Delete this row?') }}
 
                                 <fig-button
@@ -148,7 +148,7 @@ export default {
                                     variant="plain"
                                     icon="trash"
                                     dotted />
-                            </pop-confirm>
+                            </fig-pop-confirm>
                         </div>
                     </div>
                 </div>

@@ -1,6 +1,5 @@
 <script>
 import draggable from 'vuedraggable';
-import PopConfirm from '@/components/PopConfirm';
 import ColorSwatchInput from '@/components/product/colorSwatch/ColorSwatchInput';
 
 import {
@@ -8,7 +7,8 @@ import {
     FigFormInput,
     FigTableSimple,
     FigTh,
-    FigTd
+    FigTd,
+    FigPopConfirm
 } from '@notoursllc/figleaf';
 
 export default {
@@ -16,13 +16,13 @@ export default {
 
     components: {
         draggable,
-        PopConfirm,
         ColorSwatchInput,
         FigButton,
         FigFormInput,
         FigTableSimple,
         FigTh,
-        FigTd
+        FigTd,
+        FigPopConfirm
     },
 
     props: {
@@ -184,8 +184,8 @@ export default {
                         <!-- actions -->
                         <fig-td class="text-center align-middle">
                             <div class="flex items-center">
-                                <pop-confirm
-                                    @onConfirm="onDeleteColor(index)">
+                                <fig-pop-confirm
+                                    @confirm="onDeleteColor(index)">
                                     {{ $t('Delete this item?') }}
 
                                     <fig-button
@@ -194,10 +194,10 @@ export default {
                                         dotted
                                         class="ml-2"
                                         icon="trash" />
-                                </pop-confirm>
+                                </fig-pop-confirm>
 
-                                <pop-confirm
-                                    @onConfirm="onSaveSwatchToPreDefined(index)">
+                                <fig-pop-confirm
+                                    @confirm="onSaveSwatchToPreDefined(index)">
                                     {{ $t('Save to your pre-defined color swatches?') }}
 
                                     <fig-button
@@ -207,7 +207,7 @@ export default {
                                         dotted
                                         class="ml-2"
                                         icon="floppy" />
-                                </pop-confirm>
+                                </fig-pop-confirm>
                             </div>
                         </fig-td>
                     </tr>

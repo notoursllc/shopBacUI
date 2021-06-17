@@ -1,8 +1,6 @@
 <script>
 import { FigFormSelect } from '@notoursllc/figleaf';
 
-// TODO: fetch predefined sizes from API
-
 export default {
     name: 'SizeSelect',
 
@@ -30,13 +28,7 @@ export default {
     data: function() {
         return {
             selectedSize: null,
-            predefinedSizes: [
-                { label: 'S', value: 'S' },
-                { label: 'M', value: 'M' },
-                { label: 'L', value: 'L' },
-                { label: 'XL', value: 'XL' },
-                { label: '2XL', value: '2XL' }
-            ]
+            selectOptions: []
         };
     },
 
@@ -49,9 +41,29 @@ export default {
         }
     },
 
+    created() {
+        this.createOptions();
+    },
+
     methods: {
         emitInput() {
             this.$emit('input', this.selectedSize.label);
+        },
+
+        async createOptions() {
+            const types = await this.$api.masterTypes.all({
+                where: ['object', '=', 'product_size_type'],
+                sortBy: 'ordinal',
+                sortDesc: false
+            });
+
+            this.selectOptions = types.map(obj => {
+                return {
+                    label: obj.name,
+                    value: obj.value,
+                    disabled: !obj.published
+                };
+            });
         }
     }
 };
@@ -63,7 +75,7 @@ export default {
         v-model="selectedSize"
         taggable
         :clearable="false"
-        :options="predefinedSizes"
+        :options="selectOptions"
         :placeholder="placeholder"
         @input="emitInput"
         :size="size"

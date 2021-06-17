@@ -2,10 +2,8 @@
 import Vue from 'vue';
 import isObject from 'lodash.isobject';
 import draggable from 'vuedraggable';
-import PopConfirm from '@/components/PopConfirm';
 import SizeSelect from '@/components/product/size/SizeSelect';
 import Money from '@/components/Money';
-
 import {
     FigFormCheckbox,
     FigBooleanTag,
@@ -18,7 +16,8 @@ import {
     FigTableSimple,
     FigTooltip,
     FigTh,
-    FigTd
+    FigTd,
+    FigPopConfirm
 } from '@notoursllc/figleaf';
 
 
@@ -27,7 +26,6 @@ export default Vue.extend({
 
     components: {
         draggable,
-        PopConfirm,
         SizeSelect,
         Money,
         FigFormCheckbox,
@@ -41,7 +39,8 @@ export default Vue.extend({
         FigTableSimple,
         FigTooltip,
         FigTh,
-        FigTd
+        FigTd,
+        FigPopConfirm
     },
 
     props: {
@@ -504,14 +503,14 @@ export default Vue.extend({
                     </fig-td> -->
 
                     <fig-td class="align-top">
-                        <pop-confirm @onConfirm="removeRow(index)">
+                        <fig-pop-confirm @confirm="removeRow(index)">
                             <div class="text-center" style="min-width:125px">{{ $t('Delete this size?') }}</div>
                             <fig-button
                                 slot="reference"
                                 variant="ghost"
                                 size="sm"
                                 icon="trash" />
-                        </pop-confirm>
+                        </fig-pop-confirm>
                     </fig-td>
                 </tr>
             </draggable>
