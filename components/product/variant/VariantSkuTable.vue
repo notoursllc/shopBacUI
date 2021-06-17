@@ -141,7 +141,15 @@ export default Vue.extend({
         },
 
         onToggleChange(index, prop, val) {
-            this.$set(this.skus[index], prop, !val ? null : '');
+            this.$set(
+                this.skus[index],
+                prop,
+                !val ? null : ''
+            );
+        },
+
+        skuInputIsVisible(index, prop) {
+            return this.skus[index].hasOwnProperty(prop) && this.skus[index][prop] !== null;
         },
 
         toggleDetailsView() {
@@ -338,13 +346,12 @@ export default Vue.extend({
                             :cents="sku.base_price" />
                         <template v-else>
                             <fig-form-input-money
-                                v-if="sku.base_price !== null"
+                                v-if="skuInputIsVisible(index, 'base_price')"
                                 v-model="sku.base_price"
-                                size="sm"
-                                id="size_price" />
+                                size="sm" />
 
                             <fig-form-input-toggle
-                                :value="sku.base_price !== null"
+                                :value="skuInputIsVisible(index, 'base_price')"
                                 size="sm"
                                 variant="success"
                                 class="mt-2"
@@ -359,13 +366,12 @@ export default Vue.extend({
                             :cents="sku.sale_price" />
                         <template v-else>
                             <fig-form-input-money
-                                v-if="sku.sale_price !== null"
+                                v-if="skuInputIsVisible(index, 'sale_price')"
                                 v-model="sku.sale_price"
-                                size="sm"
-                                id="size_price" />
+                                size="sm" />
 
                             <fig-form-input-toggle
-                                :value="sku.sale_price !== null"
+                                :value="skuInputIsVisible(index, 'sale_price')"
                                 size="sm"
                                 variant="success"
                                 class="mt-2"
@@ -393,13 +399,13 @@ export default Vue.extend({
                             :cents="sku.compare_at_price" />
                         <template v-else>
                             <fig-form-input-money
-                                v-if="sku.compare_at_price !== null"
+                                v-if="skuInputIsVisible(index, 'compare_at_price')"
                                 v-model="sku.compare_at_price"
                                 size="sm"
                                 id="size_price_compare_at" />
 
                             <fig-form-input-toggle
-                                :value="sku.compare_at_price !== null"
+                                :value="skuInputIsVisible(index, 'compare_at_price')"
                                 size="sm"
                                 variant="success"
                                 class="mt-2"
@@ -414,13 +420,13 @@ export default Vue.extend({
                             :cents="sku.cost_price" />
                         <template v-else>
                             <fig-form-input-money
-                                v-if="sku.cost_price !== null"
+                                v-if="skuInputIsVisible(index, 'cost_price')"
                                 v-model="sku.cost_price"
                                 size="sm"
                                 id="size_price_cost" />
 
                             <fig-form-input-toggle
-                                :value="sku.cost_price !== null"
+                                :value="skuInputIsVisible(index, 'cost_price')"
                                 size="sm"
                                 variant="success"
                                 class="mt-2"
@@ -433,7 +439,7 @@ export default Vue.extend({
                         <template v-if="isDetailsView">{{ sku.weight_oz }}</template>
                         <template v-else>
                             <fig-form-input-number
-                                v-if="sku.weight_oz !== null"
+                                v-if="skuInputIsVisible(index, 'weight_oz')"
                                 v-model="sku.weight_oz"
                                 :step=".01"
                                 :min="0"
@@ -442,7 +448,7 @@ export default Vue.extend({
                                 id="size_weight" />
 
                             <fig-form-input-toggle
-                                :value="sku.weight_oz !== null"
+                                :value="skuInputIsVisible(index, 'weight_oz')"
                                 size="sm"
                                 variant="success"
                                 class="mt-2"
@@ -487,7 +493,7 @@ export default Vue.extend({
                                 class="text-gray-400">({{ $t('default') }})</div>
                         </template>
                         <template v-else>
-                            <fig-form-select-country
+                            <fig-select-country
                                 v-if="sku.customs_country_of_origin !== null"
                                 v-model="sku.customs_country_of_origin"
                                 size="xs"
