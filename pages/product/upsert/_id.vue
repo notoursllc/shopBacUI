@@ -16,7 +16,7 @@ import {
     FigFormGroup,
     FigFormInput,
     FigFormTextarea,
-    FigFormSelectCountry,
+    FigSelectCountry,
     FigButton,
     FigFormInputEndcapper,
     FigOverlay,
@@ -45,7 +45,7 @@ export default Vue.extend({
         FigFormGroup,
         FigFormInput,
         FigFormTextarea,
-        FigFormSelectCountry,
+        FigSelectCountry,
         FigButton,
         FigFormInputEndcapper,
         FigOverlay,
@@ -395,7 +395,7 @@ export default Vue.extend({
                         <div class="my-2 px-2 w-full xl:w-1/2">
                             <fig-form-group>
                                 <label slot="label" for="product_customs_country_of_origin">{{ $t('Country of origin') }}</label>
-                                <fig-form-select-country
+                                <fig-select-country
                                     v-model="product.customs_country_of_origin"
                                     id="product_customs_country_of_origin" />
 
