@@ -13,7 +13,7 @@ import {
     FigFormCheckbox,
     FigFormInput,
     FigFormGroup,
-    FigFormSelectCountry,
+    FigSelectCountry,
     FigCol,
     FigRow
 } from '@notoursllc/figleaf';
@@ -33,7 +33,7 @@ export default {
         FigFormCheckbox,
         FigFormInput,
         FigFormGroup,
-        FigFormSelectCountry,
+        FigSelectCountry,
         FigCol,
         FigRow
     },
@@ -252,7 +252,7 @@ export default {
                     <div class="my-2 px-2 w-full xl:w-1/2">
                         <fig-form-group>
                             <label slot="label" for="sku_customs_country_of_origin">{{ $t('Country of origin') }}</label>
-                            <fig-form-select-country
+                            <fig-select-country
                                 v-model="variant.customs_country_of_origin"
                                 id="sku_customs_country_of_origin" />
 
