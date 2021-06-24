@@ -11,8 +11,8 @@ export default {
                 // upload the new images:
                 const newImagePromises = [];
                 newImages.forEach((obj) => {
-                    let formData = new FormData();
-                    formData.append('file', obj.raw)
+                    const formData = new FormData();
+                    formData.append('file', obj.raw);
                     newImagePromises.push(
                         this.$api.storage.addImage(formData)
                     );
@@ -25,7 +25,7 @@ export default {
                     imageUploadResult[index].forEach((imgObject) => {
                         imgObject.altText = obj.altText;
                     });
-                })
+                });
 
                 return imageUploadResult;
             }
@@ -38,8 +38,6 @@ export default {
          * @returns Promise
          */
         storagemix_deleteProductImages(imageManagerValue, oldProductImages) {
-            console.log("DELETE IMAGES", imageManagerValue, oldProductImages);
-
             if(Array.isArray(imageManagerValue) && isObject(oldProductImages)) {
                 let newImageUrls = imageManagerValue.map(obj => obj.url);
                 let toDelete = [];
@@ -67,14 +65,13 @@ export default {
                 toDelete.forEach((obj) => {
                     imageDeletePromises.push(
                         this.$api.storage.deleteImage(obj.url)
-                    )
+                    );
                 });
 
-                console.log("DELETE IMAGES- TO DELETE", toDelete);
                 return Promise.all(imageDeletePromises);
             }
-        },
+        }
 
     }
 
-}
+};
