@@ -390,6 +390,7 @@
     "accent_message_begin_desc": "The accent message will be displayed on this date",
     "accent_message_end_desc": "The accent message will be hidden on this date",
     "Sleeve": "Sleeve",
+    "Sleeve length": "Sleeve length",
     "Sleeve lengths": "Sleeve lengths",
     "Sleeve measurement": "Sleeve measurement",
     "sleeve_measurement_description": "The sleeve length is measured from the shoulder seam to the end of the sleeve.",
