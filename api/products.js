@@ -102,16 +102,6 @@ export default ($http) => ({
     },
 
 
-    async deleteImage(id) {
-        const { data } = await $http.$delete('/product/image', {
-            params: {
-                id
-            }
-        });
-        return data;
-    },
-
-
     /***********
      * Variants
      ***********/
@@ -121,6 +111,16 @@ export default ($http) => ({
             const { data } = await $http.$delete('/product/variant', {
                 params: {
                     id
+                }
+            });
+            return data;
+        },
+
+        async deleteImage(id, media_id) {
+            const { data } = await $http.$delete('/product/variant/image', {
+                params: {
+                    id,
+                    media_id
                 }
             });
             return data;
