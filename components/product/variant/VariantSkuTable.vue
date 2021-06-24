@@ -272,7 +272,7 @@ export default Vue.extend({
                         <fig-form-input-number
                             v-else
                             v-model="defaults.weight_oz"
-                            :step=".01"
+                            :step=".1"
                             :min="0"
                             controls-right
                             size="sm"
