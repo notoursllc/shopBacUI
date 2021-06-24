@@ -192,7 +192,7 @@ export default Vue.extend({
 <template>
     <fig-overlay :show="loading">
 
-        <div class="text-right mb-3" v-if="product.id">
+        <div class="flex justify-end mb-3" v-if="product.id">
             <fig-button
                 variant="plain"
                 @click="goToStore(product.seo_uri)"
