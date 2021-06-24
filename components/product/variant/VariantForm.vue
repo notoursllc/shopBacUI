@@ -84,10 +84,13 @@ export default {
     },
 
     methods: {
-        async onDeleteImage(id) {
+        async onDeleteImage(media_id) {
             try {
                 this.loadingImages = true;
-                await this.$api.productSkus.deleteImage(id); // TODO
+                await this.$api.products.variants.deleteImage(
+                    this.variant.id,
+                    media_id
+                );
 
                 this.$successToast({
                     title: this.$t('Success'),
