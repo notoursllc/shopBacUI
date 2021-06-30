@@ -117,7 +117,7 @@ export default {
                     throw new Error(this.$t('Error adding swatch'));
                 }
 
-                this.$successToast({
+                this.$figleaf.successToast({
                     title: this.$t('Success'),
                     text: this.$t('Swatch added successfully: {hex}', {hex: data.swatch})
                 });
@@ -125,7 +125,7 @@ export default {
                 this.fetchAllSwatches();
             }
             catch(e) {
-                this.$errorToast({
+                this.$figleaf.errorToast({
                     title: this.$t('Error'),
                     text: e.message
                 });

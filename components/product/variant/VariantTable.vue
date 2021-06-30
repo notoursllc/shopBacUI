@@ -145,14 +145,14 @@ export default {
                 this.emitChange();
 
                 if(variantToDelete.id) {
-                    this.$successToast({
+                    this.$figleaf.successToast({
                         title: this.$t('Success'),
                         text: this.$t('Color deleted successfully')
                     });
                 }
             }
             catch(err) {
-                this.$errorToast({
+                this.$figleaf.errorToast({
                     title: this.$t('Error'),
                     text: err.message
                 });

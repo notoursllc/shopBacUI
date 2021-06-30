@@ -47,7 +47,7 @@ export default {
                 this.messages = data;
             }
             catch(e) {
-                this.$errorToast({
+                this.$figleaf.errorToast({
                     title: this.$t('Error'),
                     text: e.message
                 });
@@ -81,13 +81,13 @@ export default {
 
                 this.init();
 
-                this.$successToast({
+                this.$figleaf.successToast({
                     title: this.$t('Success'),
                     text: this.$t('item_deleted_label', {label: data.message})
                 });
             }
             catch(e) {
-                this.$errorToast({
+                this.$figleaf.errorToast({
                     title: this.$t('Error'),
                     text: e.message
                 });

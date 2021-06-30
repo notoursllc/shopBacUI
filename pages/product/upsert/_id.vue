@@ -105,7 +105,7 @@ export default Vue.extend({
             }
         }
         catch(e) {
-            this.$errorToast({
+            this.$figleaf.errorToast({
                 title: this.$t('Error'),
                 text: e.message
             });
@@ -129,7 +129,7 @@ export default Vue.extend({
                 this.$store.dispatch('ui/title', this.$t('Product: {name}', { name: product.title }));
             }
             catch(e) {
-                this.$errorToast({
+                this.$figleaf.errorToast({
                     title: this.$t('Error'),
                     text: e.message
                 });
@@ -148,7 +148,7 @@ export default Vue.extend({
                     throw new Error('Error updating product');
                 }
 
-                this.$successToast({
+                this.$figleaf.successToast({
                     title: p.id ? this.$t('Product updated successfully') : this.$t('Product added successfully'),
                     text: p.title
                 });
@@ -156,7 +156,7 @@ export default Vue.extend({
                 this.goToProductList();
             }
             catch(e) {
-                this.$errorToast({
+                this.$figleaf.errorToast({
                     title: this.$t('Error'),
                     text: e.message
                 });

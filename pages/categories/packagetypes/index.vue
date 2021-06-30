@@ -43,7 +43,7 @@ export default {
                 this.shippingPackageTypes = await this.$api.shipping.listPackageTypes(paramsObj);
             }
             catch(e) {
-                this.$errorToast({
+                this.$figleaf.errorToast({
                     title: this.$t('Error'),
                     text: e.message
                 });
@@ -76,13 +76,13 @@ export default {
 
                 this.fetchPackageTypes();
 
-                this.$successToast({
+                this.$figleaf.successToast({
                     title: this.$t('Success'),
                     text: `Package Type deleted: ${data.label}`
                 });
             }
             catch(e) {
-                this.$errorToast({
+                this.$figleaf.errorToast({
                     title: this.$t('Error'),
                     text: e.message
                 });

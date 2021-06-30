@@ -34,7 +34,7 @@ export default {
                 this.dataTables = await this.$api.productDataTables.list(paramsObj);
             }
             catch(e) {
-                this.$errorToast({
+                this.$figleaf.errorToast({
                     title: this.$t('Error'),
                     text: e.message
                 });
@@ -66,12 +66,12 @@ export default {
                 }
 
                 this.fetchData();
-                this.$successToast(
+                this.$figleaf.successToast(
                     this.$t('deleted_name', { name: data.name })
                 );
             }
             catch(e) {
-                this.$errorToast({
+                this.$figleaf.errorToast({
                     title: this.$t('Error'),
                     text: e.message
                 });

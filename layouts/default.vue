@@ -55,7 +55,7 @@ export default {
 
     watch: {
         $route() {
-            this.$store.dispatch('ui/CLOSE_MESSAGE_INSTANCES');
+            this.$figleaf.clearToasts();
         }
     },
 
@@ -97,7 +97,7 @@ export default {
                 });
             }
             catch(e) {
-                this.$errorToast({
+                this.$figleaf.errorToast({
                     title: this.$t('Error'),
                     text: e.message
                 });

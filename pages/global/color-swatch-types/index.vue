@@ -44,7 +44,7 @@ export default {
                 this.swatches = data;
             }
             catch(e) {
-                this.$errorToast({
+                this.$figleaf.errorToast({
                     title: this.$t('Error'),
                     text: e.message
                 });
@@ -79,13 +79,13 @@ export default {
 
                 this.fetchData();
 
-                this.$successToast({
+                this.$figleaf.successToast({
                     title: this.$t('Success'),
                     text: this.$t('item_deleted_label', {label: data.label})
                 });
             }
             catch(e) {
-                this.$errorToast({
+                this.$figleaf.errorToast({
                     title: this.$t('Error'),
                     text: e.message
                 });

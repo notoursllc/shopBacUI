@@ -40,7 +40,7 @@ export default {
                 this.data = await this.$api.productAccentMessages.get(this.id);
             }
             catch(e) {
-                this.$errorToast({
+                this.$figleaf.errorToast({
                     title: this.$t('Error'),
                     text: e.message
                 });
@@ -55,7 +55,7 @@ export default {
                     throw new Error(this.$t('Error updating item'));
                 }
 
-                this.$successToast({
+                this.$figleaf.successToast({
                     title: this.$t('Success'),
                     text: this.id ? this.$t('Item updated successfully') : this.$t('Item added successfully')
                 });
@@ -63,7 +63,7 @@ export default {
                 this.$emit('success');
             }
             catch(e) {
-                this.$errorToast({
+                this.$figleaf.errorToast({
                     title: this.$t('Error'),
                     text: e.message
                 });

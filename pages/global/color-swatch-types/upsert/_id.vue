@@ -65,7 +65,7 @@ export default {
             this.$store.dispatch('ui/title', pageTitle);
         }
         catch(e) {
-            this.$errorToast({
+            this.$figleaf.errorToast({
                 title: this.$t('Error'),
                 text: e.message
             });
@@ -78,7 +78,7 @@ export default {
                 this.form = await this.$api.productColorSwatches.get(id);
             }
             catch(e) {
-                this.$errorToast({
+                this.$figleaf.errorToast({
                     title: this.$t('Error'),
                     text: e.message
                 });
@@ -97,7 +97,7 @@ export default {
                     throw new Error(this.$t('Error updating Master Type'));
                 }
 
-                this.$successToast({
+                this.$figleaf.successToast({
                     title: this.$t('Success'),
                     text: this.$t(this.form.id ? 'updated_name' : 'added_name', { name: response.label })
                 });
@@ -105,7 +105,7 @@ export default {
                 this.goToList();
             }
             catch(e) {
-                this.$errorToast({
+                this.$figleaf.errorToast({
                     title: this.$t('Error'),
                     text: e.message
                 });

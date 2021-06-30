@@ -152,7 +152,7 @@ export default {
                 // }
             }
             catch(e) {
-                this.$errorToast({
+                this.$figleaf.errorToast({
                     title: this.$t('Error'),
                     text: e.message
                 });
@@ -167,7 +167,7 @@ export default {
                 this.allDataTables = await this.$api.productDataTables.all();
             }
             catch(e) {
-                this.$errorToast({
+                this.$figleaf.errorToast({
                     title: this.$t('Error'),
                     text: e.message
                 });

@@ -66,7 +66,7 @@ export default Vue.extend({
                 this.allSwatches = await this.$api.productColorSwatches.all();
             }
             catch(e) {
-                this.$errorToast({
+                this.$figleaf.errorToast({
                     title: this.$t('Error'),
                     text: e.message
                 });

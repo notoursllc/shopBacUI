@@ -46,7 +46,7 @@ export default {
                 this.data = data;
             }
             catch(e) {
-                this.$errorToast({
+                this.$figleaf.errorToast({
                     title: this.$t('Error'),
                     text: e.message
                 });
@@ -65,7 +65,7 @@ export default {
                     throw new Error('Error updating Data Table');
                 }
 
-                this.$successToast({
+                this.$figleaf.successToast({
                     title: p.id ? this.$t('Data Table updated successfully') : this.$t('Data Table added successfully'),
                     text: p.title
                 });
@@ -75,7 +75,7 @@ export default {
                 });
             }
             catch(e) {
-                this.$errorToast({
+                this.$figleaf.errorToast({
                     title: this.$t('Error'),
                     text: e.message
                 });

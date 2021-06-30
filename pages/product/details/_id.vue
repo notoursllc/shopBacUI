@@ -31,7 +31,7 @@ export default {
             }
         }
         catch(e) {
-            this.$errorToast({
+            this.$figleaf.errorToast({
                 title: this.$t('Error'),
                 text: e.message
             });

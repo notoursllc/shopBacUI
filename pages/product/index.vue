@@ -47,7 +47,7 @@ export default {
                 this.products = await this.$api.products.list(paramsObj);
             }
             catch(e) {
-                this.$errorToast({
+                this.$figleaf.errorToast({
                     title: this.$t('Error'),
                     text: e.message
                 });
@@ -104,7 +104,7 @@ export default {
             try {
                 await this.$api.products.delete(product.id);
 
-                this.$successToast({
+                this.$figleaf.successToast({
                     title: this.$t('Success'),
                     text: `"${product.title}" deleted`
                 });
@@ -112,7 +112,7 @@ export default {
                 this.fetchProducts();
             }
             catch(e) {
-                this.$errorToast({
+                this.$figleaf.errorToast({
                     title: this.$t('Error'),
                     text: e.message
                 });

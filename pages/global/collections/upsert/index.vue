@@ -54,7 +54,7 @@ export default {
                 }
             }
             catch(e) {
-                this.$errorToast({
+                this.$figleaf.errorToast({
                     title: this.$t('Error'),
                     text: e.message
                 });
@@ -67,7 +67,7 @@ export default {
                 this.collection.value = getNextAvailableTypeValue(collections);
             }
             catch(e) {
-                this.$errorToast({
+                this.$figleaf.errorToast({
                     title: this.$t('Error'),
                     text: e.message
                 });
@@ -82,7 +82,7 @@ export default {
                     throw new Error(this.$t('Error updating Collection'));
                 }
 
-                this.$successToast({
+                this.$figleaf.successToast({
                     title: collection.id ? this.$t('Collection updated successfully') : this.$t('Collection added successfully'),
                     text: collection.name
                 });
@@ -91,7 +91,7 @@ export default {
 
             }
             catch(e) {
-                this.$errorToast({
+                this.$figleaf.errorToast({
                     title: this.$t('Error'),
                     text: e.message
                 });

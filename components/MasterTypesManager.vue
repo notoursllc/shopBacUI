@@ -102,7 +102,7 @@ export default {
                 });
             }
             catch(e) {
-                this.$errorToast({
+                this.$figleaf.errorToast({
                     title: this.$t('Error'),
                     text: e.message
                 });
@@ -137,14 +137,14 @@ export default {
 
                 this.fetchTypes();
 
-                this.$successToast({
+                this.$figleaf.successToast({
                     title: this.$t('Success'),
                     text: this.$t('deleted_name', { name: data.name })
                 });
 
             }
             catch(err) {
-                this.$errorToast({
+                this.$figleaf.errorToast({
                     title: this.$t('Error'),
                     text: err.message
                 });
@@ -180,7 +180,7 @@ export default {
                 this.showDialog();
             }
             catch(e) {
-                this.$errorToast({
+                this.$figleaf.errorToast({
                     title: this.$t('Error'),
                     text: e.message
                 });
@@ -209,7 +209,7 @@ export default {
                     throw new Error(this.$t('Error updating Master Type'));
                 }
 
-                this.$successToast({
+                this.$figleaf.successToast({
                     title: this.$t('Success'),
                     text: this.$t(this.form.id ? 'updated_name' : 'added_name', { name: mt.name })
                 });
@@ -218,7 +218,7 @@ export default {
                 this.fetchTypes();
             }
             catch(e) {
-                this.$errorToast({
+                this.$figleaf.errorToast({
                     title: this.$t('Error'),
                     text: e.message
                 });
@@ -259,13 +259,13 @@ export default {
 
                 this.updatingSortOrder = false;
 
-                this.$successToast({
+                this.$figleaf.successToast({
                     title: this.$t('Success'),
                     text: this.$t('Sort order updated')
                 });
             }
             catch(e) {
-                this.$errorToast({
+                this.$figleaf.errorToast({
                     title: this.$t('Error'),
                     text: e.message
                 });

@@ -223,7 +223,7 @@ export default {
                 this.tableData = data.table_data;
             }
             catch(e) {
-                this.$errorToast({
+                this.$figleaf.errorToast({
                     title: this.$t('Error'),
                     text: e.message
                 });
@@ -241,7 +241,7 @@ export default {
                 this.canDoImport = results.length;
             }
             catch(e) {
-                this.$errorToast({
+                this.$figleaf.errorToast({
                     title: this.$t('Error'),
                     text: e.message
                 });

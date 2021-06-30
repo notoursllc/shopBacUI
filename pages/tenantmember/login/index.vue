@@ -44,7 +44,7 @@ export default {
             catch(e) {
                 this.$store.dispatch('ui/logout');
 
-                this.$errorToast({
+                this.$figleaf.errorToast({
                     title: this.$t('Error'),
                     text: e.message
                 });

@@ -73,7 +73,7 @@ export default {
                 loadingInstance.close();
             }
             catch(err) {
-                this.$errorToast({
+                this.$figleaf.errorToast({
                     title: this.$t('Error'),
                     text: err.message
                 });
@@ -96,7 +96,7 @@ export default {
                 loadingInstance.close();
             }
             catch(err) {
-                this.$errorToast({
+                this.$figleaf.errorToast({
                     title: this.$t('Error'),
                     text: err.message
                 });

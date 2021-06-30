@@ -49,7 +49,7 @@ export default {
                 throw new Error(this.$t('Master type not found'));
             }
 
-            this.$successToast({
+            this.$figleaf.successToast({
                 title: this.$t('Success'),
                 text: this.$t('deleted_name', { name: data.name })
             });
@@ -78,7 +78,7 @@ export default {
         //         this.showDialog();
         //     }
         //     catch(e) {
-        //         this.$errorToast({
+        //         this.$figleaf.errorToast({
         //             title: this.$t('Error'),
         //             text: e.message
         //         });
@@ -93,13 +93,13 @@ export default {
                     throw new Error(this.$t('Error updating Master Type'));
                 }
 
-                this.$successToast({
+                this.$figleaf.successToast({
                     title: this.$t('Success'),
                     text: this.$t(data.id ? 'updated_name' : 'added_name', { name: mt.name })
                 });
             }
             catch(e) {
-                this.$errorToast({
+                this.$figleaf.errorToast({
                     title: this.$t('Error'),
                     text: e.message
                 });

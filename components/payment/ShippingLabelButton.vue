@@ -194,7 +194,7 @@ export default {
 
             }
             catch(err) {
-                this.$errorToast({
+                this.$figleaf.errorToast({
                     title: this.$t('Error'),
                     text: err.message
                 });
