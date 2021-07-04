@@ -74,6 +74,28 @@ export default {
         }
     },
 
+    computed: {
+        labelSuggestion() {
+            const parts = [];
+
+            if(this.form.length_cm) {
+                parts.push(this.form.length_cm);
+            }
+            if(this.form.width_cm) {
+                parts.push(this.form.width_cm);
+            }
+            if(this.form.height_cm) {
+                parts.push(this.form.height_cm);
+            }
+
+            if(parts.length > 1) {
+                return parts.join('x');
+            }
+
+            return '';
+        }
+    },
+
     created() {
         this.fetchData();
         this.$store.dispatch('ui/title', this.$t('Package Types'));
@@ -197,6 +219,10 @@ export default {
             for(const key in this.form) {
                 this.form[key] = null;
             }
+        },
+
+        useLabelSuggestion() {
+            this.form.label = this.labelSuggestion;
         }
     }
 };
@@ -284,43 +310,6 @@ export default {
             <fig-overlay :show="loadingForm">
                 <div>
                     <div class="flex flex-wrap sm:-mx-3">
-                        <div class="w-full sm:my-3 sm:px-3 sm:w-1/2">
-                            <!-- label -->
-                            <fig-form-group class="mb-3">
-                                <label slot="label" for="input_label">{{ $t('Label') }}</label>
-                                <fig-form-input
-                                    v-model="form.label"
-                                    id="input_label" />
-
-                                <div
-                                    v-if="$v.form.label.$invalid"
-                                    slot="error">{{ $t('Required') }}</div>
-                            </fig-form-group>
-                        </div>
-
-                        <div class="w-full sm:my-3 sm:px-3 sm:w-1/2">
-                            <!-- code -->
-                            <fig-form-group class="mb-3">
-                                <label slot="label" for="input_code">{{ $t('Carrier package type code') }}</label>
-                                <fig-form-input
-                                    v-model="form.code"
-                                    id="input_code" />
-                            </fig-form-group>
-                        </div>
-                    </div>
-
-                    <!-- description -->
-                    <fig-form-group class="mb-3">
-                        <label slot="label" for="input_desc">{{ $t('Description') }}</label>
-                        <fig-form-textarea
-                            v-model="form.description"
-                            :rows="2"
-                            id="input_desc" />
-                    </fig-form-group>
-
-
-                    <div class="flex flex-wrap sm:-mx-3">
-
                         <div class="w-full sm:my-3 sm:px-3 sm:w-1/3">
                             <!-- length -->
                             <fig-form-group class="mb-3">
@@ -376,6 +365,49 @@ export default {
                             </fig-form-group>
                         </div>
                     </div>
+
+                    <div class="flex flex-wrap sm:-mx-3">
+                        <div class="w-full sm:my-3 sm:px-3 sm:w-1/2">
+                            <!-- label -->
+                            <fig-form-group class="mb-3">
+                                <label slot="label" for="input_label">{{ $t('Label') }}</label>
+                                <fig-form-input
+                                    v-model="form.label"
+                                    id="input_label" />
+                                <div v-if="labelSuggestion && labelSuggestion !== form.label" class="flex items-center mt-1">
+                                    <span class="text-gray-600 text-sm pr-2">{{ $t('Suggestion') }}:</span>
+                                    <fig-button
+                                        variant="plain"
+                                        size="sm"
+                                        @click="useLabelSuggestion">{{ labelSuggestion }}</fig-button>
+                                </div>
+
+                                <div
+                                    v-if="$v.form.label.$invalid"
+                                    slot="error">{{ $t('Required') }}</div>
+                            </fig-form-group>
+                        </div>
+
+                        <div class="w-full sm:my-3 sm:px-3 sm:w-1/2">
+                            <!-- code -->
+                            <fig-form-group class="mb-3">
+                                <label slot="label" for="input_code">{{ $t('Carrier package type code') }}</label>
+                                <fig-form-input
+                                    v-model="form.code"
+                                    id="input_code" />
+                            </fig-form-group>
+                        </div>
+                    </div>
+
+                    <!-- description -->
+                    <fig-form-group class="mb-3">
+                        <label slot="label" for="input_desc">{{ $t('Description') }}</label>
+                        <fig-form-textarea
+                            v-model="form.description"
+                            :rows="2"
+                            id="input_desc" />
+                    </fig-form-group>
+
 
                     <div class="flex flex-wrap sm:-mx-3">
                         <div class="w-full sm:my-3 sm:px-3 sm:w-1/2">
