@@ -164,15 +164,15 @@ export default {
             this.loadingForm = true;
 
             try {
-                const mt = await this.$api.packageTypes.upsert(this.form);
+                const obj = await this.$api.packageTypes.upsert(this.form);
 
-                if(!mt) {
+                if(!obj) {
                     throw new Error(this.$t('Error updating Package Type'));
                 }
 
                 this.$figleaf.successToast({
                     title: this.$t('Success'),
-                    text: this.$t(this.form.id ? 'updated_name' : 'added_name', { name: mt.name })
+                    text: this.$t(this.form.id ? 'updated_name' : 'added_name', { name: obj.label })
                 });
 
                 this.showDialog(false);
