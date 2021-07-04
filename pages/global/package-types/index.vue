@@ -1,5 +1,6 @@
 <script>
 import { required } from 'vuelidate/lib/validators';
+import draggable from 'vuedraggable';
 
 import {
     FigOperationsDropdown,
@@ -19,6 +20,7 @@ import {
 
 export default {
     components: {
+        draggable,
         FigOperationsDropdown,
         FigButton,
         FigButtonFab,
@@ -42,6 +44,7 @@ export default {
             dialog: {
                 packageTypeId: null
             },
+            updatingSortOrder: false,
             form: {
                 id: null,
                 label: null,
@@ -103,6 +106,13 @@ export default {
 
     methods: {
         async fetchData(paramsObj) {
+            if(!paramsObj) {
+                paramsObj = {
+                    sortBy: 'ordinal',
+                    sortDesc: false
+                };
+            }
+
             this.loading = true;
 
             try {
@@ -223,6 +233,43 @@ export default {
 
         useLabelSuggestion() {
             this.form.label = this.labelSuggestion;
+        },
+
+        setOrdinals() {
+            this.updatingSortOrder = true;
+
+            this.packageTypes.forEach((obj, index) => {
+                obj.ordinal = index;
+            });
+        },
+
+        async saveOrdinals() {
+            this.loading = true;
+
+            try {
+                await this.$api.packageTypes.ordinals({
+                    ordinals: this.packageTypes.map(
+                        (obj) => {
+                            return { id: obj.id, ordinal: obj.ordinal };
+                        }
+                    )
+                });
+
+                this.updatingSortOrder = false;
+
+                this.$figleaf.successToast({
+                    title: this.$t('Success'),
+                    text: this.$t('Sort order updated')
+                });
+            }
+            catch(e) {
+                this.$figleaf.errorToast({
+                    title: this.$t('Error'),
+                    text: e.message
+                });
+            }
+
+            this.loading = false;
         }
     }
 };
@@ -233,6 +280,16 @@ export default {
     <div>
         <fig-button-fab icon="plus" @click="onClickAdd()" />
 
+        <div
+            v-if="updatingSortOrder"
+            class="mb-4">
+            <fig-button
+                variant="primary"
+                size="sm"
+                @click="saveOrdinals"
+                :disabled="loading">{{ $t('Save sorting changes') }}</fig-button>
+        </div>
+
         <fig-overlay :show="loading">
             <fig-table-simple
                 striped
@@ -240,6 +297,7 @@ export default {
                 @sort="sortChanged">
                 <template slot="head">
                     <tr>
+                        <fig-th v-if="packageTypes.length > 1" class="handle-cell"></fig-th>
                         <fig-th sortable prop="label">{{ $t('Label') }}</fig-th>
                         <fig-th sortable prop="code">{{ $t('Carrier package type code') }}</fig-th>
                         <fig-th sortable prop="length_cm" right>{{ $t('Length (cm)') }}</fig-th>
@@ -250,50 +308,65 @@ export default {
                     </tr>
                 </template>
 
-                <tr v-for="(obj, idx) in packageTypes" :key="idx">
-                    <fig-td>
-                        {{ obj.label }}
-                        <fig-operations-dropdown
-                            :show-view="false"
-                            @edit="onUpsertClick(obj.id)"
-                            @delete="onDelete(obj)"
-                            class="ml-1" />
-                    </fig-td>
+                <draggable
+                    v-model="packageTypes"
+                    ghost-class="ghost"
+                    handle=".handle"
+                    @update="setOrdinals"
+                    tag="tbody">
 
-                    <!-- code -->
-                    <fig-td>
-                        {{ obj.code }}
-                    </fig-td>
+                    <tr v-for="(obj, idx) in packageTypes" :key="idx">
+                        <!-- handle -->
+                        <fig-td v-if="packageTypes.length > 1" class="align-middle">
+                            <i class="handle">
+                                <fig-icon icon="dots-vertical-double" />
+                            </i>
+                        </fig-td>
 
-                    <!-- length -->
-                    <fig-td class="text-right">
-                        {{ $n(obj.length_cm) }}
-                    </fig-td>
+                        <fig-td>
+                            {{ obj.label }}
+                            <fig-operations-dropdown
+                                :show-view="false"
+                                @edit="onUpsertClick(obj.id)"
+                                @delete="onDelete(obj)"
+                                class="ml-1" />
+                        </fig-td>
 
-                    <!-- width -->
-                    <fig-td class="text-right">
-                        {{ $n(obj.width_cm) }}
-                    </fig-td>
+                        <!-- code -->
+                        <fig-td>
+                            {{ obj.code }}
+                        </fig-td>
 
-                    <!-- height -->
-                    <fig-td class="text-right">
-                        {{ $n(obj.height_cm) }}
-                    </fig-td>
+                        <!-- length -->
+                        <fig-td class="text-right">
+                            {{ $n(obj.length_cm) }}
+                        </fig-td>
 
-                    <!-- weight -->
-                    <fig-td class="text-right">
-                        {{ $n(obj.weight_oz) }}
-                    </fig-td>
+                        <!-- width -->
+                        <fig-td class="text-right">
+                            {{ $n(obj.width_cm) }}
+                        </fig-td>
 
-                    <!-- max weight -->
-                    <fig-td class="text-right">
-                        {{ $n(obj.max_weight_oz) }}
-                    </fig-td>
-                </tr>
+                        <!-- height -->
+                        <fig-td class="text-right">
+                            {{ $n(obj.height_cm) }}
+                        </fig-td>
 
-                <fig-tr-no-results
-                    v-if="!packageTypes.length"
-                    colspan="7" />
+                        <!-- weight -->
+                        <fig-td class="text-right">
+                            {{ $n(obj.weight_oz) }}
+                        </fig-td>
+
+                        <!-- max weight -->
+                        <fig-td class="text-right">
+                            {{ $n(obj.max_weight_oz) }}
+                        </fig-td>
+                    </tr>
+
+                    <fig-tr-no-results
+                        v-if="!packageTypes.length"
+                        colspan="7" />
+                </draggable>
             </fig-table-simple>
         </fig-overlay>
 
@@ -457,3 +530,9 @@ export default {
         </fig-modal>
     </div>
 </template>
+
+<style scoped>
+.handle {
+    cursor: grab;
+}
+</style>
