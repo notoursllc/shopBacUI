@@ -1,22 +1,22 @@
 <script>
-import OperationsDropdown from '@/components/OperationsDropdown';
 import BooleanTag from '@/components/BooleanTag';
 
 import {
     FigButtonFab,
     FigTableSimple,
     FigTh,
-    FigTd
+    FigTd,
+    FigOperationsDropdown
 } from '@notoursllc/figleaf';
 
 export default {
     components: {
-        OperationsDropdown,
         BooleanTag,
         FigButtonFab,
         FigTableSimple,
         FigTh,
-        FigTd
+        FigTd,
+        FigOperationsDropdown
     },
 
     data() {
@@ -112,7 +112,7 @@ export default {
                 <!-- name -->
                 <fig-td>
                     {{ obj.name }}
-                    <operations-dropdown
+                    <fig-operations-dropdown
                         :show-view="false"
                         @edit="goToCollectionUpsert(obj.id)"
                         @delete="onDeleteCollection(obj)"

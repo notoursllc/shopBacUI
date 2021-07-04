@@ -1,22 +1,22 @@
 <script>
 import shipping_mixin from '@/mixins/shipping_mixin';
-import OperationsDropdown from '@/components/OperationsDropdown';
 
 import {
     FigButtonFab,
     FigTableSimple,
     FigTh,
-    FigTd
+    FigTd,
+    FigOperationsDropdown
 } from '@notoursllc/figleaf';
 
 export default {
     components: {
-        OperationsDropdown,
         // ShippingPackageTypeUpsertForm: () => import('@/components/shipping/ShippingPackageTypeUpsertForm')
         FigButtonFab,
         FigTableSimple,
         FigTh,
-        FigTd
+        FigTd,
+        FigOperationsDropdown
     },
 
     mixins: [
@@ -126,7 +126,7 @@ export default {
             <tr v-for="(obj, idx) in shippingPackageTypes" :key="idx">
                 <fig-td>
                     {{ obj.label }}
-                    <operations-dropdown
+                    <fig-operations-dropdown
                         :show-view="false"
                         @edit="onUpsertClick(obj.id)"
                         @delete="deleteType(obj)"

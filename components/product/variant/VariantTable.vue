@@ -4,7 +4,6 @@ import draggable from 'vuedraggable';
 import VariantForm from '@/components/product/variant/VariantForm';
 import BooleanTag from '@/components/BooleanTag';
 import ColorSwatch from '@/components/product/colorSwatch/ColorSwatch';
-import OperationsDropdown from '@/components/OperationsDropdown';
 import Money from '@/components/Money';
 import storage_mixin from '@/mixins/storage_mixin';
 import product_mixin from '@/mixins/product_mixin';
@@ -15,7 +14,8 @@ import {
     FigTableSimple,
     FigTh,
     FigTd,
-    FigTag
+    FigTag,
+    FigOperationsDropdown
 } from '@notoursllc/figleaf';
 
 export default {
@@ -26,14 +26,14 @@ export default {
         VariantForm,
         BooleanTag,
         ColorSwatch,
-        OperationsDropdown,
         Money,
         FigButton,
         FigModal,
         FigTableSimple,
         FigTh,
         FigTd,
-        FigTag
+        FigTag,
+        FigOperationsDropdown
     },
 
     mixins: [
@@ -263,7 +263,7 @@ export default {
                     <!-- Color name -->
                     <fig-td>
                         {{ color.label }}
-                        <operations-dropdown
+                        <fig-operations-dropdown
                             :show-view="false"
                             @edit="showModal(idx)"
                             @delete="onDeleteClick(idx)"

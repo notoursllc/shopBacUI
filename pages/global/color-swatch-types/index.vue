@@ -1,9 +1,6 @@
 <script>
-import isObject from 'lodash.isobject';
-
-import OperationsDropdown from '@/components/OperationsDropdown';
-
 import {
+    FigOperationsDropdown,
     FigButtonFab,
     FigFormInput,
     FigTableSimple,
@@ -14,7 +11,7 @@ import {
 
 export default {
     components: {
-        OperationsDropdown,
+        FigOperationsDropdown,
         FigButtonFab,
         FigFormInput,
         FigTableSimple,
@@ -137,7 +134,7 @@ export default {
                 <!-- label -->
                 <fig-td>
                     {{ obj.label }}
-                    <operations-dropdown
+                    <fig-operations-dropdown
                         :show-view="false"
                         @edit="goToUpsert(obj.id)"
                         @delete="deleteSwatch(obj)"

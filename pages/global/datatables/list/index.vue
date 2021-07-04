@@ -1,7 +1,6 @@
 <script>
-import OperationsDropdown from '@/components/OperationsDropdown';
-
 import {
+    FigOperationsDropdown,
     FigButtonFab,
     FigTableSimple,
     FigTh,
@@ -10,7 +9,7 @@ import {
 
 export default {
     components: {
-        OperationsDropdown,
+        FigOperationsDropdown,
         FigButtonFab,
         FigTableSimple,
         FigTh,
@@ -111,7 +110,7 @@ export default {
                 <!-- name -->
                 <fig-td>
                     {{ obj.name }}
-                    <operations-dropdown
+                    <fig-operations-dropdown
                         :show-view="false"
                         @edit="onUpsertClick(obj)"
                         @delete="onDeleteClick(obj)"

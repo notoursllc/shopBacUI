@@ -1,5 +1,4 @@
 <script>
-import OperationsDropdown from '@/components/OperationsDropdown';
 import AccentMessageForm from '@/components/product/accentMessage/AccentMessageForm';
 
 import {
@@ -7,18 +6,19 @@ import {
     FigModal,
     FigTableSimple,
     FigTh,
-    FigTd
+    FigTd,
+    FigOperationsDropdown
 } from '@notoursllc/figleaf';
 
 export default {
     components: {
-        OperationsDropdown,
         AccentMessageForm,
         FigButtonFab,
         FigModal,
         FigTableSimple,
         FigTh,
-        FigTd
+        FigTd,
+        FigOperationsDropdown
     },
 
     data() {
@@ -126,7 +126,7 @@ export default {
             <tr v-for="(obj, idx) in messages" :key="idx">
                 <fig-td>
                     {{ obj.message }}
-                    <operations-dropdown
+                    <fig-operations-dropdown
                         :show-view="false"
                         @edit="onUpsertClick(obj.id)"
                         @delete="deleteType(obj)"

@@ -1,7 +1,6 @@
 <script>
 import isObject from 'lodash.isobject';
 import product_mixin from '@/mixins/product_mixin';
-import OperationsDropdown from '@/components/OperationsDropdown';
 import BooleanTag from '@/components/BooleanTag';
 import Vnodes from '@/components/Vnodes';
 
@@ -9,18 +8,19 @@ import {
     FigButtonFab,
     FigTableSimple,
     FigTh,
-    FigTd
+    FigTd,
+    FigOperationsDropdown
 } from '@notoursllc/figleaf';
 
 export default {
     components: {
-        OperationsDropdown,
         BooleanTag,
         Vnodes,
         FigButtonFab,
         FigTableSimple,
         FigTh,
-        FigTd
+        FigTd,
+        FigOperationsDropdown
     },
 
     mixins: [
@@ -235,7 +235,7 @@ export default {
                 <!-- title -->
                 <fig-td>
                     {{ prod.title }}
-                    <operations-dropdown
+                    <fig-operations-dropdown
                         :show-view="false"
                         @edit="goToProductUpsert(prod.id)"
                         @delete="onProductDelete(prod)"

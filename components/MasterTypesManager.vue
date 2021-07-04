@@ -3,7 +3,6 @@ import draggable from 'vuedraggable';
 import isObject from 'lodash.isobject';
 import slugify from 'slugify';
 
-import OperationsDropdown from '@/components/OperationsDropdown';
 import BooleanTag from '@/components/BooleanTag';
 import MetaDataBuilder from '@/components/MetaDataBuilder';
 
@@ -17,13 +16,13 @@ import {
     FigTableSimple,
     FigTh,
     FigTd,
-    FigOverlay
+    FigOverlay,
+    FigOperationsDropdown
 } from '@notoursllc/figleaf';
 
 export default {
     components: {
         draggable,
-        OperationsDropdown,
         BooleanTag,
         MetaDataBuilder,
         FigButton,
@@ -35,7 +34,8 @@ export default {
         FigTableSimple,
         FigTh,
         FigTd,
-        FigOverlay
+        FigOverlay,
+        FigOperationsDropdown
     },
 
     props: {
@@ -325,7 +325,7 @@ export default {
 
                         <fig-td>
                             {{ type.name }}
-                            <operations-dropdown
+                            <fig-operations-dropdown
                                 :show-view="false"
                                 @edit="onUpsertClick(type)"
                                 @delete="onDeleteClick(type)"

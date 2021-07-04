@@ -5,10 +5,11 @@ import payment_mixin from '@/mixins/payment_mixin';
 
 Vue.use(TreeView);
 
+import { FigAddress } from '@notoursllc/figleaf';
 
 export default {
     components: {
-        AddressDisplay: () => import('@/components/AddressDisplay'),
+        FigAddress,
         // ShippingLabelButton: () => import('@/components/payment/ShippingLabelButton'),
         CartItem: () => import('@/components/cart/CartItem')
     },
@@ -240,7 +241,7 @@ export default {
         <div class="g-spec">
             <div class="g-spec-label">{{ $t('Shipping address') }}:</div>
             <div class="g-spec-content">
-                <address-display
+                <fig-address
                     :first-name="payment.shoppingCart.shipping_firstName"
                     :last-name="payment.shoppingCart.shipping_lastName"
                     :street-address="payment.shoppingCart.shipping_streetAddress"
@@ -257,7 +258,7 @@ export default {
         <div class="g-spec">
             <div class="g-spec-label">{{ $t('Billing address') }}:</div>
             <div class="g-spec-content">
-                <address-display
+                <fig-address
                     :first-name="payment.shoppingCart.billing_firstName"
                     :last-name="payment.shoppingCart.billing_lastName"
                     :street-address="payment.shoppingCart.billing_streetAddress"
