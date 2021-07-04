@@ -2,7 +2,6 @@
 import isObject from 'lodash.isobject';
 import draggable from 'vuedraggable';
 import DataTableSelect from '@/components/product/dataTable/DataTableSelect';
-import AppMessage from '@/components/AppMessage';
 import {
     FigButton,
     FigFormInput,
@@ -14,14 +13,14 @@ import {
     FigTableSimple,
     FigTh,
     FigTd,
-    FigPopConfirm
+    FigPopConfirm,
+    FigIconLabel
 } from '@notoursllc/figleaf';
 
 export default {
     components: {
         draggable,
         DataTableSelect,
-        AppMessage,
         FigButton,
         FigFormInput,
         FigFormInputEndcapper,
@@ -32,7 +31,8 @@ export default {
         FigTableSimple,
         FigTh,
         FigTd,
-        FigPopConfirm
+        FigPopConfirm,
+        FigIconLabel
     },
 
     props: {
@@ -292,12 +292,13 @@ export default {
                                                 size="sm" />
                                         </fig-form-group>
 
-                                        <app-message>
-                                            <template v-slot:icon>
-                                                <fig-icon icon="alert-circle" variant="warning" />
-                                            </template>
+                                        <fig-icon-label>
+                                            <fig-icon
+                                                slot="left"
+                                                icon="alert-circle"
+                                                variant="warning" />
                                             {{ $t('This action will override existing table data.') }}
-                                        </app-message>
+                                        </fig-icon-label>
                                     </template>
 
                                     <template v-else>
@@ -451,10 +452,10 @@ export default {
                             icon="plus">{{ $t('row') }}</fig-button>
 
                         <fig-pop-confirm @confirm="clearTable()">
-                            <app-message>
-                                <fig-icon slot="icon" icon="alert-circle" />
+                            <fig-icon-label>
+                                <fig-icon slot="left" icon="alert-circle" />
                                 {{ $t('Are you sure you want to remove all data from this table?') }}
-                            </app-message>
+                            </fig-icon-label>
 
                             <fig-button
                                 slot="reference"

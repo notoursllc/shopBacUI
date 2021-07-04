@@ -2,14 +2,14 @@
 import isObject from 'lodash.isobject';
 import cloneDeep from 'lodash.clonedeep';
 import AccentMessageSelect from '@/components/product/accentMessage/AccentMessageSelect';
-import AppMessage from '@/components/AppMessage';
 import { isUuid4 } from '@/utils/common';
 
 import {
     FigFormInputDate,
     FigFormInput,
     FigFormGroup,
-    FigFormSelect
+    FigFormSelect,
+    FigIconLabel
 } from '@notoursllc/figleaf';
 
 export default {
@@ -17,11 +17,11 @@ export default {
 
     components: {
         AccentMessageSelect,
-        AppMessage,
         FigFormInputDate,
         FigFormInput,
         FigFormGroup,
-        FigFormSelect
+        FigFormSelect,
+        FigIconLabel
     },
 
     inheritAttrs: false,
@@ -167,16 +167,15 @@ export default {
 <template>
     <div>
         <div class="pb-3" v-if="showWarning">
-            <app-message>
-                <template v-slot:icon>
-                    <fig-icon
-                        icon="alert-circle"
-                        variant="danger"
-                        :width="24"
-                        :height="24" />
-                </template>
+            <fig-icon-label>
+                <fig-icon
+                    slot="left"
+                    icon="alert-circle"
+                    variant="danger"
+                    :width="24"
+                    :height="24" />
                 {{ $t('This item is using a pre-defined Accent Message that no longer exists.') }}
-            </app-message>
+            </fig-icon-label>
         </div>
 
 

@@ -113,12 +113,16 @@ export default {
                 return;
             }
 
+            this.loading = true;
+
             try {
                 const response = await this.$api.packageTypes.delete(data.id);
 
                 if(!response) {
                     throw new Error(this.$t('Item not found'));
                 }
+
+                this.loading = false;
 
                 this.fetchData();
 
@@ -128,6 +132,8 @@ export default {
                 });
             }
             catch(e) {
+                this.loading = false;
+
                 this.$figleaf.errorToast({
                     title: this.$t('Error'),
                     text: e.message
@@ -136,7 +142,6 @@ export default {
         },
 
         async onUpsertClick(id) {
-            console.log("ID", id)
             this.form.id = id || null;
 
             if(id) {

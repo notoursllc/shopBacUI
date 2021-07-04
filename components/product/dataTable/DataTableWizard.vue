@@ -5,13 +5,13 @@ import { isUuid4 } from '@/utils/common';
 import TableBuilder from '@/components/tableBuilder/TableBuilder';
 import TableBuilderView from '@/components/tableBuilder/TableBuilderView';
 import DataTableSelect from '@/components/product/dataTable/DataTableSelect';
-import AppMessage from '@/components/AppMessage';
 
 import {
     FigFormInput,
     FigFormGroup,
     FigFormSelect,
-    FigOverlay
+    FigOverlay,
+    FigIconLabel
 } from '@notoursllc/figleaf';
 
 export default {
@@ -21,11 +21,11 @@ export default {
         TableBuilder,
         TableBuilderView,
         DataTableSelect,
-        AppMessage,
         FigFormInput,
         FigFormGroup,
         FigFormSelect,
-        FigOverlay
+        FigOverlay,
+        FigIconLabel
     },
 
     inheritAttrs: false,
@@ -218,16 +218,15 @@ export default {
 <template>
     <div>
         <div class="pb-3" v-if="showWarning">
-            <app-message>
-                <template v-slot:icon>
-                    <fig-icon
-                        icon="alert-circle"
-                        variant="danger"
-                        :width="24"
-                        :height="24" />
-                </template>
+            <fig-icon-label>
+                <fig-icon
+                    slot="left"
+                    icon="alert-circle"
+                    variant="danger"
+                    :width="24"
+                    :height="24" />
                 {{ $t('This SKU is assigned to a Data Table that no longer exists.') }}
-            </app-message>
+            </fig-icon-label>
         </div>
 
         <fig-form-select

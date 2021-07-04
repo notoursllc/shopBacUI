@@ -8,20 +8,19 @@ import MasterTypeSelect from '@/components/MasterTypeSelect';
 import MetaDataBuilder from '@/components/MetaDataBuilder';
 import SeoPreview from '@/components/product/SeoPreview';
 import VariantTable from '@/components/product/variant/VariantTable';
-import AppMessage from '@/components/AppMessage';
 
 import {
     FigFormCheckbox,
     FigFormGroup,
     FigFormInput,
+    FigFormInputNumber,
     FigFormTextarea,
     FigSelectCountry,
     FigButton,
     FigFormInputEndcapper,
     FigOverlay,
-    FigCol,
-    FigRow,
-    FigTextCard
+    FigTextCard,
+    FigIconLabel
 } from '@notoursllc/figleaf';
 
 
@@ -39,18 +38,17 @@ export default Vue.extend({
         MetaDataBuilder,
         SeoPreview,
         VariantTable,
-        AppMessage,
         FigFormCheckbox,
         FigFormGroup,
         FigFormInput,
+        FigFormInputNumber,
         FigFormTextarea,
         FigSelectCountry,
         FigButton,
         FigFormInputEndcapper,
         FigOverlay,
-        FigCol,
-        FigRow,
-        FigTextCard
+        FigTextCard,
+        FigIconLabel
     },
 
     mixins: [
@@ -65,7 +63,11 @@ export default Vue.extend({
                 variants: []
             },
             productHasMetaData: false,
-            domainName: this.$config.DOMAIN_NAME
+            domainName: this.$config.DOMAIN_NAME,
+            css: {
+                cellOneThird: 'my-3 px-3 w-full lg:w-1/2 xl:w-1/3',
+                cellOneHalf: 'my-3 px-3 w-full lg:w-1/2'
+            }
         };
     },
 
@@ -206,14 +208,16 @@ export default Vue.extend({
         </div>
 
 
-        <!-- Organization -->
-        <fig-text-card class="mb-5">
-            <div slot="header-left">{{ $t('Organization') }}</div>
+        <!-- row -->
+        <div class="flex flex-wrap -mx-3 overflow-hidden">
 
-            <div class="container mx-auto">
-                <fig-row sm="1/2" md="1/3" lg="1/4" xl="1/5" default="full" default-gap="1" sm-gap="2" key="org">
-                    <!-- type -->
-                    <fig-col>
+            <!-- ORGANIZATION CARD -->
+            <div :class="css.cellOneThird">
+                <fig-text-card>
+                    <div slot="header-left">{{ $t('Organization') }}</div>
+
+                    <!-- product type -->
+                    <div>
                         <fig-form-group class="mb-2">
                             <label slot="label" for="product_type">{{ $t('Product type') }}</label>
                             <master-type-select
@@ -221,10 +225,10 @@ export default Vue.extend({
                                 object="product_type"
                                 id="product_type" />
                         </fig-form-group>
-                    </fig-col>
+                    </div>
 
                     <!-- sub-type -->
-                    <fig-col>
+                    <div>
                         <fig-form-group class="mb-2">
                             <label slot="label" for="product_sub_type">{{ $t('Product sub-type') }}</label>
                             <master-type-select
@@ -232,10 +236,10 @@ export default Vue.extend({
                                 object="product_sub_type"
                                 id="product_sub_type" />
                         </fig-form-group>
-                    </fig-col>
+                    </div>
 
                     <!-- sales channel -->
-                    <fig-col>
+                    <div>
                         <fig-form-group class="mb-2">
                             <label slot="label" for="product_sales_channel_type">{{ $t('Sales channel') }}</label>
                             <master-type-select
@@ -243,10 +247,10 @@ export default Vue.extend({
                                 object="product_sales_channel_type"
                                 id="product_sales_channel_type" />
                         </fig-form-group>
-                    </fig-col>
+                    </div>
 
                     <!-- vendor -->
-                    <fig-col>
+                    <div>
                         <fig-form-group class="mb-2">
                             <label slot="label" for="product_vendor_type">{{ $t('Vendor') }}</label>
                             <master-type-select
@@ -255,20 +259,17 @@ export default Vue.extend({
                                 :multiple="false"
                                 id="product_vendor_type" />
                         </fig-form-group>
-                    </fig-col>
-                </fig-row>
+                    </div>
+                </fig-text-card>
             </div>
-        </fig-text-card>
 
+            <!-- STYLE CARD-->
+            <div :class="css.cellOneThird">
+                <fig-text-card>
+                    <div slot="header-left">{{ $t('Style') }}</div>
 
-        <!-- Style -->
-        <fig-text-card class="mb-5">
-            <div slot="header-left">{{ $t('Style') }}</div>
-
-            <div class="container mx-auto">
-                <fig-row sm="1/2" md="1/3" lg="1/4" xl="1/5" default="full" default-gap="1" sm-gap="2" key="org">
                     <!-- gender -->
-                    <fig-col>
+                    <div>
                         <fig-form-group class="mb-2">
                             <label slot="label" for="product_gender_type">{{ $t('Gender') }}</label>
                             <master-type-select
@@ -276,10 +277,10 @@ export default Vue.extend({
                                 object="product_gender_type"
                                 id="product_gender_type" />
                         </fig-form-group>
-                    </fig-col>
+                    </div>
 
                     <!-- fit -->
-                    <fig-col>
+                    <div>
                         <fig-form-group class="mb-2">
                             <label slot="label" for="product_fit_type">{{ $t('Fit') }}</label>
                             <master-type-select
@@ -287,10 +288,10 @@ export default Vue.extend({
                                 object="product_fit_type"
                                 id="product_fit_type" />
                         </fig-form-group>
-                    </fig-col>
+                    </div>
 
                     <!-- sleeve -->
-                    <fig-col>
+                    <div>
                         <fig-form-group class="mb-2">
                             <label slot="label" for="product_sleeve_length_type">{{ $t('Sleeve') }}</label>
                             <master-type-select
@@ -298,10 +299,10 @@ export default Vue.extend({
                                 object="product_sleeve_length_type"
                                 id="product_sleeve_length_type" />
                         </fig-form-group>
-                    </fig-col>
+                    </div>
 
                     <!-- feature -->
-                    <fig-col>
+                    <div>
                         <fig-form-group class="mb-2">
                             <label slot="label" for="product_feature_type">{{ $t('Feature') }}</label>
                             <master-type-select
@@ -309,20 +310,18 @@ export default Vue.extend({
                                 object="product_feature_type"
                                 id="product_feature_type" />
                         </fig-form-group>
-                    </fig-col>
-                </fig-row>
+                    </div>
+                </fig-text-card>
             </div>
-        </fig-text-card>
 
+            <!-- DETAILS CARD -->
+            <div :class="css.cellOneThird">
+                <!-- Details -->
+                <fig-text-card>
+                    <div slot="header-left">{{ $t('Details') }}</div>
 
-        <!-- Details -->
-        <fig-text-card class="mb-5">
-            <div slot="header-left">{{ $t('Details') }}</div>
-
-            <div class="container mx-auto">
-                <fig-row sm="1/3" md="1/3" default="full" default-gap="1" sm-gap="2" key="details">
-                    <fig-col>
-                        <!-- page title -->
+                    <!-- page title -->
+                    <div>
                         <fig-form-group class="mb-2">
                             <label slot="label" for="product_title">{{ $t('Title') }}</label>
                             <fig-form-input
@@ -330,10 +329,10 @@ export default Vue.extend({
                                 maxlength="70"
                                 id="product_title" />
                         </fig-form-group>
-                    </fig-col>
+                    </div>
 
-                    <fig-col>
-                        <!-- caption -->
+                    <!-- caption -->
+                    <div>
                         <fig-form-group class="mb-2">
                             <label slot="label" for="product_caption">{{ $t('Caption') }}</label>
                             <fig-form-input
@@ -341,10 +340,10 @@ export default Vue.extend({
                                 maxlength="70"
                                 id="product_caption" />
                         </fig-form-group>
-                    </fig-col>
+                    </div>
 
-                    <fig-col>
-                        <!-- description -->
+                    <!-- description -->
+                    <div>
                         <fig-form-group class="mb-2">
                             <label slot="label" for="product_description">{{ $t('Description') }}</label>
                             <fig-form-textarea
@@ -353,14 +352,14 @@ export default Vue.extend({
                                 maxlength="320"
                                 id="product_description" />
                         </fig-form-group>
-                    </fig-col>
-                </fig-row>
+                    </div>
+                </fig-text-card>
             </div>
-        </fig-text-card>
+        </div>
 
 
-        <!-- Colors -->
-        <fig-text-card class="mb-5">
+        <!-- COLORS CARD -->
+        <fig-text-card class="my-3">
             <div slot="header-left">{{ $t('Colors') }}</div>
 
             <div class="container mx-auto">
@@ -371,67 +370,122 @@ export default Vue.extend({
         </fig-text-card>
 
 
-        <!-- shipping -->
-        <fig-text-card class="mb-5">
-            <div slot="header-left">{{ $t('Shipping') }}</div>
+        <div class="flex flex-wrap -mx-3 overflow-hidden">
+            <div :class="css.cellOneHalf">
+                <!-- SHIPPING CARD -->
+                <fig-text-card>
+                    <div slot="header-left">{{ $t('Shipping') }}</div>
 
-            <div class="container mx-auto">
-                <!-- is shippable (a physical product) -->
-                <div class="mb-3">
-                    <fig-form-checkbox
-                        v-model="product.shippable">{{ $t('This is a physical product') }}</fig-form-checkbox>
-                </div>
-
-                <template v-if="!product.shippable">
-                    {{ $t('shippable_off_desc') }}
-                </template>
-                <template v-else>
-                    <hr />
-
-                    <h4>{{ $t('CUSTOMS INFORMATION') }}</h4>
-
-                    <div class="flex flex-wrap -mx-2">
-                        <!-- country of origin -->
-                        <div class="my-2 px-2 w-full xl:w-1/2">
-                            <fig-form-group>
-                                <label slot="label" for="product_customs_country_of_origin">{{ $t('Country of origin') }}</label>
-                                <fig-select-country
-                                    v-model="product.customs_country_of_origin"
-                                    id="product_customs_country_of_origin" />
-
-                                <div slot="description">
-                                    {{ $t('customs_country_of_origin_desc') }}
-                                </div>
-                            </fig-form-group>
-                        </div>
-
-                        <!-- HS code -->
-                        <div class="my-2 px-2 w-full xl:w-1/2">
-                            <fig-form-group>
-                                <label slot="label" for="product_customs_harmonized_system_code">{{ $t('HS (Harmonized System) code') }}</label>
-                                <fig-form-input
-                                    v-model="product.customs_harmonized_system_code"
-                                    id="product_customs_harmonized_system_code" />
-
-                                <div slot="description">
-                                    {{ $t('customs_hs_code_desc') }}
-                                </div>
-                            </fig-form-group>
-                        </div>
+                    <!-- is shippable (a physical product) -->
+                    <div class="mb-3">
+                        <fig-form-checkbox
+                            v-model="product.shippable">{{ $t('This is a physical product') }}</fig-form-checkbox>
                     </div>
-                </template>
+
+                    <div v-if="!product.shippable" class="text-sm">
+                        {{ $t('shippable_off_desc') }}
+                    </div>
+                    <template v-else>
+                        <hr>
+
+                        <div class="text-base font-semibold mb-3">{{ $t('CUSTOMS INFORMATION') }}:</div>
+                        <div class="px-4">
+                            <!-- country of origin -->
+                            <div class="mb-2">
+                                <fig-form-group>
+                                    <label slot="label" for="product_customs_country_of_origin">{{ $t('Country of origin') }}</label>
+                                    <fig-select-country
+                                        v-model="product.customs_country_of_origin"
+                                        id="product_customs_country_of_origin" />
+
+                                    <div slot="description">
+                                        {{ $t('customs_country_of_origin_desc') }}
+                                    </div>
+                                </fig-form-group>
+                            </div>
+
+                            <!-- HS code -->
+                            <div>
+                                <fig-form-group>
+                                    <label slot="label" for="product_customs_harmonized_system_code">{{ $t('HS (Harmonized System) code') }}</label>
+                                    <fig-form-input
+                                        v-model="product.customs_harmonized_system_code"
+                                        id="product_customs_harmonized_system_code" />
+
+                                    <div slot="description">
+                                        {{ $t('customs_hs_code_desc') }}
+                                    </div>
+                                </fig-form-group>
+                            </div>
+                        </div>
+                    </template>
+                </fig-text-card>
             </div>
-        </fig-text-card>
 
+            <!-- PACKAGING CARD -->
+            <div :class="css.cellOneHalf">
+                <fig-text-card class="mb-5">
+                    <div slot="header-left">{{ $t('Packaging') }}</div>
 
-        <!-- SEO -->
-        <fig-text-card class="mb-5">
-            <div slot="header-left">{{ $t('Search engine listing') }}</div>
+                    <!-- Ship alone -->
+                    <div class="mb-5">
+                        <fig-form-checkbox
+                            v-model="product.ship_alone">{{ $t('ship_alone_description') }}</fig-form-checkbox>
+                    </div>
 
-            <div class="container mx-auto">
-                <fig-row md="1/2" default="full" default-gap="1" sm-gap="2" key="seo">
+                    <!-- Packing length -->
+                    <div class="mb-2">
+                        <fig-form-group>
+                            <label slot="label" for="packing_length">{{ $t('Packing length (cm)') }}</label>
+                            <fig-form-input-number
+                                v-model="product.packing_length"
+                                :step="1"
+                                :min="0"
+                                controls-right
+                                size="md"
+                                id="packing_length" />
+                        </fig-form-group>
+                    </div>
+
+                    <!-- Packing width -->
+                    <div class="mb-2">
+                        <fig-form-group>
+                            <label slot="label" for="packing_width">{{ $t('Packing width (cm)') }}</label>
+                            <fig-form-input-number
+                                v-model="product.packing_width"
+                                :step="1"
+                                :min="0"
+                                controls-right
+                                size="md"
+                                id="packing_width" />
+                        </fig-form-group>
+                    </div>
+
+                    <!-- Packing width -->
+                    <div>
+                        <fig-form-group>
+                            <label slot="label" for="packing_height">{{ $t('Packing height (cm)') }}</label>
+                            <fig-form-input-number
+                                v-model="product.packing_height"
+                                :step="1"
+                                :min="0"
+                                controls-right
+                                size="md"
+                                id="packing_height" />
+                        </fig-form-group>
+                    </div>
+                </fig-text-card>
+            </div>
+        </div>
+
+        <div class="flex flex-wrap -mx-3 overflow-hidden">
+            <!-- SEO CARD -->
+            <div :class="css.cellOneHalf">
+                <fig-text-card class="mb-5">
+                    <div slot="header-left">{{ $t('Search engine listing') }}</div>
+
                     <!-- page title -->
-                    <fig-col>
+                    <div>
                         <fig-form-group class="mb-2 block">
                             <label slot="label" for="product_seo_page_title">{{ $t('Page title') }}</label>
                             <fig-form-input
@@ -439,10 +493,10 @@ export default Vue.extend({
                                 maxlength="70"
                                 id="product_seo_page_title" />
                         </fig-form-group>
-                    </fig-col>
+                    </div>
 
                     <!-- description -->
-                    <fig-col>
+                    <div>
                         <fig-form-group class="mb-2 block">
                             <label slot="label" for="product_seo_page_desc">{{ $t('Description') }}</label>
                             <fig-form-textarea
@@ -451,10 +505,10 @@ export default Vue.extend({
                                 maxlength="320"
                                 id="product_seo_page_desc" />
                         </fig-form-group>
-                    </fig-col>
+                    </div>
 
                     <!-- URI -->
-                    <fig-col>
+                    <div>
                         <fig-form-group class="mb-2 block">
                             <label slot="label" for="product_seo_uri">{{ $t('URL and handle') }}</label>
 
@@ -472,52 +526,52 @@ export default Vue.extend({
                                 v-if="$v.product.seo_uri.$invalid"
                                 slot="error">{{ seoUrlValidationErrorMessage }}</div>
                         </fig-form-group>
-                    </fig-col>
-                </fig-row>
+                    </div>
 
-
-                <div class="py-5" v-show="product.seo_page_title">
-                    <div class="text-xs text-gray-700 mb-1">{{ $t('Preview') }}:</div>
-                    <seo-preview
-                        :title="product.seo_page_title"
-                        :description="product.seo_page_desc"
-                        :uri="product.seo_uri" />
-                </div>
+                    <div class="mt-3 p-2 rounded bg-blue-100" v-show="product.seo_page_title">
+                        <div class="text-xs text-gray-700 mb-1">{{ $t('Preview') }}:</div>
+                        <seo-preview
+                            :title="product.seo_page_title"
+                            :description="product.seo_page_desc"
+                            :uri="product.seo_uri" />
+                    </div>
+                </fig-text-card>
             </div>
-        </fig-text-card>
 
+            <!-- METADATA CARD -->
+            <div :class="css.cellOneHalf">
+                <fig-text-card class="mb-5">
+                    <div slot="header-left">{{ $t('Metadata') }}</div>
 
-        <!-- Metadata -->
-        <fig-text-card class="mb-5">
-            <div slot="header-left">{{ $t('Metadata') }}</div>
+                    <div class="container mx-auto">
+                        <div class="pb-3">
+                            <fig-form-checkbox
+                                v-model="productHasMetaData">{{ $t('Metadata_description') }}</fig-form-checkbox>
+                        </div>
 
-            <div class="container mx-auto">
-                <div class="pb-3">
-                    <fig-form-checkbox
-                        v-model="productHasMetaData">{{ $t('Metadata_description') }}</fig-form-checkbox>
-                </div>
-
-                <meta-data-builder
-                    v-if="productHasMetaData"
-                    v-model="product.metadata" />
+                        <meta-data-builder
+                            v-if="productHasMetaData"
+                            v-model="product.metadata" />
+                    </div>
+                </fig-text-card>
             </div>
-        </fig-text-card>
+        </div>
 
 
-        <div class="pt-4 text-center">
-            <fig-button
-                variant="primary"
-                size="lg"
-                @click="onSaveClick"
-                :disabled="$v.product.$invalid">{{ $t('Save') }}</fig-button>
+        <div class="pt-4">
+            <div class="flex items-center justify-center">
+                <fig-button
+                    variant="primary"
+                    size="lg"
+                    @click="onSaveClick"
+                    :disabled="$v.product.$invalid">{{ $t('Save') }}</fig-button>
+            </div>
 
-            <div class="pt-2 text-danger" v-show="$v.product.$invalid">
-                <div class="inline-block">
-                    <app-message>
-                        <fig-icon slot="icon" icon="alert-circle" variant="danger" />
-                        {{ $t('Please fix the errors above before saving') }}
-                    </app-message>
-                </div>
+            <div class="pt-2 text-danger flex justify-center" v-show="$v.product.$invalid">
+                <fig-icon-label>
+                    <fig-icon slot="left" icon="alert-circle" variant="danger" />
+                    {{ $t('Please fix the errors above before saving') }}
+                </fig-icon-label>
             </div>
         </div>
     </fig-overlay>

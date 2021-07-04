@@ -264,6 +264,10 @@
 
     "Package": "Package",
     "Package Types": "Package Types",
+    "Packaging": "Packaging",
+    "Packing length (cm)": "Packing length (cm)",
+    "Packing height (cm)": "Packing height (cm)",
+    "Packing width (cm)": "Packing width (cm)",
     "Page title": "Page title",
     "Password": "Password",
     "password_error_maxLength": "maximum length: {val}",
@@ -359,6 +363,7 @@
     "Secure Payment": "Secure Payment",
     "Select file": "Select file",
     "Select menu": "Select menu",
+    "ship_alone_description": "This product ships alone, in it's own package",
     "Ship to": "Ship to",
     "shippable_off_desc": "Customers won’t enter their shipping address or choose a shipping method when buying this product.",
     "SHIPPING": "SHIPPING",
