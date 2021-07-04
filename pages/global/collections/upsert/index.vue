@@ -1,8 +1,8 @@
 <script>
 import { getNextAvailableTypeValue } from '@/utils/common';
-import TextCard from '@/components/TextCard';
 
 import {
+    FigTextCard,
     FigButton,
     FigFormCheckbox,
     FigFormInput,
@@ -12,7 +12,7 @@ import {
 
 export default {
     components: {
-        TextCard,
+        FigTextCard,
         FigButton,
         FigFormCheckbox,
         FigFormInput,
@@ -104,8 +104,8 @@ export default {
 
 <template>
     <div>
-        <text-card class="mb-5">
-            <div slot="header">{{ $t('General Info') }}</div>
+        <fig-text-card class="mb-5">
+            <div slot="header-left">{{ $t('General Info') }}</div>
 
             <!-- Available -->
             <div class="inputRow">
@@ -139,11 +139,11 @@ export default {
                 <label>{{ $t('Value') }}:</label>
                 <span> {{ collection.value }}</span>
             </div>
-        </text-card>
+        </fig-text-card>
 
         <!-- SEO -->
-        <text-card>
-            <div slot="header">{{ $t('Search engine listing') }}</div>
+        <fig-text-card>
+            <div slot="header-left">{{ $t('Search engine listing') }}</div>
 
             <!-- page title -->
             <div class="inputRow">
@@ -178,7 +178,7 @@ export default {
                     </fig-form-input-endcapper>
                 </span>
             </div>
-        </text-card>
+        </fig-text-card>
 
         <!-- buttons -->
         <div class="pt-5">

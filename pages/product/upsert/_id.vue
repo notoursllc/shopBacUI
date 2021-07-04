@@ -5,7 +5,6 @@ import product_mixin from '@/mixins/product_mixin';
 import shipping_mixin from '@/mixins/shipping_mixin';
 
 import MasterTypeSelect from '@/components/MasterTypeSelect';
-import TextCard from '@/components/TextCard';
 import MetaDataBuilder from '@/components/MetaDataBuilder';
 import SeoPreview from '@/components/product/SeoPreview';
 import VariantTable from '@/components/product/variant/VariantTable';
@@ -21,7 +20,8 @@ import {
     FigFormInputEndcapper,
     FigOverlay,
     FigCol,
-    FigRow
+    FigRow,
+    FigTextCard
 } from '@notoursllc/figleaf';
 
 
@@ -36,7 +36,6 @@ const urlValidator = (value) => {
 export default Vue.extend({
     components: {
         MasterTypeSelect,
-        TextCard,
         MetaDataBuilder,
         SeoPreview,
         VariantTable,
@@ -50,7 +49,8 @@ export default Vue.extend({
         FigFormInputEndcapper,
         FigOverlay,
         FigCol,
-        FigRow
+        FigRow,
+        FigTextCard
     },
 
     mixins: [
@@ -207,8 +207,8 @@ export default Vue.extend({
 
 
         <!-- Organization -->
-        <text-card class="mb-5">
-            <div slot="header">{{ $t('Organization') }}</div>
+        <fig-text-card class="mb-5">
+            <div slot="header-left">{{ $t('Organization') }}</div>
 
             <div class="container mx-auto">
                 <fig-row sm="1/2" md="1/3" lg="1/4" xl="1/5" default="full" default-gap="1" sm-gap="2" key="org">
@@ -258,12 +258,12 @@ export default Vue.extend({
                     </fig-col>
                 </fig-row>
             </div>
-        </text-card>
+        </fig-text-card>
 
 
         <!-- Style -->
-        <text-card class="mb-5">
-            <div slot="header">{{ $t('Style') }}</div>
+        <fig-text-card class="mb-5">
+            <div slot="header-left">{{ $t('Style') }}</div>
 
             <div class="container mx-auto">
                 <fig-row sm="1/2" md="1/3" lg="1/4" xl="1/5" default="full" default-gap="1" sm-gap="2" key="org">
@@ -312,12 +312,12 @@ export default Vue.extend({
                     </fig-col>
                 </fig-row>
             </div>
-        </text-card>
+        </fig-text-card>
 
 
         <!-- Details -->
-        <text-card class="mb-5">
-            <div slot="header">{{ $t('Details') }}</div>
+        <fig-text-card class="mb-5">
+            <div slot="header-left">{{ $t('Details') }}</div>
 
             <div class="container mx-auto">
                 <fig-row sm="1/3" md="1/3" default="full" default-gap="1" sm-gap="2" key="details">
@@ -356,34 +356,34 @@ export default Vue.extend({
                     </fig-col>
                 </fig-row>
             </div>
-        </text-card>
+        </fig-text-card>
 
 
         <!-- Colors -->
-        <text-card class="mb-5">
-            <div slot="header">{{ $t('Colors') }}</div>
+        <fig-text-card class="mb-5">
+            <div slot="header-left">{{ $t('Colors') }}</div>
 
             <div class="container mx-auto">
                 <variant-table
                     :value="product.variants"
                     @change="colors => this.$set(product, 'variants', colors)" />
             </div>
-        </text-card>
+        </fig-text-card>
 
 
         <!-- shipping -->
-        <text-card class="mb-5">
-            <div slot="header">{{ $t('Shipping') }}</div>
+        <fig-text-card class="mb-5">
+            <div slot="header-left">{{ $t('Shipping') }}</div>
 
             <div class="container mx-auto">
-                <!-- requires shipping -->
+                <!-- is shippable (a physical product) -->
                 <div class="mb-3">
                     <fig-form-checkbox
-                        v-model="product.requires_shipping">{{ $t('This is a physical product') }}</fig-form-checkbox>
+                        v-model="product.shippable">{{ $t('This is a physical product') }}</fig-form-checkbox>
                 </div>
 
-                <template v-if="!product.requires_shipping">
-                    {{ $t('requires_shipping_off_desc') }}
+                <template v-if="!product.shippable">
+                    {{ $t('shippable_off_desc') }}
                 </template>
                 <template v-else>
                     <hr />
@@ -421,12 +421,12 @@ export default Vue.extend({
                     </div>
                 </template>
             </div>
-        </text-card>
+        </fig-text-card>
 
 
         <!-- SEO -->
-        <text-card class="mb-5">
-            <div slot="header">{{ $t('Search engine listing') }}</div>
+        <fig-text-card class="mb-5">
+            <div slot="header-left">{{ $t('Search engine listing') }}</div>
 
             <div class="container mx-auto">
                 <fig-row md="1/2" default="full" default-gap="1" sm-gap="2" key="seo">
@@ -484,12 +484,12 @@ export default Vue.extend({
                         :uri="product.seo_uri" />
                 </div>
             </div>
-        </text-card>
+        </fig-text-card>
 
 
         <!-- Metadata -->
-        <text-card class="mb-5">
-            <div slot="header">{{ $t('Metadata') }}</div>
+        <fig-text-card class="mb-5">
+            <div slot="header-left">{{ $t('Metadata') }}</div>
 
             <div class="container mx-auto">
                 <div class="pb-3">
@@ -501,7 +501,7 @@ export default Vue.extend({
                     v-if="productHasMetaData"
                     v-model="product.metadata" />
             </div>
-        </text-card>
+        </fig-text-card>
 
 
         <div class="pt-4 text-center">

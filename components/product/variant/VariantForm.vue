@@ -1,7 +1,6 @@
 <script>
 import isObject from 'lodash.isobject';
 import storage_mixin from '@/mixins/storage_mixin'; // TODO: not needed?
-import TextCard from '@/components/TextCard';
 import ImageManager from '@/components/product/ImageManager';
 import ColorSwatchTable from '@/components/product/colorSwatch/ColorSwatchTable';
 import AccentMessageWizard from '@/components/product/accentMessage/AccentMessageWizard';
@@ -15,7 +14,8 @@ import {
     FigFormGroup,
     FigSelectCountry,
     FigCol,
-    FigRow
+    FigRow,
+    FigTextCard
 } from '@notoursllc/figleaf';
 
 
@@ -23,7 +23,6 @@ export default {
     name: 'ColorUpsertForm',
 
     components: {
-        TextCard,
         ImageManager,
         ColorSwatchTable,
         AccentMessageWizard,
@@ -35,7 +34,8 @@ export default {
         FigFormGroup,
         FigSelectCountry,
         FigCol,
-        FigRow
+        FigRow,
+        FigTextCard
     },
 
     mixins: [
@@ -147,7 +147,7 @@ export default {
     <div>
 
         <!-- General info -->
-        <text-card class="mb-5">
+        <fig-text-card class="mb-5">
             <div class="mb-2">
                 <!-- published -->
                 <fig-form-checkbox
@@ -159,11 +159,11 @@ export default {
                 <fig-form-checkbox
                     v-model="variant.is_taxable">{{ $t('Charge tax on this item') }}</fig-form-checkbox>
             </div>
-        </text-card>
+        </fig-text-card>
 
         <!-- Color info -->
-        <text-card class="mb-5">
-            <div slot="header">{{ $t('Color info') }}</div>
+        <fig-text-card class="mb-5">
+            <div slot="header-left">{{ $t('Color info') }}</div>
 
             <div class="container mx-auto">
                 <fig-row sm="1/2" md="1/3" lg="1/4" xl="1/5" default="full" default-gap="1" sm-gap="2" key="org">
@@ -191,60 +191,65 @@ export default {
                     </fig-col>
                 </fig-row>
             </div>
-        </text-card>
+        </fig-text-card>
 
 
         <!-- Color images -->
-        <text-card class="mb-5">
-            <div slot="header">{{ $t('Color images') }}</div>
+        <fig-text-card class="mb-5">
+            <div slot="header-left">{{ $t('Color images') }}</div>
             <div class="container mx-auto">
                 <image-manager
                     v-model="variant.images"
                     @delete="onDeleteImage"
                     :max-num-images="parseInt(imageManagerMaxImages, 10)" />
             </div>
-        </text-card>
+        </fig-text-card>
 
 
         <!-- Color swatches -->
-        <text-card class="mb-5">
-            <div slot="header">{{ $t('Color swatches') }}</div>
-            <div slot="headerSub">({{ $t('optional') }})</div>
+        <fig-text-card class="mb-5">
+            <div slot="header-left">
+                {{ $t('Color swatches') }}
+                <div class="fs12">({{ $t('optional') }})</div>
+            </div>
+
             <div class="container mx-auto">
                 <color-swatch-table
                     :value="variant.swatches"
                     @input="onColorSwatchChange" />
             </div>
-        </text-card>
+        </fig-text-card>
 
 
         <!-- Sizes -->
-        <text-card class="mb-5">
-            <div slot="header">{{ $t('Sizes') }}</div>
+        <fig-text-card class="mb-5">
+            <div slot="header-left">{{ $t('Sizes') }}</div>
             <div class="container mx-auto">
                 <variant-sku-table
                     :variant="variant"
                     @input="onSkusChange"
                     @defaults="onVariantDefaultsChange" />
             </div>
-        </text-card>
+        </fig-text-card>
 
 
         <!-- accent message -->
-        <text-card class="mb-5">
-            <div slot="header">{{ $t('Accent Message') }}</div>
-            <template v-slot:headerSub>{{ $t('accent_message_description') }}</template>
+        <fig-text-card class="mb-5">
+            <div slot="header-left">
+                {{ $t('Accent Message') }}
+                <div class="fs12">({{ $t('accent_message_description') }})</div>
+            </div>
 
             <div class="container mx-auto">
                 <accent-message-wizard
                     :model="variant"
                     @input="onAccentWizardChange" />
             </div>
-        </text-card>
+        </fig-text-card>
 
 
         <!-- shipping -->
-        <text-card class="mb-5">
+        <fig-text-card class="mb-5">
             <div slot="header">{{ $t('Shipping') }}</div>
 
             <div class="container mx-auto">
@@ -266,7 +271,7 @@ export default {
                     </div>
                 </div>
             </div>
-        </text-card>
+        </fig-text-card>
 
 
         <div class="flex items-center justify-center">
