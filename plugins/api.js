@@ -1,6 +1,7 @@
 import Cart from '@/api/cart';
 import MasterTypes from '@/api/master_types';
 import Media from '@/api/media';
+import PackageTypes from '@/api/package_types';
 import Payments from '@/api/payments';
 import Products from '@/api/products';
 import ProductCollections from '@/api/product_collections';
@@ -30,6 +31,7 @@ export default (context, inject) => {
         cart: Cart(context.$axios),
         masterTypes: MasterTypes(context.$axios),
         media: Media(context.$axios),
+        packageTypes: PackageTypes(context.$axios),
         payments: Payments(context.$axios),
         products: Products(context.$axios),
         productCollections: ProductCollections(context.$axios),

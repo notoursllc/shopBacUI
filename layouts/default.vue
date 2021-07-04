@@ -289,6 +289,11 @@ export default {
                             :to="{ name: 'global-color-swatch-types' }"
                             tag="button"
                             class="subnav-btn">{{ $t('Color swatches') }}</nuxt-link>
+
+                        <nuxt-link
+                            :to="{ name: 'global-package-types' }"
+                            tag="button"
+                            class="subnav-btn">{{ $t('Package Types') }}</nuxt-link>
                     </div>
                 </template>
 
