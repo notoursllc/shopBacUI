@@ -118,6 +118,42 @@ export default {
         '@nuxtjs/tailwindcss'
     ],
 
+
+    // Nuxt image config
+    // https://image.nuxtjs.org/api/options/
+    image: {
+        domains: [
+            'https://gmnst-assets.nyc3.digitaloceanspaces.com'
+        ],
+        // The screen sizes predefined by `@nuxt/image`:
+        screens: {
+            xs: 320,
+            sm: 640,
+            md: 768,
+            lg: 1024,
+            xl: 1280,
+            xxl: 1536,
+            '2xl': 1536
+        },
+        presets: {
+            prod_thumb: {
+                modifiers: {
+                    format: 'jpg',
+                    width: 75,
+                    height: 75
+                }
+            },
+            prod_thumb_xs: {
+                modifiers: {
+                    format: 'jpg',
+                    width: 45,
+                    height: 45
+                }
+            }
+        }
+    },
+
+
     tailwindcss: {
         cssPath: '@/node_modules/@notoursllc/figleaf/assets/css/tailwind.css',
         configPath: 'tailwind.config.js',
@@ -129,7 +165,8 @@ export default {
     */
     modules: [
         '@nuxt/http',
-        '@nuxtjs/axios'
+        '@nuxtjs/axios',
+        '@nuxt/image'
     ],
 
     router: {

@@ -165,7 +165,7 @@ export default {
                     const variant = product.variants[i];
 
                     if(Array.isArray(variant.images) && isObject(variant.images[0])) {
-                        url = this.prodmix_getSmallestImageVariant(variant.images[0].variants);
+                        url = variant.images[0].url;
                         altText = variant.images[0].alt_text;
                         break;
                     }
@@ -175,13 +175,13 @@ export default {
             if(url) {
                 const h = this.$createElement;
                 return h(
-                    'img',
+                    'nuxt-img',
                     {
                         attrs: {
                             src: url,
-                            alt: altText
-                        },
-                        class: ['prodPicSmall']
+                            alt: altText,
+                            preset: 'prod_thumb_xs'
+                        }
                     }
                 );
             }
@@ -265,10 +265,3 @@ export default {
         </fig-table-simple>
     </div>
 </template>
-
-
-<style lang="scss">
-    .prodPicSmall {
-        width: 50px;
-    }
-</style>

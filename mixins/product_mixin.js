@@ -105,43 +105,6 @@ export default {
             }
 
             return inventoryCount;
-        },
-
-        prodmix_getSmallestSkuImageMediaUrl(mediaObj) {
-            let smallestWidth;
-            let smallestUrl;
-
-            if(isObject(mediaObj)) {
-                smallestWidth = mediaObj.width || 9999;
-                smallestUrl = mediaObj.url;
-
-                if(Array.isArray(mediaObj.variants)) {
-                    mediaObj.variants.forEach((variant) => {
-                        if(variant.width < smallestWidth) {
-                            smallestWidth = variant.width;
-                            smallestUrl = variant.url;
-                        }
-                    });
-                }
-            }
-
-            return smallestUrl;
-        },
-
-        prodmix_getSmallestImageVariant(variants) {
-            let smallestWidth = 9999;
-            let smallestUrl;
-
-            if(Array.isArray(variants)) {
-                variants.forEach((variant) => {
-                    if(variant.width < smallestWidth) {
-                        smallestWidth = variant.width;
-                        smallestUrl = variant.url;
-                    }
-                });
-            }
-
-            return smallestUrl;
         }
     }
 };

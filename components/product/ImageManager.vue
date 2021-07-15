@@ -74,13 +74,7 @@ export default {
         value: {
             handler(newVal) {
                 if(Array.isArray(newVal)) {
-                    // change the media url of each image to the smallest variant
-                    this.fileList = newVal.map((obj) => {
-                        obj.media = {
-                            url: this.prodmix_getSmallestSkuImageMediaUrl(obj.media)
-                        };
-                        return obj;
-                    });
+                    this.fileList = newVal;
                 }
             },
             immediate: true
@@ -96,8 +90,8 @@ export default {
             this.$emit('delete', id);
         },
 
-        onPreview(file) {
-            this.dialogImageUrl = file;
+        onPreview(url) {
+            this.dialogImageUrl = url;
             this.$refs.image_preview_modal.show();
         },
 
@@ -167,19 +161,18 @@ export default {
                         id: null,
                         alt_text: null,
                         ordinal: newOrdinal,
-                        variants: [],
+                        url: null,
                         loading: true
                     });
                 }
 
                 const responses = await Promise.all(resizePromises);
-                // console.log("RESPONSES", responses);
 
                 responses.forEach((res, index) => {
                     const fileListIndex = newFileListIndexes[index];
 
                     this.fileList[fileListIndex].id = res.id;
-                    this.fileList[fileListIndex].variants = res.variants;
+                    this.fileList[fileListIndex].url = res.url;
                     this.fileList[fileListIndex].loading = false;
                 });
 
@@ -287,11 +280,13 @@ export default {
                     <!-- thumbnail -->
                     <fig-td>
                         <fig-overlay :show="obj.loading">
-                            <img
-                                :src="prodmix_getSmallestImageVariant(obj.variants)"
-                                class="cursor-pointer"
-                                @click="onPreview(obj)"
-                                :alt="obj.alt_text">
+                            <span @click="onPreview(obj.url)" class="cursor-pointer">
+                                <nuxt-img
+                                    v-if="obj.url"
+                                    :src="obj.url"
+                                    preset="prod_thumb"
+                                    :alt="obj.alt_text" />
+                            </span>
                         </fig-overlay>
                     </fig-td>
 
@@ -326,9 +321,8 @@ export default {
         <fig-modal
             ref="image_preview_modal"
             size="xl">
-            <img
-                :src="dialogImageUrl"
-                alt="">
+            <div slot="header"></div>
+            <img :src="dialogImageUrl" alt="">
         </fig-modal>
     </div>
 </template>

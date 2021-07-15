@@ -436,42 +436,42 @@ export default Vue.extend({
                     <!-- Packing length -->
                     <div class="mb-2">
                         <fig-form-group>
-                            <label slot="label" for="packing_length">{{ $t('Packing length (cm)') }}</label>
+                            <label slot="label" for="packing_length_cm">{{ $t('Packing length (cm)') }}</label>
                             <fig-form-input-number
-                                v-model="product.packing_length"
+                                v-model="product.packing_length_cm"
                                 :step="1"
                                 :min="0"
                                 controls-right
                                 size="md"
-                                id="packing_length" />
+                                id="packing_length_cm" />
                         </fig-form-group>
                     </div>
 
                     <!-- Packing width -->
                     <div class="mb-2">
                         <fig-form-group>
-                            <label slot="label" for="packing_width">{{ $t('Packing width (cm)') }}</label>
+                            <label slot="label" for="packing_width_cm">{{ $t('Packing width (cm)') }}</label>
                             <fig-form-input-number
-                                v-model="product.packing_width"
+                                v-model="product.packing_width_cm"
                                 :step="1"
                                 :min="0"
                                 controls-right
                                 size="md"
-                                id="packing_width" />
+                                id="packing_width_cm" />
                         </fig-form-group>
                     </div>
 
                     <!-- Packing width -->
                     <div>
                         <fig-form-group>
-                            <label slot="label" for="packing_height">{{ $t('Packing height (cm)') }}</label>
+                            <label slot="label" for="packing_height_cm">{{ $t('Packing height (cm)') }}</label>
                             <fig-form-input-number
-                                v-model="product.packing_height"
+                                v-model="product.packing_height_cm"
                                 :step="1"
                                 :min="0"
                                 controls-right
                                 size="md"
-                                id="packing_height" />
+                                id="packing_height_cm" />
                         </fig-form-group>
                     </div>
                 </fig-text-card>

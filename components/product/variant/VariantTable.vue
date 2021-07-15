@@ -180,18 +180,7 @@ export default {
         },
 
         getVariantImages(index) {
-            const variant = this.variants[index];
-            const urls = [];
-
-            if(Array.isArray(variant.images)) {
-                variant.images.forEach((obj) => {
-                    urls.push(
-                        this.prodmix_getSmallestImageVariant(obj.variants)
-                    );
-                });
-            }
-
-            return urls;
+            return Array.isArray(this.variants[index].images) ? this.variants[index].images.map(obj => obj.url) : [];
         },
 
         getVariantSwatches(index) {
@@ -292,10 +281,12 @@ export default {
                                 v-for="(url, objIndex) in getVariantImages(idx)"
                                 :key="objIndex"
                                 class="mr-2">
-                                <figure
-                                    :style="`background-image:url(${url});`"
+                                <nuxt-img
+                                    v-if="url"
+                                    :src="url"
+                                    preset="prod_thumb_xs"
                                     class="shadow variant-thumb"
-                                    :class="{'featured-thumb': objIndex === 0}"></figure>
+                                    :class="{'featured-thumb': objIndex === 0}" />
                             </div>
                         </div>
                     </fig-td>
