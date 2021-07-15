@@ -270,6 +270,10 @@ export default {
             }
 
             this.loading = false;
+        },
+
+        cmToInches(cm) {
+            return Number.parseFloat(cm / 2.54).toFixed(2);
         }
     }
 };
@@ -299,12 +303,10 @@ export default {
                     <tr>
                         <fig-th v-if="packageTypes.length > 1" class="handle-cell"></fig-th>
                         <fig-th sortable prop="label">{{ $t('Label') }}</fig-th>
-                        <fig-th sortable prop="code">{{ $t('Carrier package type code') }}</fig-th>
                         <fig-th sortable prop="length_cm" right>{{ $t('Length (cm)') }}</fig-th>
                         <fig-th sortable prop="width_cm" right>{{ $t('Width (cm)') }}</fig-th>
                         <fig-th sortable prop="height_cm" right>{{ $t('Height (cm)') }}</fig-th>
-                        <fig-th sortable prop="weight_oz" right>{{ $t('Weight (oz)') }}</fig-th>
-                        <fig-th sortable prop="max_weight_oz" right>{{ $t('Max weight (oz)') }}</fig-th>
+                        <fig-th right>{{ $t('Volume') }}</fig-th>
                     </tr>
                 </template>
 
@@ -332,40 +334,39 @@ export default {
                                 class="ml-1" />
                         </fig-td>
 
-                        <!-- code -->
-                        <fig-td>
-                            {{ obj.code }}
-                        </fig-td>
-
                         <!-- length -->
                         <fig-td class="text-right">
                             {{ $n(obj.length_cm) }}
+                            <div class="text-sm text-gray-500 text-right">
+                                {{ $t('{num} in.', {num: cmToInches(obj.length_cm)}) }}
+                            </div>
                         </fig-td>
 
                         <!-- width -->
                         <fig-td class="text-right">
                             {{ $n(obj.width_cm) }}
+                            <div class="text-sm text-gray-500 text-right">
+                                {{ $t('{num} in.', {num: cmToInches(obj.width_cm)}) }}
+                            </div>
                         </fig-td>
 
                         <!-- height -->
                         <fig-td class="text-right">
                             {{ $n(obj.height_cm) }}
+                            <div class="text-sm text-gray-500 text-right">
+                                {{ $t('{num} in.', {num: cmToInches(obj.height_cm)}) }}
+                            </div>
                         </fig-td>
 
-                        <!-- weight -->
+                        <!-- volume -->
                         <fig-td class="text-right">
-                            {{ $n(obj.weight_oz) }}
-                        </fig-td>
-
-                        <!-- max weight -->
-                        <fig-td class="text-right">
-                            {{ $n(obj.max_weight_oz) }}
+                            {{ $n(obj.volume_cm) }}
                         </fig-td>
                     </tr>
 
                     <fig-tr-no-results
                         v-if="!packageTypes.length"
-                        colspan="7" />
+                        colspan="6" />
                 </draggable>
             </fig-table-simple>
         </fig-overlay>
@@ -376,7 +377,7 @@ export default {
             size="lg">
             <div slot="header">
                 {{ form.id
-                    ? $t(`Edit Package Type: {name}`, {'name': object})
+                    ? $t('Edit Package Type')
                     : $t('Add Package Type') }}
             </div>
 
@@ -390,10 +391,13 @@ export default {
                                 <fig-form-input-number
                                     v-model="form.length_cm"
                                     id="input_length"
-                                    :step="1"
+                                    :step=".01"
                                     :min="0"
                                     controls-right
                                     size="md" />
+                                <div class="text-sm text-gray-500 pl-2">
+                                    {{ $t('{num} in.', {num: cmToInches(form.length_cm)}) }}
+                                </div>
 
                                 <div
                                     v-if="$v.form.length_cm.$invalid"
@@ -408,10 +412,13 @@ export default {
                                 <fig-form-input-number
                                     v-model="form.width_cm"
                                     id="input_width"
-                                    :step="1"
+                                    :step=".01"
                                     :min="0"
                                     controls-right
                                     size="md" />
+                                <div class="text-sm text-gray-500 pl-2">
+                                    {{ $t('{num} in.', {num: cmToInches(form.width_cm)}) }}
+                                </div>
 
                                 <div
                                     v-if="$v.form.width_cm.$invalid"
@@ -427,10 +434,13 @@ export default {
                                 <fig-form-input-number
                                     v-model="form.height_cm"
                                     id="input_width"
-                                    :step="1"
+                                    :step=".01"
                                     :min="0"
                                     controls-right
                                     size="md" />
+                                <div class="text-sm text-gray-500 pl-2">
+                                    {{ $t('{num} in.', {num: cmToInches(form.height_cm)}) }}
+                                </div>
 
                                 <div
                                     v-if="$v.form.height_cm.$invalid"
@@ -447,13 +457,13 @@ export default {
                                 <fig-form-input
                                     v-model="form.label"
                                     id="input_label" />
-                                <div v-if="labelSuggestion && labelSuggestion !== form.label" class="flex items-center mt-1">
+                                <!-- <div v-if="labelSuggestion && labelSuggestion !== form.label" class="flex items-center mt-1">
                                     <span class="text-gray-600 text-sm pr-2">{{ $t('Suggestion') }}:</span>
                                     <fig-button
                                         variant="plain"
                                         size="sm"
                                         @click="useLabelSuggestion">{{ labelSuggestion }}</fig-button>
-                                </div>
+                                </div> -->
 
                                 <div
                                     v-if="$v.form.label.$invalid"
@@ -479,6 +489,15 @@ export default {
                             v-model="form.description"
                             :rows="2"
                             id="input_desc" />
+                    </fig-form-group>
+
+                    <!-- notes -->
+                    <fig-form-group class="mb-3">
+                        <label slot="label" for="input_notes">{{ $t('Notes') }}</label>
+                        <fig-form-textarea
+                            v-model="form.notes"
+                            :rows="2"
+                            id="input_notes" />
                     </fig-form-group>
 
 

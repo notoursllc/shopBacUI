@@ -1,4 +1,9 @@
 import queryString from 'query-string';
+import cloneDeep from 'lodash.clonedeep';
+
+function stripRelations(data) {
+    delete data.volume_cm;
+}
 
 export default ($http) => ({
 
@@ -28,7 +33,10 @@ export default ($http) => ({
 
 
     async upsert(data) {
-        const response = await $http[data.hasOwnProperty('id') ? '$put' : '$post']('/package_type', data);
+        const type = cloneDeep(data);
+        stripRelations(type);
+
+        const response = await $http[data.hasOwnProperty('id') ? '$put' : '$post']('/package_type', type);
         return response.data;
     },
 

@@ -149,7 +149,7 @@
     "Edit color: {color}": "Edit color: {color}",
     "Edit Item": "Edit Item",
     "Edit Master Type ({name})": "Edit Master Type ({name})",
-    "Edit Package Type: {name}": "Edit Package Type {name}",
+    "Edit Package Type": "Edit Package Type",
     "Edit swatch: {name}": "Edit swatch: {name}",
     "Email address": "Email address",
     "Error": "Error",
@@ -241,7 +241,9 @@
     "No matching values": "No matching values",
     "No results": "No results",
     "None": "None",
+    "Notes": "Notes",
     "_num_ images selected": "{number} image selected|{number} images selected",
+    "{num} in.": "{num} in.",
 
     "OK": "OK",
     "only_num_left": "Only {qty} left!",
@@ -477,6 +479,7 @@
     "View My Order": "View My Order",
     "View product in store": "View product in store",
     "Vintage. Racing.": "Vintage. Racing.",
+    "Volume": "Volume",
 
     "warning_message_remove_product_option_tag": "Removing option values will also remove the Variants associated with the values.<br/>Continue?",
     "We have a winner!": "We have a winner!",

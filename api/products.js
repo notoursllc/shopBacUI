@@ -8,6 +8,7 @@ function stripRelations(data) {
     delete data.updated_at;
     delete data.deleted_at;
     delete data.total_inventory_count;
+    delete data.packing_volume_cm;
 
     if(Array.isArray(data.variants)) {
         data.variants.forEach((variant) => {
