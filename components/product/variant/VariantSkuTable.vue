@@ -3,7 +3,6 @@ import Vue from 'vue';
 import isObject from 'lodash.isobject';
 import draggable from 'vuedraggable';
 import SizeSelect from '@/components/product/size/SizeSelect';
-import Money from '@/components/Money';
 import {
     FigFormCheckbox,
     FigBooleanTag,
@@ -17,7 +16,8 @@ import {
     FigTooltip,
     FigTh,
     FigTd,
-    FigPopConfirm
+    FigPopConfirm,
+    FigMoney
 } from '@notoursllc/figleaf';
 
 
@@ -27,7 +27,7 @@ export default Vue.extend({
     components: {
         draggable,
         SizeSelect,
-        Money,
+        FigMoney,
         FigFormCheckbox,
         FigBooleanTag,
         FigButton,
@@ -216,7 +216,7 @@ export default Vue.extend({
                     <!-- price -->
                     <fig-th>
                         <div class="text-xs">{{ $t('default') }}:</div>
-                        <money
+                        <fig-money
                             v-if="isDetailsView"
                             :cents="defaults.base_price" />
                         <fig-form-input-money
@@ -229,7 +229,7 @@ export default Vue.extend({
                     <!-- sale price -->
                     <fig-th>
                         <div class="text-xs">{{ $t('default') }}:</div>
-                        <money
+                        <fig-money
                             v-if="isDetailsView"
                             :cents="defaults.sale_price" />
                         <fig-form-input-money
@@ -242,7 +242,7 @@ export default Vue.extend({
                     <!-- compare at -->
                     <fig-th>
                         <div class="text-xs">{{ $t('default') }}:</div>
-                        <money
+                        <fig-money
                             v-if="isDetailsView"
                             :cents="defaults.compare_at_price" />
                         <fig-form-input-money
@@ -255,7 +255,7 @@ export default Vue.extend({
                     <!-- cost -->
                     <fig-th>
                         <div class="text-xs">{{ $t('default') }}:</div>
-                        <money
+                        <fig-money
                             v-if="isDetailsView"
                             :cents="defaults.cost_price" />
                         <fig-form-input-money
@@ -341,7 +341,7 @@ export default Vue.extend({
 
                     <!-- Price -->
                     <fig-td class="text-sm text-right align-top">
-                        <money
+                        <fig-money
                             v-if="isDetailsView"
                             :cents="sku.base_price" />
                         <template v-else>
@@ -361,7 +361,7 @@ export default Vue.extend({
 
                     <!-- Sale price -->
                     <fig-td class="text-sm text-right align-top">
-                        <money
+                        <fig-money
                             v-if="isDetailsView"
                             :cents="sku.sale_price" />
                         <template v-else>
@@ -394,7 +394,7 @@ export default Vue.extend({
 
                     <!-- Compare at -->
                     <fig-td class="text-sm text-right align-top">
-                        <money
+                        <fig-money
                             v-if="isDetailsView"
                             :cents="sku.compare_at_price" />
                         <template v-else>
@@ -415,7 +415,7 @@ export default Vue.extend({
 
                     <!-- Cost -->
                     <fig-td class="text-sm text-right align-top">
-                        <money
+                        <fig-money
                             v-if="isDetailsView"
                             :cents="sku.cost_price" />
                         <template v-else>

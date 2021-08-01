@@ -1,56 +1,31 @@
 import queryString from 'query-string';
+import isObject from 'lodash.isobject';
 
 export default ($http) => ({
 
-    async updateItemQty(params) {
-        return await this.$http.post('/cart/item/qty', params);
+    async list(params) {
+        const paramString = queryString.stringify(params, { arrayFormat: 'bracket' });
+        // const paramString = queryString.stringify(params);
+        const { data } = await $http.$get(`/carts?${paramString}`); // TODO: is there a XSS issue here?
+        return data;
     },
 
-    async deleteItem(id) {
-        const { data } = await $http.$delete('/cart/item', {
-            params: {
-                id
-            }
+    async get(id, options) {
+        let params = {};
+
+        if(isObject(options)) {
+            params = {
+                ...options
+            };
+        }
+
+        params.id = id;
+
+        const { data } = await $http.$get('/cart', {
+            params
         });
 
         return data;
     }
 
-    // async list(params) {
-    //     const paramString = queryString.stringify(params, {arrayFormat: 'bracket'});
-
-    //     // const response = await $http.$get(`/products?${paramString}`); // TODO: is there a XSS issue here?
-    //     const { data } = await $http.$get(`/taxes?${paramString}`); // TODO: is there a XSS issue here?
-    //     return data;
-    // },
-
-    // async get(id) {
-    //     const { data } = await $http.$get('/tax', {
-    //         params: {
-    //             id
-    //         }
-    //     });
-
-    //     return data;
-    // },
-
-    // async add(taxData) {
-    //     const { data } = await $http.$post('/tax', taxData);
-    //     return data;
-    // },
-
-    // async update(taxData) {
-    //     const { data } = await $http.$put('/tax', taxData);
-    //     return data;
-    // },
-
-    // async delete(id) {
-    //     const { data } = await $http.$delete('/tax', {
-    //         params: {
-    //             id
-    //         }
-    //     });
-
-    //     return data;
-    // }
 });

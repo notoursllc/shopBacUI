@@ -9,6 +9,11 @@ export default {
 
 <template>
     <div>
+        <!-- Orders -->
+        <nuxt-link
+            :to="{ name: 'reports-orders-list' }"
+            tag="a"
+            class="text-lg">{{ $t('Orders') }}</nuxt-link>
 
     </div>
 </template>

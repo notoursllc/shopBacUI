@@ -1,22 +1,26 @@
 <script>
 import Vue from 'vue';
-import TreeView from 'vue-json-tree-view';
-import payment_mixin from '@/mixins/payment_mixin';
+// import TreeView from 'vue-json-tree-view';
+// import payment_mixin from '@/mixins/payment_mixin';
 
-Vue.use(TreeView);
+// Vue.use(TreeView);
 
-import { FigAddress } from '@notoursllc/figleaf';
+import {
+    FigAddress,
+    FigSpecLayout,
+    FigSpec } from '@notoursllc/figleaf';
 
 export default {
     components: {
         FigAddress,
+        FigSpecLayout,
+        FigSpec
         // ShippingLabelButton: () => import('@/components/payment/ShippingLabelButton'),
-        CartItem: () => import('@/components/cart/CartItem')
     },
 
-    mixins: [
-        payment_mixin
-    ],
+    // mixins: [
+    //     payment_mixin
+    // ],
 
     data() {
         return {
@@ -166,12 +170,12 @@ export default {
         <div class="g-spec">
             <div class="g-spec-label">Cart items ({{ payment.shoppingCart.num_items }}):</div>
             <div class="g-spec-content">
-                <cart-item
+                <!-- <cart-item
                     v-for="item in payment.shoppingCart.cart_items"
                     :key="item.id"
                     :data="item"
                     :show-price-strikethrough="false"
-                    :show-quantity-warning="false"/>
+                    :show-quantity-warning="false"/> -->
             </div>
         </div>
 

@@ -4,7 +4,6 @@ import draggable from 'vuedraggable';
 import VariantForm from '@/components/product/variant/VariantForm';
 import BooleanTag from '@/components/BooleanTag';
 import ColorSwatch from '@/components/product/colorSwatch/ColorSwatch';
-import Money from '@/components/Money';
 import storage_mixin from '@/mixins/storage_mixin';
 import product_mixin from '@/mixins/product_mixin';
 
@@ -15,7 +14,8 @@ import {
     FigTh,
     FigTd,
     FigTag,
-    FigOperationsDropdown
+    FigOperationsDropdown,
+    FigMoney
 } from '@notoursllc/figleaf';
 
 export default {
@@ -26,14 +26,14 @@ export default {
         VariantForm,
         BooleanTag,
         ColorSwatch,
-        Money,
         FigButton,
         FigModal,
         FigTableSimple,
         FigTh,
         FigTd,
         FigTag,
-        FigOperationsDropdown
+        FigOperationsDropdown,
+        FigMoney
     },
 
     mixins: [
@@ -261,7 +261,7 @@ export default {
 
                     <!-- Price -->
                     <fig-td>
-                        <money :cents="color.base_price" />
+                        <fig-money :cents="color.base_price" />
                     </fig-td>
 
                     <!-- Sizes -->
