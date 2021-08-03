@@ -1,11 +1,8 @@
 <script>
-import Vue from 'vue';
 import forEach from 'lodash.foreach';
-import TreeView from 'vue-json-tree-view';
 import payment_mixin from '@/mixins/payment_mixin';
 import shipping_mixin from '@/mixins/shipping_mixin';
 
-// Vue.use(TreeView);
 
 export default {
     props: {
@@ -464,9 +461,9 @@ export default {
                     </div>
 
                     <div v-if="showParcelCartItems" class="p-3">
-                        <tree-view
+                        <!-- <tree-view
                             :data="payment.shoppingCart.cart_items"
-                            :options="{maxDepth: 2}" />
+                            :options="{maxDepth: 2}" /> -->
                     </div>
                 </div>
             </div>

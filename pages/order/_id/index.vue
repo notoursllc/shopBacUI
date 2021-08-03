@@ -1,9 +1,6 @@
 <script>
-import Vue from 'vue';
-// import TreeView from 'vue-json-tree-view';
 // import payment_mixin from '@/mixins/payment_mixin';
 
-// Vue.use(TreeView);
 
 import {
     FigAddress,
@@ -306,7 +303,7 @@ export default {
                 :visible.sync="modalIsActive"
                 width="90%"
                 top="5vh">
-            <tree-view :data="payment" :options="{maxDepth: 3}"></tree-view>
+            <!-- <tree-view :data="payment" :options="{maxDepth: 3}"></tree-view> -->
         </el-dialog>
     </div>
 </template>

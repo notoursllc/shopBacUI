@@ -28,4 +28,15 @@ export default ($http) => ({
         return data;
     }
 
+
+    // async getShippingRate(rate_id) {
+    //     const { data } = await $http.$get('/cart/shipping/rate', {
+    //         params: {
+    //             rate_id
+    //         }
+    //     });
+
+    //     return data;
+    // }
+
 });
