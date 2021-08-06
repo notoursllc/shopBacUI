@@ -103,6 +103,9 @@ export default {
             this.$refs.shipping_rate_modal.show();
         },
 
+        showCartDataModal() {
+            this.$refs.cart_modal.show();
+        },
 
         getProductImage(prod) {
             return Array.isArray(prod.product_variant.images) ? prod.product_variant.images[0].url : null;
@@ -402,7 +405,23 @@ export default {
                     </div>
                     <div class="text-xs text-center">{{ $t('Cart') }}</div>
                 </label>
-                Cart info
+
+                <div>
+                    <fig-button
+                        variant="plain"
+                        size="sm"
+                        @click="showCartDataModal">{{ $t('view raw data') }}</fig-button>
+                </div>
+
+                <!-- raw data modal -->
+                <fig-modal
+                    ref="cart_modal"
+                    size="lg"
+                    close-button>
+                    <fig-json-tree-view
+                        :data="cart"
+                        :level="2"></fig-json-tree-view>
+                </fig-modal>
             </fig-spec>
 
             <!-- Billing -->
