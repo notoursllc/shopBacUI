@@ -49,6 +49,7 @@
     "Basic color": "Basic color",
     "Basic colors": "Basic colors",
     "Billing address": "Billing address",
+    "Box": "Box",
     "Bulk edit": "Bulk edit",
     "Buttons": "Buttons",
 
@@ -251,6 +252,7 @@
     "none": "none",
     "Notes": "Notes",
     "_num_ images selected": "{number} image selected|{number} images selected",
+    "{num} items": "{num} item|{num} items",
     "{num} in.": "{num} in.",
     "{num1} of {num2}": "{num1} of {num2}",
 
@@ -418,6 +420,7 @@
     "sku_barcode_description": "ISBN, UPC, GTIN, etc.",
     "accent_message_begin_desc": "The accent message will be displayed on this date",
     "accent_message_end_desc": "The accent message will be hidden on this date",
+    "SKU": "SKU",
     "Sleeve": "Sleeve",
     "Sleeve length": "Sleeve length",
     "Sleeve lengths": "Sleeve lengths",
@@ -467,6 +470,7 @@
     "Types": "Types",
 
     "Unable to initialize PayPal flow. Are your options correct?": "Unable to initialize PayPal flow. Are your options correct?",
+    "UNPACKED PRODUCTS": "UNPACKED PRODUCTS",
     "Update all sizes": "Update all sizes",
     "Updated": "Updated",
     "updated_name": "Updated: {name}",

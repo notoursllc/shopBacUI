@@ -98,6 +98,7 @@ export default {
         '@/plugins/vue-select',
         '@/plugins/notifications',
         '@/plugins/figIcon',
+        '@/plugins/globals',
         '@/node_modules/@notoursllc/figleaf/components/toaster',
         '@/node_modules/@notoursllc/figleaf/components/confirm'
         // { src: '@/plugins/youtube', ssr: false },
