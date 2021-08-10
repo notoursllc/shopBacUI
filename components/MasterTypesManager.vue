@@ -72,15 +72,20 @@ export default {
 
     watch: {
         object: {
-            handler(newVal) {
+            async handler(newVal) {
                 this.form.object = newVal;
-                this.fetchTypes();
+                await this.fetchTypes();
+                this.refreshState();
             },
             immediate: true
         }
     },
 
     methods: {
+        refreshState() {
+            return this.$store.dispatch('MASTER_TYPES', { object: this.object, value: this.types});
+        },
+
         async fetchTypes(paramsObj) {
             this.loading = true;
 
@@ -135,7 +140,8 @@ export default {
                     throw new Error(this.$t('Master type not found'));
                 }
 
-                this.fetchTypes();
+                await this.fetchTypes();
+                this.refreshState();
 
                 this.$figleaf.successToast({
                     title: this.$t('Success'),
@@ -215,7 +221,8 @@ export default {
                 });
 
                 this.showDialog(false);
-                this.fetchTypes();
+                await this.fetchTypes();
+                this.refreshState();
             }
             catch(e) {
                 this.$figleaf.errorToast({
