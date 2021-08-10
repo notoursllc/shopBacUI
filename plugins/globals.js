@@ -1,4 +1,8 @@
 export default async (ctx) => {
+    if(!ctx.store.state.ui.isAuthenticated) {
+        return;
+    }
+
     const promises = [
         ctx.app.$api.masterTypes.all({
             where: ['object', '=', 'product_type']
