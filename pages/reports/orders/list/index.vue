@@ -3,10 +3,9 @@ import {
     FigTableSimple,
     FigTh,
     FigTd,
-    FigOperationsDropdown,
-    FigBooleanTag,
     FigMoney,
-    FigAddress
+    FigAddress,
+    FigPaginationBar
 } from '@notoursllc/figleaf';
 
 
@@ -15,15 +14,19 @@ export default {
         FigTableSimple,
         FigTh,
         FigTd,
-        FigOperationsDropdown,
-        FigBooleanTag,
         FigMoney,
-        FigAddress
+        FigAddress,
+        FigPaginationBar
     },
 
     data() {
         return {
-            carts: []
+            carts: [],
+            pagination: {
+                pageNo: 1,
+                pageSize: 1,
+                totalResults: 0
+            }
         };
     },
 
@@ -35,11 +38,16 @@ export default {
     methods: {
         async fetchClosedCarts(paramsObj) {
             try {
-                this.carts = await this.$api.cart.list({
+                const { data, pagination } = await this.$api.cart.list({
                     where: ['closed_at', 'is not', 'NULL'],
                     viewAllRelated: true,
                     ...paramsObj
                 });
+
+                this.carts = data;
+                this.pagination.pageNo = pagination.page;
+                this.pagination.pageSize = pagination.pageSize;
+                this.pagination.totalResults = pagination.rowCount;
             }
             catch(e) {
                 this.$figleaf.errorToast({
@@ -52,7 +60,28 @@ export default {
         sortChanged(val) {
             this.fetchClosedCarts({
                 sortBy: val.by,
-                sortDesc: !val.isAsc
+                sortDesc: !val.isAsc,
+                pageSize: this.pagination.pageSize,
+                page: this.pagination.pageNo
+            });
+        },
+
+        onPerPageChange(val) {
+            this.pagination.pageSize = val;
+            this.pagination.pageNo = 1;
+
+            this.fetchClosedCarts({
+                pageSize: this.pagination.pageSize,
+                page: this.pagination.pageNo
+            });
+        },
+
+        onPageNumberChange(val) {
+            this.pagination.pageNo = val;
+
+            this.fetchClosedCarts({
+                pageSize: this.pagination.pageSize,
+                page: this.pagination.pageNo
             });
         }
     }
@@ -62,6 +91,15 @@ export default {
 
 <template>
     <div>
+        <div>
+            <fig-pagination-bar
+                :current-page="pagination.pageNo"
+                :per-page="pagination.pageSize"
+                :total-records="pagination.totalResults"
+                @perPage="onPerPageChange"
+                @pageNumber="onPageNumberChange" />
+        </div>
+
         <fig-table-simple
             striped
             hover

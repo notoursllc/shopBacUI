@@ -1,4 +1,8 @@
-{
+const figleafLocales = require('@notoursllc/figleaf/locales/en-US.js');
+
+module.exports = {
+    ...figleafLocales,
+
     "# items": "# items",
 
     "A server error occurred while setting the shipping address": "A server error occurred while setting the shipping address",

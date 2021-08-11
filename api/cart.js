@@ -3,11 +3,10 @@ import isObject from 'lodash.isobject';
 
 export default ($http) => ({
 
-    async list(params) {
+    list(params) {
         const paramString = queryString.stringify(params, { arrayFormat: 'bracket' });
         // const paramString = queryString.stringify(params);
-        const { data } = await $http.$get(`/carts?${paramString}`); // TODO: is there a XSS issue here?
-        return data;
+        return $http.$get(`/carts?${paramString}`); // TODO: is there a XSS issue here?
     },
 
     async get(id, options) {
