@@ -5,7 +5,8 @@ import {
     FigTd,
     FigMoney,
     FigAddress,
-    FigPaginationBar
+    FigPaginationBar,
+    FigTag
 } from '@notoursllc/figleaf';
 
 
@@ -16,7 +17,8 @@ export default {
         FigTd,
         FigMoney,
         FigAddress,
-        FigPaginationBar
+        FigPaginationBar,
+        FigTag
     },
 
     data() {
@@ -114,6 +116,7 @@ export default {
                     <fig-th right>{{ $t('Grand total') }}</fig-th>
                     <fig-th right>{{ $t('# items') }}</fig-th>
                     <fig-th>{{ $t('Shipping address') }}</fig-th>
+                    <fig-th sortable prop="shipped_at">{{ $t('Shipped at') }}</fig-th>
                 </tr>
             </template>
 
@@ -162,6 +165,16 @@ export default {
                         :state="cart.shipping_state"
                         :zip="cart.shipping_postalCode"
                         :country-code="cart.shipping_countryCodeAlpha2" />
+                </fig-td>
+
+                <!-- shipped at -->
+                <fig-td>
+                    <template v-if="cart.shipped_at">{{ cart.shipped_at | format8601 }}</template>
+                    <template v-else>
+                        <fig-tag
+                            variant="warning"
+                            size="sm">{{ $t('not shipped') }}</fig-tag>
+                    </template>
                 </fig-td>
             </tr>
         </fig-table-simple>
