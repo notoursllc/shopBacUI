@@ -1,8 +1,13 @@
 <script>
 import uuid from 'uuid';
+import { FigIconLabel } from '@notoursllc/figleaf';
 
 export default {
     inject: ['menuListState'],
+
+    components: {
+        FigIconLabel
+    },
 
     props: {
 
@@ -65,18 +70,51 @@ export default {
     <li class="navigation-item">
         <label
             @click="toggle"
-            :class="{'not-collapsed': !toggleIsOpen, 'collapsed': toggleIsOpen}">
-            <slot name="label"></slot>
-            <i class="navigation-item-arrow"> > </i>
+            :class="{'collapsed': !toggleIsOpen, 'not-collapsed': toggleIsOpen}">
+            <fig-icon-label>
+                <template v-slot:left v-if="$slots.icon"><slot name="icon" /></template>
+                <slot name="label"></slot>
+            </fig-icon-label>
+            <i class="navigation-item-arrow">
+                <fig-icon
+                    icon="chevron-right"
+                    :width="16"
+                    :height="16"
+                    stroke="#fff"
+                    :stroke-width="1.5" />
+            </i>
         </label>
 
-        <b-collapse
-            :visible="toggleIsOpen"
-            tag="ul"
-            is-nav
-            class="navigation-list"
-            v-on:menuItemActive.native="onChildMenuItemActive">
-            <slot></slot>
-        </b-collapse>
+        <transition name="p-toggleable-content">
+            <ul
+                v-show="toggleIsOpen"
+                class="navigation-list p-toggleable-content"
+                v-on:menuItemActive.native="onChildMenuItemActive">
+                <slot></slot>
+            </ul>
+        </transition>
     </li>
 </template>
+
+
+<style>
+.p-toggleable-content-enter-from,
+.p-toggleable-content-leave-to {
+    max-height: 0;
+}
+
+.p-toggleable-content-enter-to,
+.p-toggleable-content-leave-from {
+    max-height: 1000px;
+}
+
+.p-toggleable-content-leave-active {
+    overflow: hidden;
+    transition: max-height 0.45s cubic-bezier(0, 1, 0, 1);
+}
+
+.p-toggleable-content-enter-active {
+    overflow: hidden;
+    transition: max-height 1s ease-in-out;
+}
+</style>

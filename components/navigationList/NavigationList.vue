@@ -78,10 +78,6 @@ export default {
 
 
 <style lang="scss">
-.navigation-list-container > .navigation-item > label {
-    font-weight: 700;
-}
-
 .navigation-list {
     border: 0;
     list-style: none;
@@ -95,14 +91,10 @@ export default {
         margin: 0;
         padding: 0;
 
-        label * {
-            vertical-align: middle;
-        }
-
         label {
             height: 40px;
             line-height: 40px;
-            padding: 0 20px;
+            padding: 0 10px;
             font-size: 14px;
             position: relative;
             white-space: nowrap;
@@ -114,17 +106,11 @@ export default {
             .navigation-item-arrow {
                 position: absolute;
                 top: 50%;
-                right: 20px;
+                right: 10px;
                 margin-top: -7px;
                 transition: transform .3s;
-                font-size: 12px;
-                line-height: 1;
                 display: inline-block;
             }
-        }
-
-        &.not-collapsed > label .navigation-item-arrow {
-            transform: rotateZ(180deg);
         }
 
         .is-disabled,
@@ -134,11 +120,11 @@ export default {
     }
 
     .navigation-item > .navigation-list {
-        margin-left: 10px;
+        margin-left: 20px;
     }
 
     label.not-collapsed .navigation-item-arrow {
-        transform: rotateZ(180deg);
+        transform: rotateZ(90deg);
     }
 
     .not-collapsed:focus,

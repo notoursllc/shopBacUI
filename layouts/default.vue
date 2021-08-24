@@ -1,11 +1,13 @@
 <script>
 import { mapState } from 'vuex';
+import NavigationList from '@/components/navigationList/NavigationList.vue';
+import NavigationItem from '@/components/navigationList/NavigationItem.vue';
+import NavigationCollapse from '@/components/navigationList/NavigationCollapse.vue';
 
 import {
     FigIconSprite,
     FigVictoryIcon,
-    FigButton,
-    FigTooltip
+    FigButton
 } from '@notoursllc/figleaf';
 
 export default {
@@ -13,12 +15,13 @@ export default {
         FigIconSprite,
         FigVictoryIcon,
         FigButton,
-        FigTooltip
+        NavigationList,
+        NavigationItem,
+        NavigationCollapse
     },
 
     data() {
         return {
-            selectedGutter: 'products'
         };
     },
 
@@ -35,21 +38,6 @@ export default {
 
         pageTitle() {
             return this.$store.state.ui.pageTitle;
-        },
-
-        subNavVisible() {
-            if (['products', 'global', 'reports'].includes(this.selectedGutter)) {
-                if(this.sidebarOpened === false) {
-                    return false;
-                }
-                return true;
-            }
-
-            return false;
-        },
-
-        canShowHamburger() {
-            return ['products', 'global', 'reports'].includes(this.selectedGutter);
         }
     },
 
@@ -82,10 +70,6 @@ export default {
             }
         },
 
-        onGutterNavClick(item) {
-            this.selectedGutter = item;
-        },
-
         async logout() {
             try {
                 await this.$api.tenantMembers.logout();
@@ -109,220 +93,107 @@ export default {
 
 
 <template>
-    <div class="flex flex-row h-screen">
+    <div class="flex min-h-screen relative">
         <fig-icon-sprite />
         <fig-toaster />
 
-        <!-- left icon gutter -->
-        <div class="gutter">
-            <div class="flex flex-col justify-center">
+        <aside
+            class="layout-sidenav"
+            :class="{'layout-sidenav-opened': sidebarOpened, 'layout-sidenav-closed': !sidebarOpened}">
 
+            <div class="layout-sidenav-header">
                 <!-- logo -->
                 <nuxt-link
                     :to="{ name: 'product' }"
-                    tag="button"
-                    class="gutter-btn-logo"
-                    @click.native="onGutterNavClick('products')">
+                    tag="nav">
                     <fig-victory-icon :width="44" :height="30" fill="#fff" />
                 </nuxt-link>
-
-                <div class="p-2 text-center">
-                    <!-- products -->
-                    <nuxt-link
-                        :to="{ name: 'product' }"
-                        tag="button"
-                        class="gutter-btn"
-                        @click.native="onGutterNavClick('products')">
-                        <fig-tooltip placement="right">
-                            <fig-icon
-                                slot="toggler"
-                                icon="triangle-square-circle"
-                                :width="28"
-                                :height="28"
-                                :stroke-width="1.5" />
-                            {{ $t('Products') }}
-                        </fig-tooltip>
-                    </nuxt-link>
-
-                    <!-- master types -->
-                    <nuxt-link
-                        :to="{ name: 'global' }"
-                        tag="button"
-                        class="gutter-btn"
-                        @click.native="onGutterNavClick('global')">
-                        <fig-tooltip placement="right">
-                            <fig-icon
-                                slot="toggler"
-                                icon="world"
-                                :width="28"
-                                :height="28"
-                                :stroke-width="1.5" />
-                            {{ $t('Global values') }}
-                        </fig-tooltip>
-                    </nuxt-link>
-
-                    <!-- payments -->
-                    <nuxt-link
-                        :to="{ name: 'order-list' }"
-                        tag="button"
-                        class="gutter-btn"
-                        @click.native="onGutterNavClick('payments')">
-                        <fig-tooltip placement="right">
-                            <fig-icon
-                                slot="toggler"
-                                icon="credit-card"
-                                :width="28"
-                                :height="28"
-                                :stroke-width="1.5" />
-                            {{ $t('Payments') }}
-                        </fig-tooltip>
-                    </nuxt-link>
-
-                    <!-- reports -->
-                    <nuxt-link
-                        :to="{ name: 'reports' }"
-                        tag="button"
-                        class="gutter-btn"
-                        @click.native="onGutterNavClick('reports')">
-                        <fig-tooltip placement="right">
-                            <fig-icon
-                                slot="toggler"
-                                icon="chart-bar"
-                                :width="28"
-                                :height="28"
-                                :stroke-width="1.5" />
-                            {{ $t('Reports') }}
-                        </fig-tooltip>
-                    </nuxt-link>
-                </div>
             </div>
-        </div>
 
-        <!-- submenu -->
-        <transition name="slide">
-            <div
-                v-if="subNavVisible"
-                class="subnav">
+            <button
+                class="sidenav-x"
+                @click="menuItemClick">
+                <fig-icon
+                    icon="x"
+                    :width="26"
+                    :height="26"
+                    stroke="#fff"
+                    :stroke-width="1.5" />
+            </button>
 
-                <template v-if="selectedGutter === 'products'">
-                    <div class="subnav-title">{{ $t('Products') }}</div>
+            <navigation-list>
+                <navigation-item :route="{ name: 'product' }">
+                    <template v-slot:icon>
+                        <fig-icon
+                            icon="triangle-square-circle"
+                            :width="20"
+                            :height="20"
+                            stroke="#fff"
+                            :stroke-width="1"
+                            class="mr-1" />
+                    </template>
+                    {{ $t('Products') }}
+                </navigation-item>
 
-                    <div class="mt-5 flex flex-col justify-start text-sm">
-                        <nuxt-link
-                            :to="{ name: 'product' }"
-                            tag="button"
-                            class="subnav-btn">{{ $t('Product list') }}</nuxt-link>
-                    </div>
-                </template>
+                <navigation-collapse :fuzzy-route-match="['global-']">
+                    <template v-slot:icon>
+                        <fig-icon
+                            icon="world"
+                            :width="20"
+                            :height="20"
+                            stroke="#fff"
+                            :stroke-width="1"
+                            class="mr-1" />
+                    </template>
+                    <template v-slot:label>{{ $t('Global values') }}</template>
 
-                <!-- global sub nav -->
-                <template v-if="selectedGutter === 'global'">
-                    <div class="subnav-title">{{ $t('Global values') }}</div>
+                    <navigation-item :route="{ name: 'global-types' }">{{ $t('Types') }}</navigation-item>
+                    <navigation-item :route="{ name: 'global-sub-types' }">{{ $t('Sub-Types') }}</navigation-item>
+                    <navigation-item :route="{ name: 'global-sales-channel-types' }">{{ $t('Sales Channels') }}</navigation-item>
+                    <navigation-item :route="{ name: 'global-vendors' }">{{ $t('Vendors') }}</navigation-item>
+                    <navigation-item :route="{ name: 'global-collections' }">{{ $t('Collections') }}</navigation-item>
+                    <navigation-item :route="{ name: 'global-gender-types' }">{{ $t('Genders') }}</navigation-item>
+                    <navigation-item :route="{ name: 'global-basic-color-types' }">{{ $t('Basic colors') }}</navigation-item>
+                    <navigation-item :route="{ name: 'global-size-types' }">{{ $t('Sizes') }}</navigation-item>
+                    <navigation-item :route="{ name: 'global-feature-types' }">{{ $t('Product features') }}</navigation-item>
+                    <navigation-item :route="{ name: 'global-fit-types' }">{{ $t('Fits') }}</navigation-item>
+                    <navigation-item :route="{ name: 'global-sleeve-length-types' }">{{ $t('Sleeve length') }}</navigation-item>
+                    <navigation-item :route="{ name: 'global-accent-messages-list' }">{{ $t('Accent Messages') }}</navigation-item>
+                    <navigation-item :route="{ name: 'global-color-swatch-types' }">{{ $t('Color swatches') }}</navigation-item>
+                    <navigation-item :route="{ name: 'global-package-types' }">{{ $t('Package types') }}</navigation-item>
+                </navigation-collapse>
 
-                    <div class="mt-5 flex flex-col justify-start text-sm">
-                        <nuxt-link
-                            :to="{ name: 'global-types' }"
-                            tag="button"
-                            class="subnav-btn">{{ $t('Types') }}</nuxt-link>
+                <navigation-collapse :fuzzy-route-match="['reports-']">
+                    <template v-slot:icon>
+                        <fig-icon
+                            icon="chart-bar"
+                            :width="20"
+                            :height="20"
+                            stroke="#fff"
+                            :stroke-width="1"
+                            class="mr-1" />
+                    </template>
+                    <template v-slot:label>{{ $t('Reports') }}</template>
+                    <navigation-item :route="{ name: 'reports-orders-list' }">{{ $t('Orders') }}</navigation-item>
+                </navigation-collapse>
+            </navigation-list>
+        </aside>
 
-                        <nuxt-link
-                            :to="{ name: 'global-sub-types' }"
-                            tag="button"
-                            class="subnav-btn">{{ $t('Sub-Types') }}</nuxt-link>
-
-                        <nuxt-link
-                            :to="{ name: 'global-sales-channel-types' }"
-                            tag="button"
-                            class="subnav-btn">{{ $t('Sales Channels') }}</nuxt-link>
-
-                        <nuxt-link
-                            :to="{ name: 'global-vendors' }"
-                            tag="button"
-                            class="subnav-btn">{{ $t('Vendors') }}</nuxt-link>
-
-                        <nuxt-link
-                            :to="{ name: 'global-collections' }"
-                            tag="button"
-                            class="subnav-btn">{{ $t('Collections') }}</nuxt-link>
-
-                        <nuxt-link
-                            :to="{ name: 'global-gender-types' }"
-                            tag="button"
-                            class="subnav-btn">{{ $t('Genders') }}</nuxt-link>
-
-                        <nuxt-link
-                            :to="{ name: 'global-basic-color-types' }"
-                            tag="button"
-                            class="subnav-btn">{{ $t('Basic colors') }}</nuxt-link>
-
-                        <nuxt-link
-                            :to="{ name: 'global-size-types' }"
-                            tag="button"
-                            class="subnav-btn">{{ $t('Sizes') }}</nuxt-link>
-
-                        <nuxt-link
-                            :to="{ name: 'global-feature-types' }"
-                            tag="button"
-                            class="subnav-btn">{{ $t('Product features') }}</nuxt-link>
-
-                        <nuxt-link
-                            :to="{ name: 'global-fit-types' }"
-                            tag="button"
-                            class="subnav-btn">{{ $t('Fits') }}</nuxt-link>
-
-                        <nuxt-link
-                            :to="{ name: 'global-sleeve-length-types' }"
-                            tag="button"
-                            class="subnav-btn">{{ $t('Sleeve length') }}</nuxt-link>
-
-                        <nuxt-link
-                            :to="{ name: 'global-datatables-list' }"
-                            tag="button"
-                            class="subnav-btn">{{ $t('Data Tables') }}</nuxt-link>
-
-                        <nuxt-link
-                            :to="{ name: 'global-accent-messages-list' }"
-                            tag="button"
-                            class="subnav-btn">{{ $t('Accent Messages') }}</nuxt-link>
-
-                        <nuxt-link
-                            :to="{ name: 'global-color-swatch-types' }"
-                            tag="button"
-                            class="subnav-btn">{{ $t('Color swatches') }}</nuxt-link>
-
-                        <nuxt-link
-                            :to="{ name: 'global-package-types' }"
-                            tag="button"
-                            class="subnav-btn">{{ $t('Package Types') }}</nuxt-link>
-                    </div>
-                </template>
-
-
-                <!-- reports sub nav -->
-                <template v-if="selectedGutter === 'reports'">
-                    <div class="subnav-title">{{ $t('Reports') }}</div>
-
-                    <div class="mt-5 flex flex-col justify-start text-sm">
-                        <nuxt-link
-                            :to="{ name: 'product' }"
-                            tag="button"
-                            class="subnav-btn">Test report</nuxt-link>
-                    </div>
-                </template>
-            </div>
-        </transition>
+        <div
+            class="layout-sidenav-overlay"
+            v-if="sidebarOpened"
+            @click="$store.dispatch('ui/toggleSidebar')"></div>
 
 
         <!-- main content -->
-        <div class="main-content">
+        <div class="main-content flex-1">
             <!-- header -->
             <div class="flex items-center justify-between px-4 py-3 border-b border-gray-200 shadow-sm bg-white">
                 <div class="flex items-center">
                     <!-- hamburger -->
                     <fig-button
-                        v-if="canShowHamburger"
                         variant="plain"
-                        :icon="subNavVisible ? 'chevrons-left': 'chevrons-right'"
+                        :icon="sidebarOpened ? 'chevrons-left': 'chevrons-right'"
                         size="sm"
                         class="mr-3"
                         @click="$store.dispatch('ui/toggleSidebar')" />
@@ -353,61 +224,37 @@ export default {
 
 
 <style lang="postcss">
-.gutter {
-    @apply flex flex-col flex-none w-16;
+.layout-sidenav {
+    @apply text-blue-100 w-48 inset-y-0 left-0 transform transition duration-200 ease-in-out z-10;
     background: #232b38;
 }
 
-.gutter-btn-logo {
-    @apply flex justify-center py-4 w-full bg-purple-700;
-}
-.gutter-btn {
-    @apply flex justify-center rounded p-2 my-2;
-}
-.gutter-btn.nuxt-link-active,
-.gutter-btn.nuxt-link-exact-active {
-  background: #3d4f6b;
+.layout-sidenav-header {
+    @apply flex justify-center items-center bg-purple-600 bg-opacity-40 mb-4 py-3;
 }
 
-.gutter-btn svg {
-    stroke: #c5c7c9;
-}
-.gutter-btn.nuxt-link-active svg {
-    stroke: #fff;
+.layout-sidenav-overlay {
+    @apply fixed inset-0 bg-gray-500 bg-opacity-50 transition-opacity md:hidden;
+    border:2px solid red;
 }
 
-.subnav {
-    @apply flex-none w-56 px-2 py-4 overflow-y-auto bg-gray-50 border-r border-gray-200;
-}
-.subnav-title {
-    @apply text-base font-bold px-2;
-}
-.subnav-btn {
-    @apply text-left py-1 rounded-sm px-2;
-}
-.subnav-btn.nuxt-link-exact-active {
-    @apply bg-gray-200;
+.layout-sidenav-opened {
+    @apply absolute translate-x-0 md:relative;
 }
 
-.main-content {
-    @apply flex-auto bg-gray-50 shadow-lg overflow-auto;
+.layout-sidenav-closed {
+    /* @apply absolute -translate-x-full md:relative md:translate-x-0; */
+    @apply absolute -translate-x-full;
 }
 
-.slide-leave-active {
-    transition: all .2s ease-out;
+.layout-sidenav .sidenav-x {
+    @apply absolute top-0 right-1 p-2 md:hidden;
 }
 
-.slide-enter,
-.slide-leave-to {
-    width: 0;
-    transform: scale(0);
-}
-.slide-leave,
-.slide-enter-to {
-    @apply w-56;
-    transform: scale(1);
-}
-.slide-enter-active {
-    transition: all .3s ease-in;
+
+.layout-sidenav nav a.nuxt-link-active,
+.layout-sidenav nav a.nuxt-link-exact-active {
+    /* @apply bg-green-700; */
+    background: #3d4f6b;
 }
 </style>
