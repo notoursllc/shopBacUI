@@ -135,6 +135,20 @@ export default {
                     {{ $t('Products') }}
                 </navigation-item>
 
+                <navigation-collapse :fuzzy-route-match="['reports-']">
+                    <template v-slot:icon>
+                        <fig-icon
+                            icon="chart-bar"
+                            :width="20"
+                            :height="20"
+                            stroke="#fff"
+                            :stroke-width="1"
+                            class="mr-1" />
+                    </template>
+                    <template v-slot:label>{{ $t('Reports') }}</template>
+                    <navigation-item :route="{ name: 'reports-orders-list' }">{{ $t('Orders') }}</navigation-item>
+                </navigation-collapse>
+
                 <navigation-collapse :fuzzy-route-match="['global-']">
                     <template v-slot:icon>
                         <fig-icon
@@ -145,7 +159,7 @@ export default {
                             :stroke-width="1"
                             class="mr-1" />
                     </template>
-                    <template v-slot:label>{{ $t('Global values') }}</template>
+                    <template v-slot:label>{{ $t('Global settings') }}</template>
 
                     <navigation-item :route="{ name: 'global-types' }">{{ $t('Types') }}</navigation-item>
                     <navigation-item :route="{ name: 'global-sub-types' }">{{ $t('Sub-Types') }}</navigation-item>
@@ -161,20 +175,6 @@ export default {
                     <navigation-item :route="{ name: 'global-accent-messages-list' }">{{ $t('Accent Messages') }}</navigation-item>
                     <navigation-item :route="{ name: 'global-color-swatch-types' }">{{ $t('Color swatches') }}</navigation-item>
                     <navigation-item :route="{ name: 'global-package-types' }">{{ $t('Package types') }}</navigation-item>
-                </navigation-collapse>
-
-                <navigation-collapse :fuzzy-route-match="['reports-']">
-                    <template v-slot:icon>
-                        <fig-icon
-                            icon="chart-bar"
-                            :width="20"
-                            :height="20"
-                            stroke="#fff"
-                            :stroke-width="1"
-                            class="mr-1" />
-                    </template>
-                    <template v-slot:label>{{ $t('Reports') }}</template>
-                    <navigation-item :route="{ name: 'reports-orders-list' }">{{ $t('Orders') }}</navigation-item>
                 </navigation-collapse>
             </navigation-list>
         </aside>

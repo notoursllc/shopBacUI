@@ -20,7 +20,6 @@ import {
     FigMessage,
     FigPopConfirm
 } from '@notoursllc/figleaf';
-import BooleanTag from '~/components/BooleanTag.vue';
 
 export default {
     components: {
@@ -42,7 +41,6 @@ export default {
         FigTextCard,
         FigMessage,
         FigPopConfirm,
-        BooleanTag
         // ShippingLabelButton: () => import('@/components/payment/ShippingLabelButton'),
     },
 
@@ -149,8 +147,33 @@ export default {
         async setShippedAt(isShipped) {
             const Cart = await this.$api.cart.shipped(this.cart.id, isShipped);
             this.cart.shipped_at = Cart.shipped_at;
-        }
+        },
 
+        async sendOrderConfirmationEmail() {
+            try {
+                const result = await this.$api.cart.resendOrderConfirmationEmail(this.cart.id);
+
+                console.log("EMAIL SEND RESULTS", result)
+
+                if(result.Message === 'OK') {
+                    this.$figleaf.successToast({
+                        title: this.$t('Success'),
+                        text: this.$t('Order confirmation email sent successfully')
+                    });
+                }
+                else {
+                    throw new Error(
+                        `${this.$t('The email response did not return a success code.')} ErrorCode: ${result.ErrorCode}. Message: ${result.Message}`
+                    );
+                }
+            }
+            catch(e) {
+                this.$figleaf.errorToast({
+                    title: this.$t('Error'),
+                    text: e.message
+                });
+            }
+        }
         // labelPurchased() {
         //     this.loadPayment();
 
@@ -232,34 +255,43 @@ export default {
 
 
                 <!-- Shipped at -->
-                <div>
-                    <div class="font-semibold">{{ $t('Shipped at') }}</div>
-                    <fig-divider :margin="1" />
-                    <div class="px-4">
-                        <template v-if="cart.shipped_at">
-                            <fig-icon-label>
-                                {{ cart.shipped_at | format8601 }}
 
-                                <template v-slot:right>
-                                    <fig-pop-confirm @confirm="setShippedAt(false)">
-                                        <template v-slot:reference>
-                                            <fig-button
-                                                variant="plain"
-                                                size="sm"
-                                                class="ml-2">{{ $t('Clear') }}</fig-button>
-                                        </template>
-                                        <div>{{ $t('Are you sure you want to clear this value?') }}</div>
-                                    </fig-pop-confirm>
-                                </template>
-                            </fig-icon-label>
-                        </template>
-                        <template v-else>
-                            <fig-button
-                                variant="primary"
-                                size="sm"
-                                @click="setShippedAt(true)">{{ $t('Mark as shipped') }}</fig-button>
-                        </template>
-                    </div>
+                <div>
+                    <fig-label-value-group density="sm">
+                        <fig-label-value>
+                            <template v-slot:label>{{ $t('Shipped at') }}:</template>
+
+                            <template v-if="cart.shipped_at">
+                                <fig-icon-label>
+                                    {{ cart.shipped_at | format8601 }}
+
+                                    <template v-slot:right>
+                                        <fig-pop-confirm @confirm="setShippedAt(false)">
+                                            <template v-slot:reference>
+                                                <fig-button
+                                                    variant="plain"
+                                                    size="sm"
+                                                    class="ml-2">{{ $t('Clear') }}</fig-button>
+                                            </template>
+                                            <div>{{ $t('Are you sure you want to clear this value?') }}</div>
+                                        </fig-pop-confirm>
+                                    </template>
+                                </fig-icon-label>
+                            </template>
+
+                            <template v-else>
+                                <div class="flex items-center">
+                                    <fig-tag variant="error">{{ $t('not shipped') }}</fig-tag>
+
+                                    <fig-button
+                                        variant="primary"
+                                        size="sm"
+                                        class="ml-3"
+                                        @click="setShippedAt(true)">{{ $t('Mark as shipped') }}</fig-button>
+                                </div>
+                            </template>
+                        </fig-label-value>
+                    </fig-label-value-group>
                 </div>
 
 
@@ -267,20 +299,162 @@ export default {
                 <div class="mt-4">
                     <div class="font-semibold">{{ $t('Shipping address') }}</div>
                     <fig-divider :margin="1" />
-                    <div class="px-4">
-                        <fig-address
-                            :first-name="cart.shipping_firstName"
-                            :last-name="cart.shipping_lastName"
-                            :company="cart.shipping_company"
-                            :street-address="cart.shipping_streetAddress"
-                            :extended-address="cart.shipping_extendedAddress"
-                            :city="cart.shipping_city"
-                            :state="cart.shipping_state"
-                            :zip="cart.shipping_postalCode"
-                            :country-code="cart.shipping_countryCodeAlpha2" />
+
+                    <div class="flex flex-wrap overflow-hidden sm:-mx-2 px-4">
+                        <div class="w-full sm:my-2 sm:px-2 md:w-1/2">
+                            <fig-address
+                                :first-name="cart.shipping_firstName"
+                                :last-name="cart.shipping_lastName"
+                                :company="cart.shipping_company"
+                                :street-address="cart.shipping_streetAddress"
+                                :extended-address="cart.shipping_extendedAddress"
+                                :city="cart.shipping_city"
+                                :state="cart.shipping_state"
+                                :zip="cart.shipping_postalCode"
+                                :country-code="cart.shipping_countryCodeAlpha2" />
+                        </div>
+                        <div class="w-full sm:my-2 sm:px-2 md:w-1/2">
+                            <fig-label-value-group density="sm">
+                                <!-- Email address -->
+                                <fig-label-value>
+                                    <template v-slot:label>{{ $t('Email address') }}:</template>
+                                    {{ cart.shipping_email }}
+                                </fig-label-value>
+
+                                <!-- Email address -->
+                                <fig-label-value>
+                                    <template v-slot:label>{{ $t('Phone') }}:</template>
+                                    {{ cart.shipping_phone }}
+                                </fig-label-value>
+                            </fig-label-value-group>
+                        </div>
                     </div>
                 </div>
 
+
+
+
+                <!-- shipping label -->
+                <div class="mt-4">
+                    <div class="font-semibold">
+                        {{ $t('Shipping label') }}
+
+                        <div class="inline-block pl-4">
+                            <fig-button
+                                v-if="label"
+                                variant="plain"
+                                size="sm"
+                                @click="showShippigLabelModal">{{ $t('view raw data') }}</fig-button>
+                        </div>
+
+                        <!-- raw data modal -->
+                        <fig-modal
+                            ref="shipping_label_modal"
+                            size="lg"
+                            close-button>
+                            <fig-json-tree-view
+                                :data="label"
+                                :level="2"></fig-json-tree-view>
+                        </fig-modal>
+                    </div>
+
+                    <fig-divider :margin="1" />
+
+                    <div class='px-4'>
+                        <!-- show buy shipping label button if no label -->
+                        <template v-if="!label">
+                            <fig-message variant="warning">{{ $t('A shipping label has not been purhased yet') }}</fig-message>
+
+                            <div class="pt-2">
+                                <fig-pop-confirm @confirm="onConfirmPurchaseShippingLabel">
+                                    <template v-slot:reference>
+                                        <fig-button
+                                            variant="primary"
+                                            size="sm">{{ $t('Buy a shipping label') }}</fig-button>
+                                    </template>
+                                    <div>{{ $t('Are you sure you want to purchase a shipping label?') }}</div>
+                                </fig-pop-confirm>
+                            </div>
+                        </template>
+
+                        <!-- show label details -->
+                        <template v-else>
+                            <div class="flex flex-wrap overflow-hidden sm:-mx-2 px-4">
+                                <div class="w-full sm:my-2 sm:px-2 md:w-1/2">
+                                    <fig-label-value-group density="sm">
+                                        <!-- label PDF -->
+                                        <fig-label-value>
+                                            <template v-slot:label>{{ $t('Label') }}:</template>
+                                            <fig-icon-label>
+                                                <template v-slot:right>
+                                                    <fig-icon
+                                                        icon="new-window"
+                                                        width="18"
+                                                        height="18" />
+                                                </template>
+                                                <a :href="label.label_download.pdf"
+                                                    target="_blank"
+                                                    class="pr-1">{{ $t('View') }}</a>
+                                            </fig-icon-label>
+                                        </fig-label-value>
+
+                                        <!-- tracking # -->
+                                        <fig-label-value>
+                                            <template v-slot:label>{{ $t('Tracking #') }}:</template>
+                                            {{ label.tracking_number }}
+                                        </fig-label-value>
+
+                                        <!-- is return label -->
+                                        <fig-label-value>
+                                            <template v-slot:label>{{ $t('Is return label') }}:</template>
+                                            <fig-boolean-tag
+                                                :bool="label.is_return_label"
+                                                size="sm" />
+                                        </fig-label-value>
+
+                                        <!-- is international -->
+                                        <fig-label-value>
+                                            <template v-slot:label>{{ $t('Is international') }}:</template>
+                                            <fig-boolean-tag
+                                                :bool="label.is_international"
+                                                size="sm" />
+                                        </fig-label-value>
+
+                                        <!-- voided -->
+                                        <fig-label-value>
+                                            <template v-slot:label>{{ $t('Voided') }}:</template>
+                                            <fig-boolean-tag
+                                                :bool="label.voided"
+                                                size="sm" />
+                                        </fig-label-value>
+                                    </fig-label-value-group>
+                                </div>
+
+                                <div class="w-full sm:my-2 sm:px-2 md:w-1/2">
+                                    <fig-label-value-group density="sm">
+                                        <!-- Created -->
+                                        <fig-label-value>
+                                            <template v-slot:label>{{ $t('Created') }}:</template>
+                                            {{ label.created_at | format8601 }}
+                                        </fig-label-value>
+
+                                        <!-- Shipment ID -->
+                                        <fig-label-value>
+                                            <template v-slot:label>{{ $t('ShipEngine label ID') }}:</template>
+                                            {{ label.label_id }}
+                                        </fig-label-value>
+
+                                        <!-- Shipment ID -->
+                                        <fig-label-value>
+                                            <template v-slot:label>{{ $t('ShipEngine shipment ID') }}:</template>
+                                            {{ label.shipment_id }}
+                                        </fig-label-value>
+                                    </fig-label-value-group>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
 
                 <!-- User selected rate -->
                 <div class="mt-4">
@@ -381,129 +555,6 @@ export default {
                                 </template>
                             </fig-label-value-group>
                         </div>
-                    </div>
-                </div>
-
-                <!-- shipping label -->
-                <div class="mt-4">
-                    <div class="font-semibold">
-                        {{ $t('Shipping label') }}
-
-                        <div class="inline-block pl-4">
-                            <fig-button
-                                v-if="label"
-                                variant="plain"
-                                size="sm"
-                                @click="showShippigLabelModal">{{ $t('view raw data') }}</fig-button>
-                        </div>
-
-                        <!-- raw data modal -->
-                        <fig-modal
-                            ref="shipping_label_modal"
-                            size="lg"
-                            close-button>
-                            <fig-json-tree-view
-                                :data="label"
-                                :level="2"></fig-json-tree-view>
-                        </fig-modal>
-                    </div>
-
-                    <fig-divider :margin="1" />
-
-                    <div class='px-4'>
-                        <!-- show buy shipping label button if no label -->
-                        <template v-if="!label">
-                            <fig-message variant="warning">{{ $t('A shipping label has not been purhased yet') }}</fig-message>
-
-                            <div class="pt-2">
-                                <fig-pop-confirm @confirm="onConfirmPurchaseShippingLabel">
-                                    <template v-slot:reference>
-                                        <fig-button
-                                            variant="primary"
-                                            size="sm">{{ $t('Buy a shipping label') }}</fig-button>
-                                    </template>
-                                    <div>{{ $t('Are you sure you want to purchase a shipping label?') }}</div>
-                                </fig-pop-confirm>
-                            </div>
-                        </template>
-
-                        <!-- show label details -->
-                        <template v-else>
-
-                            <div class="flex flex-wrap overflow-hidden sm:-mx-2 px-4">
-                                <div class="w-full sm:my-2 sm:px-2 md:w-1/2">
-                                    <fig-label-value-group density="sm">
-                                        <!-- label PDF -->
-                                        <fig-label-value>
-                                            <template v-slot:label>{{ $t('Label') }}:</template>
-                                            <fig-icon-label>
-                                                <template v-slot:right>
-                                                    <fig-icon
-                                                        icon="new-window"
-                                                        width="18"
-                                                        height="18" />
-                                                </template>
-                                                <a :href="label.label_download.pdf"
-                                                    target="_blank"
-                                                    class="pr-1">{{ $t('View') }}</a>
-                                            </fig-icon-label>
-                                        </fig-label-value>
-
-                                        <!-- tracking # -->
-                                        <fig-label-value>
-                                            <template v-slot:label>{{ $t('Tracking #') }}:</template>
-                                            {{ label.tracking_number }}
-                                        </fig-label-value>
-
-                                        <!-- is return label -->
-                                        <fig-label-value>
-                                            <template v-slot:label>{{ $t('Is return label') }}:</template>
-                                            <fig-boolean-tag
-                                                :bool="label.is_return_label"
-                                                size="sm" />
-                                        </fig-label-value>
-
-                                        <!-- is international -->
-                                        <fig-label-value>
-                                            <template v-slot:label>{{ $t('Is international') }}:</template>
-                                            <fig-boolean-tag
-                                                :bool="label.is_international"
-                                                size="sm" />
-                                        </fig-label-value>
-
-                                        <!-- voided -->
-                                        <fig-label-value>
-                                            <template v-slot:label>{{ $t('Voided') }}:</template>
-                                            <fig-boolean-tag
-                                                :bool="label.voided"
-                                                size="sm" />
-                                        </fig-label-value>
-                                    </fig-label-value-group>
-                                </div>
-
-                                <div class="w-full sm:my-2 sm:px-2 md:w-1/2">
-                                    <fig-label-value-group density="sm">
-                                        <!-- Created -->
-                                        <fig-label-value>
-                                            <template v-slot:label>{{ $t('Created') }}:</template>
-                                            {{ label.created_at | format8601 }}
-                                        </fig-label-value>
-
-                                        <!-- Shipment ID -->
-                                        <fig-label-value>
-                                            <template v-slot:label>{{ $t('ShipEngine label ID') }}:</template>
-                                            {{ label.label_id }}
-                                        </fig-label-value>
-
-                                        <!-- Shipment ID -->
-                                        <fig-label-value>
-                                            <template v-slot:label>{{ $t('ShipEngine shipment ID') }}:</template>
-                                            {{ label.shipment_id }}
-                                        </fig-label-value>
-                                    </fig-label-value-group>
-                                </div>
-                            </div>
-                        </template>
                     </div>
                 </div>
             </fig-spec>
@@ -632,9 +683,10 @@ export default {
                     </div>
                     <div class="text-xs text-center">{{ $t('Billing') }}</div>
                 </template>
-                <fig-tag v-if="cart.billing_same_as_shipping">
-                    {{ $t('Same as shipping address') }}
-                </fig-tag>
+
+                <div v-if="cart.billing_same_as_shipping" class="text-gray-500">
+                    ({{ $t('Same as shipping address') }})
+                </div>
                 <fig-address
                     v-else
                     :first-name="cart.billing_firstName"
@@ -675,6 +727,31 @@ export default {
                     </fig-label-value>
                 </fig-label-value-group>
 
+            </fig-spec>
+
+            <!-- Additional actions -->
+            <fig-spec>
+                <template v-slot:label>
+                    <div class="flex justify-center">
+                        <fig-icon
+                            icon="click"
+                            width="30"
+                            height="30"
+                            :stroke-width="1" />
+                    </div>
+                    <div class="text-xs text-center">{{ $t('Additional actions') }}</div>
+                </template>
+
+                <div>
+                    <fig-pop-confirm @confirm="sendOrderConfirmationEmail()">
+                        <template v-slot:reference>
+                            <fig-button
+                                variant="plain"
+                                icon="send">{{ $t('Re-send order acknowledgement email to customer') }}</fig-button>
+                        </template>
+                        <div>{{ $t('Are you sure you want to send another order confirmation email to the customer?') }}</div>
+                    </fig-pop-confirm>
+                </div>
             </fig-spec>
 
         </fig-spec-layout>

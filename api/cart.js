@@ -55,6 +55,15 @@ export default ($http) => ({
         });
 
         return data;
+    },
+
+
+    async resendOrderConfirmationEmail(cartId) {
+        const { data } = await $http.$post('/cart/resend-order-confirmation', {
+            id: cartId
+        });
+
+        return data;
     }
 
     // async getShippingRate(rate_id) {
