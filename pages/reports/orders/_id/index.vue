@@ -331,9 +331,6 @@ export default {
                     </div>
                 </div>
 
-
-
-
                 <!-- shipping label -->
                 <div class="mt-4">
                     <div class="font-semibold">
