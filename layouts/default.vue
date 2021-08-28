@@ -121,62 +121,64 @@ export default {
                 </nuxt-link>
             </div>
 
-            <navigation-list>
-                <navigation-item :route="{ name: 'product' }">
-                    <template v-slot:icon>
-                        <fig-icon
-                            icon="triangle-square-circle"
-                            :width="20"
-                            :height="20"
-                            stroke="#fff"
-                            :stroke-width="1"
-                            class="mr-1" />
-                    </template>
-                    {{ $t('Products') }}
-                </navigation-item>
+            <div class="px-2">
+                <navigation-list>
+                    <navigation-item :route="{ name: 'product' }">
+                        <template v-slot:icon>
+                            <fig-icon
+                                icon="triangle-square-circle"
+                                :width="20"
+                                :height="20"
+                                stroke="#fff"
+                                :stroke-width="1"
+                                class="mr-1" />
+                        </template>
+                        {{ $t('Products') }}
+                    </navigation-item>
 
-                <navigation-collapse :fuzzy-route-match="['reports-']">
-                    <template v-slot:icon>
-                        <fig-icon
-                            icon="chart-bar"
-                            :width="20"
-                            :height="20"
-                            stroke="#fff"
-                            :stroke-width="1"
-                            class="mr-1" />
-                    </template>
-                    <template v-slot:label>{{ $t('Reports') }}</template>
-                    <navigation-item :route="{ name: 'reports-orders-list' }">{{ $t('Orders') }}</navigation-item>
-                </navigation-collapse>
+                    <navigation-collapse :fuzzy-route-match="['reports-']">
+                        <template v-slot:icon>
+                            <fig-icon
+                                icon="chart-bar"
+                                :width="20"
+                                :height="20"
+                                stroke="#fff"
+                                :stroke-width="1"
+                                class="mr-1" />
+                        </template>
+                        <template v-slot:label>{{ $t('Reports') }}</template>
+                        <navigation-item :route="{ name: 'reports-orders-list' }">{{ $t('Orders') }}</navigation-item>
+                    </navigation-collapse>
 
-                <navigation-collapse :fuzzy-route-match="['global-']">
-                    <template v-slot:icon>
-                        <fig-icon
-                            icon="world"
-                            :width="20"
-                            :height="20"
-                            stroke="#fff"
-                            :stroke-width="1"
-                            class="mr-1" />
-                    </template>
-                    <template v-slot:label>{{ $t('Global settings') }}</template>
+                    <navigation-collapse :fuzzy-route-match="['global-']">
+                        <template v-slot:icon>
+                            <fig-icon
+                                icon="world"
+                                :width="20"
+                                :height="20"
+                                stroke="#fff"
+                                :stroke-width="1"
+                                class="mr-1" />
+                        </template>
+                        <template v-slot:label>{{ $t('Global settings') }}</template>
 
-                    <navigation-item :route="{ name: 'global-types' }">{{ $t('Types') }}</navigation-item>
-                    <navigation-item :route="{ name: 'global-sub-types' }">{{ $t('Sub-Types') }}</navigation-item>
-                    <navigation-item :route="{ name: 'global-sales-channel-types' }">{{ $t('Sales Channels') }}</navigation-item>
-                    <navigation-item :route="{ name: 'global-vendors' }">{{ $t('Vendors') }}</navigation-item>
-                    <navigation-item :route="{ name: 'global-collections' }">{{ $t('Collections') }}</navigation-item>
-                    <navigation-item :route="{ name: 'global-gender-types' }">{{ $t('Genders') }}</navigation-item>
-                    <navigation-item :route="{ name: 'global-basic-color-types' }">{{ $t('Basic colors') }}</navigation-item>
-                    <navigation-item :route="{ name: 'global-size-types' }">{{ $t('Sizes') }}</navigation-item>
-                    <navigation-item :route="{ name: 'global-feature-types' }">{{ $t('Product features') }}</navigation-item>
-                    <navigation-item :route="{ name: 'global-fit-types' }">{{ $t('Fits') }}</navigation-item>
-                    <navigation-item :route="{ name: 'global-sleeve-length-types' }">{{ $t('Sleeve length') }}</navigation-item>
-                    <navigation-item :route="{ name: 'global-accent-messages-list' }">{{ $t('Accent Messages') }}</navigation-item>
-                    <navigation-item :route="{ name: 'global-color-swatch-types' }">{{ $t('Color swatches') }}</navigation-item>
-                    <navigation-item :route="{ name: 'global-package-types' }">{{ $t('Package types') }}</navigation-item>
-                </navigation-collapse>
-            </navigation-list>
+                        <navigation-item :route="{ name: 'global-types' }">{{ $t('Types') }}</navigation-item>
+                        <navigation-item :route="{ name: 'global-sub-types' }">{{ $t('Sub-Types') }}</navigation-item>
+                        <navigation-item :route="{ name: 'global-sales-channel-types' }">{{ $t('Sales Channels') }}</navigation-item>
+                        <navigation-item :route="{ name: 'global-vendors' }">{{ $t('Vendors') }}</navigation-item>
+                        <navigation-item :route="{ name: 'global-collections' }">{{ $t('Collections') }}</navigation-item>
+                        <navigation-item :route="{ name: 'global-gender-types' }">{{ $t('Genders') }}</navigation-item>
+                        <navigation-item :route="{ name: 'global-basic-color-types' }">{{ $t('Basic colors') }}</navigation-item>
+                        <navigation-item :route="{ name: 'global-size-types' }">{{ $t('Sizes') }}</navigation-item>
+                        <navigation-item :route="{ name: 'global-feature-types' }">{{ $t('Product features') }}</navigation-item>
+                        <navigation-item :route="{ name: 'global-fit-types' }">{{ $t('Fits') }}</navigation-item>
+                        <navigation-item :route="{ name: 'global-sleeve-length-types' }">{{ $t('Sleeve length') }}</navigation-item>
+                        <navigation-item :route="{ name: 'global-accent-messages-list' }">{{ $t('Accent Messages') }}</navigation-item>
+                        <navigation-item :route="{ name: 'global-color-swatch-types' }">{{ $t('Color swatches') }}</navigation-item>
+                        <navigation-item :route="{ name: 'global-package-types' }">{{ $t('Package types') }}</navigation-item>
+                    </navigation-collapse>
+                </navigation-list>
+            </div>
         </aside>
 
         <div
@@ -277,9 +279,5 @@ export default {
     transform: translateX(-94%);
 }
 
-.layout-sidenav nav a.nuxt-link-active,
-.layout-sidenav nav a.nuxt-link-exact-active {
-    /* @apply bg-green-700; */
-    background: #3d4f6b;
-}
+
 </style>

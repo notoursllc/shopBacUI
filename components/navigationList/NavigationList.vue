@@ -77,59 +77,45 @@ export default {
 </template>
 
 
-<style lang="scss">
+<style>
 .navigation-list {
-    border: 0;
-    list-style: none;
-    position: relative;
-    margin: 0;
-    padding: 0;
-    display: block;
+    @apply m-0 p-0 block relative border-0 list-none;
+}
 
-    .navigation-item {
-        list-style: none;
-        margin: 0;
-        padding: 0;
+.navigation-item {
+    @apply rounded m-0 p-0 list-none;
+}
 
-        label {
-            height: 40px;
-            line-height: 40px;
-            padding: 0 10px;
-            font-size: 14px;
-            position: relative;
-            white-space: nowrap;
-            cursor: pointer;
-            box-sizing: border-box;
-            transition: border-color .3s, background-color .3s, color .3s;
-            display: block;
+.navigation-item > label {
+    @apply relative block whitespace-nowrap cursor-pointer box-border text-sm px-2;
+    height: 34px;
+    line-height: 34px;
+    transition: border-color .3s, background-color .3s, color .3s;
+}
 
-            .navigation-item-arrow {
-                position: absolute;
-                top: 50%;
-                right: 10px;
-                margin-top: -7px;
-                transition: transform .3s;
-                display: inline-block;
-            }
-        }
+.navigation-item-arrow {
+    @apply absolute inline-block;
+    top: 50%;
+    right: 10px;
+    margin-top: -7px;
+    transition: transform .3s;
+}
 
-        .is-disabled,
-        .is-disabled label {
-            cursor: not-allowed !important;
-        }
-    }
+.navigation-list label.not-collapsed .navigation-item-arrow {
+    transform: rotateZ(90deg);
+}
 
-    .navigation-item > .navigation-list {
-        margin-left: 20px;
-    }
+.navigation-list .not-collapsed:focus,
+.navigation-list .collapsed:focus {
+    outline: none;
+}
 
-    label.not-collapsed .navigation-item-arrow {
-        transform: rotateZ(90deg);
-    }
+.navigation-item > .navigation-list {
+    @apply ml-5;
+}
 
-    .not-collapsed:focus,
-    .collapsed:focus {
-        outline: none;
-    }
+.navigation-item.nuxt-link-active,
+.navigation-item.nuxt-link-exact-active {
+    @apply bg-white bg-transparent bg-opacity-20;
 }
 </style>
