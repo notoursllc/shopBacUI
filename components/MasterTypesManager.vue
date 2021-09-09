@@ -17,7 +17,9 @@ import {
     FigTh,
     FigTd,
     FigOverlay,
-    FigOperationsDropdown
+    FigOperationsDropdown,
+    FigLabelValueGroup,
+    FigLabelValue
 } from '@notoursllc/figleaf';
 
 export default {
@@ -35,7 +37,9 @@ export default {
         FigTh,
         FigTd,
         FigOverlay,
-        FigOperationsDropdown
+        FigOperationsDropdown,
+        FigLabelValueGroup,
+        FigLabelValue
     },
 
     props: {
@@ -363,62 +367,51 @@ export default {
                     : $t(`Add Master Type ({name})`, {'name': object}) }}
             </div>
 
-            <div class="table w-full">
-                <!-- Available -->
-                <div class="formRow">
-                    <label class="w-24">{{ $t('Published') }}:</label>
-                    <span>
-                        <fig-form-checkbox
-                            v-model="form.published" />
-                    </span>
-                </div>
+            <fig-label-value-group density="lg">
+                <!-- Published -->
+                <fig-label-value>
+                    <template v-slot:label>{{ $t('Published') }}:</template>
+                    <fig-form-checkbox v-model="form.published" />
+                </fig-label-value>
 
                 <!-- Name -->
-                <div class="formRow">
-                    <label>{{ $t('Name') }}:</label>
-                    <span>
-                        <fig-form-input v-model="form.name" />
-                    </span>
-                </div>
+                <fig-label-value>
+                    <template v-slot:label>{{ $t('Name') }}:</template>
+                    <fig-form-input v-model="form.name" />
+                </fig-label-value>
 
                 <!-- Slug -->
-                <div class="formRow">
-                    <label>{{ $t('Slug') }}:</label>
-                    <span>
-                        <fig-form-input v-model="form.slug" />
-                        <div class="text-xs" v-show="slugIdea">
-                            <span class="text-gray-500">{{ $t('Suggestion') }}:</span>&nbsp;&nbsp;{{ slugIdea }}&nbsp;
-                            (<a @click="onUseSlugSuggestion" class="underlineDotted">{{ $t('use this') }}</a>)
-                        </div>
-                    </span>
-                </div>
+                <fig-label-value>
+                    <template v-slot:label>{{ $t('Slug') }}:</template>
+                    <fig-form-input v-model="form.slug" />
+                    <div class="text-xs" v-show="slugIdea">
+                        <span class="text-gray-500">{{ $t('Suggestion') }}:</span>&nbsp;&nbsp;{{ slugIdea }}&nbsp;
+                        (<a @click="onUseSlugSuggestion" class="underlineDotted">{{ $t('use this') }}</a>)
+                    </div>
+                </fig-label-value>
 
                 <!-- Description -->
-                <div class="formRow">
-                    <label>{{ $t('Description') }}:</label>
-                    <span>
-                        <fig-form-textarea
-                            v-model="form.description"
-                            :rows="2" />
-                    </span>
-                </div>
+                <fig-label-value>
+                    <template v-slot:label>{{ $t('Description') }}:</template>
+                    <fig-form-textarea
+                        v-model="form.description"
+                        :rows="2" />
+                </fig-label-value>
 
                 <!-- Meta data -->
-                <div class="formRow">
-                    <label>{{ $t('Meta data') }}:</label>
-                    <span>
-                        <fig-form-checkbox
-                            v-model="formHasMetaData">{{ $t('This item has additional meta data') }}</fig-form-checkbox>
-                        <div class="mt-3" v-show="formHasMetaData">
-                            <meta-data-builder v-model="form.metadata" />
-                        </div>
-                    </span>
-                </div>
+                <fig-label-value>
+                    <template v-slot:label>{{ $t('Meta data') }}:</template>
+                    <fig-form-checkbox v-model="formHasMetaData">{{ $t('This item has additional meta data') }}</fig-form-checkbox>
+                    <div class="mt-3" v-show="formHasMetaData">
+                        <meta-data-builder v-model="form.metadata" />
+                    </div>
+                </fig-label-value>
+
 
                 <!-- buttons -->
-                <div class="formRow">
-                    <label></label>
-                    <span class="pt-5">
+                <fig-label-value>
+                    <template v-slot:label>&nbsp;</template>
+                    <div class="pt-5">
                         <fig-button
                             variant="primary"
                             @click="onUpsertFormSave"
@@ -427,28 +420,15 @@ export default {
                         <fig-button
                             variant="plain"
                             @click="onUpsertFormCancel">{{ $t('Cancel') }}</fig-button>
-                    </span>
-                </div>
-            </div>
+                    </div>
+                </fig-label-value>
+            </fig-label-value-group>
+
         </fig-modal>
     </div>
 </template>
 
-<style lang="scss">
-@import "~assets/css/components/_formRow.scss";
-
-.formContainer {
-    width: 500px;
-
-    .formRow > label {
-        white-space: nowrap;
-    }
-
-    .formRow > span {
-        width: 100%;
-    }
-}
-
+<style scoped>
 .handle-cell {
     width: 30px;
 }
