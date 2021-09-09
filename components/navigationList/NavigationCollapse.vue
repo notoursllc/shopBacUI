@@ -89,7 +89,7 @@ export default {
             <ul
                 v-show="toggleIsOpen"
                 class="navigation-list p-toggleable-content"
-                v-on:menuItemActive.native="onChildMenuItemActive">
+                v-on:menuItemActive="onChildMenuItemActive">
                 <slot></slot>
             </ul>
         </transition>

@@ -1,4 +1,5 @@
 <script>
+import JsonTree from 'vue-json-tree';
 import isObject from 'lodash.isobject';
 import PackedProductDisplay from '@/components/orders/PackedProductDisplay.vue';
 import {
@@ -14,12 +15,12 @@ import {
     FigMoney,
     FigDivider,
     FigModal,
-    FigJsonTreeView,
     FigBooleanTag,
     FigTextCard,
     FigMessage,
     FigPopConfirm
 } from '@notoursllc/figleaf';
+
 
 export default {
     components: {
@@ -36,11 +37,11 @@ export default {
         FigMoney,
         FigDivider,
         FigModal,
-        FigJsonTreeView,
         FigBooleanTag,
         FigTextCard,
         FigMessage,
         FigPopConfirm,
+        JsonTree
         // ShippingLabelButton: () => import('@/components/payment/ShippingLabelButton'),
     },
 
@@ -152,8 +153,6 @@ export default {
         async sendOrderConfirmationEmail() {
             try {
                 const result = await this.$api.cart.resendOrderConfirmationEmail(this.cart.id);
-
-                console.log("EMAIL SEND RESULTS", result)
 
                 if(result.Message === 'OK') {
                     this.$figleaf.successToast({
@@ -281,7 +280,7 @@ export default {
 
                             <template v-else>
                                 <div class="flex items-center">
-                                    <fig-tag variant="error">{{ $t('not shipped') }}</fig-tag>
+                                    <fig-tag variant="warning">{{ $t('not shipped') }}</fig-tag>
 
                                     <fig-button
                                         variant="primary"
@@ -349,9 +348,9 @@ export default {
                             ref="shipping_label_modal"
                             size="lg"
                             close-button>
-                            <fig-json-tree-view
+                            <json-tree
                                 :data="label"
-                                :level="2"></fig-json-tree-view>
+                                :level="2"></json-tree>
                         </fig-modal>
                     </div>
 
