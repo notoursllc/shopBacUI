@@ -122,6 +122,7 @@ export default {
         domains: [
             'https://gmnst-assets.nyc3.digitaloceanspaces.com'
         ],
+        staticFilename: '[publicPath]/images/[name]-[hash][ext]',
         // The screen sizes predefined by `@nuxt/image`:
         screens: {
             xs: 320,
