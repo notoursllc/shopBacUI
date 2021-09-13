@@ -321,7 +321,7 @@ export default {
         <!-- color upsert form -->
         <fig-modal
             ref="color_upsert_form_modal"
-            size="xl">
+            size="full">
             <div slot="header">{{ modalTitle }}</div>
 
             <variant-form
