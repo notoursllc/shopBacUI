@@ -1,6 +1,5 @@
 <script>
 import isObject from 'lodash.isobject';
-import storage_mixin from '@/mixins/storage_mixin'; // TODO: not needed?
 import ImageManager from '@/components/product/ImageManager';
 import ColorSwatchTable from '@/components/product/colorSwatch/ColorSwatchTable';
 import AccentMessageWizard from '@/components/product/accentMessage/AccentMessageWizard';
@@ -37,10 +36,6 @@ export default {
         FigRow,
         FigTextCard
     },
-
-    mixins: [
-        storage_mixin
-    ],
 
     props: {
         value: {

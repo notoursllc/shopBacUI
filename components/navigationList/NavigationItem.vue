@@ -1,8 +1,8 @@
 <script>
-import uuid from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 import { FigIconLabel } from '@notoursllc/figleaf';
 
-const uniqueId = uuid();
+const uniqueId = uuidv4();
 
 export default {
     components: {

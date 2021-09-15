@@ -39,7 +39,7 @@ export default {
     ** Nuxt target
     ** See https://nuxtjs.org/api/configuration-target
     */
-    // target: 'server',
+    target: 'static',
 
     server: {
         port: process.env.PORT || 3000
@@ -112,8 +112,7 @@ export default {
     buildModules: [
         // Doc: https://github.com/nuxt-community/eslint-module
         // '@nuxtjs/eslint-module'
-        '@nuxtjs/tailwindcss',
-        '@nuxt/image'
+        '@nuxtjs/tailwindcss'
     ],
 
 
@@ -151,7 +150,6 @@ export default {
             }
         }
     },
-
 
     tailwindcss: {
         cssPath: '@/node_modules/@notoursllc/figleaf/assets/css/tailwind.css',

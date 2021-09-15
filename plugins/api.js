@@ -9,7 +9,6 @@ import ProductAccentMessages from '@/api/product_accent_messages';
 import ProductColorSwatches from '@/api/product_color_swatches';
 import ProductDataTables from '@/api/product_data_tables';
 import Shipping from '@/api/shipping';
-import Storage from '@/api/storage';
 import TenantMembers from '@/api/tenant_members';
 
 
@@ -39,7 +38,6 @@ export default (context, inject) => {
         productColorSwatches: ProductColorSwatches(context.$axios),
         productDataTables: ProductDataTables(context.$axios),
         shipping: Shipping(context.$axios),
-        storage: Storage(context.$axios),
         // tenantMembers: TenantMembers(context.$http)
         tenantMembers: TenantMembers(context.$axios)
     };

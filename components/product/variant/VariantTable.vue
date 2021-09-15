@@ -4,7 +4,6 @@ import draggable from 'vuedraggable';
 import VariantForm from '@/components/product/variant/VariantForm';
 import BooleanTag from '@/components/BooleanTag';
 import ColorSwatch from '@/components/product/colorSwatch/ColorSwatch';
-import storage_mixin from '@/mixins/storage_mixin';
 import product_mixin from '@/mixins/product_mixin';
 
 import {
@@ -37,7 +36,6 @@ export default {
     },
 
     mixins: [
-        storage_mixin,
         product_mixin
     ],
 

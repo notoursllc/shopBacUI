@@ -1,6 +1,6 @@
 <script>
 import Vue from 'vue';
-import uuid from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 import {
     FigFormInput,
     FigFormInputEndcapper,
@@ -38,7 +38,7 @@ export default Vue.extend({
             allSwatches: [],
             loading: false,
             swatchesFetched: false,
-            uuid: uuid()
+            uuid: uuidv4()
         };
     },
 

@@ -1,5 +1,5 @@
 <script>
-import uuid from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 import { FigIconLabel } from '@notoursllc/figleaf';
 
 export default {
@@ -30,7 +30,7 @@ export default {
 
     data() {
         return {
-            targetId: uuid(),
+            targetId: uuidv4(),
             toggleIsOpen: false
         };
     },
