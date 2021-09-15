@@ -112,7 +112,8 @@ export default {
     buildModules: [
         // Doc: https://github.com/nuxt-community/eslint-module
         // '@nuxtjs/eslint-module'
-        '@nuxtjs/tailwindcss'
+        '@nuxtjs/tailwindcss',
+        '@nuxt/image'
     ],
 
 
@@ -168,8 +169,7 @@ export default {
     */
     modules: [
         '@nuxt/http',
-        '@nuxtjs/axios',
-        '@nuxt/image'
+        '@nuxtjs/axios'
     ],
 
     router: {
