@@ -119,6 +119,8 @@ export default {
     // Nuxt image config
     // https://image.nuxtjs.org/api/options/
     image: {
+        provider: 'ipx',
+        ipx: {},
         domains: [
             'https://gmnst-assets.nyc3.digitaloceanspaces.com'
         ],
@@ -149,6 +151,10 @@ export default {
                 }
             }
         }
+    },
+
+    serverMiddleware: {
+        '/_ipx': '~/server/middleware/ipx.js'
     },
 
     tailwindcss: {
