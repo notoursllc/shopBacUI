@@ -157,7 +157,7 @@ export default {
 
 
         getCoverImage(product) {
-            let url = null;
+            let third_party_id = null;
             let altText = null;
 
             if(Array.isArray(product.variants)) {
@@ -165,22 +165,24 @@ export default {
                     const variant = product.variants[i];
 
                     if(Array.isArray(variant.images) && isObject(variant.images[0])) {
-                        url = variant.images[0].url;
+                        third_party_id = variant.images[0].third_party_id;
                         altText = variant.images[0].alt_text;
                         break;
                     }
                 }
             }
 
-            if(url) {
-                const h = this.$createElement;
-                return h(
+            if(third_party_id) {
+                return this.$createElement(
                     'nuxt-img',
                     {
                         attrs: {
-                            src: url,
+                            src: third_party_id,
+                            provider: 'cloudflare',
                             alt: altText,
-                            preset: 'prod_thumb_xs'
+                            preset: 'prod_thumb_xs',
+                            width: '45',
+                            height: '45'
                         }
                     }
                 );

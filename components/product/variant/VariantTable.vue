@@ -178,7 +178,7 @@ export default {
         },
 
         getVariantImages(index) {
-            return Array.isArray(this.variants[index].images) ? this.variants[index].images.map(obj => obj.url) : [];
+            return Array.isArray(this.variants[index].images) ? this.variants[index].images.map(obj => obj.third_party_id) : [];
         },
 
         getVariantSwatches(index) {
@@ -276,13 +276,17 @@ export default {
                         <div class="flex items-center">
                             <!-- images -->
                             <div
-                                v-for="(url, objIndex) in getVariantImages(idx)"
+                                v-for="(id, objIndex) in getVariantImages(idx)"
                                 :key="objIndex"
                                 class="mr-2">
                                 <nuxt-img
-                                    v-if="url"
-                                    :src="url"
+                                    v-if="id"
+                                    provider="cloudflare"
+                                    :src="id"
                                     preset="prod_thumb_xs"
+                                    loading="lazy"
+                                    width="45"
+                                    height="45"
                                     class="shadow variant-thumb"
                                     :class="{'featured-thumb': objIndex === 0}" />
                             </div>

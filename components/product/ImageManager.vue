@@ -162,6 +162,7 @@ export default {
                         alt_text: null,
                         ordinal: newOrdinal,
                         url: null,
+                        third_party_id: null,
                         loading: true
                     });
                 }
@@ -172,7 +173,8 @@ export default {
                     const fileListIndex = newFileListIndexes[index];
 
                     this.fileList[fileListIndex].id = res.id;
-                    this.fileList[fileListIndex].url = res.url;
+                    this.fileList[fileListIndex].url = res.url || null;
+                    this.fileList[fileListIndex].third_party_id = res.third_party_id;
                     this.fileList[fileListIndex].loading = false;
                 });
 
@@ -282,10 +284,14 @@ export default {
                         <fig-overlay :show="obj.loading">
                             <span @click="onPreview(obj.url)" class="cursor-pointer">
                                 <nuxt-img
-                                    v-if="obj.url"
-                                    :src="obj.url"
+                                    v-if="obj.third_party_id"
+                                    provider="cloudflare"
+                                    :src="obj.third_party_id"
                                     preset="prod_thumb"
-                                    :alt="obj.alt_text" />
+                                    loading="lazy"
+                                    width="75"
+                                    height="75"
+                                    :alt="obj.alt_text || $t('variant image')" />
                             </span>
                         </fig-overlay>
                     </fig-td>

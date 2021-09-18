@@ -120,12 +120,12 @@ export default {
     // Nuxt image config
     // https://image.nuxtjs.org/api/options/
     image: {
-        provider: 'ipx',
-        ipx: {},
-        domains: [
-            'https://gmnst-assets.nyc3.digitaloceanspaces.com'
-        ],
-        staticFilename: '[publicPath]/images/[name]-[hash][ext]',
+        providers: {
+            cloudflare: {
+                provider: '~/providers/cloudflare',
+                baseURL: 'https://imagedelivery.net/onkdurJr24OykoZY1xYs4g'
+            }
+        },
         // The screen sizes predefined by `@nuxt/image`:
         screens: {
             xs: 320,
@@ -139,14 +139,14 @@ export default {
         presets: {
             prod_thumb: {
                 modifiers: {
-                    format: 'jpg',
+                    // format: 'jpg',
                     width: 75,
                     height: 75
                 }
             },
             prod_thumb_xs: {
                 modifiers: {
-                    format: 'jpg',
+                    // format: 'jpg',
                     width: 45,
                     height: 45
                 }
@@ -154,9 +154,9 @@ export default {
         }
     },
 
-    serverMiddleware: {
-        '/_ipx': '~/server/middleware/ipx.js'
-    },
+    // serverMiddleware: {
+    //     '/_ipx': '~/server/middleware/ipx.js'
+    // },
 
     tailwindcss: {
         cssPath: '@/node_modules/@notoursllc/figleaf/assets/css/tailwind.css',

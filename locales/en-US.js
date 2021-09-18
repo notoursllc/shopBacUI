@@ -518,6 +518,7 @@ module.exports = {
     "Values": "Values",
     "Variant": "Variant",
     "Variant deleted successfully": "Variant deleted successfully",
+    "variant image": "variant image",
     "Variant properties": "Variant properties",
     "Variants": "Variants",
     "Vendor": "Vendor",

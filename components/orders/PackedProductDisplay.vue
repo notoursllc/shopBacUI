@@ -22,7 +22,7 @@ export default {
     methods: {
         getProductImage() {
             return (this.product.product_variant && Array.isArray(this.product.product_variant.images))
-                ? this.product.product_variant.images[0].url
+                ? this.product.product_variant.images[0].third_party_id
                 : null;
         },
 
@@ -46,8 +46,12 @@ export default {
         <div class="mr-2 sm:mr-4">
             <nuxt-img
                 v-if="getProductImage()"
+                provider="cloudflare"
                 :src="getProductImage()"
                 preset="prod_thumb"
+                loading="lazy"
+                width="75"
+                height="75"
                 class="shadow" />
         </div>
         <div class="flex-grow text-sm">
