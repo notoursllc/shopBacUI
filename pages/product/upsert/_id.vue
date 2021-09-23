@@ -60,7 +60,9 @@ export default Vue.extend({
         return {
             loading: false,
             product: {
-                variants: []
+                variants: [],
+                published: true,
+                shippable: true
             },
             productHasMetaData: false,
             domainName: this.$config.DOMAIN_NAME,
@@ -101,8 +103,6 @@ export default Vue.extend({
                 this.fetchProduct();
             }
             else {
-                // setting some defaults:
-                this.product.published = true;
                 this.$store.dispatch('ui/title', this.$t('Add product'));
             }
         }
