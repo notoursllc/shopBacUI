@@ -4,7 +4,8 @@ import {
     FigButtonFab,
     FigTableSimple,
     FigTh,
-    FigTd
+    FigTd,
+    FigTrNoResults
 } from '@notoursllc/figleaf';
 
 export default {
@@ -13,7 +14,8 @@ export default {
         FigButtonFab,
         FigTableSimple,
         FigTh,
-        FigTd
+        FigTd,
+        FigTrNoResults
     },
 
     data() {
@@ -94,7 +96,6 @@ export default {
     <div>
         <fig-button-fab icon="plus" @click="onUpsertClick()" />
 
-
         <fig-table-simple
             striped
             hover
@@ -122,6 +123,8 @@ export default {
                     {{ obj.updated_at | format8601 }}
                 </fig-td>
             </tr>
+
+            <fig-tr-no-results v-if="!dataTables.length" :colspan="2" />
         </fig-table-simple>
     </div>
 </template>

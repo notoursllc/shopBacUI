@@ -6,6 +6,7 @@ import {
     FigTableSimple,
     FigTh,
     FigTd,
+    FigTrNoResults,
     FigOperationsDropdown
 } from '@notoursllc/figleaf';
 
@@ -16,6 +17,7 @@ export default {
         FigTableSimple,
         FigTh,
         FigTd,
+        FigTrNoResults,
         FigOperationsDropdown
     },
 
@@ -96,7 +98,6 @@ export default {
     <div>
         <fig-button-fab icon="plus" @click="goToCollectionUpsert()" />
 
-
         <fig-table-simple
             striped
             hover
@@ -124,6 +125,8 @@ export default {
                     <boolean-tag :value="obj.published" />
                 </fig-td>
             </tr>
+
+            <fig-tr-no-results v-if="!collections.length" :colspan="2" />
         </fig-table-simple>
     </div>
 </template>

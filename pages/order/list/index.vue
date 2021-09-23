@@ -2,7 +2,8 @@
 import {
     FigTableSimple,
     FigTh,
-    FigTd
+    FigTd,
+    FigTrNoResults
 } from '@notoursllc/figleaf';
 
 
@@ -10,7 +11,8 @@ export default {
     components: {
         FigTableSimple,
         FigTh,
-        FigTd
+        FigTd,
+        FigTrNoResults
     },
 
     data() {
@@ -90,6 +92,8 @@ export default {
                 {{ obj.shoppingCart.grand_total }}
             </fig-td>
         </tr>
+
+        <fig-tr-no-results v-if="!products.length" :colspan="4" />
     </fig-table-simple>
 </template>
 

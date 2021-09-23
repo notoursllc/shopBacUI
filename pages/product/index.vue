@@ -9,6 +9,7 @@ import {
     FigTableSimple,
     FigTh,
     FigTd,
+    FigTrNoResults,
     FigOperationsDropdown
 } from '@notoursllc/figleaf';
 
@@ -20,6 +21,7 @@ export default {
         FigTableSimple,
         FigTh,
         FigTd,
+        FigTrNoResults,
         FigOperationsDropdown
     },
 
@@ -264,6 +266,8 @@ export default {
                     {{ getMasterTypeLabel('product_gender_type', prod.gender_type) }}
                 </fig-td>
             </tr>
+
+            <fig-tr-no-results v-if="!products.length" :colspan="6" />
         </fig-table-simple>
     </div>
 </template>

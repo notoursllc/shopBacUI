@@ -323,7 +323,6 @@ export default {
                     handle=".handle"
                     @update="setOrdinals"
                     tag="tbody">
-
                     <tr
                         v-for="(type, idx) in types"
                         :key="idx">
@@ -352,6 +351,7 @@ export default {
                         </fig-td>
                     </tr>
 
+                    <fig-tr-no-results v-if="!types.length" :colspan="4" />
                 </draggable>
             </fig-table-simple>
         </fig-overlay>

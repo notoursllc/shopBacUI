@@ -3,6 +3,7 @@ import {
     FigTableSimple,
     FigTh,
     FigTd,
+    FigTrNoResults,
     FigMoney,
     FigAddress,
     FigPaginationBar,
@@ -15,6 +16,7 @@ export default {
         FigTableSimple,
         FigTh,
         FigTd,
+        FigTrNoResults,
         FigMoney,
         FigAddress,
         FigPaginationBar,
@@ -177,6 +179,8 @@ export default {
                     </template>
                 </fig-td>
             </tr>
+
+            <fig-tr-no-results v-if="!carts.length" :colspan="8" />
         </fig-table-simple>
     </div>
 </template>
