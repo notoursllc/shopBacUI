@@ -316,7 +316,7 @@ export default {
                 variant="primary"
                 size="sm"
                 @click="addEmptyColor"
-                icon="plus">{{ $t('Add Color') }}</fig-button>
+                icon="plus">{{ $t('Add variant') }}</fig-button>
         </div>
 
 

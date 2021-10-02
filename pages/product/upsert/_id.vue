@@ -358,9 +358,9 @@ export default Vue.extend({
         </div>
 
 
-        <!-- COLORS CARD -->
+        <!-- VARIANTS CARD -->
         <fig-text-card class="my-3">
-            <div slot="header-left">{{ $t('Colors') }}</div>
+            <div slot="header-left">{{ $t('Variants') }}</div>
 
             <div class="container mx-auto">
                 <variant-table
