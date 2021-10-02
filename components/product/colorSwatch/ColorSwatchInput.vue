@@ -10,7 +10,7 @@ import {
 } from '@notoursllc/figleaf';
 
 
-export default Vue.extend({
+export default {
     name: 'ColorInput',
 
     components: {
@@ -93,7 +93,7 @@ export default Vue.extend({
             this.$refs[this.uuid].hide();
         }
     }
-});
+};
 </script>
 
 <template>
@@ -105,7 +105,7 @@ export default Vue.extend({
             v-bind="$attrs"
             @input="emitInput" />
 
-        <div slot="suffix">
+        <template v-slot:suffix>
             <fig-popover
                 placement="bottom"
                 @visible="onPopoverVisible"
@@ -114,8 +114,8 @@ export default Vue.extend({
                     slot="toggler"
                     icon="palette"
                     class="mt-1"
-                    :width="22"
-                    :height="22" />
+                    :width="20"
+                    :height="20" />
 
                 <div class="text-center">{{ $t('Choose a pre-defined swatch') }}:</div>
                 <fig-popover-divider />
@@ -141,7 +141,7 @@ export default Vue.extend({
                     </div>
                 </fig-overlay>
             </fig-popover>
-        </div>
+        </template>
     </fig-form-input-endcapper>
 </template>
 
