@@ -16,6 +16,7 @@ import {
     FigTooltip,
     FigTh,
     FigTd,
+    FigTrNoResults,
     FigPopConfirm,
     FigMoney
 } from '@notoursllc/figleaf';
@@ -40,6 +41,7 @@ export default Vue.extend({
         FigTooltip,
         FigTh,
         FigTd,
+        FigTrNoResults,
         FigPopConfirm
     },
 
@@ -286,7 +288,6 @@ export default Vue.extend({
                 ghost-class="ghost"
                 handle=".handle"
                 tag="tbody">
-
                 <tr
                     v-for="(sku, index) in skus"
                     :key="index">
@@ -519,6 +520,8 @@ export default Vue.extend({
                         </fig-pop-confirm>
                     </fig-td>
                 </tr>
+
+                <fig-tr-no-results v-if="!skus || !skus.length" :colspan="13" />
             </draggable>
         </fig-table-simple>
     </div>
