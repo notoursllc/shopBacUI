@@ -2,6 +2,7 @@
 import JsonTree from 'vue-json-tree';
 import isObject from 'lodash.isobject';
 import PackedProductDisplay from '@/components/orders/PackedProductDisplay.vue';
+import OrderRefundForm from '@/components/orders/OrderRefundForm.vue';
 import {
     FigAddress,
     FigButton,
@@ -41,7 +42,8 @@ export default {
         FigTextCard,
         FigMessage,
         FigPopConfirm,
-        JsonTree
+        JsonTree,
+        OrderRefundForm
         // ShippingLabelButton: () => import('@/components/payment/ShippingLabelButton'),
     },
 
@@ -111,6 +113,10 @@ export default {
 
         showCartDataModal() {
             this.$refs.cart_modal.show();
+        },
+
+        showRefundModal() {
+            this.$refs.refund_modal.show();
         },
 
         getProductImage(prod) {
@@ -254,7 +260,6 @@ export default {
 
 
                 <!-- Shipped at -->
-
                 <div>
                     <fig-label-value-group density="sm">
                         <fig-label-value>
@@ -468,9 +473,9 @@ export default {
                                 ref="shipping_rate_modal"
                                 size="lg"
                                 close-button>
-                                <fig-json-tree-view
+                                <json-tree
                                     :data="cart.selected_shipping_rate"
-                                    :level="2"></fig-json-tree-view>
+                                    :level="2"></json-tree>
                             </fig-modal>
                         </div>
                     </div>
@@ -570,6 +575,22 @@ export default {
                 </template>
 
                 <template v-if="cart.shipping_rate_quote">
+                    <!-- create refund button -->
+                    <div class="mb-4 flex w-full justify-end">
+                        <fig-button
+                            variant="danger"
+                            size="sm"
+                            @click="showRefundModal">{{ $t('Create refund') }}</fig-button>
+
+                        <fig-modal
+                            ref="refund_modal"
+                            size="full"
+                            close-button>
+                            <template v-slot:header>{{ $t('Select products to refund') }}</template>
+                            <order-refund-form :cart="cart" />
+                        </fig-modal>
+                    </div>
+
                     <!-- UNPACKED products -->
                     <fig-text-card class="mb-2 sm:mb-4" v-if="cart.shipping_rate_quote.packingResults.unpacked.length">
                         <template v-slot:header-left>
@@ -600,7 +621,7 @@ export default {
                         :key="index"
                         class="mb-2 sm:mb-4">
                         <template v-slot:header-left>
-                            {{ $t('Box') }} ({{ $t('{num1} of {num2}', { num1: ++index, num2: cart.shipping_rate_quote.packingResults.packed.length }) }}) -
+                            {{ $t('Box') }} ({{ $t('{num1} of {num2}', { num1: index + 1, num2: cart.shipping_rate_quote.packingResults.packed.length }) }}) -
                             {{ $tc('{num} items', p.products.length, {num: p.products.length}) }}
                         </template>
 
@@ -661,9 +682,9 @@ export default {
                     ref="cart_modal"
                     size="lg"
                     close-button>
-                    <fig-json-tree-view
+                    <json-tree
                         :data="cart"
-                        :level="2"></fig-json-tree-view>
+                        :level="2"></json-tree>
                 </fig-modal>
             </fig-spec>
 
