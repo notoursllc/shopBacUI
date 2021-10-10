@@ -50,6 +50,7 @@ export default {
         return {
             variant: {
                 published: true,
+                is_taxable: true,
                 skus: [
                     { label: null }
                 ]
@@ -63,12 +64,19 @@ export default {
         value: {
             handler(newVal) {
                 if(isObject(newVal)) {
-                    this.variant = Object.assign({ published: true }, newVal);
+                    this.variant = Object.assign(
+                        {
+                            published: true,
+                            is_taxable: true
+                        },
+                        newVal
+                    );
                     return;
                 }
 
                 this.variant = {
                     published: true,
+                    is_taxable: true,
                     skus: [
                         { label: null }
                     ]
@@ -189,9 +197,9 @@ export default {
         </fig-text-card>
 
 
-        <!-- Color images -->
+        <!-- Variant images -->
         <fig-text-card class="mb-5">
-            <div slot="header-left">{{ $t('Color images') }}</div>
+            <div slot="header-left">{{ $t('Variant images') }}</div>
             <div class="container mx-auto">
                 <image-manager
                     v-model="variant.images"
