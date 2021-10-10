@@ -177,6 +177,19 @@ export default {
                         <navigation-item :route="{ name: 'global-color-swatch-types' }">{{ $t('Color swatches') }}</navigation-item>
                         <navigation-item :route="{ name: 'global-package-types' }">{{ $t('Package types') }}</navigation-item>
                     </navigation-collapse>
+
+                    <navigation-item :route="{ name: 'tax-nexus-list' }">
+                        <template v-slot:icon>
+                            <fig-icon
+                                icon="coin"
+                                :width="20"
+                                :height="20"
+                                stroke="#fff"
+                                :stroke-width="1"
+                                class="mr-1" />
+                        </template>
+                        {{ $t('Sales Tax Nexus') }}
+                    </navigation-item>
                 </navigation-list>
             </div>
         </aside>
