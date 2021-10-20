@@ -63,14 +63,10 @@ export default {
             <div class="flex items-center justify-center">
                 <fig-victory-icon :width="100" :height="60" fill="#4e4e4f" />
             </div>
-
-            <h2 class="mt-1 text-center text-3xl font-medium text-gray-800">
-                Sign in to your account
-            </h2>
         </div>
 
         <fig-overlay :show="loading">
-            <form class="mt-8 space-y-4" @submit.prevent="onSubmit">
+            <form class="mt-4 space-y-4" @submit.prevent="onSubmit">
                 <div>
                     <fig-form-input
                         v-model="userInfo.email"
