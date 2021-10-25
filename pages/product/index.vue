@@ -2,7 +2,6 @@
 import isObject from 'lodash.isobject';
 import product_mixin from '@/mixins/product_mixin';
 import BooleanTag from '@/components/BooleanTag';
-import Vnodes from '@/components/Vnodes';
 
 import {
     FigButtonFab,
@@ -10,19 +9,20 @@ import {
     FigTh,
     FigTd,
     FigTrNoResults,
-    FigOperationsDropdown
+    FigOperationsDropdown,
+    FigVNodes
 } from '@notoursllc/figleaf';
 
 export default {
     components: {
         BooleanTag,
-        Vnodes,
         FigButtonFab,
         FigTableSimple,
         FigTh,
         FigTd,
         FigTrNoResults,
-        FigOperationsDropdown
+        FigOperationsDropdown,
+        FigVNodes
     },
 
     mixins: [
@@ -232,7 +232,7 @@ export default {
                 <!-- featured image -->
                 <fig-td class="text-center">
                     <div class="inline-block">
-                        <vnodes :vnodes="getCoverImage(prod)" />
+                        <fig-v-nodes :vnodes="getCoverImage(prod)" />
                     </div>
                     <div class="text-xs">{{ numPicsLabel(prod) }}</div>
                 </fig-td>
