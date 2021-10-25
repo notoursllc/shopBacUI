@@ -1,7 +1,5 @@
 <script>
-import isObject from 'lodash.isobject';
 import { required } from 'vuelidate/lib/validators';
-import master_types_mixin from '@/mixins/master_types_mixin';
 import MetaDataBuilder from '@/components/MetaDataBuilder';
 
 import {
@@ -23,10 +21,6 @@ export default {
         FigRow,
         MetaDataBuilder
     },
-
-    mixins: [
-        master_types_mixin
-    ],
 
     data() {
         return {
@@ -75,7 +69,8 @@ export default {
     methods: {
         async fetchSwatch(id) {
             try {
-                this.form = await this.$api.productColorSwatches.get(id);
+                const { data } = await this.$api.product.colorSwatch.get(id);
+                this.form = data;
             }
             catch(e) {
                 this.$figleaf.errorToast({
@@ -91,15 +86,15 @@ export default {
                     delete this.form.id;
                 }
 
-                const response = await this.$api.productColorSwatches.upsert(this.form);
+                const { data } = await this.$api.product.colorSwatch.upsert(this.form);
 
-                if(!response) {
+                if(!data) {
                     throw new Error(this.$t('Error updating Master Type'));
                 }
 
                 this.$figleaf.successToast({
                     title: this.$t('Success'),
-                    text: this.$t(this.form.id ? 'updated_name' : 'added_name', { name: response.label })
+                    text: this.$t(this.form.id ? 'updated_name' : 'added_name', { name: data.label })
                 });
 
                 this.goToList();

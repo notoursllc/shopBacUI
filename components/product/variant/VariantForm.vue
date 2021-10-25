@@ -90,7 +90,7 @@ export default {
         async onDeleteImage(media_id) {
             try {
                 this.loadingImages = true;
-                await this.$api.products.variants.deleteImage(
+                await this.$api.product.variant.deleteImage(
                     this.variant.id,
                     media_id
                 );

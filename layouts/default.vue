@@ -72,7 +72,7 @@ export default {
 
         async logout() {
             try {
-                await this.$api.tenantMembers.logout();
+                await this.$api.tenant.members.logout();
 
                 this.$store.dispatch('ui/logout');
 

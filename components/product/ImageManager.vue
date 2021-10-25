@@ -149,7 +149,7 @@ export default {
 
                 for (let i=0; i<numUploadedFiles; i++) {
                     resizePromises.push(
-                        this.$api.media.postImage(files[i])
+                        this.$api.media.addImage(files[i])
                     );
 
                     newFileListIndexes.push(this.fileList.length);
@@ -171,10 +171,11 @@ export default {
 
                 responses.forEach((res, index) => {
                     const fileListIndex = newFileListIndexes[index];
+                    const responseData = res.data;
 
-                    this.fileList[fileListIndex].id = res.id;
-                    this.fileList[fileListIndex].url = res.url || null;
-                    this.fileList[fileListIndex].third_party_id = res.third_party_id;
+                    this.fileList[fileListIndex].id = responseData.id;
+                    this.fileList[fileListIndex].url = responseData.url || null;
+                    this.fileList[fileListIndex].third_party_id = responseData.third_party_id;
                     this.fileList[fileListIndex].loading = false;
                 });
 

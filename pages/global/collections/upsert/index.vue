@@ -47,7 +47,8 @@ export default {
 
         async fetchCollection(id) {
             try {
-                this.collection = await this.$api.productCollections.get(id);
+                const { data } = await this.$api.product.collection.get(id);
+                this.collection = data;
 
                 if(!this.collection) {
                     throw new Error(this.$t('Collection not found'));
@@ -63,8 +64,8 @@ export default {
 
         async setNextAvailableValue() {
             try {
-                const collections = await this.$api.productCollections.list();
-                this.collection.value = getNextAvailableTypeValue(collections);
+                const { data } = await this.$api.product.collection.list();
+                this.collection.value = getNextAvailableTypeValue(data);
             }
             catch(e) {
                 this.$figleaf.errorToast({
@@ -76,15 +77,15 @@ export default {
 
         async onFormSave() {
             try {
-                const collection = await this.$api.productCollections.upsert(this.collection);
+                const { data } = await this.$api.product.collection.upsert(this.collection);
 
-                if(!collection) {
+                if(!data) {
                     throw new Error(this.$t('Error updating Collection'));
                 }
 
                 this.$figleaf.successToast({
-                    title: collection.id ? this.$t('Collection updated successfully') : this.$t('Collection added successfully'),
-                    text: collection.name
+                    title: data.id ? this.$t('Collection updated successfully') : this.$t('Collection added successfully'),
+                    text: data.name
                 });
 
                 this.goToProductCollectionList();

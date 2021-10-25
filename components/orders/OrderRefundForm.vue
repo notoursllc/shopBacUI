@@ -1,33 +1,27 @@
 <script>
 import {
-    FigTableSimple,
-    FigTh,
-    FigTd,
-    FigTrNoResults,
-    FigMoney,
     FigLabelValueGroup,
     FigLabelValue,
+    FigFormInputMoney,
+    FigFormSelectNative,
+    FigFormTextarea,
+    FigIconLabel,
     FigButton,
-    FigDataToggler,
-    FigFormCheckbox,
     FigPopConfirm,
-    FigFormSelectNative
+    FigMoney
 } from '@notoursllc/figleaf';
 
 export default {
     components: {
-        FigTableSimple,
-        FigTh,
-        FigTd,
-        FigTrNoResults,
-        FigMoney,
         FigLabelValueGroup,
         FigLabelValue,
+        FigFormInputMoney,
+        FigFormSelectNative,
+        FigFormTextarea,
+        FigIconLabel,
         FigButton,
-        FigDataToggler,
-        FigFormCheckbox,
         FigPopConfirm,
-        FigFormSelectNative
+        FigMoney
     },
 
     props: {
@@ -39,238 +33,146 @@ export default {
 
     data() {
         return {
-            showDetailsInRow: {},
-            selectedItems: []
+            form: {
+                refund: 0,
+                reason: 'requested_by_customer',
+                description: null
+            }
         };
     },
 
     computed: {
-        totalRefundAmount() {
-            let total = 0;
+        maxRefundAmount() {
+            return this.cart ? this.cart.grand_total : 0;
+        }
+    },
 
-            this.selectedItems.forEach((item) => {
-                const price = this.getDisplayPrice(item);
-                total += (price * item.qtyToRefund);
-            });
-
-            return total;
+    watch: {
+        cart: {
+            handler: function(newVal) {
+                this.form.refund = newVal ? newVal.grand_total : 0;
+            },
+            immediate: true
         }
     },
 
     methods: {
-        getProductImage(cartItem) {
-            return (cartItem.product_variant && Array.isArray(cartItem.product_variant.images))
-                ? cartItem.product_variant.images[0].third_party_id
-                : null;
-        },
+        async onConfirmRefund() {
+            console.log("onConfirmRefund");
 
-        getMasterTypeName(object, value) {
-            if(Array.isArray(this.$store.state.masterTypes[object])) {
-                for(let i=0; i<this.$store.state.masterTypes[object].length; i++) {
-                    if(this.$store.state.masterTypes[object][i].value === value) {
-                        return this.$store.state.masterTypes[object][i].name;
-                    }
-                }
+            try {
+                // await this.$api.cart.items.refundCartItems(
+                //     cartItems,
+                //     this.refundForm.refundSalesTax
+                // );
             }
-            return null;
-        },
-
-        toggleShowMore(index) {
-            this.$set(
-                this.showDetailsInRow,
-                index,
-                !this.showDetailsInRow[index]
-            );
-        },
-
-        getDisplayPrice(cartItem) {
-            return cartItem.product_variant_sku.display_price !== null
-                ? cartItem.product_variant_sku.display_price
-                : cartItem.product_variant.display_price;
-        },
-
-        onConfirmRefundItems(selectedItems) {
-            console.log("SELETED ITESM", [...selectedItems]);
-
-            // TODO: send API request
-        },
-
-        onItemSelected(selectedItems) {
-            this.selectedItems = [...selectedItems];
-            console.log("ON CHANGE", this.selectedItems);
-        },
-
-        getRefundQtyOptions(qtyPurchased) {
-            const options = [];
-
-            for(let i=parseInt(qtyPurchased); i>0; i--) {
-                options.push(
-                    { label: i, value: i }
-                );
+            catch(e) {
+                this.$figleaf.errorToast({
+                    title: this.$t('Error'),
+                    text: e.message
+                });
             }
-
-            return options;
-        },
-
-        onCartItemCheckboxClick(cartItem, isChecked) {
-            cartItem.qtyToRefund = isChecked ? 1 : null;
         }
-    }
+    },
+
+
 };
 </script>
 
 
 <template>
-    <fig-data-toggler
-        :items="cart.cart_items"
-        v-slot:default="slotProps"
-        @changed="onItemSelected">
-
-        <fig-table-simple
-            striped
-            hover
-            :cell-padding="1">
-            <template slot="head">
-                <tr>
-                    <fig-th class="w-16">
-                        <div class="text-center">
-                            <fig-form-checkbox
-                                inline
-                                @input="(isChecked) => slotProps.toggleAll(isChecked)"
-                                v-model="slotProps.allAreSelected" />
-                        </div>
-                    </fig-th>
-                    <fig-th>{{ $t('Image') }}</fig-th>
-                    <fig-th>{{ $t('Qty purchased') }}</fig-th>
-                    <fig-th>{{ $t('Qty to refund') }}</fig-th>
-                    <fig-th>{{ $t('Price (ea.)') }}</fig-th>
-                    <fig-th>{{ $t('Title') }}</fig-th>
-                    <fig-th>{{ $t('Size') }}</fig-th>
-                    <fig-th>{{ $t('SKU') }}</fig-th>
-                    <fig-th>{{ $t('Product sub-type') }}</fig-th>
-                    <fig-th>{{ $t('Gender') }}</fig-th>
-                    <fig-th></fig-th>
-                </tr>
-            </template>
-
-            <tr
-                v-for="(cartItem, idx) in cart.cart_items"
-                :key="idx"
-                :class="{'bg-red-100': slotProps.selectedItems.has(cartItem)}">
-                <!-- checkbox -->
-                <fig-td class="text-center">
-                    <fig-form-checkbox
-                        inline
-                        @input="(isChecked) => { slotProps.toggleOne(cartItem, isChecked); onCartItemCheckboxClick(cartItem, isChecked) }"
-                        :value="slotProps.selectedItems.has(cartItem)" />
-                </fig-td>
-
-                <!-- image -->
-                <fig-td>
-                    <nuxt-img
-                        v-if="getProductImage(cartItem)"
-                        provider="cloudflare"
-                        :src="getProductImage(cartItem)"
-                        preset="prod_thumb"
-                        loading="lazy"
-                        width="75"
-                        height="75"
-                        class="shadow" />
-                </fig-td>
-
-                <!-- qty purchased -->
-                <fig-td>
-                    {{ $n(cartItem.qty) }}
-                </fig-td>
-
-                <!-- qty to refund -->
-                <fig-td>
-                    <fig-form-select-native
-                        v-model="cartItem.qtyToRefund"
-                        :options="getRefundQtyOptions(cartItem.qty)" />
-                </fig-td>
-
-                <!-- Price -->
-                <fig-td>
-                    <fig-money :cents="getDisplayPrice(cartItem)" />
-                </fig-td>
-
-                <!-- title -->
-                <fig-td>
-                    {{ cartItem.product.title }}
-                </fig-td>
-
-                <!-- Size -->
-                <fig-td>
-                    {{ cartItem.product_variant_sku.label }}
-                </fig-td>
-
-                <!-- SKU -->
-                <fig-td>
-                    {{ cartItem.product_variant_sku.sku }}
-                </fig-td>
-
-                <!-- Product sub-type -->
-                <fig-td>
-                    {{ getMasterTypeName('product_sub_type', cartItem.product.sub_type) }}
-                </fig-td>
-
-                <!-- Gender -->
-                <fig-td>
-                    {{ getMasterTypeName('product_gender_type', cartItem.product.gender_type) }}
-                </fig-td>
-
-                <!-- more... -->
-                <fig-td>
-                    <fig-button
-                        size="sm"
-                        @click="toggleShowMore(idx)">{{ $t(showDetailsInRow[idx] ? 'hide more' : 'show more') }}</fig-button>
-
-                    <fig-label-value-group
-                        class="mt-2"
-                        density="sm"
-                        block
-                        v-show="showDetailsInRow[idx]">
-
-                        <!-- product type -->
-                        <fig-label-value>
-                            <template v-slot:label>{{ $t('Product type') }}:</template>
-                            {{ getMasterTypeName('product_type', cartItem.product.type) }}
-                        </fig-label-value>
-
-                        <!-- fit -->
-                        <fig-label-value>
-                            <template v-slot:label>{{ $t('Fit') }}:</template>
-                            {{ getMasterTypeName('product_fit_type', cartItem.product.fit_type) }}
-                        </fig-label-value>
-
-                        <!-- sleeve -->
-                        <fig-label-value>
-                            <template v-slot:label>{{ $t('Sleeve') }}:</template>
-                            {{ getMasterTypeName('product_sleeve_length_type', cartItem.product.sleeve_length_type) }}
-                        </fig-label-value>
-                    </fig-label-value-group>
-                </fig-td>
-            </tr>
-
-            <fig-tr-no-results v-if="!cart.cart_items.length" colspan="9" />
-        </fig-table-simple>
-
-        <div class="mt-6" v-if="totalRefundAmount">
-            <div class="text-red-700">{{ $t('Refund amount') }}: <fig-money :cents="totalRefundAmount" /></div>
+    <div>
+        <div class="px-6 py-2 bg-gray-100 text-sm">
+            <fig-icon-label>
+                <template v-slot:left>
+                    <fig-icon
+                        icon="info-circle"
+                        width="20"
+                        height="20"
+                        :stroke-width="1.5" />
+                </template>
+                <div class="pl-1">{{ $t('refund_delay_info') }}</div>
+            </fig-icon-label>
         </div>
 
         <div class="mt-6">
-            <fig-pop-confirm
-                @confirm="onConfirmRefundItems(slotProps.selectedItems)"
-                :disabled="!slotProps.numberSelected">
-                {{ $t('Refund the selected items?') }} (<fig-money :cents="totalRefundAmount" />)
+            <fig-label-value-group density="md" class="w-full">
+                <!-- Cart totals -->
+                <fig-label-value>
+                    <template v-slot:label><label>{{ $t('Totals') }}:</label></template>
+                    <fig-label-value-group density="sm">
+                        <!-- sub total -->
+                        <fig-label-value>
+                            <template v-slot:label>{{ $t('Subtotal') }}:</template>
+                            <fig-money class="font-mono" :cents="cart.sub_total" />
+                        </fig-label-value>
 
+                        <!-- shipping_total -->
+                        <fig-label-value>
+                            <template v-slot:label>{{ $t('Shipping') }}:</template>
+                            <fig-money class="font-mono" :cents="cart.shipping_total" />
+                        </fig-label-value>
+
+                        <!-- sales tax -->
+                        <fig-label-value>
+                            <template v-slot:label>{{ $t('Tax') }}:</template>
+                            <fig-money class="font-mono" :cents="cart.sales_tax" />
+                        </fig-label-value>
+
+                        <!-- grand total -->
+                        <fig-label-value class="font-semibold text-green-700">
+                            <template v-slot:label>{{ $t('Grand total') }}:</template>
+                            <fig-money class="font-mono" :cents="cart.grand_total" />
+                        </fig-label-value>
+                    </fig-label-value-group>
+                </fig-label-value>
+
+                <!-- Refund -->
+                <fig-label-value>
+                    <template v-slot:label><label for="refund-amount">{{ $t('Refund') }}:</label></template>
+                    <fig-form-input-money
+                        v-model="form.refund"
+                        min="0"
+                        :max="maxRefundAmount"
+                        id="refund-amount" />
+                    <!-- <template v-slot:error v-if="$v.nexus.countryCodeAlpha2.$invalid">
+                        <div>{{ $t('Required') }}</div>
+                    </template> -->
+                </fig-label-value>
+
+                <!-- Reason -->
+                <fig-label-value>
+                    <template v-slot:label><label for="refund-reason">{{ $t('Reason') }}:</label></template>
+                    <fig-form-select-native
+                        v-model="form.reason"
+                        :options="[
+                            { label: this.$t('Duplicate'), value: 'duplicate' },
+                            { label: this.$t('Fraudulent'), value: 'fraudulent' },
+                            { label: this.$t('Requested by customer'), value: 'requested_by_customer' },
+                            { label: this.$t('Other'), value: 'other' }
+                        ]"
+                        id="refund-reason" />
+                </fig-label-value>
+
+                <!-- more info -->
+                <fig-label-value>
+                    <template v-slot:label>&nbsp;</template>
+                    <fig-form-textarea
+                        v-model="form.description"
+                        :placeholder="$t('Add more details about this refund.')" />
+                </fig-label-value>
+            </fig-label-value-group>
+        </div>
+
+        <div class="mt-6 flex justify-center">
+            <fig-pop-confirm
+                @confirm="onConfirmRefund">
+                {{ $t('Process refund?') }} (<fig-money :cents="form.refund" />)
                 <fig-button
                     slot="reference"
-                    variant="danger"
-                    :disabled="!slotProps.numberSelected">{{ $t('Process refund') }}</fig-button>
+                    variant="danger">{{ $t('Process refund') }}: <fig-money :cents="form.refund" /></fig-button>
             </fig-pop-confirm>
         </div>
-    </fig-data-toggler>
+
+</div>
 </template>

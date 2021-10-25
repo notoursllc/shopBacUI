@@ -37,7 +37,8 @@ export default {
     methods: {
         async fetchData() {
             try {
-                this.data = await this.$api.productAccentMessages.get(this.id);
+                const { data } = await this.$api.product.accentMessage.get(this.id);
+                this.data = data;
             }
             catch(e) {
                 this.$figleaf.errorToast({
@@ -49,9 +50,9 @@ export default {
 
         async onFormSave() {
             try {
-                const response = await this.$api.productAccentMessages.upsert(this.data);
+                const { data } = await this.$api.product.accentMessage.upsert(this.data);
 
-                if(!response) {
+                if(!data) {
                     throw new Error(this.$t('Error updating item'));
                 }
 

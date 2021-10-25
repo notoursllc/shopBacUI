@@ -113,10 +113,11 @@ export default {
     methods: {
         async fetchAllAccentMessages() {
             try {
-                this.allAccentMessages = await this.$api.productAccentMessages.all({
+                const { data } = await this.$api.product.accentMessage.all({
                     sortBy: 'message',
                     sortDesc: false
                 });
+                this.allAccentMessages = data;
                 // const options = [];
 
                 // if(Array.isArray(data)) {

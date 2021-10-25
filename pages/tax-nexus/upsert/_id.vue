@@ -74,7 +74,7 @@ export default Vue.extend({
                 const id = this.$route.params.id;
                 this.loading = true;
 
-                const nexus = await this.$api.taxNexus.get(id);
+                const nexus = await this.$api.nexus.get(id);
 
                 if(!nexus) {
                     throw new Error(this.$t('Item not found'));
@@ -101,7 +101,7 @@ export default Vue.extend({
             try {
                 this.loading = true;
 
-                const n = await this.$api.taxNexus.upsert({
+                const n = await this.$api.nexus.upsert({
                     ...this.nexus,
                     tax_rate: this.nexus.tax_rate > 0 ? this.nexus.tax_rate/100 : 0
                 });

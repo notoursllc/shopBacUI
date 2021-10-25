@@ -37,7 +37,7 @@ export default {
             this.loading = true;
 
             try {
-                const data = await this.$api.productDataTables.get(id);
+                const { data } = await this.$api.product.dataTable.get(id);
 
                 if(!data) {
                     throw new Error(this.$t('Data Table not found'));
@@ -59,15 +59,15 @@ export default {
         async onSaveClick() {
             try {
                 this.loading = true;
-                const p = await this.$api.productDataTables.upsert(this.data);
+                const { data } = await this.$api.product.dataTable.upsert(this.data);
 
-                if(!p) {
+                if(!data) {
                     throw new Error('Error updating Data Table');
                 }
 
                 this.$figleaf.successToast({
-                    title: p.id ? this.$t('Data Table updated successfully') : this.$t('Data Table added successfully'),
-                    text: p.title
+                    title: data.id ? this.$t('Data Table updated successfully') : this.$t('Data Table added successfully'),
+                    text: data.title
                 });
 
                 this.$router.push({

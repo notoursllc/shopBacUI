@@ -35,7 +35,8 @@ export default {
     methods: {
         async fetchCollections(paramsObj) {
             try {
-                this.collections = await this.$api.productCollections.list(paramsObj);
+                const { data } = await this.$api.product.collection.list(paramsObj);
+                this.collections = data;
             }
             catch(e) {
                 this.$figleaf.errorToast({
@@ -63,9 +64,9 @@ export default {
             }
 
             try {
-                const collection = await this.$api.productCollections.delete(data.id);
+                const response = await this.$api.product.collection.delete(data.id);
 
-                if(!collection) {
+                if(!response.data) {
                     throw new Error(this.$t('Collection not found'));
                 }
 

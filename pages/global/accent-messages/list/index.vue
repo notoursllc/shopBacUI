@@ -43,7 +43,7 @@ export default {
 
         async fetchData(paramsObj) {
             try {
-                const { data } = await this.$api.productAccentMessages.list(paramsObj);
+                const { data } = await this.$api.product.accentMessage.list(paramsObj);
                 this.messages = data;
             }
             catch(e) {
@@ -73,9 +73,9 @@ export default {
             }
 
             try {
-                const response = await this.$api.productAccentMessages.delete(data.id);
+                const response = await this.$api.product.accentMessage.delete(data.id);
 
-                if(!response) {
+                if(!response.data) {
                     throw new Error(this.$t('Item not found'));
                 }
 

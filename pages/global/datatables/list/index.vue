@@ -32,7 +32,8 @@ export default {
         // will need to add pagination params in the future
         async fetchData(paramsObj) {
             try {
-                this.dataTables = await this.$api.productDataTables.list(paramsObj);
+                const { data } = await this.$api.product.dataTable.list(paramsObj);
+                this.dataTables = data;
             }
             catch(e) {
                 this.$figleaf.errorToast({
@@ -60,9 +61,9 @@ export default {
                     return;
                 }
 
-                const result = await this.$api.productDataTables.delete(data.id);
+                const result = await this.$api.product.dataTable.delete(data.id);
 
-                if(!result) {
+                if(!result.data) {
                     throw new Error(this.$t('Data Table not found'));
                 }
 

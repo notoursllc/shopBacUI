@@ -120,15 +120,15 @@ export default Vue.extend({
             this.loading = true;
 
             try {
-                const product = await this.$api.products.get(id, { viewAllRelated: true });
+                const { data } = await this.$api.product.get(id, { viewAllRelated: true });
 
-                if(!product) {
+                if(!data) {
                     throw new Error(this.$t('Product not found'));
                 }
 
-                this.productHasMetaData = !!product.metadata;
-                this.product = product;
-                this.$store.dispatch('ui/title', this.$t('Product: {name}', { name: product.title }));
+                this.productHasMetaData = !!data.metadata;
+                this.product = data;
+                this.$store.dispatch('ui/title', this.$t('Product: {name}', { name: data.title }));
             }
             catch(e) {
                 this.$figleaf.errorToast({
@@ -144,15 +144,15 @@ export default Vue.extend({
             try {
                 this.loading = true;
 
-                const p = await this.$api.products.upsert(this.product);
+                const { data } = await this.$api.product.upsert(this.product);
 
-                if(!p) {
+                if(!data) {
                     throw new Error('Error updating product');
                 }
 
                 this.$figleaf.successToast({
-                    title: p.id ? this.$t('Product updated successfully') : this.$t('Product added successfully'),
-                    text: p.title
+                    title: data.id ? this.$t('Product updated successfully') : this.$t('Product added successfully'),
+                    text: data.title
                 });
 
                 this.goToProductList();

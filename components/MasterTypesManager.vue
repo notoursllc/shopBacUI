@@ -101,7 +101,7 @@ export default {
             paramsObj.sortDesc = paramsObj.hasOwnProperty('sortDesc') ? paramsObj.sortDesc : false;
 
             try {
-                this.types = await this.$api.masterTypes.list({
+                const { data } = await this.$api.masterType.list({
                     where: ['object', '=', this.object],
                     // whereRaw: ['sub_type & ? > 0', [productTypeId]],
                     // andWhere: [
@@ -109,6 +109,7 @@ export default {
                     // ],
                     ...paramsObj
                 });
+                this.types = data;
             }
             catch(e) {
                 this.$figleaf.errorToast({
@@ -138,9 +139,9 @@ export default {
                     return;
                 }
 
-                const typeJson = await this.$api.masterTypes.delete(data.id);
+                const response = await this.$api.masterType.delete(data.id);
 
-                if(!typeJson) {
+                if(!response.data) {
                     throw new Error(this.$t('Master type not found'));
                 }
 
@@ -167,24 +168,27 @@ export default {
                 this.clearForm();
 
                 if(isObject(data) && data.id) {
-                    const masterType = await this.$api.masterTypes.get(data.id);
+                    const response = await this.$api.masterType.get(data.id);
 
-                    if(!masterType) {
+                    if(!response.data) {
                         throw new Error(this.$t('Master Type not found'));
                     }
 
-                    Object.keys(masterType).forEach((key) => {
-                        this.form[key] = masterType[key];
+                    Object.keys(response.data).forEach((key) => {
+                        this.form[key] = response.data[key];
                     });
 
                     this.formHasMetaData = Array.isArray(this.form.metadata);
                 }
                 else {
-                    const masterTypes = await this.$api.masterTypes.all({
+                    const response = await this.$api.masterType.all({
                         where: ['object', '=', this.object]
                     });
+
+                    const nextAvail = this.$api.masterType.getNextAvailableTypeValue(response.data);
+
                     this.form.published = true;
-                    this.form.value = this.$api.masterTypes.getNextAvailableTypeValue(masterTypes);
+                    this.form.value = nextAvail.data;
                 }
 
                 this.showDialog();
@@ -213,15 +217,15 @@ export default {
                     this.form.metadata = null;
                 }
 
-                const mt = await this.$api.masterTypes.upsert(this.form);
+                const { data } = await this.$api.masterType.upsert(this.form);
 
-                if(!mt) {
+                if(!data) {
                     throw new Error(this.$t('Error updating Master Type'));
                 }
 
                 this.$figleaf.successToast({
                     title: this.$t('Success'),
-                    text: this.$t(this.form.id ? 'updated_name' : 'added_name', { name: mt.name })
+                    text: this.$t(this.form.id ? 'updated_name' : 'added_name', { name: data.name })
                 });
 
                 this.showDialog(false);
@@ -260,7 +264,7 @@ export default {
             this.loading = true;
 
             try {
-                await this.$api.masterTypes.ordinals({
+                await this.$api.masterType.ordinals({
                     ordinals: this.types.map(
                         (obj) => {
                             return { id: obj.id, ordinal: obj.ordinal };

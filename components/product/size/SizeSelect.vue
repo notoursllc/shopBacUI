@@ -51,13 +51,13 @@ export default {
         },
 
         async createOptions() {
-            const types = await this.$api.masterTypes.all({
+            const { data } = await this.$api.masterType.all({
                 where: ['object', '=', 'product_size_type'],
                 sortBy: 'ordinal',
                 sortDesc: false
             });
 
-            this.selectOptions = types.map(obj => {
+            this.selectOptions = data.map(obj => {
                 return {
                     label: obj.name,
                     value: obj.value,

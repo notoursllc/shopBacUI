@@ -141,11 +141,12 @@ export default {
                 return;
             }
 
-            this.loading = true;
             let tableData;
 
             try {
-                tableData = await this.$api.productDataTables.get(id);
+                this.loading = true;
+                const { data } = await this.$api.product.dataTable.get(id);
+                tableData = data;
 
                 // if(!tableData) {
                 //     throw new Error(this.$t('Data Table not found'));
@@ -164,7 +165,8 @@ export default {
 
         async fetchAllDataTables() {
             try {
-                this.allDataTables = await this.$api.productDataTables.all();
+                const { data } = await this.$api.product.dataTable.all();
+                this.allDataTables = data;
             }
             catch(e) {
                 this.$figleaf.errorToast({

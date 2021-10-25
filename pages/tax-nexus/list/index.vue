@@ -40,7 +40,7 @@ export default {
     methods: {
         async fetchList(paramsObj) {
             try {
-                const { data, pagination } = await this.$api.taxNexus.list({
+                const { data, pagination } = await this.$api.nexus.list({
                     ...paramsObj
                 });
 
@@ -74,7 +74,7 @@ export default {
             }
 
             try {
-                const response = await this.$api.taxNexus.delete(nexus.id);
+                const response = await this.$api.nexus.delete(nexus.id);
 
                 if(!response) {
                     throw new Error(this.$t('Item not found'));

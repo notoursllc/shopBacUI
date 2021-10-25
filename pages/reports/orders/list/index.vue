@@ -1,6 +1,7 @@
 <script>
 import {
     FigTableSimple,
+    FigTr,
     FigTh,
     FigTd,
     FigTrNoResults,
@@ -14,6 +15,7 @@ import {
 export default {
     components: {
         FigTableSimple,
+        FigTr,
         FigTh,
         FigTd,
         FigTrNoResults,
@@ -104,83 +106,84 @@ export default {
                 @pageNumber="onPageNumberChange" />
         </div>
 
-        <fig-table-simple
-            striped
-            hover
-            @sort="sortChanged"
-            :cell-padding="1">
-            <template slot="head">
-                <tr>
-                    <fig-th sortable prop="closed_at">{{ $t('Created') }}</fig-th>
-                    <fig-th right>{{ $t('Subtotal') }}</fig-th>
-                    <fig-th right>{{ $t('Shipping') }}</fig-th>
-                    <fig-th right>{{ $t('Tax') }}</fig-th>
-                    <fig-th right>{{ $t('Grand total') }}</fig-th>
-                    <fig-th right>{{ $t('# items') }}</fig-th>
-                    <fig-th>{{ $t('Shipping address') }}</fig-th>
-                    <fig-th sortable prop="shipped_at">{{ $t('Shipped at') }}</fig-th>
-                </tr>
-            </template>
+        <div class="text-sm">
+            <fig-table-simple
+                striped
+                hover
+                @sort="sortChanged"
+                :cell-padding="1">
+                <template slot="head">
+                    <fig-tr>
+                        <fig-th right>{{ $t('Grand total') }}</fig-th>
+                        <fig-th right>{{ $t('Subtotal') }}</fig-th>
+                        <fig-th right>{{ $t('Shipping') }}</fig-th>
+                        <fig-th right>{{ $t('Tax') }}</fig-th>
+                        <fig-th right>{{ $t('# items') }}</fig-th>
+                        <fig-th>{{ $t('Shipping address') }}</fig-th>
+                        <fig-th sortable prop="shipped_at">{{ $t('Shipped at') }}</fig-th>
+                        <fig-th sortable prop="closed_at">{{ $t('Created') }}</fig-th>
+                    </fig-tr>
+                </template>
 
-            <tr v-for="(cart, idx) in carts" :key="idx">
-                <!-- title -->
-                <fig-td>
-                    <nuxt-link
-                        :to="{ name: 'reports-orders-id', params: { id: cart.id }}"
-                        tag="a">{{ cart.closed_at | format8601 }}</nuxt-link>
+                <fig-tr v-for="(cart, idx) in carts" :key="idx">
+                    <fig-td class="text-right">
+                        <nuxt-link
+                            :to="{ name: 'reports-orders-id', params: { id: cart.id }}"
+                            tag="a"><fig-money :cents="cart.grand_total" /></nuxt-link>
+                        <!-- <fig-operations-dropdown
+                            :show-view="false"
+                            @edit="goToProductUpsert(prod.id)"
+                            @delete="onProductDelete(prod)"
+                            class="ml-1" /> -->
+                    </fig-td>
 
-                    <!-- <fig-operations-dropdown
-                        :show-view="false"
-                        @edit="goToProductUpsert(prod.id)"
-                        @delete="onProductDelete(prod)"
-                        class="ml-1" /> -->
-                </fig-td>
+                    <fig-td class="text-right">
+                        <fig-money :cents="cart.sub_total" />
+                    </fig-td>
 
-                <fig-td class="text-right">
-                    <fig-money :cents="cart.sub_total" />
-                </fig-td>
+                    <fig-td class="text-right">
+                        <fig-money :cents="cart.shipping_total" />
+                    </fig-td>
 
-                <fig-td class="text-right">
-                    <fig-money :cents="cart.shipping_total" />
-                </fig-td>
+                    <fig-td class="text-right">
+                        <fig-money :cents="cart.sales_tax" />
+                    </fig-td>
 
-                <fig-td class="text-right">
-                    <fig-money :cents="cart.sales_tax" />
-                </fig-td>
+                    <fig-td class="text-right">
+                        {{ $n(cart.num_items) }}
+                    </fig-td>
 
-                <fig-td class="text-right">
-                    <fig-money :cents="cart.grand_total" />
-                </fig-td>
+                    <fig-td>
+                        <fig-address
+                            :first-name="cart.shipping_firstName"
+                            :last-name="cart.shipping_lastName"
+                            :company="cart.shipping_company"
+                            :street-address="cart.shipping_streetAddress"
+                            :extended-address="cart.shipping_extendedAddress"
+                            :city="cart.shipping_city"
+                            :state="cart.shipping_state"
+                            :zip="cart.shipping_postalCode"
+                            :country-code="cart.shipping_countryCodeAlpha2" />
+                    </fig-td>
 
-                <fig-td class="text-right">
-                    {{ $n(cart.num_items) }}
-                </fig-td>
+                    <!-- shipped at -->
+                    <fig-td>
+                        <template v-if="cart.shipped_at">{{ cart.shipped_at | format8601 }}</template>
+                        <template v-else>
+                            <fig-tag
+                                variant="warning"
+                                size="sm">{{ $t('not shipped') }}</fig-tag>
+                        </template>
+                    </fig-td>
 
-                <fig-td>
-                    <fig-address
-                        :first-name="cart.shipping_firstName"
-                        :last-name="cart.shipping_lastName"
-                        :company="cart.shipping_company"
-                        :street-address="cart.shipping_streetAddress"
-                        :extended-address="cart.shipping_extendedAddress"
-                        :city="cart.shipping_city"
-                        :state="cart.shipping_state"
-                        :zip="cart.shipping_postalCode"
-                        :country-code="cart.shipping_countryCodeAlpha2" />
-                </fig-td>
+                    <!-- Created -->
+                    <fig-td>
+                        {{ cart.closed_at | format8601 }}
+                    </fig-td>
+                </fig-tr>
 
-                <!-- shipped at -->
-                <fig-td>
-                    <template v-if="cart.shipped_at">{{ cart.shipped_at | format8601 }}</template>
-                    <template v-else>
-                        <fig-tag
-                            variant="warning"
-                            size="sm">{{ $t('not shipped') }}</fig-tag>
-                    </template>
-                </fig-td>
-            </tr>
-
-            <fig-tr-no-results v-if="!carts.length" :colspan="8" />
-        </fig-table-simple>
+                <fig-tr-no-results v-if="!carts.length" :colspan="8" />
+            </fig-table-simple>
+        </div>
     </div>
 </template>

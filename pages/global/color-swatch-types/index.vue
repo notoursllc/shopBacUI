@@ -37,7 +37,7 @@ export default {
             this.loading = true;
 
             try {
-                const { data } = await this.$api.productColorSwatches.list(paramsObj);
+                const { data } = await this.$api.product.colorSwatch.list(paramsObj);
                 this.swatches = data;
             }
             catch(e) {
@@ -68,9 +68,9 @@ export default {
             }
 
             try {
-                const response = await this.$api.productColorSwatches.delete(data.id);
+                const response = await this.$api.product.colorSwatch.delete(data.id);
 
-                if(!response) {
+                if(!response.data) {
                     throw new Error(this.$t('Item not found'));
                 }
 

@@ -43,9 +43,9 @@ export default {
         },
 
         async createOptions() {
-            const dataTables = await this.$api.productDataTables.all();
+            const { data } = await this.$api.product.dataTable.all();
 
-            this.selectOptions = dataTables.map(obj => {
+            this.selectOptions = data.map(obj => {
                 return {
                     label: obj.name,
                     value: obj.id

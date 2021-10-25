@@ -46,7 +46,8 @@ export default {
     methods: {
         async fetchProducts(paramsObj) {
             try {
-                this.products = await this.$api.products.list(paramsObj);
+                const { data } = await this.$api.product.list(paramsObj);
+                this.products = data;
             }
             catch(e) {
                 this.$figleaf.errorToast({
@@ -57,11 +58,11 @@ export default {
         },
 
         async fetchMasterTypes() {
-            const masterTypes = await this.$api.masterTypes.all();
+            const { data } = await this.$api.masterType.all();
             const groupedTypes = {};
 
-            if(Array.isArray(masterTypes)) {
-                masterTypes.forEach((obj) => {
+            if(Array.isArray(data)) {
+                data.forEach((obj) => {
                     if(!groupedTypes.hasOwnProperty(obj.object)) {
                         groupedTypes[obj.object] = [];
                     }
@@ -104,7 +105,7 @@ export default {
             }
 
             try {
-                await this.$api.products.delete(product.id);
+                await this.$api.product.delete(product.id);
 
                 this.$figleaf.successToast({
                     title: this.$t('Success'),

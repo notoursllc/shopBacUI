@@ -77,10 +77,10 @@ export default {
         },
 
         async fetchAllSwatches() {
-            const all = await this.$api.productColorSwatches.all();
+            const { data } = await this.$api.product.colorSwatch.all();
 
-            if(Array.isArray(all)) {
-                this.allSwatchHexValues = all.map(obj => obj.hex);
+            if(Array.isArray(data)) {
+                this.allSwatchHexValues = data.map(obj => obj.hex);
             }
         },
 
@@ -108,12 +108,12 @@ export default {
         async onSaveSwatchToPreDefined(index) {
             try {
                 const data = this.selectedColors[index];
-                const response = await this.$api.productColorSwatches.upsert({
+                const response = await this.$api.product.colorSwatch.upsert({
                     hex: data.swatch,
                     label: data.label
                 });
 
-                if(!response) {
+                if(!response.data) {
                     throw new Error(this.$t('Error adding swatch'));
                 }
 

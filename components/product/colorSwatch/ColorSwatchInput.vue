@@ -63,7 +63,8 @@ export default {
             this.loading = true;
 
             try {
-                this.allSwatches = await this.$api.productColorSwatches.all();
+                const { data } = await this.$api.product.colorSwatch.all();
+                this.allSwatches = data;
             }
             catch(e) {
                 this.$figleaf.errorToast({

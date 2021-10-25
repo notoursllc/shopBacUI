@@ -214,7 +214,7 @@ export default {
             this.loading = true;
 
             try {
-                const data = await this.$api.productDataTables.get(id);
+                const { data } = await this.$api.product.dataTable.get(id);
 
                 if(!data) {
                     throw new Error(this.$t('Data Table not found'));
@@ -234,11 +234,11 @@ export default {
 
         async setCanDoImport() {
             try {
-                const results = await this.$api.productDataTables.list({
+                const { data } = await this.$api.product.dataTable.list({
                     limit: 1
                 });
 
-                this.canDoImport = results.length;
+                this.canDoImport = data.length;
             }
             catch(e) {
                 this.$figleaf.errorToast({

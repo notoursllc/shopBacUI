@@ -136,7 +136,7 @@ export default {
 
                 // Only delete the variants that are persisted in the DB (which have an id)
                 if(variantToDelete.id) {
-                    await this.$api.products.variants.delete(variantToDelete.id);
+                    await this.$api.product.variant.delete(variantToDelete.id);
                 }
 
                 this.variants.splice(index, 1);

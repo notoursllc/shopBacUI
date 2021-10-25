@@ -116,7 +116,8 @@ export default {
             this.loading = true;
 
             try {
-                this.packageTypes = await this.$api.packageTypes.list(paramsObj);
+                const { data } = await this.$api.packageType.list(paramsObj);
+                this.packageTypes = data;
             }
             catch(e) {
                 this.$figleaf.errorToast({
@@ -148,9 +149,9 @@ export default {
             this.loading = true;
 
             try {
-                const response = await this.$api.packageTypes.delete(data.id);
+                const response = await this.$api.packageType.delete(data.id);
 
-                if(!response) {
+                if(!response.data) {
                     throw new Error(this.$t('Item not found'));
                 }
 
@@ -177,7 +178,8 @@ export default {
             this.form.id = id || null;
 
             if(id) {
-                this.form = await this.$api.packageTypes.get(id);
+                const { data } = await this.$api.packageType.get(id);
+                this.form = data;
             }
 
             this.showDialog();
@@ -196,15 +198,15 @@ export default {
             this.loadingForm = true;
 
             try {
-                const obj = await this.$api.packageTypes.upsert(this.form);
+                const { data } = await this.$api.packageType.upsert(this.form);
 
-                if(!obj) {
+                if(!data) {
                     throw new Error(this.$t('Error updating Package Type'));
                 }
 
                 this.$figleaf.successToast({
                     title: this.$t('Success'),
-                    text: this.$t(this.form.id ? 'updated_name' : 'added_name', { name: obj.label })
+                    text: this.$t(this.form.id ? 'updated_name' : 'added_name', { name: data.label })
                 });
 
                 this.showDialog(false);
@@ -247,7 +249,7 @@ export default {
             this.loading = true;
 
             try {
-                await this.$api.packageTypes.ordinals({
+                await this.$api.packageType.ordinals({
                     ordinals: this.packageTypes.map(
                         (obj) => {
                             return { id: obj.id, ordinal: obj.ordinal };

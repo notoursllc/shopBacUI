@@ -40,7 +40,7 @@ export default {
         async getMessages() {
             try {
                 // TODOs
-                const data = await this.$api.productAccentMessages.all({
+                const { data } = await this.$api.product.accentMessage.all({
                     sortBy: 'message',
                     sortDesc: false
                 });
