@@ -259,7 +259,6 @@ module.exports = {
     "n_in_stock_for_n_variants": "{numInventory} in stock for {numVariants} variant | {numInventory} in stock for {numVariants} variants",
     "n_pictures": "{num} picture | {num} pictures",
     "Name": "Name",
-    "New item": "New item",
     "New message": "New message",
     "New option": "New option",
     "Nexus: {name}": "Nexus: {name}",

@@ -2,9 +2,7 @@
 import draggable from 'vuedraggable';
 import isObject from 'lodash.isobject';
 import slugify from 'slugify';
-
 import BooleanTag from '@/components/BooleanTag';
-import MetaDataBuilder from '@/components/MetaDataBuilder';
 
 import {
     FigButton,
@@ -19,14 +17,14 @@ import {
     FigOverlay,
     FigOperationsDropdown,
     FigLabelValueGroup,
-    FigLabelValue
+    FigLabelValue,
+    FigMetaDataBuilder
 } from '@notoursllc/figleaf';
 
 export default {
     components: {
         draggable,
         BooleanTag,
-        MetaDataBuilder,
         FigButton,
         FigButtonFab,
         FigFormCheckbox,
@@ -39,7 +37,8 @@ export default {
         FigOverlay,
         FigOperationsDropdown,
         FigLabelValueGroup,
-        FigLabelValue
+        FigLabelValue,
+        FigMetaDataBuilder
     },
 
     props: {
@@ -407,7 +406,7 @@ export default {
                     <template v-slot:label>{{ $t('Meta data') }}:</template>
                     <fig-form-checkbox v-model="formHasMetaData">{{ $t('This item has additional meta data') }}</fig-form-checkbox>
                     <div class="mt-3" v-show="formHasMetaData">
-                        <meta-data-builder v-model="form.metadata" />
+                        <fig-meta-data-builder v-model="form.metadata" />
                     </div>
                 </fig-label-value>
 

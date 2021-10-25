@@ -5,7 +5,6 @@ import product_mixin from '@/mixins/product_mixin';
 import shipping_mixin from '@/mixins/shipping_mixin';
 
 import MasterTypeSelect from '@/components/MasterTypeSelect';
-import MetaDataBuilder from '@/components/MetaDataBuilder';
 import SeoPreview from '@/components/product/SeoPreview';
 import VariantTable from '@/components/product/variant/VariantTable';
 
@@ -20,7 +19,8 @@ import {
     FigFormInputEndcapper,
     FigOverlay,
     FigTextCard,
-    FigIconLabel
+    FigIconLabel,
+    FigMetaDataBuilder
 } from '@notoursllc/figleaf';
 
 
@@ -35,7 +35,6 @@ const urlValidator = (value) => {
 export default Vue.extend({
     components: {
         MasterTypeSelect,
-        MetaDataBuilder,
         SeoPreview,
         VariantTable,
         FigFormCheckbox,
@@ -48,7 +47,8 @@ export default Vue.extend({
         FigFormInputEndcapper,
         FigOverlay,
         FigTextCard,
-        FigIconLabel
+        FigIconLabel,
+        FigMetaDataBuilder
     },
 
     mixins: [
@@ -549,7 +549,7 @@ export default Vue.extend({
                                 v-model="productHasMetaData">{{ $t('Metadata_description') }}</fig-form-checkbox>
                         </div>
 
-                        <meta-data-builder
+                        <fig-meta-data-builder
                             v-if="productHasMetaData"
                             v-model="product.metadata" />
                     </div>

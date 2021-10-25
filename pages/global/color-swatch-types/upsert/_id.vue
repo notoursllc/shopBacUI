@@ -1,6 +1,5 @@
 <script>
 import { required } from 'vuelidate/lib/validators';
-import MetaDataBuilder from '@/components/MetaDataBuilder';
 
 import {
     FigButton,
@@ -8,7 +7,8 @@ import {
     FigFormTextarea,
     FigFormGroup,
     FigCol,
-    FigRow
+    FigRow,
+    FigMetaDataBuilder
 } from '@notoursllc/figleaf';
 
 export default {
@@ -19,7 +19,7 @@ export default {
         FigFormGroup,
         FigCol,
         FigRow,
-        MetaDataBuilder
+        FigMetaDataBuilder
     },
 
     data() {
@@ -172,7 +172,7 @@ export default {
             <fig-col>
                 <fig-form-group>
                     <label slot="label">{{ $t('Meta data') }}</label>
-                    <meta-data-builder v-model="form.metadata" />
+                    <fig-meta-data-builder v-model="form.metadata" />
                 </fig-form-group>
             </fig-col>
         </fig-row>
