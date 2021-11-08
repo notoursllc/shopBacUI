@@ -33,7 +33,7 @@ export default {
             this.loading = true;
 
             try {
-                await this.$api.tenant.members.login(this.userInfo);
+                await this.$api.tenant.member.login(this.userInfo);
 
                 this.$store.dispatch('ui/login');
 

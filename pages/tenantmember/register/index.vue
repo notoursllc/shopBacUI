@@ -45,7 +45,7 @@ export default {
 
     methods: {
         async onSubmit() {
-            const response = await this.$api.tenant.members.add(this.userData);
+            const response = await this.$api.tenant.member.add(this.userData);
         },
 
         delayTouch($v) {
