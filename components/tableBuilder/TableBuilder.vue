@@ -235,7 +235,8 @@ export default {
         async setCanDoImport() {
             try {
                 const { data } = await this.$api.product.dataTable.list({
-                    limit: 1
+                    _page: 1,
+                    _pageSize: 1
                 });
 
                 this.canDoImport = data.length;

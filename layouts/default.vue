@@ -7,14 +7,12 @@ import NavigationCollapse from '@/components/navigationList/NavigationCollapse.v
 import {
     FigIconSprite,
     FigVictoryIcon,
-    FigButton
 } from '@notoursllc/figleaf';
 
 export default {
     components: {
         FigIconSprite,
         FigVictoryIcon,
-        FigButton,
         NavigationList,
         NavigationItem,
         NavigationCollapse
@@ -72,7 +70,7 @@ export default {
 
         async logout() {
             try {
-                await this.$api.tenant.members.logout();
+                await this.$api.tenant.member.logout();
 
                 this.$store.dispatch('ui/logout');
 
@@ -93,7 +91,7 @@ export default {
 
 
 <template>
-    <div class="flex min-h-screen relative">
+    <div class="flex min-h-screen relative text-sm">
         <fig-icon-sprite />
         <fig-toaster />
 
@@ -101,96 +99,106 @@ export default {
             class="layout-sidenav"
             :class="{'layout-sidenav-opened': sidebarOpened, 'layout-sidenav-closed': !sidebarOpened}">
 
-            <div class="layout-sidenav-toggle" @click="$store.dispatch('ui/toggleSidebar')">
-                <button>
-                    <fig-icon
-                        :icon="sidebarOpened ? 'chevron-left': 'chevron-right'"
-                        :width="18"
-                        :height="18"
-                        :stroke-width="1.5"
-                        stroke="#000" />
-                </button>
-            </div>
+            <div class="layout-sidenav-toggle" @click="$store.dispatch('ui/toggleSidebar')"></div>
 
-            <div class="layout-sidenav-header">
-                <!-- logo -->
-                <nuxt-link
-                    :to="{ name: 'product' }"
-                    tag="nav">
-                    <fig-victory-icon :width="44" :height="30" fill="#fff" />
-                </nuxt-link>
-            </div>
+            <div class="layout-sidenav-content">
+                <div class="layout-sidenav-header">
+                    <!-- logo -->
+                    <nuxt-link
+                        :to="{ name: 'product' }"
+                        tag="nav">
+                        <fig-victory-icon :width="50" :height="35" fill="#4f46e4" />
+                    </nuxt-link>
+                </div>
 
-            <div class="px-2">
-                <navigation-list>
-                    <navigation-item :route="{ name: 'product' }">
-                        <template v-slot:icon>
-                            <fig-icon
-                                icon="triangle-square-circle"
-                                :width="20"
-                                :height="20"
-                                stroke="#fff"
-                                :stroke-width="1"
-                                class="mr-1" />
-                        </template>
-                        {{ $t('Products') }}
-                    </navigation-item>
+                <div class="flex-grow px-2">
+                    <navigation-list text-color="#484747">
+                        <navigation-item :route="{ name: 'product' }">
+                            <!-- <template v-slot:icon>
+                                <fig-icon
+                                    icon="triangle-square-circle"
+                                    :width="22"
+                                    :height="22"
+                                    stroke="#444242"
+                                    :stroke-width="1.5"
+                                    class="mr-1" />
+                            </template> -->
+                            <span class="nav-item-main">{{ $t('Products') }}</span>
+                        </navigation-item>
 
-                    <navigation-collapse :fuzzy-route-match="['reports-']">
-                        <template v-slot:icon>
-                            <fig-icon
-                                icon="chart-bar"
-                                :width="20"
-                                :height="20"
-                                stroke="#fff"
-                                :stroke-width="1"
-                                class="mr-1" />
-                        </template>
-                        <template v-slot:label>{{ $t('Reports') }}</template>
-                        <navigation-item :route="{ name: 'reports-orders-list' }">{{ $t('Orders') }}</navigation-item>
-                    </navigation-collapse>
+                        <navigation-collapse :fuzzy-route-match="['reports-']">
+                            <!-- <template v-slot:icon>
+                                <fig-icon
+                                    icon="chart-bar"
+                                    :width="22"
+                                    :height="22"
+                                    stroke="#444242"
+                                    :stroke-width="1.5"
+                                    class="mr-1" />
+                            </template> -->
+                            <template v-slot:label>
+                                <span class="nav-item-main">{{ $t('Reports') }}</span>
+                            </template>
+                            <navigation-item :route="{ name: 'reports-orders-list' }">{{ $t('Orders') }}</navigation-item>
+                        </navigation-collapse>
 
-                    <navigation-collapse :fuzzy-route-match="['global-']">
-                        <template v-slot:icon>
-                            <fig-icon
-                                icon="world"
-                                :width="20"
-                                :height="20"
-                                stroke="#fff"
-                                :stroke-width="1"
-                                class="mr-1" />
-                        </template>
-                        <template v-slot:label>{{ $t('Global settings') }}</template>
+                        <navigation-collapse :fuzzy-route-match="['global-']">
+                            <!-- <template v-slot:icon>
+                                <fig-icon
+                                    icon="world"
+                                    :width="22"
+                                    :height="22"
+                                    stroke="#444242"
+                                    :stroke-width="1.5"
+                                    class="mr-1" />
+                            </template> -->
+                            <template v-slot:label>
+                                <span class="nav-item-main">{{ $t('Global settings') }}</span>
+                            </template>
 
-                        <navigation-item :route="{ name: 'global-types' }">{{ $t('Types') }}</navigation-item>
-                        <navigation-item :route="{ name: 'global-sub-types' }">{{ $t('Sub-Types') }}</navigation-item>
-                        <navigation-item :route="{ name: 'global-sales-channel-types' }">{{ $t('Sales Channels') }}</navigation-item>
-                        <navigation-item :route="{ name: 'global-vendors' }">{{ $t('Vendors') }}</navigation-item>
-                        <navigation-item :route="{ name: 'global-collections' }">{{ $t('Collections') }}</navigation-item>
-                        <navigation-item :route="{ name: 'global-gender-types' }">{{ $t('Genders') }}</navigation-item>
-                        <navigation-item :route="{ name: 'global-basic-color-types' }">{{ $t('Basic colors') }}</navigation-item>
-                        <navigation-item :route="{ name: 'global-size-types' }">{{ $t('Sizes') }}</navigation-item>
-                        <navigation-item :route="{ name: 'global-feature-types' }">{{ $t('Product features') }}</navigation-item>
-                        <navigation-item :route="{ name: 'global-fit-types' }">{{ $t('Fits') }}</navigation-item>
-                        <navigation-item :route="{ name: 'global-sleeve-length-types' }">{{ $t('Sleeve length') }}</navigation-item>
-                        <navigation-item :route="{ name: 'global-accent-messages-list' }">{{ $t('Accent Messages') }}</navigation-item>
-                        <navigation-item :route="{ name: 'global-color-swatch-types' }">{{ $t('Color swatches') }}</navigation-item>
-                        <navigation-item :route="{ name: 'global-package-types' }">{{ $t('Package types') }}</navigation-item>
-                    </navigation-collapse>
+                            <navigation-item :route="{ name: 'global-types' }">{{ $t('Types') }}</navigation-item>
+                            <navigation-item :route="{ name: 'global-sub-types' }">{{ $t('Sub-Types') }}</navigation-item>
+                            <navigation-item :route="{ name: 'global-sales-channel-types' }">{{ $t('Sales Channels') }}</navigation-item>
+                            <navigation-item :route="{ name: 'global-vendors' }">{{ $t('Vendors') }}</navigation-item>
+                            <navigation-item :route="{ name: 'global-collections' }">{{ $t('Collections') }}</navigation-item>
+                            <navigation-item :route="{ name: 'global-gender-types' }">{{ $t('Genders') }}</navigation-item>
+                            <navigation-item :route="{ name: 'global-basic-color-types' }">{{ $t('Basic colors') }}</navigation-item>
+                            <navigation-item :route="{ name: 'global-size-types' }">{{ $t('Sizes') }}</navigation-item>
+                            <navigation-item :route="{ name: 'global-feature-types' }">{{ $t('Product features') }}</navigation-item>
+                            <navigation-item :route="{ name: 'global-fit-types' }">{{ $t('Fits') }}</navigation-item>
+                            <navigation-item :route="{ name: 'global-sleeve-length-types' }">{{ $t('Sleeve length') }}</navigation-item>
+                            <navigation-item :route="{ name: 'global-accent-messages-list' }">{{ $t('Accent Messages') }}</navigation-item>
+                            <navigation-item :route="{ name: 'global-color-swatch-types' }">{{ $t('Color swatches') }}</navigation-item>
+                            <navigation-item :route="{ name: 'global-package-types' }">{{ $t('Package types') }}</navigation-item>
+                        </navigation-collapse>
 
-                    <navigation-item :route="{ name: 'tax-nexus-list' }">
-                        <template v-slot:icon>
-                            <fig-icon
-                                icon="coin"
-                                :width="20"
-                                :height="20"
-                                stroke="#fff"
-                                :stroke-width="1"
-                                class="mr-1" />
-                        </template>
-                        {{ $t('Sales Tax Nexus') }}
-                    </navigation-item>
-                </navigation-list>
+                        <navigation-item :route="{ name: 'tax-nexus-list' }">
+                            <!-- <template v-slot:icon>
+                                <fig-icon
+                                    icon="coin"
+                                    :width="22"
+                                    :height="22"
+                                    stroke="#444242"
+                                    :stroke-width="1.5"
+                                    class="mr-1" />
+                            </template> -->
+                            <span class="nav-item-main">{{ $t('Sales Tax Nexus') }}</span>
+                        </navigation-item>
+                    </navigation-list>
+                </div>
+
+                <!-- sidenav footer -->
+                <div class="flex items-center p-2" :class="{'justify-center': !sidebarOpened, 'justify-end': sidebarOpened}">
+                    <button
+                        class="layout-sidenav-toggle-button"
+                        @click="$store.dispatch('ui/toggleSidebar')">
+                        <fig-icon
+                            :icon="sidebarOpened ? 'chevrons-left': 'chevrons-right'"
+                            :width="30"
+                            :height="30"
+                            :stroke-width="1.5" />
+                    </button>
+                </div>
             </div>
         </aside>
 
@@ -203,8 +211,8 @@ export default {
         <!-- main content -->
         <div class="main-content flex-1">
             <!-- header -->
-            <div class="flex items-center justify-between px-6 py-3 border-b border-gray-200 shadow-sm bg-white">
-                <div class="flex items-center font-bold">{{ pageTitle }}</div>
+            <header class="layout-header">
+                <div class="flex items-center font-semibold text-base">{{ pageTitle }}</div>
                 <div>
                     <nuxt-link
                         v-if="!isLoggedIn"
@@ -215,8 +223,7 @@ export default {
                         v-else
                         @click="logout">Logout</a>
                 </div>
-            </div>
-
+            </header>
 
             <div class="w-full">
                 <div class="md:p-6 sm:p-4">
@@ -230,8 +237,8 @@ export default {
 
 <style lang="postcss">
 .layout-sidenav {
-    @apply text-blue-100 w-48 inset-y-0 left-0 transform transition duration-200 ease-in-out z-10 relative;
-    background: #232b38;
+    @apply text-gray-700 w-48 inset-y-0 left-0 transform transition duration-200 ease-in-out z-10 relative border-r border-gray-300 flex-shrink-0;
+    background: #f3f4f6;
 }
 
 .layout-sidenav-toggle {
@@ -245,36 +252,21 @@ export default {
 .layout-sidenav-toggle:hover {
     @apply border-blue-400;
 }
-.layout-sidenav-toggle:hover > button {
-    @apply bg-blue-500 border-blue-500;
-}
-.layout-sidenav-toggle > button {
-    @apply cursor-pointer bg-white border border-gray-300 rounded-full absolute shadow-sm flex items-center justify-center focus:outline-none;
-    top: 58px;
-    right: -6px;
-    width: 26px;
-    height: 26px;
-    z-index: 4;
-    padding: 0;
-    transition: background-color .2s ease 0s;
-}
-.layout-sidenav-toggle > button svg {
-    /* left: -1px; */
-    position: relative;
-}
-.layout-sidenav-toggle:hover svg {
-    stroke: #fff;
-}
 
-.layout-sidenav-toggle-btn {
-    position: absolute;
-    top: 50px;
-    right: -10px;
+.layout-sidenav-toggle-button {
+    @apply rounded p-1;
+}
+.layout-sidenav-toggle-button:hover {
+    @apply bg-gray-200;
 }
 
 .layout-sidenav-header {
-    @apply flex justify-center items-center bg-purple-600 bg-opacity-40 mb-4 py-2;
+    @apply flex justify-center items-center bg-opacity-40 mb-4 py-2;
     height: 48px;
+}
+
+.layout-sidenav-content {
+    @apply flex flex-col h-full flex-grow;
 }
 
 .layout-sidenav-overlay {
@@ -292,5 +284,14 @@ export default {
     transform: translateX(-94%);
 }
 
+.layout-header {
+    @apply flex items-center justify-between px-6 py-3;
+}
 
+.navigation-item {
+    @apply text-xs;
+}
+.navigation-item .nav-item-main {
+    @apply font-semibold uppercase;
+}
 </style>

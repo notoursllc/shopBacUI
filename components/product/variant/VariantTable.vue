@@ -313,7 +313,7 @@ export default {
 
         <div class="pt-4">
             <fig-button
-                variant="primary"
+                variant="plain"
                 size="sm"
                 @click="addEmptyColor"
                 icon="plus">{{ $t('Add variant') }}</fig-button>

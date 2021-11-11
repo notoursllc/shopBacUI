@@ -51,10 +51,9 @@ export default {
         },
 
         async createOptions() {
-            const { data } = await this.$api.masterType.all({
-                where: ['object', '=', 'product_size_type'],
-                sortBy: 'ordinal',
-                sortDesc: false
+            const { data } = await this.$api.masterType.list({
+                object: 'product_size_type',
+                _sort: 'ordinal:asc'
             });
 
             this.selectOptions = data.map(obj => {

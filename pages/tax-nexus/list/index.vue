@@ -1,12 +1,15 @@
 <script>
+import NexusUpsertForm from '../../../components/nexus/NexusUpsertForm.vue';
+
 import {
     FigButtonFab,
     FigTableSimple,
     FigTh,
     FigTd,
     FigTrNoResults,
-    FigPaginationBar,
-    FigOperationsDropdown
+    FigPaginationWrapper,
+    FigOperationsDropdown,
+    FigModal
 } from '@notoursllc/figleaf';
 
 
@@ -17,39 +20,44 @@ export default {
         FigTh,
         FigTd,
         FigTrNoResults,
-        FigPaginationBar,
-        FigOperationsDropdown
+        FigPaginationWrapper,
+        FigOperationsDropdown,
+        FigModal,
+        NexusUpsertForm
     },
 
     data() {
         return {
             nexusList: [],
             pagination: {
-                pageNo: 1,
-                pageSize: 1,
-                totalResults: 0
+                _page: 1,
+                _pageSize: 100
+            },
+            table: {
+                _sort: 'countryCodeAlpha2:asc'
+            },
+            totalResults: 0,
+            form: {
+                nexusId: null
             }
         };
     },
 
     created() {
         this.$store.dispatch('ui/title', this.$t('Nexus'));
-        this.fetchList();
+        this.fetchData();
     },
 
     methods: {
-        async fetchList(paramsObj) {
+        async fetchData() {
             try {
                 const { data, pagination } = await this.$api.nexus.list({
-                    ...paramsObj
+                    ...this.pagination,
+                    ...this.table
                 });
 
-
-
                 this.nexusList = data;
-                // this.pagination.pageNo = pagination.page;
-                // this.pagination.pageSize = pagination.pageSize;
-                // this.pagination.totalResults = pagination.rowCount;
+                this.totalResults = pagination.rowCount;
             }
             catch(e) {
                 this.$figleaf.errorToast({
@@ -95,42 +103,32 @@ export default {
             }
         },
 
-        goToUpsert(id) {
-            this.$router.push({
-                name: 'tax-nexus-upsert-id',
-                params: { id }
-            });
+        onUpsert(id) {
+            this.form.nexusId = id;
+            this.showModal();
+        },
+
+        showModal(show) {
+            show === false ? this.$refs.nexus_upsert_modal.hide() : this.$refs.nexus_upsert_modal.show();
+        },
+
+        onPaginationChange(data) {
+            this.pagination = { ...data };
+            this.fetchData();
         },
 
         sortChanged(val) {
-            this.fetchList({
-                sortBy: val.by,
-                sortDesc: !val.isAsc,
-                pageSize: this.pagination.pageSize,
-                page: this.pagination.pageNo
-            });
+            this.table._sort = val;
+            this.fetchData();
         },
 
-        onPerPageChange(val) {
-            this.pagination.pageSize = val;
-            this.pagination.pageNo = 1;
-
-            this.fetchList({
-                pageSize: this.pagination.pageSize,
-                page: this.pagination.pageNo
-            });
+        onNexusFormSaved() {
+            this.fetchData();
+            this.showModal(false);
         },
 
         init() {
-            this.fetchList({
-                pageSize: this.pagination.pageSize,
-                page: this.pagination.pageNo
-            });
-        },
-
-        onPageNumberChange(val) {
-            this.pagination.pageNo = val;
-            this.init();
+            this.fetchData();
         }
     }
 };
@@ -139,54 +137,65 @@ export default {
 
 <template>
     <div>
-        <fig-button-fab icon="plus" @click="goToUpsert()" />
+        <fig-button-fab icon="plus" @click="onUpsert()" />
 
-        <div>
-            <fig-pagination-bar
-                :current-page="pagination.pageNo"
-                :per-page="pagination.pageSize"
-                :total-records="pagination.totalResults"
-                @perPage="onPerPageChange"
-                @pageNumber="onPageNumberChange" />
-        </div>
+        <fig-pagination-wrapper
+            bottom
+            :total-records="totalResults"
+            @perPage="onPaginationChange"
+            @pageNumber="onPaginationChange">
+            <fig-table-simple
+                striped
+                hover
+                @sort="sortChanged">
+                <template slot="head">
+                    <tr>
+                        <fig-th sortable prop="countryCodeAlpha2">{{ $t('Country code') }}</fig-th>
+                        <fig-th sortable prop="state">{{ $t('State/Province/Region') }}</fig-th>
+                        <fig-th sortable prop="tax_rate">{{ $t('Tax rate') }} (%)</fig-th>
+                    </tr>
+                </template>
 
-        <fig-table-simple
-            striped
-            hover
-            @sort="sortChanged"
-            :cell-padding="1">
-            <template slot="head">
-                <tr>
-                    <fig-th sortable prop="countryCodeAlpha2">{{ $t('Country code') }}</fig-th>
-                    <fig-th sortable prop="state">{{ $t('State/Province/Region') }}</fig-th>
-                    <fig-th sortable prop="tax_rate">{{ $t('Tax rate') }} (%)</fig-th>
+                <tr v-for="(nexus, idx) in nexusList" :key="idx">
+                    <!-- country code -->
+                    <fig-td>
+                        {{ nexus.countryCodeAlpha2 }}
+
+                        <fig-operations-dropdown
+                            :show-view="false"
+                            @edit="onUpsert(nexus.id)"
+                            @delete="onDelete(nexus)"
+                            class="ml-1" />
+                    </fig-td>
+
+                    <!-- state -->
+                    <fig-td>
+                        {{ nexus.state }}
+                    </fig-td>
+
+                    <!-- tax rate -->
+                    <fig-td>
+                        {{ nexus.tax_rate ? parseFloat(nexus.tax_rate * 100) : 0 }}
+                    </fig-td>
                 </tr>
+
+                <fig-tr-no-results v-if="!nexusList.length" :colspan="3" />
+            </fig-table-simple>
+        </fig-pagination-wrapper>
+
+
+        <!-- add/upsert modal -->
+        <fig-modal
+            ref="nexus_upsert_modal"
+            size="md">
+
+            <template v-slot:header>
+                {{ form.nexusId ? $t('Edit Nexus') : $t('Add Nexus') }}
             </template>
 
-            <tr v-for="(nexus, idx) in nexusList" :key="idx">
-                <!-- country code -->
-                <fig-td>
-                    {{ nexus.countryCodeAlpha2 }}
-
-                    <fig-operations-dropdown
-                        :show-view="false"
-                        @edit="goToUpsert(nexus.id)"
-                        @delete="onDelete(nexus)"
-                        class="ml-1" />
-                </fig-td>
-
-                <!-- state -->
-                <fig-td>
-                    {{ nexus.state }}
-                </fig-td>
-
-                <!-- tax rate -->
-                <fig-td>
-                    {{ nexus.tax_rate ? parseFloat(nexus.tax_rate * 100) : 0 }}
-                </fig-td>
-            </tr>
-
-            <fig-tr-no-results v-if="!nexusList.length" :colspan="3" />
-        </fig-table-simple>
+            <nexus-upsert-form
+                :id="form.nexusId"
+                @saved="onNexusFormSaved" />
+        </fig-modal>
     </div>
 </template>

@@ -5,7 +5,9 @@ import {
     FigTableSimple,
     FigTh,
     FigTd,
-    FigTrNoResults
+    FigTrNoResults,
+    FigOverlay,
+    FigPaginationWrapper
 } from '@notoursllc/figleaf';
 
 export default {
@@ -15,12 +17,23 @@ export default {
         FigTableSimple,
         FigTh,
         FigTd,
-        FigTrNoResults
+        FigTrNoResults,
+        FigOverlay,
+        FigPaginationWrapper
     },
 
     data() {
         return {
-            dataTables: []
+            loading: false,
+            dataTables: [],
+            pagination: {
+                _page: 1,
+                _pageSize: 100
+            },
+            table: {
+                _sort: 'name:asc'
+            },
+            totalResults: 0
         };
     },
 
@@ -29,11 +42,15 @@ export default {
     },
 
     methods: {
-        // will need to add pagination params in the future
-        async fetchData(paramsObj) {
+        async fetchData() {
             try {
-                const { data } = await this.$api.product.dataTable.list(paramsObj);
+                const { data, pagination } = await this.$api.product.dataTable.list({
+                    ...this.pagination,
+                    ...this.table
+                });
+
                 this.dataTables = data;
+                this.totalResults = pagination.rowCount;
             }
             catch(e) {
                 this.$figleaf.errorToast({
@@ -44,10 +61,13 @@ export default {
         },
 
         sortChanged(val) {
-            this.fetchData({
-                sortBy: val.by,
-                sortDesc: !val.isAsc
-            });
+            this.table._sort = val;
+            this.fetchData();
+        },
+
+        onPaginationChange(data) {
+            this.pagination = { ...data };
+            this.fetchData();
         },
 
         async onDeleteClick(data) {
@@ -97,35 +117,45 @@ export default {
     <div>
         <fig-button-fab icon="plus" @click="onUpsertClick()" />
 
-        <fig-table-simple
-            striped
-            hover
-            @sort="sortChanged">
-            <template slot="head">
-                <tr>
-                    <fig-th sortable prop="name">{{ $t('Name') }}</fig-th>
-                    <fig-th sortable prop="updated_at">{{ $t('Updated') }}</fig-th>
-                </tr>
-            </template>
+        <fig-pagination-wrapper
+            bottom
+            :total-records="totalResults"
+            @perPage="onPaginationChange"
+            @pageNumber="onPaginationChange">
 
-            <tr v-for="(obj, idx) in dataTables" :key="idx">
-                <!-- name -->
-                <fig-td>
-                    {{ obj.name }}
-                    <fig-operations-dropdown
-                        :show-view="false"
-                        @edit="onUpsertClick(obj)"
-                        @delete="onDeleteClick(obj)"
-                        class="ml-1" />
-                </fig-td>
+            <fig-overlay :show="loading">
+                <fig-table-simple
+                    striped
+                    hover
+                    @sort="sortChanged">
+                    <template slot="head">
+                        <tr>
+                            <fig-th sortable prop="name">{{ $t('Name') }}</fig-th>
+                            <fig-th sortable prop="updated_at">{{ $t('Updated') }}</fig-th>
+                        </tr>
+                    </template>
 
-                <!-- updated -->
-                <fig-td>
-                    {{ obj.updated_at | format8601 }}
-                </fig-td>
-            </tr>
+                    <tr v-for="(obj, idx) in dataTables" :key="idx">
+                        <!-- name -->
+                        <fig-td>
+                            {{ obj.name }}
+                            <fig-operations-dropdown
+                                :show-view="false"
+                                @edit="onUpsertClick(obj)"
+                                @delete="onDeleteClick(obj)"
+                                class="ml-1" />
+                        </fig-td>
 
-            <fig-tr-no-results v-if="!dataTables.length" :colspan="2" />
-        </fig-table-simple>
+                        <!-- updated -->
+                        <fig-td>
+                            {{ obj.updated_at | format8601 }}
+                        </fig-td>
+                    </tr>
+
+                    <fig-tr-no-results v-if="!dataTables.length" :colspan="2" />
+                </fig-table-simple>
+            </fig-overlay>
+
+        </fig-pagination-wrapper>
     </div>
 </template>

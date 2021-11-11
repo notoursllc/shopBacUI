@@ -80,7 +80,6 @@ export default {
                     icon="chevron-right"
                     :width="16"
                     :height="16"
-                    stroke="#fff"
                     :stroke-width="1.5" />
             </i>
         </label>

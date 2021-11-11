@@ -77,7 +77,9 @@ export default {
         },
 
         async fetchAllSwatches() {
-            const { data } = await this.$api.product.colorSwatch.all();
+            const { data } = await this.$api.product.colorSwatch.list({
+                _sort: 'label:asc'
+            });
 
             if(Array.isArray(data)) {
                 this.allSwatchHexValues = data.map(obj => obj.hex);

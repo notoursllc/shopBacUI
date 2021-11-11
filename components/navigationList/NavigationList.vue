@@ -87,7 +87,7 @@ export default {
 }
 
 .navigation-item > label {
-    @apply relative block whitespace-nowrap cursor-pointer box-border text-sm px-2;
+    @apply relative block whitespace-nowrap cursor-pointer box-border px-2;
     height: 34px;
     line-height: 34px;
     transition: border-color .3s, background-color .3s, color .3s;
@@ -111,11 +111,11 @@ export default {
 }
 
 .navigation-item > .navigation-list {
-    @apply ml-5;
+    @apply ml-1;
 }
 
 .navigation-item.nuxt-link-active,
 .navigation-item.nuxt-link-exact-active {
-    @apply bg-white bg-transparent bg-opacity-20;
+    @apply bg-gray-400 bg-transparent bg-opacity-20;
 }
 </style>

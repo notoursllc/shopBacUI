@@ -18,7 +18,9 @@ import {
     FigOperationsDropdown,
     FigLabelValueGroup,
     FigLabelValue,
-    FigMetaDataBuilder
+    FigMetaDataBuilder,
+    FigTrNoResults,
+    FigPaginationWrapper
 } from '@notoursllc/figleaf';
 
 export default {
@@ -38,7 +40,9 @@ export default {
         FigOperationsDropdown,
         FigLabelValueGroup,
         FigLabelValue,
-        FigMetaDataBuilder
+        FigMetaDataBuilder,
+        FigTrNoResults,
+        FigPaginationWrapper
     },
 
     props: {
@@ -60,7 +64,15 @@ export default {
             formHasMetaData: false,
             types: [],
             updatingSortOrder: false,
-            loading: false
+            loading: false,
+            pagination: {
+                _page: 1,
+                _pageSize: 100
+            },
+            table: {
+                _sort: 'ordinal:asc'
+            },
+            totalResults: 0
         };
     },
 
@@ -89,26 +101,18 @@ export default {
             return this.$store.dispatch('MASTER_TYPES', { object: this.object, value: this.types});
         },
 
-        async fetchTypes(paramsObj) {
+        async fetchTypes() {
             this.loading = true;
 
-            if(!isObject(paramsObj)) {
-                paramsObj = {};
-            }
-
-            paramsObj.sortBy = paramsObj.sortBy || 'ordinal';
-            paramsObj.sortDesc = paramsObj.hasOwnProperty('sortDesc') ? paramsObj.sortDesc : false;
-
             try {
-                const { data } = await this.$api.masterType.list({
-                    where: ['object', '=', this.object],
-                    // whereRaw: ['sub_type & ? > 0', [productTypeId]],
-                    // andWhere: [
-                    //     ['total_inventory_count', '>', 0]
-                    // ],
-                    ...paramsObj
+                const { data, pagination } = await this.$api.masterType.list({
+                    object: this.object,
+                    ...this.pagination,
+                    ...this.table
                 });
+
                 this.types = data;
+                this.totalResults = pagination.rowCount;
             }
             catch(e) {
                 this.$figleaf.errorToast({
@@ -120,11 +124,14 @@ export default {
             this.loading = false;
         },
 
+        onPaginationChange(data) {
+            this.pagination = { ...data };
+            this.fetchTypes();
+        },
+
         sortChanged(val) {
-            this.fetchTypes({
-                sortBy: val.by,
-                sortDesc: !val.isAsc
-            });
+            this.table._sort = val;
+            this.fetchTypes();
         },
 
         async onDeleteClick(data) {
@@ -180,8 +187,8 @@ export default {
                     this.formHasMetaData = Array.isArray(this.form.metadata);
                 }
                 else {
-                    const response = await this.$api.masterType.all({
-                        where: ['object', '=', this.object]
+                    const response = await this.$api.masterType.list({
+                        object: this.object
                     });
 
                     const nextAvail = this.$api.masterType.getNextAvailableTypeValue(response.data);
@@ -296,81 +303,89 @@ export default {
     <div>
         <fig-button-fab icon="plus" @click="onUpsertClick()" />
 
-        <div
-            v-if="updatingSortOrder"
-            class="mb-4">
-            <fig-button
-                variant="primary"
-                size="sm"
-                @click="saveOrdinals"
-                :disabled="loading">{{ $t('Save sorting changes') }}</fig-button>
-        </div>
+        <fig-pagination-wrapper
+            bottom
+            :total-records="totalResults"
+            @perPage="onPaginationChange"
+            @pageNumber="onPaginationChange">
 
-        <fig-overlay :show="loading">
-            <fig-table-simple
-                striped
-                hover
-                @sort="sortChanged">
-                <template slot="head">
-                    <tr>
-                        <fig-th v-if="types.length > 1" class="handle-cell"></fig-th>
-                        <fig-th sortable prop="name">{{ $t('Name') }}</fig-th>
-                        <fig-th sortable prop="slug">{{ $t('Slug') }}</fig-th>
-                        <fig-th sortable prop="published">{{ $t('Published') }}</fig-th>
-                    </tr>
-                </template>
+            <div
+                v-if="updatingSortOrder"
+                class="mb-4">
+                <fig-button
+                    variant="primary"
+                    size="sm"
+                    @click="saveOrdinals"
+                    :disabled="loading">{{ $t('Save sorting changes') }}</fig-button>
+            </div>
 
-                <draggable
-                    v-model="types"
-                    ghost-class="ghost"
-                    handle=".handle"
-                    @update="setOrdinals"
-                    tag="tbody">
-                    <tr
-                        v-for="(type, idx) in types"
-                        :key="idx">
-                        <!-- handle -->
-                        <fig-td v-if="types.length > 1" class="align-middle">
-                            <i class="handle">
-                                <fig-icon icon="dots-vertical-double" />
-                            </i>
-                        </fig-td>
+            <fig-overlay :show="loading">
+                <fig-table-simple
+                    striped
+                    hover
+                    @sort="sortChanged">
+                    <template slot="head">
+                        <tr>
+                            <fig-th v-if="types.length > 1" class="handle-cell"></fig-th>
+                            <fig-th sortable prop="name">{{ $t('Name') }}</fig-th>
+                            <fig-th sortable prop="slug">{{ $t('Slug') }}</fig-th>
+                            <fig-th sortable prop="published">{{ $t('Published') }}</fig-th>
+                        </tr>
+                    </template>
 
-                        <fig-td>
-                            {{ type.name }}
-                            <fig-operations-dropdown
-                                :show-view="false"
-                                @edit="onUpsertClick(type)"
-                                @delete="onDeleteClick(type)"
-                                class="ml-1" />
-                        </fig-td>
+                    <draggable
+                        v-model="types"
+                        ghost-class="ghost"
+                        handle=".handle"
+                        @update="setOrdinals"
+                        tag="tbody">
+                        <tr
+                            v-for="(type, idx) in types"
+                            :key="idx">
+                            <!-- handle -->
+                            <fig-td v-if="types.length > 1" class="align-middle">
+                                <i class="handle">
+                                    <fig-icon icon="dots-vertical-double" />
+                                </i>
+                            </fig-td>
 
-                        <fig-td>
-                            {{ type.slug }}
-                        </fig-td>
+                            <fig-td>
+                                {{ type.name }}
+                                <fig-operations-dropdown
+                                    :show-view="false"
+                                    @edit="onUpsertClick(type)"
+                                    @delete="onDeleteClick(type)"
+                                    class="ml-1" />
+                            </fig-td>
 
-                        <fig-td>
-                            <boolean-tag :value="type.published" />
-                        </fig-td>
-                    </tr>
+                            <fig-td>
+                                {{ type.slug }}
+                            </fig-td>
 
-                    <fig-tr-no-results v-if="!types.length" :colspan="4" />
-                </draggable>
-            </fig-table-simple>
-        </fig-overlay>
+                            <fig-td>
+                                <boolean-tag :value="type.published" />
+                            </fig-td>
+                        </tr>
+
+                        <fig-tr-no-results v-if="!types.length" :colspan="4" />
+                    </draggable>
+                </fig-table-simple>
+            </fig-overlay>
+
+        </fig-pagination-wrapper>
 
 
         <fig-modal
             ref="type_upsert_modal"
-            size="xl">
+            size="md">
 
-            <div slot="header">
+            <template v-slot:header>
                 {{ form.id
                     ? $t(`Edit Master Type ({name})`, {'name': object})
                     : $t(`Add Master Type ({name})`, {'name': object}) }}
-            </div>
+            </template>
 
-            <fig-label-value-group density="lg">
+            <fig-label-value-group density="lg" display="table" class="w-full">
                 <!-- Published -->
                 <fig-label-value>
                     <template v-slot:label>{{ $t('Published') }}:</template>
@@ -409,24 +424,19 @@ export default {
                         <fig-meta-data-builder v-model="form.metadata" />
                     </div>
                 </fig-label-value>
-
-
-                <!-- buttons -->
-                <fig-label-value>
-                    <template v-slot:label>&nbsp;</template>
-                    <div class="pt-5">
-                        <fig-button
-                            variant="primary"
-                            @click="onUpsertFormSave"
-                            class="mr-3">{{ $t('Save') }}</fig-button>
-
-                        <fig-button
-                            variant="plain"
-                            @click="onUpsertFormCancel">{{ $t('Cancel') }}</fig-button>
-                    </div>
-                </fig-label-value>
             </fig-label-value-group>
 
+
+            <div class="pt-5 flex items-center justify-center">
+                <fig-button
+                    variant="primary"
+                    @click="onUpsertFormSave"
+                    class="mr-3">{{ $t('Save') }}</fig-button>
+
+                <fig-button
+                    variant="plain"
+                    @click="onUpsertFormCancel">{{ $t('Cancel') }}</fig-button>
+            </div>
         </fig-modal>
     </div>
 </template>

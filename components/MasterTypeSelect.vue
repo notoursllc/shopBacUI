@@ -63,10 +63,9 @@ export default {
         },
 
         async createOptions() {
-            const { data } = await this.$api.masterType.all({
-                where: ['object', '=', this.object],
-                sortBy: 'ordinal',
-                sortDesc: false
+            const { data } = await this.$api.masterType.list({
+                object: this.object,
+                _sort: 'ordinal:asc'
             });
 
             this.selectOptions = data.map(obj => {

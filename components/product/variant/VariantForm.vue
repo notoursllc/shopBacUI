@@ -56,7 +56,12 @@ export default {
                 ]
             },
             imageManagerMaxImages: this.$config.SKU_IMAGE_MANAGER_MAX_IMAGES || 6,
-            loadingImages: false
+            loadingImages: false,
+            css: {
+                cellOneFourth: 'mb-2 px-2 w-full md:w-1/2 xl:w-1/4',
+                cellOneThird: 'mb-2 px-2 w-full lg:w-1/2 xl:w-1/3',
+                cellOneHalf: 'mb-2 px-2 w-full lg:w-1/2'
+            }
         };
     },
 
@@ -164,115 +169,107 @@ export default {
             </div>
         </fig-text-card>
 
+
         <!-- Color info -->
-        <fig-text-card class="mb-5">
-            <div slot="header-left">{{ $t('Color info') }}</div>
+        <fig-text-card class="mb-6" variant="white">
+            <template v-slot:header-left>
+                <div class="text-lg font-bold">{{ $t('Color info') }}</div>
+            </template>
 
-            <div class="container mx-auto">
-                <fig-row sm="1/2" md="1/3" lg="1/4" xl="1/5" default="full" default-gap="1" sm-gap="2" key="org">
+            <div class="flex flex-wrap -mx-2">
+                <!-- color name -->
+                <fig-form-group :class="css.cellOneThird">
+                    <label slot="label" for="variant_name">{{ $t('Color name') }}</label>
+                    <fig-form-input
+                        v-model="variant.label"
+                        id="variant_name" />
+                </fig-form-group>
 
-                    <!-- color name -->
-                    <fig-col>
-                        <fig-form-group>
-                            <label slot="label" for="variant_name">{{ $t('Color name') }}</label>
-                            <fig-form-input
-                                v-model="variant.label"
-                                id="variant_name" />
-                        </fig-form-group>
-                    </fig-col>
-
-                    <!-- basic color type -->
-                    <fig-col>
-                        <fig-form-group class="mb-2">
-                            <label slot="label" for="product_basic_color_type">{{ $t('Basic color') }}</label>
-                            <master-type-select
-                                v-model="variant.basic_color_type"
-                                object="product_basic_color_type"
-                                id="product_basic_color_type" />
-                            <template slot="description">{{ $t('Used for product searches') }}</template>
-                        </fig-form-group>
-                    </fig-col>
-                </fig-row>
+                <!-- basic color type -->
+                <fig-form-group :class="css.cellOneThird">
+                    <label slot="label" for="product_basic_color_type">{{ $t('Basic color') }}</label>
+                    <master-type-select
+                        v-model="variant.basic_color_type"
+                        object="product_basic_color_type"
+                        id="product_basic_color_type" />
+                    <template slot="description">{{ $t('Used for product searches') }}</template>
+                </fig-form-group>
             </div>
         </fig-text-card>
 
 
         <!-- Variant images -->
-        <fig-text-card class="mb-5">
-            <div slot="header-left">{{ $t('Variant images') }}</div>
-            <div class="container mx-auto">
-                <image-manager
-                    v-model="variant.images"
-                    @delete="onDeleteImage"
-                    :max-num-images="parseInt(imageManagerMaxImages, 10)" />
-            </div>
+        <fig-text-card class="mb-6" variant="white">
+            <template v-slot:header-left>
+                <div class="text-lg font-bold">{{ $t('Variant images') }}</div>
+            </template>
+
+            <image-manager
+                v-model="variant.images"
+                @delete="onDeleteImage"
+                :max-num-images="parseInt(imageManagerMaxImages, 10)" />
         </fig-text-card>
 
 
         <!-- Color swatches -->
-        <fig-text-card class="mb-5">
-            <div slot="header-left">
-                {{ $t('Color swatches') }}
-                <div class="fs12">({{ $t('optional') }})</div>
-            </div>
+        <fig-text-card class="mb-6" variant="white">
+            <template v-slot:header-left>
+                <div class="text-lg font-bold">{{ $t('Color swatches') }}</div>
+                <div class="text-sm">&nbsp;&nbsp;({{ $t('optional') }})</div>
+            </template>
 
-            <div class="container mx-auto">
-                <color-swatch-table
-                    :value="variant.swatches"
-                    @input="onColorSwatchChange" />
-            </div>
+            <color-swatch-table
+                :value="variant.swatches"
+                @input="onColorSwatchChange" />
         </fig-text-card>
 
 
         <!-- Sizes -->
-        <fig-text-card class="mb-5">
-            <div slot="header-left">{{ $t('Sizes') }}</div>
-            <div class="container mx-auto">
-                <variant-sku-table
-                    :variant="variant"
-                    @input="onSkusChange"
-                    @defaults="onVariantDefaultsChange" />
-            </div>
+        <fig-text-card class="mb-6" variant="white">
+            <template v-slot:header-left>
+                <div class="text-lg font-bold">{{ $t('Sizes') }}</div>
+            </template>
+
+            <variant-sku-table
+                :variant="variant"
+                @input="onSkusChange"
+                @defaults="onVariantDefaultsChange" />
         </fig-text-card>
 
 
         <!-- accent message -->
-        <fig-text-card class="mb-5">
-            <div slot="header-left">
-                {{ $t('Accent Message') }}
-                <div class="fs12">({{ $t('accent_message_description') }})</div>
-            </div>
+        <fig-text-card class="mb-6" variant="white">
+            <template v-slot:header-left>
+                <div class="text-lg font-bold">{{ $t('Accent Message') }}</div>
+                <div class="test-sm">&nbsp;&nbsp;({{ $t('accent_message_description') }})</div>
+            </template>
 
-            <div class="container mx-auto">
-                <accent-message-wizard
-                    :model="variant"
-                    @input="onAccentWizardChange" />
-            </div>
+            <accent-message-wizard
+                :model="variant"
+                @input="onAccentWizardChange" />
         </fig-text-card>
 
 
         <!-- shipping -->
-        <fig-text-card class="mb-5">
-            <div slot="header">{{ $t('Shipping') }}</div>
+        <fig-text-card class="mb-6" variant="white">
+            <template v-slot:header-left>
+                <div class="text-lg font-bold">{{ $t('Shipping') }}</div>
+            </template>
 
-            <div class="container mx-auto">
-                <h4>{{ $t('CUSTOMS INFORMATION') }}</h4>
+            <h4>{{ $t('CUSTOMS INFORMATION') }}</h4>
 
-                <div class="flex flex-wrap -mx-2">
-                    <!-- country of origin -->
-                    <div class="my-2 px-2 w-full xl:w-1/2">
-                        <fig-form-group>
-                            <label slot="label" for="sku_customs_country_of_origin">{{ $t('Country of origin') }}</label>
-                            <fig-select-country
-                                v-model="variant.customs_country_of_origin"
-                                id="sku_customs_country_of_origin" />
+            <div class="flex flex-wrap -mx-2">
+                <!-- country of origin -->
+                <fig-form-group :class="css.cellOneThird">
+                    <label slot="label" for="sku_customs_country_of_origin">{{ $t('Country of origin') }}</label>
+                    <fig-select-country
+                        v-model="variant.customs_country_of_origin"
+                        id="sku_customs_country_of_origin" />
 
-                            <div slot="description">
-                                {{ $t('customs_country_of_origin_desc') }}
-                            </div>
-                        </fig-form-group>
+                    <div slot="description">
+                        {{ $t('customs_country_of_origin_desc') }}
                     </div>
-                </div>
+                </fig-form-group>
             </div>
         </fig-text-card>
 

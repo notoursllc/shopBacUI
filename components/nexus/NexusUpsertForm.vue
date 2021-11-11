@@ -3,13 +3,11 @@ import Vue from 'vue';
 import { required } from 'vuelidate/lib/validators';
 
 import {
-    FigFormGroup,
     FigFormInputNumber,
     FigSelectCountry,
     FigButton,
     FigOverlay,
     FigSelectStateProvince,
-    FigIconLabel,
     FigLabelValueGroup,
     FigLabelValue
 } from '@notoursllc/figleaf';
@@ -17,15 +15,19 @@ import {
 
 export default Vue.extend({
     components: {
-        FigFormGroup,
         FigFormInputNumber,
         FigSelectCountry,
         FigButton,
         FigOverlay,
         FigSelectStateProvince,
-        FigIconLabel,
         FigLabelValueGroup,
         FigLabelValue
+    },
+
+    props: {
+        id: {
+            type: String
+        }
     },
 
     data() {
@@ -52,40 +54,27 @@ export default Vue.extend({
     },
 
     mounted() {
-        try {
-            if(this.$route.params.id) {
-                this.fetchNexus();
-            }
-            else {
-                this.$store.dispatch('ui/title', this.$t('Add Nexus'));
-            }
-        }
-        catch(e) {
-            this.$figleaf.errorToast({
-                title: this.$t('Error'),
-                text: e.message
-            });
+        console.log("NEXUS FORM MOUNTED", this.id)
+        if(this.id) {
+            this.fetchNexus();
         }
     },
 
     methods: {
         async fetchNexus() {
             try {
-                const id = this.$route.params.id;
                 this.loading = true;
 
-                const nexus = await this.$api.nexus.get(id);
+                const { data } = await this.$api.nexus.get(this.id);
 
-                if(!nexus) {
+                if(!data) {
                     throw new Error(this.$t('Item not found'));
                 }
 
                 this.nexus = {
-                    ...nexus,
-                    tax_rate: nexus.tax_rate ? parseFloat(nexus.tax_rate * 100) : 0
+                    ...data,
+                    tax_rate: data.tax_rate ? parseFloat(data.tax_rate * 100) : 0
                 };
-
-                this.$store.dispatch('ui/title', this.$t('Nexus: {name}', { name: `${nexus.countryCodeAlpha2}/${nexus.state}` }));
             }
             catch(e) {
                 this.$figleaf.errorToast({
@@ -101,23 +90,21 @@ export default Vue.extend({
             try {
                 this.loading = true;
 
-                const n = await this.$api.nexus.upsert({
+                const { data } = await this.$api.nexus.upsert({
                     ...this.nexus,
                     tax_rate: this.nexus.tax_rate > 0 ? this.nexus.tax_rate/100 : 0
                 });
 
-                if(!n) {
+                if(!data) {
                     throw new Error('Error updating item');
                 }
 
                 this.$figleaf.successToast({
-                    title: n.id ? this.$t('Item updated successfully') : this.$t('Item added successfully'),
-                    text: `${n.countryCodeAlpha2}/${n.state}`
+                    title: data.id ? this.$t('Item updated successfully') : this.$t('Item added successfully'),
+                    text: `${data.countryCodeAlpha2} / ${data.state}`
                 });
 
-                this.$router.push({
-                    name: 'tax-nexus-list'
-                });
+                this.$emit('saved', this.nexus);
             }
             catch(e) {
                 this.$figleaf.errorToast({
@@ -135,7 +122,6 @@ export default Vue.extend({
 
 <template>
     <fig-overlay :show="loading">
-
         <fig-label-value-group density="lg">
             <!-- country code -->
             <fig-label-value>
@@ -193,9 +179,5 @@ export default Vue.extend({
                 </div>
             </fig-label-value>
         </fig-label-value-group>
-
-
-
-
     </fig-overlay>
 </template>

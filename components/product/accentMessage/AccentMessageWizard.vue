@@ -113,9 +113,8 @@ export default {
     methods: {
         async fetchAllAccentMessages() {
             try {
-                const { data } = await this.$api.product.accentMessage.all({
-                    sortBy: 'message',
-                    sortDesc: false
+                const { data } = await this.$api.product.accentMessage.list({
+                    _sort: 'message:asc'
                 });
                 this.allAccentMessages = data;
                 // const options = [];

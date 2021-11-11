@@ -4,26 +4,26 @@ export default async (ctx) => {
     }
 
     const promises = [
-        ctx.app.$api.masterType.all({
-            where: ['object', '=', 'product_type']
+        ctx.app.$api.masterType.list({
+            object: 'product_type'
         }),
-        ctx.app.$api.masterType.all({
-            where: ['object', '=', 'product_sub_type']
+        ctx.app.$api.masterType.list({
+            object: 'product_sub_type'
         }),
-        ctx.app.$api.masterType.all({
-            where: ['object', '=', 'product_gender_type']
+        ctx.app.$api.masterType.list({
+            object: 'product_gender_type'
         }),
-        ctx.app.$api.masterType.all({
-            where: ['object', '=', 'product_basic_color_type']
+        ctx.app.$api.masterType.list({
+            object: 'product_basic_color_type'
         }),
-        ctx.app.$api.masterType.all({
-            where: ['object', '=', 'product_size_type']
+        ctx.app.$api.masterType.list({
+            object: 'product_size_type'
         }),
-        ctx.app.$api.masterType.all({
-            where: ['object', '=', 'product_fit_type']
+        ctx.app.$api.masterType.list({
+            object: 'product_fit_type'
         }),
-        ctx.app.$api.masterType.all({
-            where: ['object', '=', 'product_sleeve_length_type']
+        ctx.app.$api.masterType.list({
+            object: 'product_sleeve_length_type'
         })
     ];
 

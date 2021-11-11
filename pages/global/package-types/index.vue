@@ -15,7 +15,8 @@ import {
     FigTd,
     FigTrNoResults,
     FigModal,
-    FigOverlay
+    FigOverlay,
+    FigPaginationWrapper
 } from '@notoursllc/figleaf';
 
 export default {
@@ -33,7 +34,8 @@ export default {
         FigTd,
         FigTrNoResults,
         FigModal,
-        FigOverlay
+        FigOverlay,
+        FigPaginationWrapper
     },
 
     data() {
@@ -56,7 +58,15 @@ export default {
                 height_cm: null,
                 weight_oz: null,
                 max_weight_oz: null
-            }
+            },
+            pagination: {
+                _page: 1,
+                _pageSize: 100
+            },
+            table: {
+                _sort: 'ordinal:asc'
+            },
+            totalResults: 0
         };
     },
 
@@ -105,19 +115,17 @@ export default {
     },
 
     methods: {
-        async fetchData(paramsObj) {
-            if(!paramsObj) {
-                paramsObj = {
-                    sortBy: 'ordinal',
-                    sortDesc: false
-                };
-            }
-
+        async fetchData() {
             this.loading = true;
 
             try {
-                const { data } = await this.$api.packageType.list(paramsObj);
+                const { data, pagination } = await this.$api.packageType.list({
+                    ...this.pagination,
+                    ...this.table
+                });
+
                 this.packageTypes = data;
+                this.totalResults = pagination.rowCount;
             }
             catch(e) {
                 this.$figleaf.errorToast({
@@ -130,10 +138,13 @@ export default {
         },
 
         sortChanged(val) {
-            this.fetchData({
-                sortBy: val.by,
-                sortDesc: !val.isAsc
-            });
+            this.table._sort = val;
+            this.fetchData();
+        },
+
+        onPaginationChange(data) {
+            this.pagination = { ...data };
+            this.fetchData();
         },
 
         async onDelete(data) {
@@ -286,92 +297,100 @@ export default {
     <div>
         <fig-button-fab icon="plus" @click="onClickAdd()" />
 
-        <div
-            v-if="updatingSortOrder"
-            class="mb-4">
-            <fig-button
-                variant="primary"
-                size="sm"
-                @click="saveOrdinals"
-                :disabled="loading">{{ $t('Save sorting changes') }}</fig-button>
-        </div>
+        <fig-pagination-wrapper
+            bottom
+            :total-records="totalResults"
+            @perPage="onPaginationChange"
+            @pageNumber="onPaginationChange">
 
-        <fig-overlay :show="loading">
-            <fig-table-simple
-                striped
-                hover
-                @sort="sortChanged">
-                <template slot="head">
-                    <tr>
-                        <fig-th v-if="packageTypes.length > 1" class="handle-cell"></fig-th>
-                        <fig-th sortable prop="label">{{ $t('Label') }}</fig-th>
-                        <fig-th sortable prop="length_cm" right>{{ $t('Length (cm)') }}</fig-th>
-                        <fig-th sortable prop="width_cm" right>{{ $t('Width (cm)') }}</fig-th>
-                        <fig-th sortable prop="height_cm" right>{{ $t('Height (cm)') }}</fig-th>
-                        <fig-th right>{{ $t('Volume') }}</fig-th>
-                    </tr>
-                </template>
+            <div
+                v-if="updatingSortOrder"
+                class="mb-4">
+                <fig-button
+                    variant="primary"
+                    size="sm"
+                    @click="saveOrdinals"
+                    :disabled="loading">{{ $t('Save sorting changes') }}</fig-button>
+            </div>
 
-                <draggable
-                    v-model="packageTypes"
-                    ghost-class="ghost"
-                    handle=".handle"
-                    @update="setOrdinals"
-                    tag="tbody">
+            <fig-overlay :show="loading">
+                <fig-table-simple
+                    striped
+                    hover
+                    @sort="sortChanged">
+                    <template slot="head">
+                        <tr>
+                            <fig-th v-if="packageTypes.length > 1" class="handle-cell"></fig-th>
+                            <fig-th sortable prop="label">{{ $t('Label') }}</fig-th>
+                            <fig-th sortable prop="length_cm" right>{{ $t('Length (cm)') }}</fig-th>
+                            <fig-th sortable prop="width_cm" right>{{ $t('Width (cm)') }}</fig-th>
+                            <fig-th sortable prop="height_cm" right>{{ $t('Height (cm)') }}</fig-th>
+                            <fig-th right>{{ $t('Volume') }}</fig-th>
+                        </tr>
+                    </template>
 
-                    <tr v-for="(obj, idx) in packageTypes" :key="idx">
-                        <!-- handle -->
-                        <fig-td v-if="packageTypes.length > 1" class="align-middle">
-                            <i class="handle">
-                                <fig-icon icon="dots-vertical-double" />
-                            </i>
-                        </fig-td>
+                    <draggable
+                        v-model="packageTypes"
+                        ghost-class="ghost"
+                        handle=".handle"
+                        @update="setOrdinals"
+                        tag="tbody">
 
-                        <fig-td>
-                            {{ obj.label }}
-                            <fig-operations-dropdown
-                                :show-view="false"
-                                @edit="onUpsertClick(obj.id)"
-                                @delete="onDelete(obj)"
-                                class="ml-1" />
-                        </fig-td>
+                        <tr v-for="(obj, idx) in packageTypes" :key="idx">
+                            <!-- handle -->
+                            <fig-td v-if="packageTypes.length > 1" class="align-middle">
+                                <i class="handle">
+                                    <fig-icon icon="dots-vertical-double" />
+                                </i>
+                            </fig-td>
 
-                        <!-- length -->
-                        <fig-td class="text-right">
-                            {{ $n(obj.length_cm) }}
-                            <div class="text-sm text-gray-500 text-right">
-                                {{ $t('{num} in.', {num: cmToInches(obj.length_cm)}) }}
-                            </div>
-                        </fig-td>
+                            <fig-td>
+                                {{ obj.label }}
+                                <fig-operations-dropdown
+                                    :show-view="false"
+                                    @edit="onUpsertClick(obj.id)"
+                                    @delete="onDelete(obj)"
+                                    class="ml-1" />
+                            </fig-td>
 
-                        <!-- width -->
-                        <fig-td class="text-right">
-                            {{ $n(obj.width_cm) }}
-                            <div class="text-sm text-gray-500 text-right">
-                                {{ $t('{num} in.', {num: cmToInches(obj.width_cm)}) }}
-                            </div>
-                        </fig-td>
+                            <!-- length -->
+                            <fig-td class="text-right">
+                                {{ $n(obj.length_cm) }}
+                                <div class="text-sm text-gray-500 text-right">
+                                    {{ $t('{num} in.', {num: cmToInches(obj.length_cm)}) }}
+                                </div>
+                            </fig-td>
 
-                        <!-- height -->
-                        <fig-td class="text-right">
-                            {{ $n(obj.height_cm) }}
-                            <div class="text-sm text-gray-500 text-right">
-                                {{ $t('{num} in.', {num: cmToInches(obj.height_cm)}) }}
-                            </div>
-                        </fig-td>
+                            <!-- width -->
+                            <fig-td class="text-right">
+                                {{ $n(obj.width_cm) }}
+                                <div class="text-sm text-gray-500 text-right">
+                                    {{ $t('{num} in.', {num: cmToInches(obj.width_cm)}) }}
+                                </div>
+                            </fig-td>
 
-                        <!-- volume -->
-                        <fig-td class="text-right">
-                            {{ $n(obj.volume_cm) }}
-                        </fig-td>
-                    </tr>
+                            <!-- height -->
+                            <fig-td class="text-right">
+                                {{ $n(obj.height_cm) }}
+                                <div class="text-sm text-gray-500 text-right">
+                                    {{ $t('{num} in.', {num: cmToInches(obj.height_cm)}) }}
+                                </div>
+                            </fig-td>
 
-                    <fig-tr-no-results
-                        v-if="!packageTypes.length"
-                        colspan="6" />
-                </draggable>
-            </fig-table-simple>
-        </fig-overlay>
+                            <!-- volume -->
+                            <fig-td class="text-right">
+                                {{ $n(obj.volume_cm) }}
+                            </fig-td>
+                        </tr>
+
+                        <fig-tr-no-results
+                            v-if="!packageTypes.length"
+                            colspan="6" />
+                    </draggable>
+                </fig-table-simple>
+            </fig-overlay>
+
+        </fig-pagination-wrapper>
 
 
         <fig-modal

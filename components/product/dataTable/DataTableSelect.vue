@@ -43,7 +43,9 @@ export default {
         },
 
         async createOptions() {
-            const { data } = await this.$api.product.dataTable.all();
+            const { data } = await this.$api.product.dataTable.list({
+                _sort: 'name:asc'
+            });
 
             this.selectOptions = data.map(obj => {
                 return {

@@ -91,7 +91,6 @@ export default {
         '@/plugins/vuelidate',
         '@/plugins/format8601',
         '@/plugins/prettyJson',
-        '@/plugins/vue-select',
         '@/plugins/notifications',
         '@/plugins/figIcon',
         '@/plugins/globals',

@@ -57,8 +57,9 @@ export default {
         <div class="flex-grow text-sm">
             <div class="flex flex-wrap -mx-2 overflow-hidden">
                 <div class="my-2 px-2 w-full lg:w-1/2">
-                    <fig-label-value-group density="sm">
+                    <fig-label-value-group density="md" display="table">
                         <fig-label-value>
+                            <template v-slot:label>{{ $t('Title') }}:</template>
                             {{ product.title }}
                         </fig-label-value>
 
@@ -82,7 +83,7 @@ export default {
                 </div>
 
                 <div class="my-2 px-2 w-full lg:w-1/2">
-                    <fig-label-value-group density="sm">
+                    <fig-label-value-group density="md" display="table">
                         <fig-label-value>
                             <template v-slot:label>{{ $t('Product type') }}:</template>
                             {{ getMasterTypeName('product_type', product.type) }}

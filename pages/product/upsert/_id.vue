@@ -67,8 +67,9 @@ export default Vue.extend({
             productHasMetaData: false,
             domainName: this.$config.DOMAIN_NAME,
             css: {
-                cellOneThird: 'my-3 px-3 w-full lg:w-1/2 xl:w-1/3',
-                cellOneHalf: 'my-3 px-3 w-full lg:w-1/2'
+                cellOneFourth: 'mb-2 px-2 w-full md:w-1/2 xl:w-1/4',
+                cellOneThird: 'mb-2 px-2 w-full lg:w-1/2 xl:w-1/3',
+                cellOneHalf: 'mb-2 px-2 w-full lg:w-1/2'
             }
         };
     },
@@ -208,354 +209,377 @@ export default Vue.extend({
         </div>
 
 
-        <!-- row -->
-        <div class="flex flex-wrap -mx-3 overflow-hidden">
+        <!-- ORGANIZATION -->
+        <fig-text-card class="mb-6" variant="white">
+            <template v-slot:header-left>
+                <div class="flex justify-center mr-2">
+                    <fig-icon
+                        icon="list-check"
+                        width="26"
+                        height="26"
+                        :stroke-width="1" />
+                    <div class="text-lg font-bold pl-2">{{ $t('Organization') }}</div>
+                </div>
+            </template>
 
-            <!-- ORGANIZATION CARD -->
-            <div :class="css.cellOneThird">
-                <fig-text-card>
-                    <div slot="header-left">{{ $t('Organization') }}</div>
+            <div class="flex flex-wrap -mx-2">
+                <fig-form-group :class="css.cellOneHalf">
+                    <label slot="label" for="product_type">{{ $t('Product type') }}</label>
+                    <master-type-select
+                        v-model="product.type"
+                        object="product_type"
+                        id="product_type" />
+                </fig-form-group>
 
-                    <!-- product type -->
-                    <div>
-                        <fig-form-group class="mb-2">
-                            <label slot="label" for="product_type">{{ $t('Product type') }}</label>
-                            <master-type-select
-                                v-model="product.type"
-                                object="product_type"
-                                id="product_type" />
-                        </fig-form-group>
-                    </div>
+                <!-- sub-type -->
+                <fig-form-group :class="css.cellOneHalf">
+                    <label slot="label" for="product_sub_type">{{ $t('Product sub-type') }}</label>
+                    <master-type-select
+                        v-model="product.sub_type"
+                        object="product_sub_type"
+                        id="product_sub_type" />
+                </fig-form-group>
 
-                    <!-- sub-type -->
-                    <div>
-                        <fig-form-group class="mb-2">
-                            <label slot="label" for="product_sub_type">{{ $t('Product sub-type') }}</label>
-                            <master-type-select
-                                v-model="product.sub_type"
-                                object="product_sub_type"
-                                id="product_sub_type" />
-                        </fig-form-group>
-                    </div>
+                <!-- sales channel -->
+                <fig-form-group :class="css.cellOneHalf">
+                    <label slot="label" for="product_sales_channel_type">{{ $t('Sales channel') }}</label>
+                    <master-type-select
+                        v-model="product.sales_channel_type"
+                        object="product_sales_channel_type"
+                        id="product_sales_channel_type" />
+                </fig-form-group>
 
-                    <!-- sales channel -->
-                    <div>
-                        <fig-form-group class="mb-2">
-                            <label slot="label" for="product_sales_channel_type">{{ $t('Sales channel') }}</label>
-                            <master-type-select
-                                v-model="product.sales_channel_type"
-                                object="product_sales_channel_type"
-                                id="product_sales_channel_type" />
-                        </fig-form-group>
-                    </div>
-
-                    <!-- vendor -->
-                    <div>
-                        <fig-form-group class="mb-2">
-                            <label slot="label" for="product_vendor_type">{{ $t('Vendor') }}</label>
-                            <master-type-select
-                                v-model="product.vendor_type"
-                                object="product_vendor_type"
-                                :multiple="false"
-                                id="product_vendor_type" />
-                        </fig-form-group>
-                    </div>
-                </fig-text-card>
-            </div>
-
-            <!-- STYLE CARD-->
-            <div :class="css.cellOneThird">
-                <fig-text-card>
-                    <div slot="header-left">{{ $t('Style') }}</div>
-
-                    <!-- gender -->
-                    <div>
-                        <fig-form-group class="mb-2">
-                            <label slot="label" for="product_gender_type">{{ $t('Gender') }}</label>
-                            <master-type-select
-                                v-model="product.gender_type"
-                                object="product_gender_type"
-                                id="product_gender_type" />
-                        </fig-form-group>
-                    </div>
-
-                    <!-- fit -->
-                    <div>
-                        <fig-form-group class="mb-2">
-                            <label slot="label" for="product_fit_type">{{ $t('Fit') }}</label>
-                            <master-type-select
-                                v-model="product.fit_type"
-                                object="product_fit_type"
-                                id="product_fit_type" />
-                        </fig-form-group>
-                    </div>
-
-                    <!-- sleeve -->
-                    <div>
-                        <fig-form-group class="mb-2">
-                            <label slot="label" for="product_sleeve_length_type">{{ $t('Sleeve') }}</label>
-                            <master-type-select
-                                v-model="product.sleeve_length_type"
-                                object="product_sleeve_length_type"
-                                id="product_sleeve_length_type" />
-                        </fig-form-group>
-                    </div>
-
-                    <!-- feature -->
-                    <div>
-                        <fig-form-group class="mb-2">
-                            <label slot="label" for="product_feature_type">{{ $t('Feature') }}</label>
-                            <master-type-select
-                                v-model="product.feature_type"
-                                object="product_feature_type"
-                                id="product_feature_type" />
-                        </fig-form-group>
-                    </div>
-                </fig-text-card>
-            </div>
-
-            <!-- DETAILS CARD -->
-            <div :class="css.cellOneThird">
-                <!-- Details -->
-                <fig-text-card>
-                    <div slot="header-left">{{ $t('Details') }}</div>
-
-                    <!-- page title -->
-                    <div>
-                        <fig-form-group class="mb-2">
-                            <label slot="label" for="product_title">{{ $t('Title') }}</label>
-                            <fig-form-input
-                                v-model="product.title"
-                                maxlength="70"
-                                id="product_title" />
-                        </fig-form-group>
-                    </div>
-
-                    <!-- caption -->
-                    <div>
-                        <fig-form-group class="mb-2">
-                            <label slot="label" for="product_caption">{{ $t('Caption') }}</label>
-                            <fig-form-input
-                                v-model="product.caption"
-                                maxlength="70"
-                                id="product_caption" />
-                        </fig-form-group>
-                    </div>
-
-                    <!-- description -->
-                    <div>
-                        <fig-form-group class="mb-2">
-                            <label slot="label" for="product_description">{{ $t('Description') }}</label>
-                            <fig-form-textarea
-                                v-model="product.description"
-                                :rows="2"
-                                maxlength="320"
-                                id="product_description" />
-                        </fig-form-group>
-                    </div>
-                </fig-text-card>
-            </div>
-        </div>
-
-
-        <!-- VARIANTS CARD -->
-        <fig-text-card class="my-3">
-            <div slot="header-left">{{ $t('Variants') }}</div>
-
-            <div class="container mx-auto">
-                <variant-table
-                    :value="product.variants"
-                    @change="colors => this.$set(product, 'variants', colors)" />
+                <!-- vendor -->
+                <fig-form-group :class="css.cellOneHalf">
+                    <label slot="label" for="product_vendor_type">{{ $t('Vendor') }}</label>
+                    <master-type-select
+                        v-model="product.vendor_type"
+                        object="product_vendor_type"
+                        :multiple="false"
+                        id="product_vendor_type" />
+                </fig-form-group>
             </div>
         </fig-text-card>
 
 
-        <div class="flex flex-wrap -mx-3 overflow-hidden">
-            <div :class="css.cellOneHalf">
-                <!-- SHIPPING CARD -->
-                <fig-text-card>
-                    <div slot="header-left">{{ $t('Shipping') }}</div>
+        <!-- STYLE -->
+        <fig-text-card class="mb-6" variant="white">
+            <template v-slot:header-left>
+                <div class="flex justify-center mr-2">
+                    <fig-icon
+                        icon="shirt"
+                        width="26"
+                        height="26"
+                        :stroke-width="1" />
+                    <div class="text-lg font-bold pl-2">{{ $t('Style') }}</div>
+                </div>
+            </template>
 
-                    <!-- is shippable (a physical product) -->
-                    <div class="mb-3">
-                        <fig-form-checkbox
-                            v-model="product.shippable">{{ $t('This is a physical product') }}</fig-form-checkbox>
-                    </div>
+            <div class="flex flex-wrap -mx-2">
+                <!-- gender -->
+                <fig-form-group :class="css.cellOneHalf">
+                    <label slot="label" for="product_gender_type">{{ $t('Gender') }}</label>
+                    <master-type-select
+                        v-model="product.gender_type"
+                        object="product_gender_type"
+                        id="product_gender_type" />
+                </fig-form-group>
 
-                    <div v-if="!product.shippable" class="text-sm">
-                        {{ $t('shippable_off_desc') }}
-                    </div>
-                    <template v-else>
-                        <hr>
+                <!-- fit -->
+                <fig-form-group :class="css.cellOneHalf">
+                    <label slot="label" for="product_fit_type">{{ $t('Fit') }}</label>
+                    <master-type-select
+                        v-model="product.fit_type"
+                        object="product_fit_type"
+                        id="product_fit_type" />
+                </fig-form-group>
 
-                        <div class="text-base font-semibold mb-3">{{ $t('CUSTOMS INFORMATION') }}:</div>
-                        <div class="px-4">
-                            <!-- country of origin -->
-                            <div class="mb-2">
-                                <fig-form-group>
-                                    <label slot="label" for="product_customs_country_of_origin">{{ $t('Country of origin') }}</label>
-                                    <fig-select-country
-                                        v-model="product.customs_country_of_origin"
-                                        id="product_customs_country_of_origin" />
+                <!-- sleeve -->
+                <fig-form-group :class="css.cellOneHalf">
+                    <label slot="label" for="product_sleeve_length_type">{{ $t('Sleeve') }}</label>
+                    <master-type-select
+                        v-model="product.sleeve_length_type"
+                        object="product_sleeve_length_type"
+                        id="product_sleeve_length_type" />
+                </fig-form-group>
 
-                                    <div slot="description">
-                                        {{ $t('customs_country_of_origin_desc') }}
-                                    </div>
-                                </fig-form-group>
-                            </div>
+                <!-- feature -->
+                <fig-form-group :class="css.cellOneHalf">
+                    <label slot="label" for="product_feature_type">{{ $t('Feature') }}</label>
+                    <master-type-select
+                        v-model="product.feature_type"
+                        object="product_feature_type"
+                        id="product_feature_type" />
+                </fig-form-group>
+            </div>
+        </fig-text-card>
 
-                            <!-- HS code -->
-                            <div>
-                                <fig-form-group>
-                                    <label slot="label" for="product_customs_harmonized_system_code">{{ $t('HS (Harmonized System) code') }}</label>
-                                    <fig-form-input
-                                        v-model="product.customs_harmonized_system_code"
-                                        id="product_customs_harmonized_system_code" />
 
-                                    <div slot="description">
-                                        {{ $t('customs_hs_code_desc') }}
-                                    </div>
-                                </fig-form-group>
-                            </div>
+        <!-- DETAILS -->
+        <fig-text-card class="mb-6" variant="white">
+            <template v-slot:header-left>
+                <div class="flex justify-center mr-2">
+                    <fig-icon
+                        icon="tag"
+                        width="26"
+                        height="26"
+                        :stroke-width="1" />
+                    <div class="text-lg font-bold pl-2">{{ $t('Details') }}</div>
+                </div>
+            </template>
+
+            <div class="flex flex-wrap -mx-2">
+                <!-- page title -->
+                <fig-form-group :class="css.cellOneHalf">
+                    <label slot="label" for="product_title">{{ $t('Title') }}</label>
+                    <fig-form-input
+                        v-model="product.title"
+                        maxlength="70"
+                        id="product_title" />
+                </fig-form-group>
+
+                <!-- caption -->
+                <fig-form-group :class="css.cellOneHalf">
+                    <label slot="label" for="product_caption">{{ $t('Caption') }}</label>
+                    <fig-form-input
+                        v-model="product.caption"
+                        maxlength="70"
+                        id="product_caption" />
+                </fig-form-group>
+
+                <!-- description -->
+                <fig-form-group :class="css.cellOneHalf">
+                    <label slot="label" for="product_description">{{ $t('Description') }}</label>
+                    <fig-form-textarea
+                        v-model="product.description"
+                        :rows="2"
+                        maxlength="320"
+                        id="product_description" />
+                </fig-form-group>
+            </div>
+        </fig-text-card>
+
+
+        <!-- VARIANTS -->
+        <fig-text-card class="mb-6" variant="white">
+            <template v-slot:header-left>
+                <div class="flex justify-center mr-2">
+                    <fig-icon
+                        icon="triangle-square-circle"
+                        width="26"
+                        height="26"
+                        :stroke-width="1" />
+                    <div class="text-lg font-bold pl-2">{{ $t('Variants') }}</div>
+                </div>
+            </template>
+
+            <variant-table
+                :value="product.variants"
+                @change="colors => this.$set(product, 'variants', colors)" />
+        </fig-text-card>
+
+
+        <!-- SHIPPING -->
+        <fig-text-card class="mb-6" variant="white">
+            <template v-slot:header-left>
+                <div class="flex justify-center mr-2">
+                    <fig-icon
+                        icon="truck"
+                        width="26"
+                        height="26"
+                        :stroke-width="1" />
+                    <div class="text-lg font-bold pl-2">{{ $t('Shipping') }}</div>
+                </div>
+            </template>
+
+            <!-- is shippable (a physical product) -->
+            <div class="mb-3">
+                <fig-form-checkbox
+                    v-model="product.shippable">{{ $t('This is a physical product') }}</fig-form-checkbox>
+            </div>
+
+            <div v-if="!product.shippable" class="text-sm">
+                {{ $t('shippable_off_desc') }}
+            </div>
+
+            <div v-else class="px-4">
+                <div class="font-semibold mb-2">{{ $t('CUSTOMS INFORMATION') }}:</div>
+                <div class="flex flex-wrap -mx-2 md:-mx-3">
+                    <!-- country of origin -->
+                    <fig-form-group :class="css.cellOneHalf">
+                        <label slot="label" for="product_customs_country_of_origin">{{ $t('Country of origin') }}</label>
+                        <fig-select-country
+                            v-model="product.customs_country_of_origin"
+                            id="product_customs_country_of_origin" />
+
+                        <div slot="description">
+                            {{ $t('customs_country_of_origin_desc') }}
                         </div>
-                    </template>
-                </fig-text-card>
+                    </fig-form-group>
+
+                    <!-- HS code -->
+                    <fig-form-group :class="css.cellOneHalf">
+                        <label slot="label" for="product_customs_harmonized_system_code">{{ $t('HS (Harmonized System) code') }}</label>
+                        <fig-form-input
+                            v-model="product.customs_harmonized_system_code"
+                            id="product_customs_harmonized_system_code" />
+
+                        <div slot="description">
+                            {{ $t('customs_hs_code_desc') }}
+                        </div>
+                    </fig-form-group>
+                </div>
+            </div>
+        </fig-text-card>
+
+
+        <!-- PACKAGING -->
+        <fig-text-card class="mb-6" variant="white">
+            <template v-slot:header-left>
+                <div class="flex justify-center mr-2">
+                    <fig-icon
+                        icon="package"
+                        width="26"
+                        height="26"
+                        :stroke-width="1" />
+                    <div class="text-lg font-bold pl-2">{{ $t('Packaging') }}</div>
+                </div>
+            </template>
+
+            <!-- Ship alone -->
+            <div class="mb-5">
+                <fig-form-checkbox
+                    v-model="product.ship_alone">{{ $t('ship_alone_description') }}</fig-form-checkbox>
             </div>
 
-            <!-- PACKAGING CARD -->
-            <div :class="css.cellOneHalf">
-                <fig-text-card class="mb-5">
-                    <div slot="header-left">{{ $t('Packaging') }}</div>
+            <div class="flex flex-wrap -mx-2">
+                <!-- Packing length -->
+                <fig-form-group :class="css.cellOneHalf">
+                    <label slot="label" for="packing_length_cm">{{ $t('Packing length (cm)') }}</label>
+                    <fig-form-input-number
+                        v-model="product.packing_length_cm"
+                        :step="1"
+                        :min="0"
+                        controls-right
+                        size="md"
+                        id="packing_length_cm" />
+                </fig-form-group>
 
-                    <!-- Ship alone -->
-                    <div class="mb-5">
-                        <fig-form-checkbox
-                            v-model="product.ship_alone">{{ $t('ship_alone_description') }}</fig-form-checkbox>
-                    </div>
+                <!-- Packing width -->
+                <fig-form-group :class="css.cellOneHalf">
+                    <label slot="label" for="packing_width_cm">{{ $t('Packing width (cm)') }}</label>
+                    <fig-form-input-number
+                        v-model="product.packing_width_cm"
+                        :step="1"
+                        :min="0"
+                        controls-right
+                        size="md"
+                        id="packing_width_cm" />
+                </fig-form-group>
 
-                    <!-- Packing length -->
-                    <div class="mb-2">
-                        <fig-form-group>
-                            <label slot="label" for="packing_length_cm">{{ $t('Packing length (cm)') }}</label>
-                            <fig-form-input-number
-                                v-model="product.packing_length_cm"
-                                :step="1"
-                                :min="0"
-                                controls-right
-                                size="md"
-                                id="packing_length_cm" />
-                        </fig-form-group>
-                    </div>
-
-                    <!-- Packing width -->
-                    <div class="mb-2">
-                        <fig-form-group>
-                            <label slot="label" for="packing_width_cm">{{ $t('Packing width (cm)') }}</label>
-                            <fig-form-input-number
-                                v-model="product.packing_width_cm"
-                                :step="1"
-                                :min="0"
-                                controls-right
-                                size="md"
-                                id="packing_width_cm" />
-                        </fig-form-group>
-                    </div>
-
-                    <!-- Packing width -->
-                    <div>
-                        <fig-form-group>
-                            <label slot="label" for="packing_height_cm">{{ $t('Packing height (cm)') }}</label>
-                            <fig-form-input-number
-                                v-model="product.packing_height_cm"
-                                :step="1"
-                                :min="0"
-                                controls-right
-                                size="md"
-                                id="packing_height_cm" />
-                        </fig-form-group>
-                    </div>
-                </fig-text-card>
+                <!-- Packing width -->
+                <fig-form-group :class="css.cellOneHalf">
+                    <label slot="label" for="packing_height_cm">{{ $t('Packing height (cm)') }}</label>
+                    <fig-form-input-number
+                        v-model="product.packing_height_cm"
+                        :step="1"
+                        :min="0"
+                        controls-right
+                        size="md"
+                        id="packing_height_cm" />
+                </fig-form-group>
             </div>
-        </div>
+        </fig-text-card>
 
-        <div class="flex flex-wrap -mx-3 overflow-hidden">
-            <!-- SEO CARD -->
-            <div :class="css.cellOneHalf">
-                <fig-text-card class="mb-5">
-                    <div slot="header-left">{{ $t('Search engine listing') }}</div>
 
-                    <!-- page title -->
-                    <div>
-                        <fig-form-group class="mb-2 block">
-                            <label slot="label" for="product_seo_page_title">{{ $t('Page title') }}</label>
-                            <fig-form-input
-                                v-model="product.seo_page_title"
-                                maxlength="70"
-                                id="product_seo_page_title" />
-                        </fig-form-group>
-                    </div>
+        <!-- META DATA -->
+        <fig-text-card class="mb-6" variant="white">
+            <template v-slot:header-left>
+                <div class="flex justify-center mr-2">
+                    <fig-icon
+                        icon="file-code"
+                        width="26"
+                        height="26"
+                        :stroke-width="1" />
+                    <div class="text-lg font-bold pl-2">{{ $t('Metadata') }}</div>
+                </div>
+            </template>
 
-                    <!-- description -->
-                    <div>
-                        <fig-form-group class="mb-2 block">
-                            <label slot="label" for="product_seo_page_desc">{{ $t('Description') }}</label>
-                            <fig-form-textarea
-                                v-model="product.seo_page_desc"
-                                :rows="2"
-                                maxlength="320"
-                                id="product_seo_page_desc" />
-                        </fig-form-group>
-                    </div>
+            <div class="pb-3">
+                <fig-form-checkbox
+                    v-model="productHasMetaData">{{ $t('Metadata_description') }}</fig-form-checkbox>
+            </div>
 
-                    <!-- URI -->
-                    <div>
-                        <fig-form-group class="mb-2 block">
-                            <label slot="label" for="product_seo_uri">{{ $t('URL and handle') }}</label>
+            <fig-meta-data-builder
+                v-if="productHasMetaData"
+                v-model="product.metadata" />
+        </fig-text-card>
 
-                            <fig-form-input-endcapper>
-                                <template slot="prefix">{{ `https://${domainName}/p/` }}</template>
-                                <fig-form-input
-                                    v-model="product.seo_uri"
-                                    maxlength="50"
-                                    :state="!$v.product.seo_uri.$invalid ? null : false"
-                                    square-left
-                                    id="product_seo_uri" />
-                            </fig-form-input-endcapper>
 
-                            <div
-                                v-if="$v.product.seo_uri.$invalid"
-                                slot="error">{{ seoUrlValidationErrorMessage }}</div>
-                        </fig-form-group>
-                    </div>
+        <!-- SEARCH ENGINE LISTING-->
+        <fig-text-card class="mb-6" variant="white">
+            <template v-slot:header-left>
+                <div class="flex justify-center mr-2">
+                    <fig-icon
+                        icon="search"
+                        width="26"
+                        height="26"
+                        :stroke-width="1" />
+                    <div class="text-lg font-bold pl-2">{{ $t('Search engine listing') }}</div>
+                </div>
+            </template>
 
-                    <div class="mt-3 p-2 rounded bg-blue-100" v-show="product.seo_page_title">
-                        <div class="text-xs text-gray-700 mb-1">{{ $t('Preview') }}:</div>
+            <div class="flex flex-wrap -mx-2">
+                <!-- page title -->
+                <fig-form-group :class="css.cellOneHalf">
+                    <label slot="label" for="product_seo_page_title">{{ $t('Page title') }}</label>
+                    <fig-form-input
+                        v-model="product.seo_page_title"
+                        maxlength="70"
+                        id="product_seo_page_title" />
+                </fig-form-group>
+
+                <!-- URI -->
+                <fig-form-group :class="css.cellOneHalf">
+                    <label slot="label" for="product_seo_uri">{{ $t('URL and handle') }}</label>
+
+                    <fig-form-input-endcapper>
+                        <template slot="prefix">{{ `https://${domainName}/p/` }}</template>
+                        <fig-form-input
+                            v-model="product.seo_uri"
+                            maxlength="50"
+                            :state="!$v.product.seo_uri.$invalid ? null : false"
+                            square-left
+                            id="product_seo_uri" />
+                    </fig-form-input-endcapper>
+
+                    <div
+                        v-if="$v.product.seo_uri.$invalid"
+                        slot="error">{{ seoUrlValidationErrorMessage }}</div>
+                </fig-form-group>
+
+                <!-- description -->
+                <fig-form-group :class="css.cellOneHalf">
+                    <label slot="label" for="product_seo_page_desc">{{ $t('Description') }}</label>
+                    <fig-form-textarea
+                        v-model="product.seo_page_desc"
+                        :rows="2"
+                        maxlength="320"
+                        id="product_seo_page_desc" />
+                </fig-form-group>
+
+                <!-- preview -->
+                <fig-form-group :class="css.cellOneHalf">
+                    <label slot="label">{{ $t('Preview') }}</label>
+                    <div class="py-2 px-4 rounded bg-blue-100" v-show="product.seo_page_title">
                         <seo-preview
                             :title="product.seo_page_title"
                             :description="product.seo_page_desc"
                             :uri="product.seo_uri" />
                     </div>
-                </fig-text-card>
+                </fig-form-group>
             </div>
-
-            <!-- METADATA CARD -->
-            <div :class="css.cellOneHalf">
-                <fig-text-card class="mb-5">
-                    <div slot="header-left">{{ $t('Metadata') }}</div>
-
-                    <div class="container mx-auto">
-                        <div class="pb-3">
-                            <fig-form-checkbox
-                                v-model="productHasMetaData">{{ $t('Metadata_description') }}</fig-form-checkbox>
-                        </div>
-
-                        <fig-meta-data-builder
-                            v-if="productHasMetaData"
-                            v-model="product.metadata" />
-                    </div>
-                </fig-text-card>
-            </div>
-        </div>
+        </fig-text-card>
 
 
         <div class="pt-4">

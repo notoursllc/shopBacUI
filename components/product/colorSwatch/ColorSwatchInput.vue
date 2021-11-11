@@ -63,7 +63,9 @@ export default {
             this.loading = true;
 
             try {
-                const { data } = await this.$api.product.colorSwatch.all();
+                const { data } = await this.$api.product.colorSwatch.list({
+                    _sort: 'label:asc'
+                });
                 this.allSwatches = data;
             }
             catch(e) {

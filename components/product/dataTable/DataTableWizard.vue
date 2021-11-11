@@ -165,7 +165,9 @@ export default {
 
         async fetchAllDataTables() {
             try {
-                const { data } = await this.$api.product.dataTable.all();
+                const { data } = await this.$api.product.dataTable.list({
+                    _sort: 'name:asc'
+                });
                 this.allDataTables = data;
             }
             catch(e) {

@@ -3,23 +3,21 @@ import JsonTree from 'vue-json-tree';
 import isObject from 'lodash.isobject';
 import PackedProductDisplay from '@/components/orders/PackedProductDisplay.vue';
 import OrderRefundForm from '@/components/orders/OrderRefundForm.vue';
+import OrderRefundList from '@/components/orders/OrderRefundList.vue';
 import {
     FigAddress,
     FigButton,
-    FigSpecLayout,
-    FigSpec,
     FigTag,
     FigIconLabel,
     FigIcon,
     FigLabelValueGroup,
     FigLabelValue,
     FigMoney,
-    FigDivider,
     FigModal,
     FigBooleanTag,
     FigTextCard,
-    FigMessage,
-    FigPopConfirm
+    FigPopConfirm,
+    FigCardLastFour
 } from '@notoursllc/figleaf';
 
 
@@ -28,33 +26,36 @@ export default {
         PackedProductDisplay,
         FigAddress,
         FigButton,
-        FigSpecLayout,
-        FigSpec,
         FigTag,
         FigIconLabel,
         FigIcon,
         FigLabelValueGroup,
         FigLabelValue,
         FigMoney,
-        FigDivider,
         FigModal,
         FigBooleanTag,
         FigTextCard,
-        FigMessage,
         FigPopConfirm,
+        FigCardLastFour,
         JsonTree,
-        OrderRefundForm
+        OrderRefundForm,
+        OrderRefundList
     },
 
     data() {
         return {
             cart: null,
             label: null,
+            payment: null,
             shippingRate: {}
         };
     },
 
     computed: {
+        isPaypalPayment() {
+            return isObject(this.payment) && this.payment.payer;
+        }
+
         // numPackedProducts() {
         //     return isObject(this.cart.shipping_rate_quote.packingResults) && this.cart.shipping_rate_quote.packingResults.packed
         //         ? this.cart.shipping_rate_quote.packingResults.packed.length
@@ -68,8 +69,9 @@ export default {
         // }
     },
 
-    created() {
+    mounted() {
         this.getOrder();
+        this.$store.dispatch('ui/title', this.$t('Order Details'));
     },
 
     methods: {
@@ -83,6 +85,7 @@ export default {
                 const { data } = await this.$api.cart.order.get(this.$route.params.id);
                 this.cart = data.cart;
                 this.label = data.label;
+                this.payment = data.payment;
 
                 if(!this.cart) {
                     throw new Error(this.$t('Cart not found'));
@@ -107,16 +110,20 @@ export default {
             this.$refs.shipping_rate_modal.show();
         },
 
-        showShippigLabelModal() {
-            this.$refs.shipping_label_modal.show();
-        },
-
         showCartDataModal() {
             this.$refs.cart_modal.show();
         },
 
         showRefundModal() {
             this.$refs.refund_modal.show();
+        },
+
+        hideRefundModal() {
+            this.$refs.refund_modal.hide();
+        },
+
+        showShippingLabelDetailsModal() {
+            this.$refs.shipping_label_details_modal.show();
         },
 
         getProductImage(prod) {
@@ -179,7 +186,17 @@ export default {
                     text: e.message
                 });
             }
+        },
+
+        onRefundSuccess(refundAmount) {
+            this.hideRefundModal();
+
+            this.$figleaf.successToast({
+                title: this.$t('Refund successful'),
+                text: refundAmount
+            });
         }
+
         // labelPurchased() {
         //     this.loadPayment();
 
@@ -203,67 +220,88 @@ export default {
 
 
 <template>
-    <div>
-        <fig-spec-layout v-if="cart" class="text-sm">
-            <!-- Totals -->
-            <fig-spec>
-                <template v-slot:label>
-                    <div class="flex justify-center">
-                        <fig-icon
-                            icon="credit-card"
-                            width="30"
-                            height="30"
-                            :stroke-width="1" />
-                    </div>
-                    <div class="text-xs text-center">{{ $t('Totals') }}</div>
-                </template>
-
-                <fig-label-value-group density="sm">
-                    <!-- sub total -->
-                    <fig-label-value>
-                        <template v-slot:label>{{ $t('Subtotal') }}:</template>
-                        <fig-money class="font-mono" :cents="cart.sub_total" />
-                    </fig-label-value>
-
-                    <!-- shipping_total -->
-                    <fig-label-value>
-                        <template v-slot:label>{{ $t('Shipping') }}:</template>
-                        <fig-money class="font-mono" :cents="cart.shipping_total" />
-                    </fig-label-value>
-
-                    <!-- sales tax -->
-                    <fig-label-value>
-                        <template v-slot:label>{{ $t('Tax') }}:</template>
-                        <fig-money class="font-mono" :cents="cart.sales_tax" />
-                    </fig-label-value>
-
-                    <!-- grand total -->
-                    <fig-label-value class="font-semibold text-green-700">
-                        <template v-slot:label>{{ $t('Grand total') }}:</template>
-                        <fig-money class="font-mono" :cents="cart.grand_total" />
-                    </fig-label-value>
-                </fig-label-value-group>
-            </fig-spec>
+    <div class="text-sm">
+        <fig-text-card class="mb-6" v-if="cart" variant="white">
+            <template v-slot:header-left>
+                <div class="text-lg font-bold">
+                    <fig-money :cents="cart.grand_total" />
+                </div>
+            </template>
 
 
-            <!-- Shipping address -->
-            <fig-spec>
-                <template v-slot:label>
-                    <div class="flex justify-center">
-                        <fig-icon
-                            icon="truck"
-                            width="30"
-                            height="30"
-                            :stroke-width="1" />
-                    </div>
-                    <div class="text-xs text-center">{{ $t('Shipping address') }}</div>
-                </template>
+            <fig-label-value-group density="md" display="table" class="text-sm">
+                <!-- order created -->
+                <fig-label-value>
+                    <template v-slot:label>{{ $t('Date') }}:</template>
+                    {{ cart.closed_at | format8601 }}
+                </fig-label-value>
 
-                <!-- Shipped at -->
-                <div>
+                <!-- sub total -->
+                <fig-label-value>
+                    <template v-slot:label>{{ $t('Subtotal') }}:</template>
+                    <div class="text-right font-mono"><fig-money :cents="cart.sub_total" /></div>
+                </fig-label-value>
+
+                <!-- shipping_total -->
+                <fig-label-value>
+                    <template v-slot:label>{{ $t('Shipping') }}:</template>
+                    <div class="text-right font-mono"><fig-money :cents="cart.shipping_total" /></div>
+                </fig-label-value>
+
+                <!-- sales tax -->
+                <fig-label-value>
+                    <template v-slot:label>{{ $t('Tax') }}:</template>
+                    <div class="text-right font-mono"><fig-money :cents="cart.sales_tax" /></div>
+                </fig-label-value>
+
+                <!-- grand total -->
+                <fig-label-value>
+                    <template v-slot:label>{{ $t('Grand total') }}:</template>
+                    <div class="text-right font-mono"><fig-money :cents="cart.grand_total" /></div>
+                </fig-label-value>
+
+                <!-- payment method -->
+                <fig-label-value>
+                    <template v-slot:label>{{ $t('Payment method') }}:</template>
+                    <fig-card-last-four
+                        :type="isPaypalPayment ? 'paypal' : payment.payment_method_details.card.brand"
+                        :last-four="payment.payment_method_details.card.last4"
+                        :email="isPaypalPayment ? payment.payer.email_address : ''" />
+                </fig-label-value>
+
+                <fig-label-value>
+                    <template v-slot:label>
+                        {{ isPaypalPayment ? $t('Paypal details') : $t('Stripe details') }}:
+                    </template>
+                    <a
+                        :href="isPaypalPayment ? 'TODO' : `https://dashboard.stripe.com/payments/${cart.stripe_payment_intent_id}`"
+                        target="_blank">{{ $t('View') }}</a>
+                </fig-label-value>
+            </fig-label-value-group>
+        </fig-text-card>
+
+
+        <!-- Shipping address -->
+        <fig-text-card class="mb-6" v-if="cart" variant="white">
+            <template v-slot:header-left>
+                <div class="flex items-center justify-center">
+                    <fig-icon
+                        icon="truck"
+                        width="26"
+                        height="26"
+                        :stroke-width="1" />
+                    <div class="text-lg font-bold pl-2">{{ $t('Shipping') }}</div>
+                </div>
+            </template>
+
+            <fig-label-value-group density="md" display="row" class="text-sm">
+                <!-- shipped at -->
+                <fig-label-value>
+                    <template v-slot:label>{{ $t('Shipped at') }}:</template>
+
                     <template v-if="cart.shipped_at">
                         <fig-icon-label>
-                            {{ $t('Shipped at') }}: <span class="font-bold">{{ cart.shipped_at | format8601 }}</span>
+                            {{ cart.shipped_at | format8601 }}
 
                             <template v-slot:right>
                                 <fig-pop-confirm @confirm="setShippedAt(false)">
@@ -271,7 +309,8 @@ export default {
                                         <fig-button
                                             variant="plain"
                                             size="sm"
-                                            class="ml-2">{{ $t('Clear') }}</fig-button>
+                                            class="ml-2"
+                                            icon="x"></fig-button>
                                     </template>
                                     <div>{{ $t('Are you sure you want to clear this value?') }}</div>
                                 </fig-pop-confirm>
@@ -280,90 +319,29 @@ export default {
                     </template>
 
                     <template v-else>
-                        <div class="flex items-center">
-                            <fig-tag variant="warning">{{ $t('not shipped') }}</fig-tag>
+                        <div>
+                            <div>
+                                <fig-tag variant="warning" size="sm">{{ $t('not shipped') }}</fig-tag>
+                            </div>
 
-                            <fig-button
-                                variant="primary"
-                                size="sm"
-                                class="ml-3"
-                                @click="setShippedAt(true)">{{ $t('Mark as shipped') }}</fig-button>
+                            <div class="mt-4">
+                                <fig-button
+                                    variant="primary"
+                                    size="sm"
+                                    @click="setShippedAt(true)">{{ $t('Mark as shipped') }}</fig-button>
+                            </div>
                         </div>
                     </template>
-                </div>
+                </fig-label-value>
 
-                <!-- shipping address -->
-                <div class="flex flex-wrap overflow-hidden sm:-mx-2 px-4">
-                    <div class="w-full sm:my-2 sm:px-2 md:w-1/2">
-                        <fig-address
-                            :first-name="cart.shipping_firstName"
-                            :last-name="cart.shipping_lastName"
-                            :company="cart.shipping_company"
-                            :street-address="cart.shipping_streetAddress"
-                            :extended-address="cart.shipping_extendedAddress"
-                            :city="cart.shipping_city"
-                            :state="cart.shipping_state"
-                            :zip="cart.shipping_postalCode"
-                            :country-code="cart.shipping_countryCodeAlpha2" />
-                    </div>
-                    <div class="w-full sm:my-2 sm:px-2 md:w-1/2">
-                        <fig-label-value-group density="sm">
-                            <!-- Email address -->
-                            <fig-label-value>
-                                <template v-slot:label>{{ $t('Email address') }}:</template>
-                                {{ cart.shipping_email }}
-                            </fig-label-value>
+                <!-- shipping label -->
+                <fig-label-value>
+                    <template v-slot:label>{{ $t('Shipping label') }}:</template>
 
-                            <!-- Email address -->
-                            <fig-label-value>
-                                <template v-slot:label>{{ $t('Phone') }}:</template>
-                                {{ cart.shipping_phone }}
-                            </fig-label-value>
-                        </fig-label-value-group>
-                    </div>
-                </div>
-            </fig-spec>
-
-
-            <!-- Shipping label -->
-            <fig-spec>
-                <template v-slot:label>
-                    <div class="flex justify-center">
-                        <fig-icon
-                            icon="truck"
-                            width="30"
-                            height="30"
-                            :stroke-width="1" />
-                    </div>
-                    <div class="text-xs text-center">{{ $t('Shipping label') }}</div>
-                </template>
-
-                <div class="flex justify-right">
-                    <div class="inline-block pl-4">
-                        <fig-button
-                            v-if="label"
-                            variant="plain"
-                            size="sm"
-                            @click="showShippigLabelModal">{{ $t('view raw data') }}</fig-button>
-                    </div>
-
-                    <!-- raw data modal -->
-                    <fig-modal
-                        ref="shipping_label_modal"
-                        size="lg"
-                        close-button>
-                        <json-tree
-                            :data="label"
-                            :level="1" />
-                    </fig-modal>
-                </div>
-
-                <div class='px-4'>
-                    <!-- show buy shipping label button if no label -->
                     <template v-if="!label">
-                        <fig-message variant="warning">{{ $t('A shipping label has not been purhased yet') }}</fig-message>
+                        <fig-tag variant="warning" size="sm">{{ $t('None') }}</fig-tag>
 
-                        <div class="pt-2">
+                        <div class="pt-4">
                             <fig-pop-confirm @confirm="onConfirmPurchaseShippingLabel">
                                 <template v-slot:reference>
                                     <fig-button
@@ -377,327 +355,391 @@ export default {
 
                     <!-- show label details -->
                     <template v-else>
-                        <div class="flex flex-wrap overflow-hidden sm:-mx-2 px-4">
-                            <div class="w-full sm:my-2 sm:px-2 md:w-1/2">
-                                <fig-label-value-group density="sm">
-                                    <!-- label PDF -->
-                                    <fig-label-value>
-                                        <template v-slot:label>{{ $t('Label') }}:</template>
-                                        <fig-icon-label>
-                                            <template v-slot:right>
-                                                <fig-icon
-                                                    icon="new-window"
-                                                    width="18"
-                                                    height="18" />
-                                            </template>
-                                            <a :href="label.label_download.pdf"
-                                                target="_blank"
-                                                class="pr-1">{{ $t('View') }}</a>
-                                        </fig-icon-label>
-                                    </fig-label-value>
+                        <!-- label PDF -->
+                        <fig-icon-label>
+                            <template v-slot:right>
+                                <fig-icon
+                                    icon="new-window"
+                                    width="18"
+                                    height="18" />
+                            </template>
+                            <a :href="label.label_download.pdf"
+                               target="_blank"
+                               class="pr-1">{{ $t('View') }}</a>
+                        </fig-icon-label>
 
-                                    <!-- tracking # -->
-                                    <fig-label-value>
-                                        <template v-slot:label>{{ $t('Tracking #') }}:</template>
-                                        {{ label.tracking_number }}
-                                    </fig-label-value>
+                        <fig-button
+                            variant="plain"
+                            size="sm"
+                            @click="showShippingLabelDetailsModal">{{ $t('label details') }}</fig-button>
 
-                                    <!-- is return label -->
-                                    <fig-label-value>
-                                        <template v-slot:label>{{ $t('Is return label') }}:</template>
-                                        <fig-boolean-tag
-                                            :bool="label.is_return_label"
-                                            size="sm" />
-                                    </fig-label-value>
+                        <!-- shipping label details modal -->
+                        <fig-modal
+                            ref="shipping_label_details_modal"
+                            size="lg"
+                            close-button>
+                            <json-tree
+                                :data="label"
+                                :level="1" />
+                            <div class="flex flex-wrap overflow-hidden sm:-mx-2 px-4">
+                                <div class="w-full sm:my-2 sm:px-2 md:w-1/2">
+                                    <fig-label-value-group density="md" display="table">
+                                        <!-- tracking # -->
+                                        <fig-label-value>
+                                            <template v-slot:label>{{ $t('Tracking #') }}:</template>
+                                            {{ label.tracking_number }}
+                                        </fig-label-value>
 
-                                    <!-- is international -->
-                                    <fig-label-value>
-                                        <template v-slot:label>{{ $t('Is international') }}:</template>
-                                        <fig-boolean-tag
-                                            :bool="label.is_international"
-                                            size="sm" />
-                                    </fig-label-value>
+                                        <!-- is return label -->
+                                        <fig-label-value>
+                                            <template v-slot:label>{{ $t('Is return label') }}:</template>
+                                            <fig-boolean-tag
+                                                :bool="label.is_return_label"
+                                                size="sm" />
+                                        </fig-label-value>
 
-                                    <!-- voided -->
-                                    <fig-label-value>
-                                        <template v-slot:label>{{ $t('Voided') }}:</template>
-                                        <fig-boolean-tag
-                                            :bool="label.voided"
-                                            size="sm" />
-                                    </fig-label-value>
-                                </fig-label-value-group>
+                                        <!-- is international -->
+                                        <fig-label-value>
+                                            <template v-slot:label>{{ $t('Is international') }}:</template>
+                                            <fig-boolean-tag
+                                                :bool="label.is_international"
+                                                size="sm" />
+                                        </fig-label-value>
+
+                                        <!-- voided -->
+                                        <fig-label-value>
+                                            <template v-slot:label>{{ $t('Voided') }}:</template>
+                                            <fig-boolean-tag
+                                                :bool="label.voided"
+                                                size="sm" />
+                                        </fig-label-value>
+                                    </fig-label-value-group>
+                                </div>
+
+                                <div class="w-full sm:my-2 sm:px-2 md:w-1/2">
+                                    <fig-label-value-group density="md" display="table">
+                                        <!-- Created -->
+                                        <fig-label-value>
+                                            <template v-slot:label>{{ $t('Created') }}:</template>
+                                            {{ label.created_at | format8601 }}
+                                        </fig-label-value>
+
+                                        <!-- Shipment ID -->
+                                        <fig-label-value>
+                                            <template v-slot:label>{{ $t('ShipEngine label ID') }}:</template>
+                                            {{ label.label_id }}
+                                        </fig-label-value>
+
+                                        <!-- Shipment ID -->
+                                        <fig-label-value>
+                                            <template v-slot:label>{{ $t('ShipEngine shipment ID') }}:</template>
+                                            {{ label.shipment_id }}
+                                        </fig-label-value>
+                                    </fig-label-value-group>
+                                </div>
                             </div>
-
-                            <div class="w-full sm:my-2 sm:px-2 md:w-1/2">
-                                <fig-label-value-group density="sm">
-                                    <!-- Created -->
-                                    <fig-label-value>
-                                        <template v-slot:label>{{ $t('Created') }}:</template>
-                                        {{ label.created_at | format8601 }}
-                                    </fig-label-value>
-
-                                    <!-- Shipment ID -->
-                                    <fig-label-value>
-                                        <template v-slot:label>{{ $t('ShipEngine label ID') }}:</template>
-                                        {{ label.label_id }}
-                                    </fig-label-value>
-
-                                    <!-- Shipment ID -->
-                                    <fig-label-value>
-                                        <template v-slot:label>{{ $t('ShipEngine shipment ID') }}:</template>
-                                        {{ label.shipment_id }}
-                                    </fig-label-value>
-                                </fig-label-value-group>
-                            </div>
-                        </div>
+                        </fig-modal>
                     </template>
-                </div>
-            </fig-spec>
+                </fig-label-value>
+
+                <!-- shipping address -->
+                <fig-label-value>
+                    <template v-slot:label>{{ $t('Shipping address') }}:</template>
+                    <fig-address
+                        :first-name="cart.shipping_firstName"
+                        :last-name="cart.shipping_lastName"
+                        :company="cart.shipping_company"
+                        :street-address="cart.shipping_streetAddress"
+                        :extended-address="cart.shipping_extendedAddress"
+                        :city="cart.shipping_city"
+                        :state="cart.shipping_state"
+                        :zip="cart.shipping_postalCode"
+                        :country-code="cart.shipping_countryCodeAlpha2" />
+                </fig-label-value>
+
+                <!-- email -->
+                <fig-label-value>
+                    <template v-slot:label>{{ $t('Email') }}:</template>
+                    {{ cart.shipping_email }}
+                </fig-label-value>
+
+                <!-- phone -->
+                <fig-label-value>
+                    <template v-slot:label>{{ $t('Phone') }}:</template>
+                    {{ cart.shipping_phone }}
+                </fig-label-value>
+            </fig-label-value-group>
 
 
             <!-- Shipping rate -->
-            <fig-spec>
-                <template v-slot:label>
-                    <div class="flex justify-center">
-                        <fig-icon
-                            icon="truck"
-                            width="30"
-                            height="30"
-                            :stroke-width="1" />
-                    </div>
-                    <div class="text-xs text-center">{{ $t('Shipping rate') }}</div>
-                </template>
+            <div class="mt-4 pl-4">
+                <div class="flex items-center">
+                    <div class="text-black">{{ $t('SHIPPING RATE') }}</div>
 
-                <div class="flex flex-wrap overflow-hidden sm:-mx-2 px-4">
-                    <div class="w-full sm:my-2 sm:px-2 md:w-1/2">
-                        <fig-label-value-group density="sm">
+                    <fig-button
+                        variant="plain"
+                        size="sm"
+                        class="ml-4"
+                        @click="showShippigRateModal">{{ $t('view raw data') }}</fig-button>
+                </div>
+
+                <!-- raw data modal -->
+                <fig-modal
+                    ref="shipping_rate_modal"
+                    size="lg"
+                    close-button>
+                    <json-tree
+                        :data="cart.selected_shipping_rate"
+                        :level="1" />
+                </fig-modal>
+            </div>
+
+            <div class="flex flex-wrap overflow-hidden sm:-mx-2 px-4">
+                <div class="w-full sm:my-2 sm:px-2 md:w-1/2">
+                    <fig-label-value-group density="md" display="table">
+                        <fig-label-value>
+                            <template v-slot:label>{{ $t('Quoted shipping rate') }}:</template>
+                            <fig-money :cents="cart.shipping_total" />
+                        </fig-label-value>
+
+                        <!--
+                            There is a scenario where cart.selected_shipping_rate is null.
+                            It happens when there was no suitable package (box) for the products
+                            in the cart, thus a shipping rate could not be calculated
+                        -->
+                        <template v-if="cart.selected_shipping_rate">
                             <fig-label-value>
-                                <template v-slot:label>{{ $t('Quoted shipping rate') }}:</template>
-                                <fig-money :cents="cart.shipping_total" />
+                                <template v-slot:label>{{ $t('Carrier') }}:</template>
+                                {{ cart.selected_shipping_rate.carrier_friendly_name }}
                             </fig-label-value>
 
-                            <!--
-                                There is a scenario where cart.selected_shipping_rate is null.
-                                It happens when there was no suitable package (box) for the products
-                                in the cart, thus a shipping rate could not be calculated
-                            -->
-                            <template v-if="cart.selected_shipping_rate">
-                                <fig-label-value>
-                                    <template v-slot:label>{{ $t('Carrier') }}:</template>
-                                    {{ cart.selected_shipping_rate.carrier_friendly_name }}
-                                </fig-label-value>
+                            <fig-label-value>
+                                <template v-slot:label>{{ $t('Service type') }}:</template>
+                                {{ cart.selected_shipping_rate.service_type }}
+                            </fig-label-value>
 
-                                <fig-label-value>
-                                    <template v-slot:label>{{ $t('Service type') }}:</template>
-                                    {{ cart.selected_shipping_rate.service_type }}
-                                </fig-label-value>
-
-                                <fig-label-value>
-                                    <template v-slot:label>{{ $t('Estimated delivery') }}:</template>
-                                    {{ cart.selected_shipping_rate.estimated_delivery_date | format8601 }}
-                                </fig-label-value>
-                            </template>
-                        </fig-label-value-group>
-                    </div>
-
-                    <div class="w-full sm:my-2 sm:px-2 md:w-1/2">
-                        <fig-label-value-group density="sm">
-                            <template v-if="cart.selected_shipping_rate">
-                                <fig-label-value>
-                                    <template v-slot:label>{{ $t('Trackable') }}:</template>
-                                    <fig-boolean-tag
-                                        :bool="cart.selected_shipping_rate.trackable"
-                                        size="sm" />
-                                </fig-label-value>
-
-                                <fig-label-value>
-                                    <template v-slot:label>{{ $t('Address validation status') }}:</template>
-                                    {{ cart.selected_shipping_rate.validation_status }}
-                                </fig-label-value>
-
-                                <fig-label-value>
-                                    <template v-slot:label>{{ $t('Error messages') }}:</template>
-                                    <ul v-if="cart.selected_shipping_rate.error_messages.length" class="list-disc">
-                                        <li
-                                            v-for="(message, index) in cart.selected_shipping_rate.error_messages"
-                                            :key="index"
-                                            class="text-red-700">
-                                            {{ message }}
-                                        </li>
-                                    </ul>
-                                    <div v-else class="text-gray-400">({{ $t('none') }})</div>
-                                </fig-label-value>
-
-                                <fig-label-value>
-                                    <template v-slot:label>{{ $t('Warning messages') }}:</template>
-                                    <ul v-if="cart.selected_shipping_rate.warning_messages.length" class="list-disc">
-                                        <li
-                                            v-for="(message, index) in cart.selected_shipping_rate.warning_messages"
-                                            :key="index"
-                                            class="text-yellow-600">
-                                            {{ message }}
-                                        </li>
-                                    </ul>
-                                    <div v-else class="text-gray-400">({{ $t('none') }})</div>
-                                </fig-label-value>
-                            </template>
-                        </fig-label-value-group>
-                    </div>
-                </div>
-
-                <div class="mt-2">
-                    <fig-button
-                        variant="plain"
-                        size="sm"
-                        @click="showShippigRateModal">{{ $t('view raw data') }}</fig-button>
-
-                    <!-- raw data modal -->
-                    <fig-modal
-                        ref="shipping_rate_modal"
-                        size="lg"
-                        close-button>
-                        <json-tree
-                            :data="cart.selected_shipping_rate"
-                            :level="2"></json-tree>
-                    </fig-modal>
-                </div>
-            </fig-spec>
-
-
-            <!-- Packaging -->
-            <fig-spec>
-                <template v-slot:label>
-                    <div class="flex justify-center">
-                        <fig-icon
-                            icon="package"
-                            width="30"
-                            height="30"
-                            :stroke-width="1" />
-                    </div>
-                    <div class="text-xs text-center">{{ $t('Packaging') }}</div>
-                </template>
-
-                <template v-if="cart.shipping_rate_quote">
-
-
-                    <!-- UNPACKED products -->
-                    <fig-text-card class="mb-2 sm:mb-4" v-if="cart.shipping_rate_quote.packingResults.unpacked.length">
-                        <template v-slot:header-left>
-                            <fig-icon-label>
-                                <template v-slot:left>
-                                    <fig-icon
-                                        icon="alert-circle"
-                                        width="24"
-                                        height="24"
-                                        :stroke-width="1.5"
-                                        stroke="#e01616" />
-                                </template>
-                                <div class="text-red-700">{{ $t('UNPACKED PRODUCTS') }}</div>
-                            </fig-icon-label>
+                            <fig-label-value>
+                                <template v-slot:label>{{ $t('Estimated delivery') }}:</template>
+                                {{ cart.selected_shipping_rate.estimated_delivery_date | format8601 }}
+                            </fig-label-value>
                         </template>
+                    </fig-label-value-group>
+                </div>
 
-                        <div
-                            v-for="(p, index) in cart.shipping_rate_quote.packingResults.unpacked"
-                            :key="index"
-                            class="mb-2">
-                            <packed-product-display :product="p" />
-                        </div>
-                    </fig-text-card>
+                <div class="w-full sm:my-2 sm:px-2 md:w-1/2">
+                    <fig-label-value-group density="md" display="table">
+                        <template v-if="cart.selected_shipping_rate">
+                            <fig-label-value>
+                                <template v-slot:label>{{ $t('Trackable') }}:</template>
+                                <fig-boolean-tag
+                                    :bool="cart.selected_shipping_rate.trackable"
+                                    size="sm" />
+                            </fig-label-value>
 
-                    <!-- PACKED products -->
-                    <fig-text-card
-                        v-for="(p, index) in cart.shipping_rate_quote.packingResults.packed"
+                            <fig-label-value>
+                                <template v-slot:label>{{ $t('Address validation status') }}:</template>
+                                {{ cart.selected_shipping_rate.validation_status }}
+                            </fig-label-value>
+
+                            <fig-label-value>
+                                <template v-slot:label>{{ $t('Error messages') }}:</template>
+                                <ul v-if="cart.selected_shipping_rate.error_messages.length" class="list-disc">
+                                    <li
+                                        v-for="(message, index) in cart.selected_shipping_rate.error_messages"
+                                        :key="index"
+                                        class="text-red-700">
+                                        {{ message }}
+                                    </li>
+                                </ul>
+                                <div v-else class="text-gray-400">({{ $t('none') }})</div>
+                            </fig-label-value>
+
+                            <fig-label-value>
+                                <template v-slot:label>{{ $t('Warning messages') }}:</template>
+                                <ul v-if="cart.selected_shipping_rate.warning_messages.length" class="list-disc">
+                                    <li
+                                        v-for="(message, index) in cart.selected_shipping_rate.warning_messages"
+                                        :key="index"
+                                        class="text-yellow-600">
+                                        {{ message }}
+                                    </li>
+                                </ul>
+                                <div v-else class="text-gray-400">({{ $t('none') }})</div>
+                            </fig-label-value>
+                        </template>
+                    </fig-label-value-group>
+                </div>
+            </div>
+
+            <div class="mt-2">
+
+            </div>
+        </fig-text-card>
+
+
+        <!-- Packaging -->
+        <fig-text-card class="mb-6" v-if="cart" variant="white">
+            <template v-slot:header-left>
+                <div class="flex items-center justify-center">
+                    <fig-icon
+                        icon="package"
+                        width="26"
+                        height="26"
+                        :stroke-width="1" />
+                    <div class="text-lg font-bold pl-2">{{ $t('Packaging') }}</div>
+                </div>
+            </template>
+
+            <template v-if="cart.shipping_rate_quote">
+                <!-- UNPACKED products -->
+                <fig-text-card class="mb-2 sm:mb-4" v-if="cart.shipping_rate_quote.packingResults.unpacked.length">
+                    <template v-slot:header-left>
+                        <fig-icon-label>
+                            <template v-slot:left>
+                                <fig-icon
+                                    icon="alert-circle"
+                                    width="24"
+                                    height="24"
+                                    :stroke-width="1.5"
+                                    stroke="#e01616" />
+                            </template>
+                            <div class="text-red-700">{{ $t('UNPACKED PRODUCTS') }}</div>
+                        </fig-icon-label>
+                    </template>
+
+                    <div
+                        v-for="(p, index) in cart.shipping_rate_quote.packingResults.unpacked"
                         :key="index"
-                        class="mb-2 sm:mb-4">
-                        <template v-slot:header-left>
-                            {{ $t('Box') }} ({{ $t('{num1} of {num2}', { num1: index + 1, num2: cart.shipping_rate_quote.packingResults.packed.length }) }}) -
-                            {{ $tc('{num} items', p.products.length, {num: p.products.length}) }}
-                        </template>
+                        class="mb-2">
+                        <packed-product-display :product="p" />
+                    </div>
+                </fig-text-card>
 
-                        <div class="flex flex-row align-top px-2">
-                            <!-- box info -->
-                            <div class="pr-5">
-                                <div class="flex justify-center">
-                                    <fig-icon
-                                        icon="package"
-                                        width="50"
-                                        height="50"
-                                        :stroke-width="1" />
-                                </div>
-                                <div class="text-xs text-center">
-                                    <div>{{ p.box.label }}</div>
-                                    <div>{{ p.box.description }}</div>
-                                </div>
+                <!-- PACKED products -->
+                <fig-text-card
+                    v-for="(p, index) in cart.shipping_rate_quote.packingResults.packed"
+                    :key="index"
+                    border
+                    shadow
+                    class="mb-2 sm:mb-4">
+                    <template v-slot:header-left>
+                        {{ $t('Box') }} ({{ $t('{num1} of {num2}', { num1: index + 1, num2: cart.shipping_rate_quote.packingResults.packed.length }) }}) -
+                        {{ $tc('{num} items', p.products.length, {num: p.products.length}) }}
+                    </template>
+
+                    <div class="flex flex-row align-top px-2">
+                        <!-- box info -->
+                        <div class="pr-5">
+                            <div class="flex justify-center">
+                                <fig-icon
+                                    icon="package"
+                                    width="50"
+                                    height="50"
+                                    :stroke-width="1" />
                             </div>
-
-                            <!-- products packed in box -->
-                            <div class="flex-grow">
-                                <!-- product card -->
-                                <div
-                                    v-for="(prod, index) in p.products"
-                                    :key="index"
-                                    class="mb-2">
-                                    <packed-product-display :product="prod" />
-                                </div>
+                            <div class="text-xs text-center">
+                                <div>{{ p.box.label }}</div>
+                                <div>{{ p.box.description }}</div>
                             </div>
                         </div>
-                    </fig-text-card>
-                </template>
-            </fig-spec>
 
-
-            <!-- Refunds -->
-            <fig-spec>
-                <template v-slot:label>
-                    <div class="flex justify-center">
-                        <fig-icon
-                            icon="receipt-refund"
-                            width="30"
-                            height="30"
-                            :stroke-width="1" />
+                        <!-- products packed in box -->
+                        <div class="flex-grow">
+                            <!-- product card -->
+                            <div
+                                v-for="(prod, idx) in p.products"
+                                :key="idx"
+                                class="mb-2">
+                                <packed-product-display :product="prod" />
+                            </div>
+                        </div>
                     </div>
-                    <div class="text-xs text-center">{{ $t('Refunds') }}</div>
-                </template>
+                </fig-text-card>
+            </template>
+        </fig-text-card>
 
-                <!-- create refund button -->
-                <div class="mb-4 flex w-full justify-end">
-                    <fig-button
-                        variant="danger"
-                        size="sm"
-                        @click="showRefundModal">{{ $t('Create refund') }}</fig-button>
 
-                    <fig-modal
-                        ref="refund_modal"
-                        size="md"
-                        close-button>
-                        <template v-slot:header>{{ $t('Refund payment') }}</template>
-                        <order-refund-form :cart="cart" />
-                    </fig-modal>
+        <!-- Refunds -->
+        <fig-text-card class="mb-6" v-if="cart" variant="white">
+            <template v-slot:header-left>
+                <div class="flex justify-center items-center">
+                    <fig-icon
+                        icon="receipt-refund"
+                        width="26"
+                        height="26"
+                        :stroke-width="1" />
+                    <div class="text-lg font-bold pl-2">{{ $t('Refunds') }}</div>
                 </div>
+            </template>
+            <template v-slot:header-right>
+                <fig-button
+                    variant="plain"
+                    size="sm"
+                    @click="showRefundModal">{{ $t('Create refund') }}</fig-button>
 
-                TODO: show list of refunds for this cart
-            </fig-spec>
+                <fig-modal
+                    ref="refund_modal"
+                    size="md"
+                    close-button>
+                    <template v-slot:header>{{ $t('Refund payment') }}</template>
+                    <order-refund-form
+                        :cart="cart"
+                        @success="onRefundSuccess" />
+                </fig-modal>
+            </template>
+
+            <order-refund-list :cart-id="cart.id" />
+        </fig-text-card>
 
 
-            <!-- Cart -->
-            <fig-spec>
-                <template v-slot:label>
-                    <div class="flex justify-center">
-                        <fig-icon
-                            icon="cart"
-                            width="30"
-                            height="30"
-                            :stroke-width="1" />
-                    </div>
-                    <div class="text-xs text-center">{{ $t('Cart') }}</div>
-                </template>
-
-                <div>
-                    <fig-button
-                        variant="plain"
-                        size="sm"
-                        @click="showCartDataModal">{{ $t('view raw data') }}</fig-button>
+        <!-- Billing -->
+        <fig-text-card class="mb-6" v-if="cart" variant="white">
+            <template v-slot:header-left>
+                <div class="flex justify-center items-center">
+                    <fig-icon
+                        icon="file-invoice"
+                        width="26"
+                        height="26"
+                        :stroke-width="1" />
+                    <div class="text-lg font-bold pl-2">{{ $t('Billing') }}</div>
                 </div>
+            </template>
+
+            <div v-if="cart.billing_same_as_shipping" class="text-gray-500">
+                ({{ $t('Same as shipping address') }})
+            </div>
+            <fig-address
+                v-else
+                :first-name="cart.billing_firstName"
+                :last-name="cart.billing_lastName"
+                :company="cart.billing_company"
+                :street-address="cart.billing_streetAddress"
+                :extended-address="cart.billing_extendedAddress"
+                :city="cart.billing_city"
+                :state="cart.billing_state"
+                :zip="cart.billing_postalCode"
+                :country-code="cart.billing_countryCodeAlpha2" />
+        </fig-text-card>
+
+
+        <!-- Cart -->
+        <fig-text-card class="mb-6" v-if="cart" variant="white">
+            <template v-slot:header-left>
+                <div class="flex justify-center items-center">
+                    <fig-icon
+                        icon="cart"
+                        width="26"
+                        height="26"
+                        :stroke-width="1" />
+                    <div class="text-lg font-bold pl-2">{{ $t('Cart') }}</div>
+                </div>
+            </template>
+
+            <div>
+                <fig-button
+                    variant="plain"
+                    size="sm"
+                    @click="showCartDataModal">{{ $t('view raw data') }}</fig-button>
 
                 <!-- raw data modal -->
                 <fig-modal
@@ -708,92 +750,33 @@ export default {
                         :data="cart"
                         :level="1" />
                 </fig-modal>
-            </fig-spec>
+            </div>
+        </fig-text-card>
 
-            <!-- Billing -->
-            <fig-spec>
-                <template v-slot:label>
-                    <div class="flex justify-center">
-                        <fig-icon
-                            icon="file-invoice"
-                            width="30"
-                            height="30"
-                            :stroke-width="1" />
-                    </div>
-                    <div class="text-xs text-center">{{ $t('Billing') }}</div>
-                </template>
 
-                <div v-if="cart.billing_same_as_shipping" class="text-gray-500">
-                    ({{ $t('Same as shipping address') }})
+        <!-- Additional actions -->
+        <fig-text-card class="mb-6" v-if="cart" variant="white">
+            <template v-slot:header-left>
+                <div class="flex justify-center items-center">
+                    <fig-icon
+                        icon="click"
+                        width="26"
+                        height="26"
+                        :stroke-width="1" />
+                    <div class="text-lg font-bold pl-2">{{ $t('Additional actions') }}</div>
                 </div>
-                <fig-address
-                    v-else
-                    :first-name="cart.billing_firstName"
-                    :last-name="cart.billing_lastName"
-                    :company="cart.billing_company"
-                    :street-address="cart.billing_streetAddress"
-                    :extended-address="cart.billing_extendedAddress"
-                    :city="cart.billing_city"
-                    :state="cart.billing_state"
-                    :zip="cart.billing_postalCode"
-                    :country-code="cart.billing_countryCodeAlpha2" />
-            </fig-spec>
+            </template>
 
-            <!-- General Info -->
-            <fig-spec>
-                <template v-slot:label>
-                    <div class="flex justify-center">
-                        <fig-icon
-                            icon="folder"
-                            width="30"
-                            height="30"
-                            :stroke-width="1" />
-                    </div>
-                    <div class="text-xs text-center">{{ $t('General Info') }}</div>
+            <fig-pop-confirm @confirm="sendOrderConfirmationEmail()">
+                <template v-slot:reference>
+                    <fig-button
+                        variant="plain"
+                        size="sm"
+                        icon="send">{{ $t('Re-send order acknowledgement email to customer') }}</fig-button>
                 </template>
-
-                <fig-label-value-group density="sm">
-                    <!-- closed at (order created)-->
-                    <fig-label-value>
-                        <template v-slot:label>{{ $t('Order created') }}:</template>
-                        {{ cart.closed_at | format8601 }}
-                    </fig-label-value>
-
-                    <!-- cart created -->
-                    <fig-label-value>
-                        <template v-slot:label>{{ $t('Cart created') }}:</template>
-                        {{ cart.created_at | format8601 }}
-                    </fig-label-value>
-                </fig-label-value-group>
-
-            </fig-spec>
-
-            <!-- Additional actions -->
-            <fig-spec>
-                <template v-slot:label>
-                    <div class="flex justify-center">
-                        <fig-icon
-                            icon="click"
-                            width="30"
-                            height="30"
-                            :stroke-width="1" />
-                    </div>
-                    <div class="text-xs text-center">{{ $t('Additional actions') }}</div>
-                </template>
-
-                <div>
-                    <fig-pop-confirm @confirm="sendOrderConfirmationEmail()">
-                        <template v-slot:reference>
-                            <fig-button
-                                variant="plain"
-                                icon="send">{{ $t('Re-send order acknowledgement email to customer') }}</fig-button>
-                        </template>
-                        <div>{{ $t('Are you sure you want to send another order confirmation email to the customer?') }}</div>
-                    </fig-pop-confirm>
-                </div>
-            </fig-spec>
-
-        </fig-spec-layout>
+                <div>{{ $t('Are you sure you want to send another order confirmation email to the customer?') }}</div>
+            </fig-pop-confirm>
+        </fig-text-card>
     </div>
 </template>
 

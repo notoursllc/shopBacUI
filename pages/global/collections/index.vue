@@ -7,7 +7,9 @@ import {
     FigTh,
     FigTd,
     FigTrNoResults,
-    FigOperationsDropdown
+    FigOperationsDropdown,
+    FigPaginationWrapper,
+    FigOverlay
 } from '@notoursllc/figleaf';
 
 export default {
@@ -18,25 +20,43 @@ export default {
         FigTh,
         FigTd,
         FigTrNoResults,
-        FigOperationsDropdown
+        FigOperationsDropdown,
+        FigPaginationWrapper,
+        FigOverlay
     },
 
     data() {
         return {
-            collections: []
+            loading: false,
+            collections: [],
+            pagination: {
+                _page: 1,
+                _pageSize: 100
+            },
+            table: {
+                _sort: 'name:asc'
+            },
+            totalResults: 0
         };
     },
 
     created() {
-        this.fetchCollections();
+        this.fetchData();
         this.$store.dispatch('ui/title', this.$t('Product collections'));
     },
 
     methods: {
-        async fetchCollections(paramsObj) {
+        async fetchData() {
             try {
-                const { data } = await this.$api.product.collection.list(paramsObj);
+                this.loading = true;
+
+                const { data, pagination } = await this.$api.product.collection.list({
+                    ...this.pagination,
+                    ...this.table
+                });
+
                 this.collections = data;
+                this.totalResults = pagination.rowCount;
             }
             catch(e) {
                 this.$figleaf.errorToast({
@@ -44,13 +64,18 @@ export default {
                     text: e.message
                 });
             }
+
+            this.loading = false;
         },
 
         sortChanged(val) {
-            this.fetchCollections({
-                sortBy: val.by,
-                sortDesc: !val.isAsc
-            });
+            this.table._sort = val;
+            this.fetchData();
+        },
+
+        onPaginationChange(data) {
+            this.pagination = { ...data };
+            this.fetchData();
         },
 
         async onDeleteCollection(data) {
@@ -70,7 +95,7 @@ export default {
                     throw new Error(this.$t('Collection not found'));
                 }
 
-                this.fetchCollections();
+                this.fetchData();
                 this.$figleaf.successToast({
                     title: this.$t('Success'),
                     text: this.$t('deleted_name', {name: data.name})
@@ -99,35 +124,45 @@ export default {
     <div>
         <fig-button-fab icon="plus" @click="goToCollectionUpsert()" />
 
-        <fig-table-simple
-            striped
-            hover
-            @sort="sortChanged">
-            <template slot="head">
-                <tr>
-                    <fig-th sortable prop="name">{{ $t('Name') }}</fig-th>
-                    <fig-th sortable prop="published">{{ $t('Published') }}</fig-th>
-                </tr>
-            </template>
+        <fig-pagination-wrapper
+            bottom
+            :total-records="totalResults"
+            @perPage="onPaginationChange"
+            @pageNumber="onPaginationChange">
 
-            <tr v-for="(obj, idx) in collections" :key="idx">
-                <!-- name -->
-                <fig-td>
-                    {{ obj.name }}
-                    <fig-operations-dropdown
-                        :show-view="false"
-                        @edit="goToCollectionUpsert(obj.id)"
-                        @delete="onDeleteCollection(obj)"
-                        class="ml-1" />
-                </fig-td>
+            <fig-overlay :show="loading">
+                <fig-table-simple
+                    striped
+                    hover
+                    @sort="sortChanged">
+                    <template slot="head">
+                        <tr>
+                            <fig-th sortable prop="name">{{ $t('Name') }}</fig-th>
+                            <fig-th sortable prop="published">{{ $t('Published') }}</fig-th>
+                        </tr>
+                    </template>
 
-                <!-- published -->
-                <fig-td>
-                    <boolean-tag :value="obj.published" />
-                </fig-td>
-            </tr>
+                    <tr v-for="(obj, idx) in collections" :key="idx">
+                        <!-- name -->
+                        <fig-td>
+                            {{ obj.name }}
+                            <fig-operations-dropdown
+                                :show-view="false"
+                                @edit="goToCollectionUpsert(obj.id)"
+                                @delete="onDeleteCollection(obj)"
+                                class="ml-1" />
+                        </fig-td>
 
-            <fig-tr-no-results v-if="!collections.length" :colspan="2" />
-        </fig-table-simple>
+                        <!-- published -->
+                        <fig-td>
+                            <boolean-tag :value="obj.published" />
+                        </fig-td>
+                    </tr>
+
+                    <fig-tr-no-results v-if="!collections.length" :colspan="2" />
+                </fig-table-simple>
+            </fig-overlay>
+
+        </fig-pagination-wrapper>
     </div>
 </template>

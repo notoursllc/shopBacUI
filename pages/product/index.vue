@@ -10,7 +10,9 @@ import {
     FigTd,
     FigTrNoResults,
     FigOperationsDropdown,
-    FigVNodes
+    FigVNodes,
+    FigOverlay,
+    FigPaginationWrapper
 } from '@notoursllc/figleaf';
 
 export default {
@@ -22,7 +24,9 @@ export default {
         FigTd,
         FigTrNoResults,
         FigOperationsDropdown,
-        FigVNodes
+        FigVNodes,
+        FigOverlay,
+        FigPaginationWrapper
     },
 
     mixins: [
@@ -31,8 +35,17 @@ export default {
 
     data() {
         return {
+            loading: false,
             products: [],
-            masterTypes: {}
+            masterTypes: {},
+            pagination: {
+                _page: 1,
+                _pageSize: 100
+            },
+            table: {
+                _sort: 'updated_at:asc'
+            },
+            totalResults: 0
         };
     },
 
@@ -46,8 +59,16 @@ export default {
     methods: {
         async fetchProducts(paramsObj) {
             try {
-                const { data } = await this.$api.product.list(paramsObj);
+                this.loading = true;
+
+                const { data, pagination } = await this.$api.product.list({
+                    ...this.pagination,
+                    ...this.table,
+                    _withRelated: '*'
+                });
+
                 this.products = data;
+                this.totalResults = pagination.rowCount;
             }
             catch(e) {
                 this.$figleaf.errorToast({
@@ -55,10 +76,12 @@ export default {
                     text: e.message
                 });
             }
+
+            this.loading = false;
         },
 
         async fetchMasterTypes() {
-            const { data } = await this.$api.masterType.all();
+            const { data } = await this.$api.masterType.list();
             const groupedTypes = {};
 
             if(Array.isArray(data)) {
@@ -73,6 +96,16 @@ export default {
             this.masterTypes = groupedTypes;
         },
 
+        sortChanged(val) {
+            this.table._sort = val;
+            this.fetchProducts();
+        },
+
+        onPaginationChange(data) {
+            this.pagination = { ...data };
+            this.fetchProducts();
+        },
+
         getMasterTypeLabel(object, value) {
             const labels = [];
 
@@ -85,13 +118,6 @@ export default {
             }
 
             return labels.join(', ');
-        },
-
-        sortChanged(val) {
-            this.fetchProducts({
-                sortBy: val.by,
-                sortDesc: !val.isAsc
-            });
         },
 
         async onProductDelete(product) {
@@ -212,63 +238,72 @@ export default {
     <div>
         <fig-button-fab icon="plus" @click="goToProductUpsert()" />
 
+        <fig-pagination-wrapper
+            bottom
+            :total-records="totalResults"
+            @perPage="onPaginationChange"
+            @pageNumber="onPaginationChange">
 
-        <fig-table-simple
-            striped
-            hover
-            @sort="sortChanged">
-            <template slot="head">
-                <tr>
-                    <fig-th></fig-th>
-                    <fig-th sortable prop="title">{{ $t('Title') }}</fig-th>
-                    <fig-th>{{ $t('Inventory') }}</fig-th>
-                    <fig-th sortable prop="published">{{ $t('Published') }}</fig-th>
-                    <fig-th sortable prop="sub_type">{{ $t('Sub Type') }}</fig-th>
-                    <fig-th sortable prop="gender_type">{{ $t('Gender') }}</fig-th>
-                </tr>
-            </template>
+            <fig-overlay :show="loading">
+                <fig-table-simple
+                    striped
+                    hover
+                    @sort="sortChanged">
+                    <template slot="head">
+                        <tr>
+                            <fig-th></fig-th>
+                            <fig-th sortable prop="title">{{ $t('Title') }}</fig-th>
+                            <fig-th>{{ $t('Inventory') }}</fig-th>
+                            <fig-th sortable prop="published">{{ $t('Published') }}</fig-th>
+                            <fig-th sortable prop="sub_type">{{ $t('Sub Type') }}</fig-th>
+                            <fig-th sortable prop="gender_type">{{ $t('Gender') }}</fig-th>
+                        </tr>
+                    </template>
 
-            <tr v-for="(prod, idx) in products" :key="idx">
-                <!-- featured image -->
-                <fig-td class="text-center">
-                    <div class="inline-block">
-                        <fig-v-nodes :vnodes="getCoverImage(prod)" />
-                    </div>
-                    <div class="text-xs">{{ numPicsLabel(prod) }}</div>
-                </fig-td>
+                    <tr v-for="(prod, idx) in products" :key="idx">
+                        <!-- featured image -->
+                        <fig-td class="text-center">
+                            <div class="inline-block">
+                                <fig-v-nodes :vnodes="getCoverImage(prod)" />
+                            </div>
+                            <div class="text-xs">{{ numPicsLabel(prod) }}</div>
+                        </fig-td>
 
-                <!-- title -->
-                <fig-td>
-                    {{ prod.title }}
-                    <fig-operations-dropdown
-                        :show-view="false"
-                        @edit="goToProductUpsert(prod.id)"
-                        @delete="onProductDelete(prod)"
-                        class="ml-1" />
-                </fig-td>
+                        <!-- title -->
+                        <fig-td>
+                            {{ prod.title }}
+                            <fig-operations-dropdown
+                                :show-view="false"
+                                @edit="goToProductUpsert(prod.id)"
+                                @delete="onProductDelete(prod)"
+                                class="ml-1" />
+                        </fig-td>
 
-                <!-- inventory count -->
-                <fig-td>
-                    {{ getInventoryCountString(prod) }}
-                </fig-td>
+                        <!-- inventory count -->
+                        <fig-td>
+                            {{ getInventoryCountString(prod) }}
+                        </fig-td>
 
-                <!-- published -->
-                <fig-td>
-                    <boolean-tag :value="prod.published" />
-                </fig-td>
+                        <!-- published -->
+                        <fig-td>
+                            <boolean-tag :value="prod.published" />
+                        </fig-td>
 
-                <!-- sub type -->
-                <fig-td>
-                    {{ getMasterTypeLabel('product_sub_type', prod.sub_type) }}
-                </fig-td>
+                        <!-- sub type -->
+                        <fig-td>
+                            {{ getMasterTypeLabel('product_sub_type', prod.sub_type) }}
+                        </fig-td>
 
-                <!-- gender -->
-                <fig-td>
-                    {{ getMasterTypeLabel('product_gender_type', prod.gender_type) }}
-                </fig-td>
-            </tr>
+                        <!-- gender -->
+                        <fig-td>
+                            {{ getMasterTypeLabel('product_gender_type', prod.gender_type) }}
+                        </fig-td>
+                    </tr>
 
-            <fig-tr-no-results v-if="!products.length" :colspan="6" />
-        </fig-table-simple>
+                    <fig-tr-no-results v-if="!products.length" :colspan="6" />
+                </fig-table-simple>
+            </fig-overlay>
+
+        </fig-pagination-wrapper>
     </div>
 </template>
