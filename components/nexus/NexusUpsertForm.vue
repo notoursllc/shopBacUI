@@ -122,7 +122,7 @@ export default Vue.extend({
 
 <template>
     <fig-overlay :show="loading">
-        <fig-label-value-group density="lg">
+        <fig-label-value-group density="lg" display="table" class="w-full">
             <!-- country code -->
             <fig-label-value>
                 <template v-slot:label><label for="country_code">{{ $t('Country code') }}:</label></template>
@@ -167,17 +167,15 @@ export default Vue.extend({
                     <div>{{ $t('Required') }}</div>
                 </template>
             </fig-label-value>
-
-            <fig-label-value>
-                <label slot="label"></label>
-                <div class="pt-4">
-                    <fig-button
-                        variant="primary"
-                        size="lg"
-                        @click="onSaveClick"
-                        :disabled="$v.$invalid">{{ $t('Save') }}</fig-button>
-                </div>
-            </fig-label-value>
         </fig-label-value-group>
+
+
+        <div class="pt-4 text-center">
+            <fig-button
+                variant="primary"
+                size="lg"
+                @click="onSaveClick"
+                :disabled="$v.$invalid">{{ $t('Save') }}</fig-button>
+        </div>
     </fig-overlay>
 </template>
