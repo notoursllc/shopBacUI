@@ -75,11 +75,6 @@ export default {
     },
 
     methods: {
-        // async viewPackingSlip() {
-        //     const { data } = await this.$api.cart.get(this.payment.id);
-        //     window.open(data.slip_url);
-        // },
-
         async getOrder() {
             try {
                 const { data } = await this.$api.cart.order.get(this.$route.params.id);

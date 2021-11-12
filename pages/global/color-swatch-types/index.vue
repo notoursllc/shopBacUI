@@ -52,8 +52,7 @@ export default {
 
         sortChanged(val) {
             this.fetchData({
-                sortBy: val.by,
-                sortDesc: !val.isAsc
+                _sort: val
             });
         },
 

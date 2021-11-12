@@ -121,7 +121,10 @@ export default Vue.extend({
             this.loading = true;
 
             try {
-                const { data } = await this.$api.product.get(id, { viewAllRelated: true });
+                const { data } = await this.$api.product.get(
+                    id,
+                    { _withRelated: '*' }
+                );
 
                 if(!data) {
                     throw new Error(this.$t('Product not found'));
