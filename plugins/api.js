@@ -14,6 +14,17 @@ export default (context, inject) => {
 
 
     const api = BreadvanApi(context.$axios);
+
+    api.getErrorMessage = (err) => {
+        let message = err.message;
+
+        if(err.response && err.response.data && err.response.data.message) {
+            message = err.response.data.message;
+        }
+
+        return message;
+    };
+
     inject('api', { ...api });
 
 };

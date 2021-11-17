@@ -1,6 +1,5 @@
 <script>
 import isObject from 'lodash.isobject';
-import qs from 'qs';
 import { maxValue } from 'vuelidate/lib/validators';
 
 import {
@@ -9,6 +8,7 @@ import {
     FigFormInputMoney,
     FigFormSelectNative,
     FigFormTextarea,
+    FigFormInputToggle,
     FigIconLabel,
     FigButton,
     FigMoney,
@@ -25,6 +25,7 @@ export default {
         FigFormInputMoney,
         FigFormSelectNative,
         FigFormTextarea,
+        FigFormInputToggle,
         FigIconLabel,
         FigButton,
         FigMoney,
@@ -44,14 +45,17 @@ export default {
     data() {
         return {
             payment: {},
-            refunds: [],
+            refundSummary: {},
             form: {
-                subtotal: 3,
-                shipping: 0,
-                tax: 0,
+                subtotal_refund: 0,
+                shipping_refund: 0,
+                tax_refund: 0,
                 reason: 'requested_by_customer',
                 description: null,
-                taxCalculationType: 'calculate'
+                taxCalculationType: 'calculate',
+                shippingCalculationType: 'calculate',
+                canIncludeShippingRefund: false,
+                canIncludeTaxRefund: true
             }
         };
     },
@@ -59,13 +63,13 @@ export default {
     validations() {
         return {
             form: {
-                subtotal: {
+                subtotal_refund: {
                     maxValue: maxValue(this.cart.sub_total)
                 },
-                shipping: {
+                shipping_refund: {
                     maxValue: maxValue(this.cart.shipping_total)
                 },
-                tax: {
+                tax_refund: {
                     maxValue: maxValue(this.cart.sales_tax)
                 }
             }
@@ -73,66 +77,73 @@ export default {
     },
 
     computed: {
-        refundTotal() {
-            let total = this.form.subtotal;
-
-            if(this.form.taxCalculationType === 'manual') {
-                total += this.form.tax;
+        finalShippingRefund() {
+            if(this.form.canIncludeShippingRefund) {
+                if(this.form.shippingCalculationType === 'manual') {
+                    return parseInt(this.form.shipping_refund, 10);
+                }
+                else {
+                    return this.calculatedShippingRefund;
+                }
             }
-            else {
-                total += this.calculatedTaxRefund;
+
+            return 0;
+        },
+
+        calculatedShippingRefund() {
+            const subtotalRefundPercentage = parseInt(this.form.subtotal_refund, 10) / parseInt(this.cart.sub_total, 10);
+            return parseInt(this.cart.shipping_total, 10) * subtotalRefundPercentage;
+        },
+
+        finalTaxRefund() {
+            if(this.form.canIncludeTaxRefund) {
+                if(this.form.taxCalculationType === 'manual') {
+                    return parseInt(this.form.tax_refund, 10);
+                }
+                else {
+                    return this.taxRefundByNexus;
+                }
             }
 
-            total += this.form.shipping;
-            total = total = this.availableToBeRefunded;
-
-            return total;
+            return 0;
         },
 
-        maxRefundAmount() {
-            return this.cart ? this.cart.grand_total : 0;
-        },
-
-        maxSubtotalRefund() {
-            return this.cart ? this.cart.sub_total : 0;
-        },
-
-        maxShippingRefund() {
-            return this.cart ? this.cart.shipping_total : 0;
-        },
-
-        maxTaxRefund() {
-            return this.cart ? this.cart.sales_tax : 0;
-        },
-
-        calculatedTaxRefund() {
+        taxRefundByNexus() {
             let total = 0;
 
             if(isObject(this.cart.tax_nexus_applied) && this.cart.tax_nexus_applied.tax_rate) {
-                total = Math.ceil(this.form.subtotal * this.cart.tax_nexus_applied.tax_rate);
+                const formRefund = (parseInt(this.form.subtotal_refund, 10) || 0)
+                    + (parseInt(this.form.shipping_refund, 10) || 0)
+                    + (parseInt(this.form.tax_refund, 10) || 0);
+
+                total = Math.ceil(formRefund * this.cart.tax_nexus_applied.tax_rate);
             }
 
             return total;
         },
 
-        previouslyRefunded() {
-            return this.refunds.reduce((a, b) => a + parseInt(b.refund_total, 10), 0);
+        computedRefund() {
+            return parseInt(this.form.subtotal_refund, 10) + this.finalShippingRefund + this.finalTaxRefund;
+        },
+
+        computedRefundIsValid() {
+            return this.computedRefund > 0 && (this.computedRefund <= this.availableToBeRefunded);
+        },
+
+        totalOfPreviousRefunds() {
+            return this.refundSummary.total ? parseInt(this.refundSummary.total, 10) : 0;
         },
 
         availableToBeRefunded() {
-            const val = this.cart.grand_total - this.previouslyRefunded;
+            const val = this.cart.grand_total - this.totalOfPreviousRefunds;
             return val < 0 ? 0 : val;
         }
     },
 
     watch: {
         cart: {
-            handler: function(newVal) {
-                this.form.subtotal = newVal ? newVal.sub_total : 0;
-                this.form.shipping = newVal ? newVal.shipping_total : 0;
-                this.form.tax = newVal ? newVal.sales_tax : 0;
-
-                this.fetchRefunds();
+            handler: function() {
+                this.fetchRefundSummary();
             },
             immediate: true
         }
@@ -141,7 +152,7 @@ export default {
     methods: {
         async onProcessRefund() {
             try {
-                const refundAmountString = `$${this.refundTotal / 100}`;
+                const refundAmountString = `$${this.computedRefund / 100}`;
 
                 const confirmed = await this.$showConfirm(
                     this.$t('Are you sure?'),
@@ -155,10 +166,11 @@ export default {
                     return;
                 }
 
-                await this.$api.cart.refund({
+                await this.$api.cart.refund.add({
                     cart_id: this.cart.id,
-                    // amount: this.refundTotal,
-                    // TODO: send subtotal_refund, shipping_refund & tax_refund
+                    subtotal_refund: this.form.subtotal_refund,
+                    shipping_refund: this.finalShippingRefund,
+                    tax_refund: this.finalTaxRefund,
                     description: this.form.description,
                     reason: this.form.reason
                 });
@@ -168,24 +180,23 @@ export default {
             catch(err) {
                 this.$figleaf.errorToast({
                     title: this.$t('Error'),
-                    text: err.message
+                    text: this.$api.getErrorMessage(err)
                 });
             }
         },
 
-        async fetchRefunds() {
+        async fetchRefundSummary() {
             try {
-                const { data } = await this.$api.cart.refund.list({
+                const { data } = await this.$api.cart.refund.summary({
                     cart_id: this.cart.id
                 });
-                console.log("REFUNDS", data)
 
-                this.refunds = data;
+                this.refundSummary = data;
             }
-            catch(e) {
+            catch(err) {
                 this.$figleaf.errorToast({
                     title: this.$t('Error'),
-                    text: e.message
+                    text: this.$api.getErrorMessage(err)
                 });
             }
         }
@@ -234,9 +245,9 @@ export default {
                     </fig-label-value>
 
                     <!-- total of previous refunds -->
-                    <fig-label-value v-if="refundTotal">
+                    <fig-label-value v-if="totalOfPreviousRefunds">
                         <template v-slot:label>{{ $t('Total of previous refunds') }}:</template>
-                        <div class="text-right">- <fig-money class="font-mono" :cents="previouslyRefunded" /></div>
+                        <div class="text-right">- <fig-money class="font-mono" :cents="totalOfPreviousRefunds" /></div>
                     </fig-label-value>
 
                     <!-- available to be refunded -->
@@ -252,35 +263,55 @@ export default {
                 <template v-slot:label>{{ $t('Refund') }}</template>
 
                 <fig-label-value-group density="md" display="table" class="w-full">
-                    <!-- Subtotal -->
+                    <!-- Subtotal refund -->
                     <fig-label-value>
                         <template v-slot:label><label for="refund-advanced-subtotal">{{ $t('Subtotal') }}:</label></template>
                         <fig-form-input-money
-                            v-model="form.subtotal"
+                            v-model="form.subtotal_refund"
                             :min="0"
-                            :max="maxSubtotalRefund/100"
+                            :max="availableToBeRefunded/100"
                             id="refund-advanced-subtotal" />
-                        <div class="text-right text-xs text-gray-500">{{ $t('Max refund') }}: <fig-money :cents="maxSubtotalRefund" /></div>
-
-                        <template v-slot:error v-if="!$v.form.subtotal.maxValue">
-                            <div>{{ $t('must be less than') }}: <fig-money :cents="$v.form.subtotal.$params.maxValue.max" /></div>
-                        </template>
                     </fig-label-value>
 
 
-                    <!-- Shipping -->
+                    <!-- Shipping refund -->
                     <fig-label-value>
-                        <template v-slot:label><label for="refund-advanced-shipping">{{ $t('Shipping') }}:</label></template>
-                        <fig-form-input-money
-                            v-model="form.shipping"
-                            :min="0"
-                            :max="maxShippingRefund/100"
-                            id="refund-advanced-shipping" />
-                        <div class="text-right text-xs text-gray-500">{{ $t('Max refund') }}: <fig-money :cents="maxShippingRefund" /></div>
-
-                        <template v-slot:error v-if="!$v.form.shipping.maxValue">
-                            <div>{{ $t('must be less than') }}: <fig-money :cents="$v.form.shipping.$params.maxValue.max" /></div>
+                        <template v-slot:label>
+                            <label for="refund-advanced-shipping" class="pr-1">{{ $t('Shipping') }}:</label>
                         </template>
+
+                        <div class="flex justify-start items-center">
+                            <fig-form-input-toggle
+                                v-model="form.canIncludeShippingRefund"
+                                size="sm"
+                                variant="success"
+                                class="w-10" />
+
+                            <template v-if="form.canIncludeShippingRefund">
+                                <!-- calculate or manual -->
+                                <fig-form-select-native
+                                    v-model="form.shippingCalculationType"
+                                    :options="[
+                                        { label: 'Calculate', value: 'calculate' },
+                                        { label: 'Set manually', value: 'manual' }
+                                    ]"
+                                    class="mr-2" />
+
+                                <div class="flex-grow">
+                                    <template v-if="form.shippingCalculationType === 'manual'">
+                                        <fig-form-input-money
+                                            v-model="form.shipping_refund"
+                                            :min="0"
+                                            id="refund-advanced-shipping" />
+                                    </template>
+                                    <template v-else>
+                                        <fig-form-input-money
+                                            :value="calculatedShippingRefund"
+                                            disabled />
+                                    </template>
+                                </div>
+                            </template>
+                        </div>
                     </fig-label-value>
 
 
@@ -315,34 +346,37 @@ export default {
                             </label>
                         </template>
 
-                        <div class="flex justify-start" :class="{'items-start': form.taxCalculationType === 'manual', 'items-center': form.taxCalculationType === 'calculate'}">
-                            <fig-form-select-native
-                                v-model="form.taxCalculationType"
-                                :options="[
-                                    { label: 'Calculate', value: 'calculate' },
-                                    { label: 'Set manually', value: 'manual' }
-                                ]"
-                                class="mr-2" />
+                        <div class="flex justify-start items-center">
+                            <fig-form-input-toggle
+                                v-model="form.canIncludeTaxRefund"
+                                size="sm"
+                                variant="success"
+                                class="w-10" />
 
-                            <div class="flex-grow">
-                                <template v-if="form.taxCalculationType === 'manual'">
-                                    <fig-form-input-money
-                                        v-model="form.tax"
-                                        :min="0"
-                                        :max="maxTaxRefund/100"
-                                        id="refund-advanced-tax" />
-                                    <div class="text-right text-xs text-gray-500">{{ $t('Max refund') }}: <fig-money :cents="maxTaxRefund" /></div>
 
-                                    <template v-if="!$v.form.tax.maxValue">
-                                        <div>{{ $t('must be less than') }}: <fig-money :cents="$v.form.tax.$params.maxValue.max" /></div>
+                            <template v-if="form.canIncludeTaxRefund">
+                                <fig-form-select-native
+                                    v-model="form.taxCalculationType"
+                                    :options="[
+                                        { label: 'Calculate', value: 'calculate' },
+                                        { label: 'Set manually', value: 'manual' }
+                                    ]"
+                                    class="mr-2" />
+
+                                <div class="flex-grow">
+                                    <template v-if="form.taxCalculationType === 'manual'">
+                                        <fig-form-input-money
+                                            v-model="form.tax_refund"
+                                            :min="0"
+                                            id="refund-advanced-tax" />
                                     </template>
-                                </template>
-                                <template v-else>
-                                    <fig-form-input-money
-                                        :value="calculatedTaxRefund"
-                                        disabled />
-                                </template>
-                            </div>
+                                    <template v-else>
+                                        <fig-form-input-money
+                                            :value="taxRefundByNexus"
+                                            disabled />
+                                    </template>
+                                </div>
+                            </template>
                         </div>
                     </fig-label-value>
 
@@ -350,7 +384,19 @@ export default {
                     <!-- Refund -->
                     <fig-label-value>
                         <template v-slot:label>{{ $t('Refund') }}:</template>
-                        <fig-money class="font-mono font-semibold text-green-700 text-xl" :cents="refundTotal" />
+                        <div class="flex items-center">
+                            <fig-money
+                                class="font-mono font-semibold text-xl mr-1"
+                                :class="{'text-green-700': computedRefundIsValid, 'text-red-700': !computedRefundIsValid}"
+                                :cents="computedRefund" />
+
+                            <fig-signpost
+                                v-if="!computedRefundIsValid"
+                                icon="alert-circle"
+                                icon-stroke-color="#b91c1c">
+                                {{ $t('Refund must be less than or equal to:') }} <fig-money class="font-mono" :cents="availableToBeRefunded" />
+                            </fig-signpost>
+                        </div>
                     </fig-label-value>
 
 
@@ -382,11 +428,11 @@ export default {
 
         <div class="mt-6 flex justify-center">
             <fig-button
+                :disabled="!computedRefundIsValid"
                 slot="reference"
                 variant="success"
-                @click="onProcessRefund"
-                :disabled="$v.$invalid">
-                {{ $t('Refund') }}<template v-if="!$v.$invalid">: <fig-money :cents="refundTotal" /></template>
+                @click="onProcessRefund">
+                {{ $t('Refund') }}<template v-if="computedRefundIsValid">: <fig-money :cents="computedRefund" /></template>
             </fig-button>
         </div>
 

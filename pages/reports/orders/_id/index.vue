@@ -190,6 +190,8 @@ export default {
                 title: this.$t('Refund successful'),
                 text: refundAmount
             });
+
+            this.$refs.orderRefundList.fetchData();
         }
 
         // labelPurchased() {
@@ -674,7 +676,7 @@ export default {
 
                 <fig-modal
                     ref="refund_modal"
-                    size="md"
+                    size="lg"
                     close-button>
                     <template v-slot:header>{{ $t('Refund payment') }}</template>
                     <order-refund-form
@@ -683,7 +685,9 @@ export default {
                 </fig-modal>
             </template>
 
-            <order-refund-list :cart-id="cart.id" />
+            <order-refund-list
+                ref="orderRefundList"
+                :cart-id="cart.id" />
         </fig-text-card>
 
 

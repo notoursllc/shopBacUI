@@ -52,7 +52,7 @@ export default {
     },
 
     methods: {
-        async fetchData(paramsObj) {
+        async fetchData() {
             try {
                 this.loading = true;
 
@@ -103,7 +103,7 @@ export default {
             <template slot="head">
                 <fig-tr>
                     <fig-th sortable prop="created_at">{{ $t('Created') }}</fig-th>
-                    <fig-th sortable prop="amount" right>{{ $t('Amount') }}</fig-th>
+                    <fig-th sortable prop="total_refund" right>{{ $t('Amount') }}</fig-th>
                     <fig-th sortable prop="reason">{{ $t('Reason') }}</fig-th>
                     <fig-th>{{ $t('Description') }}</fig-th>
                     <fig-th sortable prop="stripe_refund_id">{{ $t('Stripe Refund ID') }}</fig-th>
@@ -119,7 +119,7 @@ export default {
 
                 <!-- amount -->
                 <fig-td class="text-right">
-                    <fig-money :cents="refund.amount" />
+                    <fig-money :cents="refund.total_refund" />
                 </fig-td>
 
                 <!-- reason -->
