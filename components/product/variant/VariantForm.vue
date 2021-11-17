@@ -170,32 +170,7 @@ export default {
         </fig-text-card>
 
 
-        <!-- Color info -->
-        <fig-text-card class="mb-6" variant="white">
-            <template v-slot:header-left>
-                <div class="text-lg font-bold">{{ $t('Color info') }}</div>
-            </template>
 
-            <div class="flex flex-wrap -mx-2">
-                <!-- color name -->
-                <fig-form-group :class="css.cellOneThird">
-                    <label slot="label" for="variant_name">{{ $t('Color name') }}</label>
-                    <fig-form-input
-                        v-model="variant.label"
-                        id="variant_name" />
-                </fig-form-group>
-
-                <!-- basic color type -->
-                <fig-form-group :class="css.cellOneThird">
-                    <label slot="label" for="product_basic_color_type">{{ $t('Basic color') }}</label>
-                    <master-type-select
-                        v-model="variant.basic_color_type"
-                        object="product_basic_color_type"
-                        id="product_basic_color_type" />
-                    <template slot="description">{{ $t('Used for product searches') }}</template>
-                </fig-form-group>
-            </div>
-        </fig-text-card>
 
 
         <!-- Variant images -->
@@ -221,6 +196,34 @@ export default {
             <color-swatch-table
                 :value="variant.swatches"
                 @input="onColorSwatchChange" />
+        </fig-text-card>
+
+
+        <!-- Color info -->
+        <fig-text-card class="mb-6" variant="white">
+            <template v-slot:header-left>
+                <div class="text-lg font-bold">{{ $t('Color info') }}</div>
+            </template>
+
+            <div class="flex flex-wrap -mx-2">
+                <!-- color name -->
+                <fig-form-group :class="css.cellOneThird">
+                    <label slot="label" for="variant_name">{{ $t('Color name') }}</label>
+                    <fig-form-input
+                        v-model="variant.label"
+                        id="variant_name" />
+                </fig-form-group>
+
+                <!-- basic color type -->
+                <fig-form-group :class="css.cellOneThird">
+                    <label slot="label" for="product_basic_color_type">{{ $t('Basic color') }}</label>
+                    <master-type-select
+                        v-model="variant.basic_color_type"
+                        object="product_basic_color_type"
+                        id="product_basic_color_type" />
+                    <template slot="description">{{ $t('Used for product searches') }}</template>
+                </fig-form-group>
+            </div>
         </fig-text-card>
 
 
