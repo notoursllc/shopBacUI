@@ -262,7 +262,7 @@ export default {
                     <template v-slot:label>{{ $t('Payment method') }}:</template>
                     <fig-card-last-four
                         :type="isPaypalPayment ? 'paypal' : payment.payment_method_details.card.brand"
-                        :last-four="payment.payment_method_details.card.last4"
+                        :last-four="isPaypalPayment ? '' : payment.payment_method_details.card.last4"
                         :email="isPaypalPayment ? payment.payer.email_address : ''" />
                 </fig-label-value>
 
@@ -271,7 +271,7 @@ export default {
                         {{ isPaypalPayment ? $t('Paypal details') : $t('Stripe details') }}:
                     </template>
                     <a
-                        :href="isPaypalPayment ? 'TODO' : `https://dashboard.stripe.com/payments/${cart.stripe_payment_intent_id}`"
+                        :href="isPaypalPayment ? 'https://www.paypal.com/activities/' : `https://dashboard.stripe.com/payments/${cart.stripe_payment_intent_id}`"
                         target="_blank">{{ $t('View') }}</a>
                 </fig-label-value>
             </fig-label-value-group>
@@ -687,7 +687,9 @@ export default {
 
             <order-refund-list
                 ref="orderRefundList"
-                :cart-id="cart.id" />
+                :cart-id="cart.id"
+                :stripe="!!cart.stripe_payment_intent_id"
+                :paypal="!!cart.paypal_order_id" />
         </fig-text-card>
 
 

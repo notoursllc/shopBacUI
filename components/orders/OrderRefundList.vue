@@ -24,6 +24,16 @@ export default {
         cartId: {
             type: String,
             default: null
+        },
+
+        stripe: {
+            type: Boolean,
+            default: true
+        },
+
+        paypal: {
+            type: Boolean,
+            default: true
         }
     },
 
@@ -36,7 +46,7 @@ export default {
                 _pageSize: 100
             },
             table: {
-                _sort: 'created_at:asc'
+                _sort: 'created_at:desc'
             },
             totalResults: 0
         };
@@ -106,8 +116,8 @@ export default {
                     <fig-th sortable prop="total_refund" right>{{ $t('Amount') }}</fig-th>
                     <fig-th sortable prop="reason">{{ $t('Reason') }}</fig-th>
                     <fig-th>{{ $t('Description') }}</fig-th>
-                    <fig-th sortable prop="stripe_refund_id">{{ $t('Stripe Refund ID') }}</fig-th>
-                    <fig-th sortable prop="paypal_refund_id">{{ $t('Paypal Refund ID') }}</fig-th>
+                    <fig-th sortable prop="stripe_refund_id" v-if="stripe">{{ $t('Stripe Refund ID') }}</fig-th>
+                    <fig-th sortable prop="paypal_refund_id" v-if="paypal">{{ $t('Paypal Refund ID') }}</fig-th>
                 </fig-tr>
             </template>
 
@@ -133,12 +143,12 @@ export default {
                 </fig-td>
 
                 <!-- stripe refund id -->
-                <fig-td>
+                <fig-td v-if="stripe">
                     {{ refund.stripe_refund_id }}
                 </fig-td>
 
                 <!-- paypal refund id -->
-                <fig-td>
+                <fig-td v-if="paypal">
                     {{ refund.paypal_refund_id }}
                 </fig-td>
             </fig-tr>

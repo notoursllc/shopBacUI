@@ -33,7 +33,7 @@ export default {
                 _pageSize: 100
             },
             table: {
-                _sort: 'closed_at:asc'
+                _sort: 'closed_at:desc'
             },
             totalResults: 0
         };
