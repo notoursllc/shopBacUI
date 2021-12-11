@@ -101,7 +101,6 @@ module.exports = {
     "Collection updated successfully": "Collection updated successfully",
     "Collections": "Collections",
     "Color": "Color",
-    "Color deleted successfully": "Color deleted successfully",
     "Color info": "Color info",
     "Color name": "Color name",
     "Color swatches": "Color swatches",

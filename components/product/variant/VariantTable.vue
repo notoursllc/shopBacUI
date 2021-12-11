@@ -145,7 +145,7 @@ export default {
                 if(variantToDelete.id) {
                     this.$figleaf.successToast({
                         title: this.$t('Success'),
-                        text: this.$t('Color deleted successfully')
+                        text: this.$t('Variant deleted successfully')
                     });
                 }
             }
@@ -281,12 +281,10 @@ export default {
                                 class="mr-2">
                                 <nuxt-img
                                     v-if="id"
-                                    provider="cloudflare"
+                                    provider="bunny"
                                     :src="id"
-                                    preset="prod_thumb_xs"
+                                    preset="prodthumbxs"
                                     loading="lazy"
-                                    width="45"
-                                    height="45"
                                     class="shadow variant-thumb"
                                     :class="{'featured-thumb': objIndex === 0}" />
                             </div>
