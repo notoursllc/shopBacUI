@@ -285,13 +285,11 @@ export default {
                         <fig-overlay :show="obj.loading">
                             <span @click="onPreview(obj.url)" class="cursor-pointer">
                                 <nuxt-img
-                                    v-if="obj.third_party_id"
-                                    provider="cloudflare"
-                                    :src="obj.third_party_id"
-                                    preset="prod_thumb"
+                                    v-if="obj.url"
+                                    provider="bunny"
+                                    :src="obj.url"
+                                    preset="prodthumb"
                                     loading="lazy"
-                                    width="75"
-                                    height="75"
                                     :alt="obj.alt_text || $t('variant image')" />
                             </span>
                         </fig-overlay>

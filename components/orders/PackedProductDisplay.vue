@@ -46,12 +46,10 @@ export default {
         <div class="mr-2 sm:mr-4">
             <nuxt-img
                 v-if="getProductImage()"
-                provider="cloudflare"
+                provider="bunny"
                 :src="getProductImage()"
-                preset="prod_thumb"
+                preset="prodthumb"
                 loading="lazy"
-                width="75"
-                height="75"
                 class="shadow" />
         </div>
         <div class="flex-grow text-sm">

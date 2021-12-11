@@ -123,6 +123,9 @@ export default {
             cloudflare: {
                 provider: '~/providers/cloudflare',
                 baseURL: 'https://imagedelivery.net/onkdurJr24OykoZY1xYs4g'
+            },
+            bunny: {
+                provider: '~/providers/bunny'
             }
         },
         // The screen sizes predefined by `@nuxt/image`:
@@ -136,14 +139,14 @@ export default {
             '2xl': 1536
         },
         presets: {
-            prod_thumb: {
+            prodthumb: {
                 modifiers: {
                     // format: 'jpg',
                     width: 75,
                     height: 75
                 }
             },
-            prod_thumb_xs: {
+            prodthumbxs: {
                 modifiers: {
                     // format: 'jpg',
                     width: 45,

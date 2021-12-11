@@ -207,11 +207,9 @@ export default {
                     {
                         attrs: {
                             src: third_party_id,
-                            provider: 'cloudflare',
+                            provider: 'bunny',
                             alt: altText,
-                            preset: 'prod_thumb_xs',
-                            width: '45',
-                            height: '45'
+                            preset: 'prodthumbxs'
                         }
                     }
                 );
