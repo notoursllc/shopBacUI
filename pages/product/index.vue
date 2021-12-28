@@ -186,7 +186,7 @@ export default {
 
 
         getCoverImage(product) {
-            let third_party_id = null;
+            let url = null;
             let altText = null;
 
             if(Array.isArray(product.variants)) {
@@ -194,19 +194,19 @@ export default {
                     const variant = product.variants[i];
 
                     if(Array.isArray(variant.images) && isObject(variant.images[0])) {
-                        third_party_id = variant.images[0].third_party_id;
+                        url = variant.images[0].url;
                         altText = variant.images[0].alt_text;
                         break;
                     }
                 }
             }
 
-            if(third_party_id) {
+            if(url) {
                 return this.$createElement(
                     'nuxt-img',
                     {
                         attrs: {
-                            src: third_party_id,
+                            src: url,
                             provider: 'bunny',
                             alt: altText,
                             preset: 'prodthumbxs'

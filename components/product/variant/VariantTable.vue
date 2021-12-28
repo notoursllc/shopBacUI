@@ -178,7 +178,7 @@ export default {
         },
 
         getVariantImages(index) {
-            return Array.isArray(this.variants[index].images) ? this.variants[index].images.map(obj => obj.third_party_id) : [];
+            return Array.isArray(this.variants[index].images) ? this.variants[index].images.map(obj => obj.url) : [];
         },
 
         getVariantSwatches(index) {
@@ -224,7 +224,7 @@ export default {
             <template slot="head">
                 <tr>
                     <fig-th v-if="canShowGrabHandles" class="w-12"></fig-th>
-                    <fig-th>{{ $t('Color name') }}</fig-th>
+                    <fig-th>{{ $t('Variant name') }}</fig-th>
                     <fig-th sortable prop="base_price">{{ $t('Price') }}</fig-th>
                     <fig-th>{{ $t('Sizes') }}</fig-th>
                     <fig-th>{{ $t('Images') }}</fig-th>
@@ -247,7 +247,7 @@ export default {
                             class="handle cursor-grab" />
                     </fig-td>
 
-                    <!-- Color name -->
+                    <!-- Variant name -->
                     <fig-td>
                         {{ color.label }}
                         <fig-operations-dropdown

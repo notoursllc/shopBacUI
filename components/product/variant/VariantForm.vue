@@ -206,9 +206,9 @@ export default {
             </template>
 
             <div class="flex flex-wrap -mx-2">
-                <!-- color name -->
+                <!-- variant name -->
                 <fig-form-group :class="css.cellOneThird">
-                    <label slot="label" for="variant_name">{{ $t('Color name') }}</label>
+                    <label slot="label" for="variant_name">{{ $t('Variant name') }}</label>
                     <fig-form-input
                         v-model="variant.label"
                         id="variant_name" />

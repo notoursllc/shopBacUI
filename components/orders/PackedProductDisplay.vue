@@ -22,7 +22,7 @@ export default {
     methods: {
         getProductImage() {
             return (this.product.product_variant && Array.isArray(this.product.product_variant.images))
-                ? this.product.product_variant.images[0].third_party_id
+                ? this.product.product_variant.images[0].url
                 : null;
         },
 
