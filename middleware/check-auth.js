@@ -23,7 +23,7 @@ export default function (context) {
     // but already logged in, then redirect to somewhere else
     if(routeWhitelist.indexOf(context.route.name) > -1) {
         if(isAuthenticated) {
-            context.redirect('/product/list');
+            context.redirect('/product');
         }
     }
     else if(!isAuthenticated) {

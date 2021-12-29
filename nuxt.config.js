@@ -149,6 +149,10 @@ export default {
     //     '/_ipx': '~/server/middleware/ipx.js'
     // },
 
+    serverMiddleware: [
+        '~/server/middleware/redirects.js'
+    ],
+
     tailwindcss: {
         cssPath: '@/node_modules/@notoursllc/figleaf/assets/css/tailwind.css',
         configPath: 'tailwind.config.js',
@@ -163,11 +167,11 @@ export default {
         '@nuxtjs/axios'
     ],
 
-    router: {
-        middleware: [
-            // 'check-auth'
-        ]
-    },
+    // router: {
+    //     middleware: [
+    //         'check-auth'
+    //     ]
+    // },
 
     axios: {
         // will send the session cookie with the requests
