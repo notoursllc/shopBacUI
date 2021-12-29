@@ -1,13 +1,15 @@
 <script>
 import {
     FigLabelValueGroup,
-    FigLabelValue
+    FigLabelValue,
+    FigNuxtImgBunny
 } from '@notoursllc/figleaf';
 
 export default {
     components: {
         FigLabelValueGroup,
-        FigLabelValue
+        FigLabelValue,
+        FigNuxtImgBunny
     },
 
     props: {
@@ -44,9 +46,8 @@ export default {
 <template>
     <div class="bg-white rounded p-2 sm:p-3 flex items-start shadow border border-gray-200">
         <div class="mr-2 sm:mr-4">
-            <nuxt-img
+            <fig-nuxt-img-bunny
                 v-if="getProductImage()"
-                provider="bunny"
                 :src="getProductImage()"
                 preset="prodthumb"
                 loading="lazy"

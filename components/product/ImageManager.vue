@@ -12,9 +12,8 @@ import {
     FigTableSimple,
     FigTh,
     FigTd,
-    FigCol,
-    FigRow,
-    FigPopConfirm
+    FigPopConfirm,
+    FigNuxtImgBunny
 } from '@notoursllc/figleaf';
 
 export default {
@@ -31,9 +30,8 @@ export default {
         FigTableSimple,
         FigTh,
         FigTd,
-        FigCol,
-        FigRow,
-        FigPopConfirm
+        FigPopConfirm,
+        FigNuxtImgBunny
     },
 
     mixins: [
@@ -282,12 +280,11 @@ export default {
                     <fig-td>
                         <fig-overlay :show="obj.loading">
                             <span @click="onPreview(obj.url)" class="cursor-pointer">
-                                <nuxt-img
+                                <fig-nuxt-img-bunny
                                     v-if="obj.url"
-                                    provider="bunny"
                                     :src="obj.url"
                                     preset="prodthumb"
-                                    loading="lazy"
+                                    loading="eager"
                                     :alt="obj.alt_text || $t('variant image')" />
                             </span>
                         </fig-overlay>

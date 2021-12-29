@@ -14,7 +14,8 @@ import {
     FigTd,
     FigTag,
     FigOperationsDropdown,
-    FigMoney
+    FigMoney,
+    FigNuxtImgBunny
 } from '@notoursllc/figleaf';
 
 export default {
@@ -32,7 +33,8 @@ export default {
         FigTd,
         FigTag,
         FigOperationsDropdown,
-        FigMoney
+        FigMoney,
+        FigNuxtImgBunny
     },
 
     mixins: [
@@ -279,9 +281,8 @@ export default {
                                 v-for="(id, objIndex) in getVariantImages(idx)"
                                 :key="objIndex"
                                 class="mr-2">
-                                <nuxt-img
+                                <fig-nuxt-img-bunny
                                     v-if="id"
-                                    provider="bunny"
                                     :src="id"
                                     preset="prodthumbxs"
                                     loading="lazy"

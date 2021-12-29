@@ -1,3 +1,5 @@
+import { presets } from './node_modules/@notoursllc/figleaf/components/nuxtImgBunny/bunnyProvider.js';
+
 const isDev = process.env.NODE_ENV === 'development';
 
 if(isDev) {
@@ -120,12 +122,12 @@ export default {
     // https://image.nuxtjs.org/api/options/
     image: {
         providers: {
-            cloudflare: {
-                provider: '~/providers/cloudflare',
-                baseURL: 'https://imagedelivery.net/onkdurJr24OykoZY1xYs4g'
-            },
+            // cloudflare: {
+            //     provider: '~/providers/cloudflare',
+            //     baseURL: 'https://imagedelivery.net/onkdurJr24OykoZY1xYs4g'
+            // },
             bunny: {
-                provider: '~/providers/bunny'
+                provider: '@/node_modules/@notoursllc/figleaf/components/nuxtImgBunny/bunnyProvider.js'
             }
         },
         // The screen sizes predefined by `@nuxt/image`:
@@ -139,20 +141,7 @@ export default {
             '2xl': 1536
         },
         presets: {
-            prodthumb: {
-                modifiers: {
-                    // format: 'jpg',
-                    width: 75,
-                    height: 75
-                }
-            },
-            prodthumbxs: {
-                modifiers: {
-                    // format: 'jpg',
-                    width: 45,
-                    height: 45
-                }
-            }
+            ...presets
         }
     },
 

@@ -12,7 +12,8 @@ import {
     FigOperationsDropdown,
     FigVNodes,
     FigOverlay,
-    FigPaginationWrapper
+    FigPaginationWrapper,
+    FigNuxtImgBunny
 } from '@notoursllc/figleaf';
 
 export default {
@@ -26,7 +27,8 @@ export default {
         FigOperationsDropdown,
         FigVNodes,
         FigOverlay,
-        FigPaginationWrapper
+        FigPaginationWrapper,
+        FigNuxtImgBunny
     },
 
     mixins: [
@@ -203,11 +205,10 @@ export default {
 
             if(url) {
                 return this.$createElement(
-                    'nuxt-img',
+                    'fig-nuxt-img-bunny',
                     {
                         attrs: {
                             src: url,
-                            provider: 'bunny',
                             alt: altText,
                             preset: 'prodthumbxs'
                         }
