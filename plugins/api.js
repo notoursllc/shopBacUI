@@ -7,7 +7,8 @@ export default (context, inject) => {
 
         switch(errorCode) {
             case 401:
-                window.location = '/tenantmember/login';
+                context.store.dispatch('ui/logout');
+                context.redirect('/tenantmember/login');
                 break;
         }
     });

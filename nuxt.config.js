@@ -87,6 +87,7 @@ export default {
     */
     plugins: [
         '@/plugins/bugsnag.client.js',
+        '@/plugins/persistedState.client.js',
         '@/plugins/api.js',
         '@/plugins/http',
         '@/plugins/i18n.js',
@@ -167,11 +168,11 @@ export default {
         '@nuxtjs/axios'
     ],
 
-    // router: {
-    //     middleware: [
-    //         'check-auth'
-    //     ]
-    // },
+    router: {
+        middleware: [
+            'check-auth'
+        ]
+    },
 
     axios: {
         // will send the session cookie with the requests

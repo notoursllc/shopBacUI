@@ -1,8 +1,7 @@
 export default function (context) {
 
-    // If you're on the login page then we're gonna make sure we set your state
-    // as logged out.
-    // if(context.route.name === 'user-login') {
+    // If you're on the login page then we're gonna make sure we set your state as logged out.
+    // if(context.route.name === 'tenantmember-login') {
     //     context.store.dispatch('ui/logout');
     // }
 
