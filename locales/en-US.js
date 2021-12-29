@@ -289,6 +289,7 @@ module.exports = {
     "OR": "OR",
     "Order": "Order",
     "Order Details": "Order Details",
+    "Order is a gift": "Order is a gift",
     "Order More": "Order More",
     "Order not found": "Order not found",
     "Order summary": "Order summary",

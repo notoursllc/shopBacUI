@@ -527,6 +527,13 @@ export default {
                     <fig-label-value-group density="md" display="table">
                         <template v-if="cart.selected_shipping_rate">
                             <fig-label-value>
+                                <template v-slot:label>{{ $t('Order is a gift') }}:</template>
+                                <fig-boolean-tag
+                                    :bool="cart.is_gift"
+                                    size="sm" />
+                            </fig-label-value>
+
+                            <fig-label-value>
                                 <template v-slot:label>{{ $t('Trackable') }}:</template>
                                 <fig-boolean-tag
                                     :bool="cart.selected_shipping_rate.trackable"
