@@ -150,9 +150,9 @@ export default {
     //     '/_ipx': '~/server/middleware/ipx.js'
     // },
 
-    serverMiddleware: [
-        '~/server/middleware/redirects.js'
-    ],
+    // serverMiddleware: [
+    //     '~/server/middleware/redirects.js'
+    // ],
 
     tailwindcss: {
         cssPath: '@/node_modules/@notoursllc/figleaf/assets/css/tailwind.css',
