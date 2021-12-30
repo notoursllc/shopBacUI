@@ -98,7 +98,13 @@ export default {
 
     methods: {
         refreshState() {
-            return this.$store.dispatch('MASTER_TYPES', { object: this.object, value: this.types});
+            // Need to clone each object in the array before storing in vuex.
+            // Otherwise when the setOrdinals() methods modifies the 'ordinal' value
+            // in each object, vuex will throw an error that state can not be modified
+            // outside of a vuex modifier method
+            const types = this.types.map((obj) => Object.assign({}, obj));
+
+            return this.$store.dispatch('MASTER_TYPES', { object: this.object, value: types});
         },
 
         async fetchTypes() {
@@ -186,16 +192,6 @@ export default {
 
                     this.formHasMetaData = Array.isArray(this.form.metadata);
                 }
-                else {
-                    const response = await this.$api.masterType.list({
-                        object: this.object
-                    });
-
-                    const nextAvail = this.$api.masterType.getNextAvailableTypeValue(response.data);
-
-                    this.form.published = true;
-                    this.form.value = nextAvail.data;
-                }
 
                 this.showDialog();
             }
@@ -208,11 +204,14 @@ export default {
         },
 
         clearForm() {
-            Object.keys(this.form).forEach((key) => {
-                if(key !== 'object') {
+            for(const key in this.form) {
+                if(key === 'published') {
+                    this.form.published = true;
+                }
+                else if(key !== 'object') {
                     this.form[key] = null;
                 }
-            });
+            }
         },
 
         async onUpsertFormSave() {
