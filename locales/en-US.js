@@ -14,6 +14,7 @@ module.exports = {
     "accept_privacy_and_tos": "By placing your order, you agree to our {linkPrivacy} and {linkTos}.",
     "Add a new Variant": "Add a new Variant",
     "Add column": "Add column",
+    "Add hero slide": "Add hero slide",
     "Add Item": "Add Item",
     "Add Master Type ({name})": "Add Master Type ({name})",
     "Add more details about this refund.": "Add more details about this refund.",
@@ -163,6 +164,7 @@ module.exports = {
     "Duplicate": "Duplicate",
 
     "Edit": "Edit",
+    "Edit hero slide": "Edit hero slide",
     "Edit Item": "Edit Item",
     "Edit Master Type ({name})": "Edit Master Type ({name})",
     "Edit Nexus": "Edit Nexus",
@@ -203,6 +205,7 @@ module.exports = {
 
     "HATS": "HATS",
     "Height (cm)": "Height (cm)",
+    "Hero slides": "Hero slides",
     "Hex": "Hex",
     "Hide": "Hide",
     "Hide when out of stock": "Hide when out of stock",
@@ -215,6 +218,7 @@ module.exports = {
     "Image deleted successfully": "Image deleted successfully",
     "Image_alt_text_description": "A brief description of the image to improve search engine optimization (SEO) and accessibility for visually impaired customers.",
     "Image": "Image",
+    "Image alt text": "Image alt text",
     "Images": "Images",
     "Import": "Import",
     "Import data from an existing Data Table": "Import data from an existing Data Table",

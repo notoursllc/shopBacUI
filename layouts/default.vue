@@ -126,6 +126,19 @@ export default {
                             <span class="nav-item-main">{{ $t('Products') }}</span>
                         </navigation-item>
 
+                        <navigation-item :route="{ name: 'hero-list' }">
+                            <!-- <template v-slot:icon>
+                                <fig-icon
+                                    icon="coin"
+                                    :width="22"
+                                    :height="22"
+                                    stroke="#444242"
+                                    :stroke-width="1.5"
+                                    class="mr-1" />
+                            </template> -->
+                            <span class="nav-item-main">{{ $t('Hero slides') }}</span>
+                        </navigation-item>
+
                         <navigation-collapse :fuzzy-route-match="['reports-']">
                             <!-- <template v-slot:icon>
                                 <fig-icon
