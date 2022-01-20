@@ -111,7 +111,7 @@ export default {
                     </nuxt-link>
                 </div>
 
-                <div class="flex-grow px-2">
+                <div class="grow px-2">
                     <navigation-list text-color="#484747">
                         <navigation-item :route="{ name: 'product' }">
                             <!-- <template v-slot:icon>
@@ -250,12 +250,12 @@ export default {
 
 <style lang="postcss">
 .layout-sidenav {
-    @apply text-gray-700 w-48 inset-y-0 left-0 transform transition duration-200 ease-in-out z-10 relative border-r border-gray-300 flex-shrink-0;
+    @apply text-gray-700 w-48 inset-y-0 left-0 transform transition duration-200 ease-in-out z-10 relative border-r border-gray-300 shrink-0;
     background: #f3f4f6;
 }
 
 .layout-sidenav-toggle {
-    @apply flex-shrink-0 w-2 absolute border-l-4 border-transparent h-full;
+    @apply shrink-0 w-2 absolute border-l-4 border-transparent h-full;
     transition: border-color .2s ease 0s;
     cursor: ew-resize;
     right: -8px;
@@ -279,7 +279,7 @@ export default {
 }
 
 .layout-sidenav-content {
-    @apply flex flex-col h-full flex-grow;
+    @apply flex flex-col h-full grow;
 }
 
 .layout-sidenav-overlay {

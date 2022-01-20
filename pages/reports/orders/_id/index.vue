@@ -564,7 +564,7 @@ export default {
                                     <li
                                         v-for="(message, index) in cart.selected_shipping_rate.warning_messages"
                                         :key="index"
-                                        class="text-yellow-600">
+                                        class="text-amber-600">
                                         {{ message }}
                                     </li>
                                 </ul>
@@ -648,7 +648,7 @@ export default {
                         </div>
 
                         <!-- products packed in box -->
-                        <div class="flex-grow">
+                        <div class="grow">
                             <!-- product card -->
                             <div
                                 v-for="(prod, idx) in p.products"

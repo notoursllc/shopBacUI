@@ -53,7 +53,7 @@ export default {
                 loading="lazy"
                 class="shadow" />
         </div>
-        <div class="flex-grow text-sm">
+        <div class="grow text-sm">
             <div class="flex flex-wrap -mx-2 overflow-hidden">
                 <div class="my-2 px-2 w-full lg:w-1/2">
                     <fig-label-value-group density="md" display="table">

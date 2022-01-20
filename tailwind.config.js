@@ -2,15 +2,13 @@
 const figleafTailwindConfig = require('@notoursllc/figleaf/tailwind.config.js');
 
 // Add our own paths:
-// figleafTailwindConfig.purge.enabled = true; //test only
-
-figleafTailwindConfig.purge.content.push(
-    'components/**/*.vue',
-    'layouts/**/*.vue',
-    'pages/**/*.vue',
-    'plugins/**/*.js',
-    'nuxt.config.js',
-    'node_modules/@notoursllc/figleaf/components/**/*.vue',
+figleafTailwindConfig.content.push(
+    './components/**/*.{js,vue}',
+    './layouts/**/*.vue',
+    './pages/**/*.vue',
+    './plugins/**/*.js',
+    './nuxt.config.js',
+    'node_modules/@notoursllc/figleaf/components/**/*.{js,vue}',
     'node_modules/@notoursllc/figleaf/layouts/**/*.vue'
 );
 

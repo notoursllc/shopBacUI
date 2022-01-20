@@ -253,7 +253,7 @@ export default {
                     <!-- available to be refunded -->
                     <fig-label-value>
                         <template v-slot:label>{{ $t('Available to be refunded') }}:</template>
-                        <div class="text-right text-green-700 font-semibold"><fig-money class="font-mono" :cents="availableToBeRefunded" /></div>
+                        <div class="text-right text-emerald-700 font-semibold"><fig-money class="font-mono" :cents="availableToBeRefunded" /></div>
                     </fig-label-value>
                 </fig-label-value-group>
             </fig-spec>
@@ -297,7 +297,7 @@ export default {
                                     ]"
                                     class="mr-2" />
 
-                                <div class="flex-grow">
+                                <div class="grow">
                                     <template v-if="form.shippingCalculationType === 'manual'">
                                         <fig-form-input-money
                                             v-model="form.shipping_refund"
@@ -363,7 +363,7 @@ export default {
                                     ]"
                                     class="mr-2" />
 
-                                <div class="flex-grow">
+                                <div class="grow">
                                     <template v-if="form.taxCalculationType === 'manual'">
                                         <fig-form-input-money
                                             v-model="form.tax_refund"
@@ -387,7 +387,7 @@ export default {
                         <div class="flex items-center">
                             <fig-money
                                 class="font-mono font-semibold text-xl mr-1"
-                                :class="{'text-green-700': computedRefundIsValid, 'text-red-700': !computedRefundIsValid}"
+                                :class="{'text-emerald-700': computedRefundIsValid, 'text-red-700': !computedRefundIsValid}"
                                 :cents="computedRefund" />
 
                             <fig-signpost

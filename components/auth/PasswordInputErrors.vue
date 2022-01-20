@@ -74,7 +74,7 @@ export default {
         <div
             v-for="(val, key) in allPossibleErrors"
             :key="key"
-            :class="{'text-red-600': errors.hasOwnProperty(key), 'text-green-700': !errors.hasOwnProperty(key)}">
+            :class="{'text-red-600': errors.hasOwnProperty(key), 'text-emerald-700': !errors.hasOwnProperty(key)}">
             <template v-if="displayError(key)">
                 <i v-if="isDirty"
                    :class="{'el-icon-close': errors.hasOwnProperty(key), 'el-icon-check': !errors.hasOwnProperty(key)}" />

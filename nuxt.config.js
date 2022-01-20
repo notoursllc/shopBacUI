@@ -75,7 +75,8 @@ export default {
     ** Global CSS
     */
     css: [
-        '@/assets/css/base.scss'
+        '@/assets/css/base.scss',
+        '@/node_modules/@notoursllc/figleaf/assets/css/tailwind.css'
     ],
 
     /*
@@ -114,7 +115,8 @@ export default {
     buildModules: [
         // Doc: https://github.com/nuxt-community/eslint-module
         // '@nuxtjs/eslint-module'
-        '@nuxtjs/tailwindcss',
+        // '@nuxtjs/tailwindcss',
+        '@nuxt/postcss8',
         '@nuxt/image'
     ],
 
@@ -154,12 +156,6 @@ export default {
     //     '~/server/middleware/redirects.js'
     // ],
 
-    tailwindcss: {
-        cssPath: '@/node_modules/@notoursllc/figleaf/assets/css/tailwind.css',
-        configPath: 'tailwind.config.js',
-        exposeConfig: false // https://tailwindcss.nuxtjs.org/options/#exposeconfig
-    },
-
     /*
     ** Nuxt.js modules
     */
@@ -195,6 +191,13 @@ export default {
     ** See https://nuxtjs.org/api/configuration-build/
     */
     build: {
+        postcss: {
+            plugins: {
+                tailwindcss: {},
+                autoprefixer: {}
+            }
+        },
+
         // transpile: [/^element-ui/],
 
         /*
