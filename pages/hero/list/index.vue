@@ -196,6 +196,7 @@ export default {
                             <fig-th sortable prop="caption">{{ $t('Caption') }}</fig-th>
                             <fig-th>{{ $t('Image alt text') }}</fig-th>
                             <fig-th sortable prop="published">{{ $t('Published') }}</fig-th>
+                            <fig-th>{{ $t('Actions') }}</fig-th>
                         </tr>
                     </template>
 
@@ -226,12 +227,6 @@ export default {
                             <!-- title -->
                             <fig-td>
                                 {{ obj.title }}
-
-                                <fig-operations-dropdown
-                                    :show-view="false"
-                                    @edit="onUpsert(obj.id)"
-                                    @delete="onDelete(obj)"
-                                    class="ml-1" />
                             </fig-td>
 
                             <!-- caption -->
@@ -248,9 +243,18 @@ export default {
                             <fig-td>
                                 <boolean-tag :value="obj.published" />
                             </fig-td>
+
+                            <!-- actions -->
+                            <fig-td class="text-center">
+                                <fig-operations-dropdown
+                                    :show-view="false"
+                                    @edit="onUpsert(obj.id)"
+                                    @delete="onDelete(obj)"
+                                    class="ml-1" />
+                            </fig-td>
                         </tr>
 
-                        <fig-tr-no-results v-if="!heros.length" :colspan="5" />
+                        <fig-tr-no-results v-if="!heros.length" :colspan="7" />
                     </draggable>
                 </fig-table-simple>
             </fig-pagination-wrapper>

@@ -166,6 +166,14 @@ export default Vue.extend({
                     <template v-slot:error>
                         <div v-if="fileError">{{ fileError }}</div>
                     </template>
+
+                    <div class="pt-2 text-gray-500">{{ $t('hero_image_aspect_ratio_recommendation') }}</div>
+                </fig-label-value>
+
+                <!-- image alt text -->
+                <fig-label-value>
+                    <template v-slot:label>{{ $t('Image alt text') }}:</template>
+                    <fig-form-input v-model="form.alt_text" />
                 </fig-label-value>
 
                 <!-- title -->
@@ -182,11 +190,6 @@ export default Vue.extend({
                         rows="5" />
                 </fig-label-value>
 
-                <!-- alt text -->
-                <fig-label-value>
-                    <template v-slot:label>{{ $t('Alt text') }}:</template>
-                    <fig-form-input v-model="form.alt_text" />
-                </fig-label-value>
 
                 <!-- Meta data -->
                 <fig-label-value>

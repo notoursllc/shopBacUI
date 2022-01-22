@@ -247,7 +247,7 @@ export default {
                     <fig-th class="w-24"></fig-th>
                     <fig-th>
                         <div class="flex items-center">
-                            {{ $t('Alt text') }}
+                            {{ $t('Image alt text') }}
 
                             <fig-tooltip placement="top">
                                 <div slot="toggler" class="ml-1 cursor-pointer">
