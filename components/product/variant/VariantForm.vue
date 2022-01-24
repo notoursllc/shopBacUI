@@ -176,7 +176,8 @@ export default {
         <!-- Variant images -->
         <fig-text-card class="mb-6" variant="white">
             <template v-slot:header-left>
-                <div class="text-lg font-bold">{{ $t('Variant images') }}</div>
+                <span class="text-lg font-bold">{{ $t('Variant images') }}</span>
+                <span class="pl-1 text-sm text-gray-500 font-normal">- {{ $t('variant_images_size_suggestion') }}</span>
             </template>
 
             <image-manager

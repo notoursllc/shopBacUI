@@ -538,6 +538,7 @@ module.exports = {
     "Value": "Value",
     "Values": "Values",
     "Variant": "Variant",
+    "variant_images_size_suggestion": "For best results use a 1:1 aspect ratio (ex: 592px x 592px)",
     "Variant deleted successfully": "Variant deleted successfully",
     "variant image": "variant image",
     "Variant images": "Variant images",
