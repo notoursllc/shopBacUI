@@ -222,7 +222,7 @@ export default {
 
 
         <!-- main content -->
-        <div class="main-content flex-1">
+        <div class="main-content">
             <!-- header -->
             <header class="layout-header">
                 <div class="flex items-center font-semibold text-base">{{ pageTitle }}</div>
@@ -306,5 +306,9 @@ export default {
 }
 .navigation-item .nav-item-main {
     @apply font-semibold uppercase;
+}
+
+.main-content {
+    @apply flex-1 pb-20;
 }
 </style>
