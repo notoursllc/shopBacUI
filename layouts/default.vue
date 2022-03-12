@@ -126,6 +126,10 @@ export default {
                             <span class="nav-item-main">{{ $t('Products') }}</span>
                         </navigation-item>
 
+                        <navigation-item :route="{ name: 'product_artists' }">
+                            <span class="nav-item-main">{{ $t('Product artists') }}</span>
+                        </navigation-item>
+
                         <navigation-item :route="{ name: 'hero-list' }">
                             <!-- <template v-slot:icon>
                                 <fig-icon

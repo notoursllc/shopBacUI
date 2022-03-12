@@ -9,7 +9,8 @@ import {
     FigFormInput,
     FigFormTextarea,
     FigFormCheckbox,
-    FigMetaDataBuilder
+    FigSelectCountry,
+    FigSelectStateProvince
 } from '@notoursllc/figleaf';
 
 
@@ -22,7 +23,8 @@ export default Vue.extend({
         FigFormInput,
         FigFormTextarea,
         FigFormCheckbox,
-        FigMetaDataBuilder
+        FigSelectCountry,
+        FigSelectStateProvince
     },
 
     props: {
@@ -37,10 +39,12 @@ export default Vue.extend({
             form: {
                 published: true,
                 file: null,
-                title: null,
-                caption: null,
-                alt_text: null,
-                metadata: null
+                name: null,
+                description: null,
+                website: null,
+                city: null,
+                state: null,
+                countryCodeAlpha2: null
             },
             fileError: null,
             accept: 'image/png, image/jpeg, image/gif'
@@ -49,23 +53,19 @@ export default Vue.extend({
 
     mounted() {
         if(this.id) {
-            this.fetchHero();
+            this.fetchArtist();
         }
     },
 
     methods: {
-        async fetchHero() {
+        async fetchArtist() {
             try {
                 this.loading = true;
 
-                const { data } = await this.$api.hero.get(this.id);
+                const { data } = await this.$api.product_artists.get(this.id);
 
                 if(!data) {
                     throw new Error(this.$t('Item not found'));
-                }
-
-                if(data.metadata) {
-                    data.metadata = JSON.parse(data.metadata);
                 }
 
                 this.form = {
@@ -89,7 +89,7 @@ export default Vue.extend({
          * @returns boolean
          */
         filesAreAcceptedTypes(FileList) {
-            const acceptedTypes = this.accept.split(',').map((type) => { return type.trim() });
+            const acceptedTypes = this.accept.split(',').map((type) => type.trim());
             let isAcceptedType = true;
 
             for (let i=0; i<FileList.length; i++) {
@@ -106,6 +106,7 @@ export default Vue.extend({
             // https://developer.mozilla.org/en-US/docs/Web/API/FileList
             const files = event.target.files;
 
+
             if(!this.filesAreAcceptedTypes(files)) {
                 this.fileError = this.$t('File type not allowed');
                 this.form.file = null;
@@ -113,6 +114,7 @@ export default Vue.extend({
             else {
                 this.fileError = null;
                 this.form.file = files[0];
+                console.log("FILES", this.form.file);
             }
         },
 
@@ -120,10 +122,14 @@ export default Vue.extend({
             try {
                 this.loading = true;
 
-                await this.$api.hero.upsert({
-                    ...this.form,
-                    id: this.id
-                });
+                const args = {
+                    ...this.form
+                };
+                if(this.id) {
+                    args.id = this.id;
+                }
+
+                await this.$api.product_artists.upsert(args);
 
                 this.$emit('saved');
             }
@@ -166,37 +172,51 @@ export default Vue.extend({
                     <template v-slot:error>
                         <div v-if="fileError">{{ fileError }}</div>
                     </template>
-
-                    <div class="pt-2 text-gray-500">{{ $t('hero_image_aspect_ratio_recommendation') }}</div>
                 </fig-label-value>
 
-                <!-- image alt text -->
+                <!-- Name -->
                 <fig-label-value>
-                    <template v-slot:label>{{ $t('Image alt text') }}:</template>
-                    <fig-form-input v-model="form.alt_text" />
+                    <template v-slot:label>{{ $t('Name') }}:</template>
+                    <fig-form-input v-model="form.name" />
                 </fig-label-value>
 
-                <!-- title -->
+                <!-- description -->
                 <fig-label-value>
-                    <template v-slot:label>{{ $t('Title') }}:</template>
-                    <fig-form-input v-model="form.title" />
-                </fig-label-value>
-
-                <!-- caption -->
-                <fig-label-value>
-                    <template v-slot:label>{{ $t('Caption') }}:</template>
+                    <template v-slot:label>{{ $t('Description') }}:</template>
                     <fig-form-textarea
-                        v-model="form.caption"
+                        v-model="form.description"
                         rows="5" />
                 </fig-label-value>
 
-
-                <!-- Meta data -->
+                <!-- website -->
                 <fig-label-value>
-                    <template v-slot:label>{{ $t('Meta data') }}:</template>
-                    <div class="mt-3">
-                        <fig-meta-data-builder v-model="form.metadata" />
-                    </div>
+                    <template v-slot:label>{{ $t('Website') }}:</template>
+                    <fig-form-input v-model="form.website" />
+                </fig-label-value>
+
+                <!-- city -->
+                <fig-label-value>
+                    <template v-slot:label>{{ $t('City') }}:</template>
+                    <fig-form-input v-model="form.city" />
+                </fig-label-value>
+
+                <!-- country -->
+                <fig-label-value>
+                    <template v-slot:label>{{ $t('Country') }}:</template>
+                    <fig-select-country
+                        v-model="form.countryCodeAlpha2"
+                        :clearable="false"
+                        id="country_code" />
+                </fig-label-value>
+
+                <!-- state -->
+                <fig-label-value>
+                    <template v-slot:label>{{ $t('State/Province/Region') }}:</template>
+                    <fig-select-state-province
+                        v-model="form.state"
+                        :country="form.countryCodeAlpha2"
+                        :clearable="false"
+                        id="state" />
                 </fig-label-value>
             </fig-label-value-group>
 
