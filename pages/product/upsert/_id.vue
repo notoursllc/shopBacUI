@@ -5,6 +5,7 @@ import product_mixin from '@/mixins/product_mixin';
 import shipping_mixin from '@/mixins/shipping_mixin';
 
 import MasterTypeSelect from '@/components/MasterTypeSelect';
+import ProductArtistSelect from '@/components/product/artist/ProductArtistSelect.vue';
 import SeoPreview from '@/components/product/SeoPreview';
 import VariantTable from '@/components/product/variant/VariantTable';
 
@@ -35,6 +36,7 @@ const urlValidator = (value) => {
 export default Vue.extend({
     components: {
         MasterTypeSelect,
+        ProductArtistSelect,
         SeoPreview,
         VariantTable,
         FigFormCheckbox,
@@ -227,7 +229,9 @@ export default Vue.extend({
 
             <div class="flex flex-wrap -mx-2">
                 <fig-form-group :class="css.cellOneHalf">
-                    <label slot="label" for="product_type">{{ $t('Product type') }}</label>
+                    <template v-slot:label>
+                        <label for="product_type">{{ $t('Product type') }}</label>
+                    </template>
                     <master-type-select
                         v-model="product.type"
                         object="product_type"
@@ -236,7 +240,9 @@ export default Vue.extend({
 
                 <!-- sub-type -->
                 <fig-form-group :class="css.cellOneHalf">
-                    <label slot="label" for="product_sub_type">{{ $t('Product sub-type') }}</label>
+                    <template v-slot:label>
+                        <label for="product_sub_type">{{ $t('Product sub-type') }}</label>
+                    </template>
                     <master-type-select
                         v-model="product.sub_type"
                         object="product_sub_type"
@@ -245,7 +251,9 @@ export default Vue.extend({
 
                 <!-- sales channel -->
                 <fig-form-group :class="css.cellOneHalf">
-                    <label slot="label" for="product_sales_channel_type">{{ $t('Sales channel') }}</label>
+                    <template v-slot:label>
+                        <label for="product_sales_channel_type">{{ $t('Sales channel') }}</label>
+                    </template>
                     <master-type-select
                         v-model="product.sales_channel_type"
                         object="product_sales_channel_type"
@@ -254,7 +262,9 @@ export default Vue.extend({
 
                 <!-- vendor -->
                 <fig-form-group :class="css.cellOneHalf">
-                    <label slot="label" for="product_vendor_type">{{ $t('Vendor') }}</label>
+                    <template v-slot:label>
+                        <label for="product_vendor_type">{{ $t('Vendor') }}</label>
+                    </template>
                     <master-type-select
                         v-model="product.vendor_type"
                         object="product_vendor_type"
@@ -281,7 +291,9 @@ export default Vue.extend({
             <div class="flex flex-wrap -mx-2">
                 <!-- gender -->
                 <fig-form-group :class="css.cellOneHalf">
-                    <label slot="label" for="product_gender_type">{{ $t('Gender') }}</label>
+                    <template v-slot:label>
+                        <label for="product_gender_type">{{ $t('Gender') }}</label>
+                    </template>
                     <master-type-select
                         v-model="product.gender_type"
                         object="product_gender_type"
@@ -290,7 +302,9 @@ export default Vue.extend({
 
                 <!-- fit -->
                 <fig-form-group :class="css.cellOneHalf">
-                    <label slot="label" for="product_fit_type">{{ $t('Fit') }}</label>
+                    <template v-slot:label>
+                        <label for="product_fit_type">{{ $t('Fit') }}</label>
+                    </template>
                     <master-type-select
                         v-model="product.fit_type"
                         object="product_fit_type"
@@ -299,7 +313,9 @@ export default Vue.extend({
 
                 <!-- sleeve -->
                 <fig-form-group :class="css.cellOneHalf">
-                    <label slot="label" for="product_sleeve_length_type">{{ $t('Sleeve') }}</label>
+                    <template v-slot:label>
+                        <label for="product_sleeve_length_type">{{ $t('Sleeve') }}</label>
+                    </template>
                     <master-type-select
                         v-model="product.sleeve_length_type"
                         object="product_sleeve_length_type"
@@ -308,7 +324,9 @@ export default Vue.extend({
 
                 <!-- feature -->
                 <fig-form-group :class="css.cellOneHalf">
-                    <label slot="label" for="product_feature_type">{{ $t('Feature') }}</label>
+                    <template v-slot:label>
+                        <label for="product_feature_type">{{ $t('Feature') }}</label>
+                    </template>
                     <master-type-select
                         v-model="product.feature_type"
                         object="product_feature_type"
@@ -334,7 +352,9 @@ export default Vue.extend({
             <div class="flex flex-wrap -mx-2">
                 <!-- page title -->
                 <fig-form-group :class="css.cellOneHalf">
-                    <label slot="label" for="product_title">{{ $t('Title') }}</label>
+                    <template v-slot:label>
+                        <label for="product_title">{{ $t('Title') }}</label>
+                    </template>
                     <fig-form-input
                         v-model="product.title"
                         maxlength="70"
@@ -343,7 +363,9 @@ export default Vue.extend({
 
                 <!-- caption -->
                 <fig-form-group :class="css.cellOneHalf">
-                    <label slot="label" for="product_caption">{{ $t('Caption') }}</label>
+                    <template v-slot:label>
+                        <label for="product_caption">{{ $t('Caption') }}</label>
+                    </template>
                     <fig-form-input
                         v-model="product.caption"
                         maxlength="70"
@@ -352,7 +374,9 @@ export default Vue.extend({
 
                 <!-- description -->
                 <fig-form-group :class="css.cellOneHalf">
-                    <label slot="label" for="product_description">{{ $t('Description') }}</label>
+                    <template v-slot:label>
+                        <label for="product_description">{{ $t('Description') }}</label>
+                    </template>
                     <fig-form-textarea
                         v-model="product.description"
                         :rows="2"
@@ -410,7 +434,9 @@ export default Vue.extend({
                 <div class="flex flex-wrap -mx-2 md:-mx-3">
                     <!-- country of origin -->
                     <fig-form-group :class="css.cellOneHalf">
-                        <label slot="label" for="product_customs_country_of_origin">{{ $t('Country of origin') }}</label>
+                        <template v-slot:label>
+                            <label for="product_customs_country_of_origin">{{ $t('Country of origin') }}</label>
+                        </template>
                         <fig-select-country
                             v-model="product.customs_country_of_origin"
                             id="product_customs_country_of_origin" />
@@ -422,7 +448,9 @@ export default Vue.extend({
 
                     <!-- HS code -->
                     <fig-form-group :class="css.cellOneHalf">
-                        <label slot="label" for="product_customs_harmonized_system_code">{{ $t('HS (Harmonized System) code') }}</label>
+                        <template v-slot:label>
+                            <label for="product_customs_harmonized_system_code">{{ $t('HS (Harmonized System) code') }}</label>
+                        </template>
                         <fig-form-input
                             v-model="product.customs_harmonized_system_code"
                             id="product_customs_harmonized_system_code" />
@@ -458,7 +486,9 @@ export default Vue.extend({
             <div class="flex flex-wrap -mx-2">
                 <!-- Packing length -->
                 <fig-form-group :class="css.cellOneHalf">
-                    <label slot="label" for="packing_length_cm">{{ $t('Packing length (cm)') }}</label>
+                    <template v-slot:label>
+                        <label for="packing_length_cm">{{ $t('Packing length (cm)') }}</label>
+                    </template>
                     <fig-form-input-number
                         v-model="product.packing_length_cm"
                         :step="1"
@@ -470,7 +500,9 @@ export default Vue.extend({
 
                 <!-- Packing width -->
                 <fig-form-group :class="css.cellOneHalf">
-                    <label slot="label" for="packing_width_cm">{{ $t('Packing width (cm)') }}</label>
+                    <template v-slot:label>
+                        <label for="packing_width_cm">{{ $t('Packing width (cm)') }}</label>
+                    </template>
                     <fig-form-input-number
                         v-model="product.packing_width_cm"
                         :step="1"
@@ -482,7 +514,9 @@ export default Vue.extend({
 
                 <!-- Packing width -->
                 <fig-form-group :class="css.cellOneHalf">
-                    <label slot="label" for="packing_height_cm">{{ $t('Packing height (cm)') }}</label>
+                    <template v-slot:label>
+                        <label for="packing_height_cm">{{ $t('Packing height (cm)') }}</label>
+                    </template>
                     <fig-form-input-number
                         v-model="product.packing_height_cm"
                         :step="1"
@@ -519,6 +553,28 @@ export default Vue.extend({
         </fig-text-card>
 
 
+        <!-- ARTIST -->
+        <fig-text-card class="mb-6" variant="white">
+            <template v-slot:header-left>
+                <div class="flex justify-center mr-2">
+                    <fig-icon
+                        icon="palette"
+                        width="26"
+                        height="26"
+                        :stroke-width="1" />
+                    <div class="text-lg font-bold pl-2">{{ $t('Artist/Photographer') }}</div>
+                </div>
+            </template>
+
+            <div class="flex flex-wrap -mx-2">
+                <fig-form-group :class="css.cellOneHalf">
+                    <product-artist-select
+                        v-model="product.product_artist_id" />
+                </fig-form-group>
+            </div>
+        </fig-text-card>
+
+
         <!-- SEARCH ENGINE LISTING-->
         <fig-text-card class="mb-6" variant="white">
             <template v-slot:header-left>
@@ -535,7 +591,9 @@ export default Vue.extend({
             <div class="flex flex-wrap -mx-2">
                 <!-- page title -->
                 <fig-form-group :class="css.cellOneHalf">
-                    <label slot="label" for="product_seo_page_title">{{ $t('Page title') }}</label>
+                    <template v-slot:label>
+                        <label for="product_seo_page_title">{{ $t('Page title') }}</label>
+                    </template>
                     <fig-form-input
                         v-model="product.seo_page_title"
                         maxlength="70"
@@ -544,8 +602,9 @@ export default Vue.extend({
 
                 <!-- URI -->
                 <fig-form-group :class="css.cellOneHalf">
-                    <label slot="label" for="product_seo_uri">{{ $t('URL and handle') }}</label>
-
+                    <template v-slot:label>
+                        <label for="product_seo_uri">{{ $t('URL and handle') }}</label>
+                    </template>
                     <fig-form-input-endcapper>
                         <template slot="prefix">{{ `https://${domainName}/p/` }}</template>
                         <fig-form-input
@@ -563,7 +622,9 @@ export default Vue.extend({
 
                 <!-- description -->
                 <fig-form-group :class="css.cellOneHalf">
-                    <label slot="label" for="product_seo_page_desc">{{ $t('Description') }}</label>
+                    <template v-slot:label>
+                        <label for="product_seo_page_desc">{{ $t('Description') }}</label>
+                    </template>
                     <fig-form-textarea
                         v-model="product.seo_page_desc"
                         :rows="2"
@@ -573,7 +634,9 @@ export default Vue.extend({
 
                 <!-- preview -->
                 <fig-form-group :class="css.cellOneHalf">
-                    <label slot="label">{{ $t('Preview') }}</label>
+                    <template v-slot:label>
+                        <label>{{ $t('Preview') }}</label>
+                    </template>
                     <div class="py-2 px-4 rounded bg-blue-100" v-show="product.seo_page_title">
                         <seo-preview
                             :title="product.seo_page_title"

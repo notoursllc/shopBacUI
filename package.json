@@ -13,7 +13,7 @@
   "dependencies": {
     "@bugsnag/js": "^7.10.1",
     "@bugsnag/plugin-vue": "^7.11.0",
-    "@notoursllc/breadvan-api": "^0.4.3",
+    "@notoursllc/breadvan-api": "^0.4.5",
     "@notoursllc/figleaf": "^0.38.1",
     "@nuxt/http": "^0.5.2",
     "@nuxt/image": "^0.6.0",

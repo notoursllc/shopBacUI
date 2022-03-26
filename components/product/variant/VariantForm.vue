@@ -170,9 +170,6 @@ export default {
         </fig-text-card>
 
 
-
-
-
         <!-- Variant images -->
         <fig-text-card class="mb-6" variant="white">
             <template v-slot:header-left>
@@ -200,10 +197,10 @@ export default {
         </fig-text-card>
 
 
-        <!-- Color info -->
+        <!-- Variant info -->
         <fig-text-card class="mb-6" variant="white">
             <template v-slot:header-left>
-                <div class="text-lg font-bold">{{ $t('Color info') }}</div>
+                <div class="text-lg font-bold">{{ $t('Variant info') }}</div>
             </template>
 
             <div class="flex flex-wrap -mx-2">

@@ -62,19 +62,19 @@ export default {
             }
         },
 
-        async createOptions() {
-            const { data } = await this.$api.masterType.list({
-                object: this.object,
-                _sort: 'ordinal:asc'
+        createOptions() {
+            const opts = [];
+
+            this.$store.state.masterTypes[this.object].forEach((obj) => {
+                if(obj.published) {
+                    opts.push({
+                        label: obj.name,
+                        value: obj.value
+                    });
+                }
             });
 
-            this.selectOptions = data.map(obj => {
-                return {
-                    label: obj.name,
-                    value: obj.value,
-                    disabled: !obj.published
-                };
-            });
+            this.selectOptions = opts;
         }
     }
 };
