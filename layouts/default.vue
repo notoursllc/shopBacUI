@@ -189,8 +189,10 @@ export default {
                             <navigation-item :route="{ name: 'global-package-types' }">{{ $t('Package types') }}</navigation-item>
                         </navigation-collapse>
 
+                        <!-- hiding this for now, as I am trying out Stripe Tax -->
+                        <!--
                         <navigation-item :route="{ name: 'tax-nexus-list' }">
-                            <!-- <template v-slot:icon>
+                            <template v-slot:icon>
                                 <fig-icon
                                     icon="coin"
                                     :width="22"
@@ -198,9 +200,10 @@ export default {
                                     stroke="#444242"
                                     :stroke-width="1.5"
                                     class="mr-1" />
-                            </template> -->
+                            </template>
                             <span class="nav-item-main">{{ $t('Sales Tax Nexus') }}</span>
                         </navigation-item>
+                        -->
                     </navigation-list>
                 </div>
 

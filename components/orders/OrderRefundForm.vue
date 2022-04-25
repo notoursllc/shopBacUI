@@ -1,5 +1,4 @@
 <script>
-import isObject from 'lodash.isobject';
 import { maxValue } from 'vuelidate/lib/validators';
 
 import {
@@ -108,15 +107,28 @@ export default {
             return 0;
         },
 
+        // taxRefundByNexus() {
+        //     let total = 0;
+
+        //     if(isObject(this.cart.tax_nexus_applied) && this.cart.tax_nexus_applied.tax_rate) {
+        //         const formRefund = (parseInt(this.form.subtotal_refund, 10) || 0)
+        //             + (parseInt(this.form.shipping_refund, 10) || 0)
+        //             + (parseInt(this.form.tax_refund, 10) || 0);
+
+        //         total = Math.ceil(formRefund * this.cart.tax_nexus_applied.tax_rate);
+        //     }
+
+        //     return total;
+        // },
         taxRefundByNexus() {
             let total = 0;
 
-            if(isObject(this.cart.tax_nexus_applied) && this.cart.tax_nexus_applied.tax_rate) {
+            if(this.cart.tax_rate) {
                 const formRefund = (parseInt(this.form.subtotal_refund, 10) || 0)
                     + (parseInt(this.form.shipping_refund, 10) || 0)
                     + (parseInt(this.form.tax_refund, 10) || 0);
 
-                total = Math.ceil(formRefund * this.cart.tax_nexus_applied.tax_rate);
+                total = Math.ceil(formRefund * this.cart.tax_rate);
             }
 
             return total;
@@ -320,29 +332,26 @@ export default {
                         <template v-slot:label>
                             <label for="refund-advanced-tax" class="flex items-center">
                                 <div class="mr-1">{{ $t('Tax') }}:</div>
-                                <fig-signpost>
+                                <!-- <fig-signpost>
                                     <div class="mb-1 font-semibold">{{ $t('Sales Tax Nexus') }}:</div>
 
                                     <fig-label-value-group density="md" display="table" class="w-full">
-                                        <!-- country -->
                                         <fig-label-value>
                                             <template v-slot:label>{{ $t('Country') }}:</template>
                                             {{ cart.tax_nexus_applied.countryCodeAlpha2 }}
                                         </fig-label-value>
 
-                                        <!-- state -->
                                         <fig-label-value>
                                             <template v-slot:label>{{ $t('State/Province/Region') }}:</template>
                                             {{ cart.tax_nexus_applied.state }}
                                         </fig-label-value>
 
-                                        <!-- tax rate -->
                                         <fig-label-value>
                                             <template v-slot:label>{{ $t('Tax rate') }}:</template>
                                             <fig-percentage :value="cart.tax_nexus_applied.tax_rate" />
                                         </fig-label-value>
                                     </fig-label-value-group>
-                                </fig-signpost>
+                                </fig-signpost> -->
                             </label>
                         </template>
 
