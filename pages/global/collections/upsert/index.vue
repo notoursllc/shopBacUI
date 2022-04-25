@@ -106,7 +106,7 @@ export default {
 <template>
     <div>
         <fig-text-card class="mb-5">
-            <div slot="header-left">{{ $t('General Info') }}</div>
+            <div slot="header-left">{{ $t('General info') }}</div>
 
             <!-- Available -->
             <div class="inputRow">

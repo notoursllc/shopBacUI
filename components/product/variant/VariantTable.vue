@@ -226,7 +226,7 @@ export default {
             <template slot="head">
                 <tr>
                     <fig-th v-if="canShowGrabHandles" class="w-12"></fig-th>
-                    <fig-th>{{ $t('Variant name') }}</fig-th>
+                    <fig-th>{{ $t('Label') }}</fig-th>
                     <fig-th sortable prop="base_price">{{ $t('Price') }}</fig-th>
                     <fig-th>{{ $t('Sizes') }}</fig-th>
                     <fig-th>{{ $t('Images') }}</fig-th>
@@ -249,7 +249,7 @@ export default {
                             class="handle cursor-grab" />
                     </fig-td>
 
-                    <!-- Variant name -->
+                    <!-- Label -->
                     <fig-td>
                         {{ color.label }}
                         <fig-operations-dropdown

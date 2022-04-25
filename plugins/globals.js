@@ -3,11 +3,17 @@ export default async (ctx) => {
         return;
     }
 
-    const { data } = await ctx.app.$api.masterType.all({
-        _sort: 'ordinal:asc'
-    });
+    const results = await Promise.all([
+        ctx.app.$api.masterType.all({
+            _sort: 'ordinal:asc'
+        }),
 
-    for(const type in data) {
-        ctx.store.dispatch('MASTER_TYPES', { object: type, value: data[type]});
+        ctx.app.$api.product.getStipeTaxCodes()
+    ]);
+
+    for(const type in results[0].data) {
+        ctx.store.dispatch('MASTER_TYPES', { object: type, value: results[0].data[type]});
     }
+
+    ctx.store.dispatch('TAX_CODES', results[1].data);
 };

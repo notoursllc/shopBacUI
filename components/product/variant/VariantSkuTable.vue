@@ -170,7 +170,7 @@ export default Vue.extend({
                 size="sm"
                 @click="addSize"
                 icon="plus"
-                class="mr-2">{{ $t('Add Size') }}</fig-button>
+                class="mr-2">{{ $t('Add SKU') }}</fig-button>
 
             <fig-button
                 v-if="skus && skus.length"

@@ -25,7 +25,7 @@ module.exports = {
     "Add Package Type": "Add Package Type",
     "Add product": "Add product",
     "Add row": "Add row",
-    "Add Size": "Add Size",
+    "Add SKU": "Add SKU",
     "Add swatch": "Add swatch",
     "Add To Your Order": "Add To Your Order",
     "Add variant": "Add variant",
@@ -202,7 +202,7 @@ module.exports = {
 
     "Gender": "Gender",
     "Genders": "Genders",
-    "General Info": "General Info",
+    "General info": "General info",
     "Global settings": "Global settings",
     "Grand total": "Grand total",
 
@@ -495,6 +495,7 @@ module.exports = {
     "Swatch added successfully: {hex}": "Swatch added successfully: {hex}",
 
     "Tax": "Tax",
+    "Tax code": "Tax code",
     "Tax rate": "Tax rate",
     "TERMS": "TERMS",
     "Thanks!": "Thanks!",
@@ -546,9 +547,6 @@ module.exports = {
     "variant_images_size_suggestion": "For best results use a 1:1 aspect ratio (ex: 592px x 592px)",
     "Variant deleted successfully": "Variant deleted successfully",
     "variant image": "variant image",
-    "Variant images": "Variant images",
-    "Variant info": "Variant info",
-    "Variant name": "Variant name",
     "Variant properties": "Variant properties",
     "Variants": "Variants",
     "Vendor": "Vendor",

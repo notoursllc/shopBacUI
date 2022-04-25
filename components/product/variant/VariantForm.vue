@@ -170,10 +170,10 @@ export default {
         </fig-text-card>
 
 
-        <!-- Variant images -->
+        <!-- Images -->
         <fig-text-card class="mb-6" variant="white">
             <template v-slot:header-left>
-                <span class="text-lg font-bold">{{ $t('Variant images') }}</span>
+                <span class="text-lg font-bold">{{ $t('Images') }}</span>
                 <span class="pl-1 text-sm text-gray-500 font-normal">- {{ $t('variant_images_size_suggestion') }}</span>
             </template>
 
@@ -197,16 +197,16 @@ export default {
         </fig-text-card>
 
 
-        <!-- Variant info -->
+        <!-- General info -->
         <fig-text-card class="mb-6" variant="white">
             <template v-slot:header-left>
-                <div class="text-lg font-bold">{{ $t('Variant info') }}</div>
+                <div class="text-lg font-bold">{{ $t('General info') }}</div>
             </template>
 
             <div class="flex flex-wrap -mx-2">
                 <!-- variant name -->
                 <fig-form-group :class="css.cellOneThird">
-                    <label slot="label" for="variant_name">{{ $t('Variant name') }}</label>
+                    <label slot="label" for="variant_name">{{ $t('Label') }}</label>
                     <fig-form-input
                         v-model="variant.label"
                         id="variant_name" />
@@ -225,10 +225,10 @@ export default {
         </fig-text-card>
 
 
-        <!-- Sizes -->
+        <!-- SKUs -->
         <fig-text-card class="mb-6" variant="white">
             <template v-slot:header-left>
-                <div class="text-lg font-bold">{{ $t('Sizes') }}</div>
+                <div class="text-lg font-bold">{{ $t('SKUs') }}</div>
             </template>
 
             <variant-sku-table

@@ -6,6 +6,7 @@ import shipping_mixin from '@/mixins/shipping_mixin';
 
 import MasterTypeSelect from '@/components/MasterTypeSelect';
 import ProductArtistSelect from '@/components/product/artist/ProductArtistSelect.vue';
+import ProductTaxCodeSelect from '@/components/product/ProductTaxCodeSelect.vue';
 import SeoPreview from '@/components/product/SeoPreview';
 import VariantTable from '@/components/product/variant/VariantTable';
 
@@ -37,6 +38,7 @@ export default Vue.extend({
     components: {
         MasterTypeSelect,
         ProductArtistSelect,
+        ProductTaxCodeSelect,
         SeoPreview,
         VariantTable,
         FigFormCheckbox,
@@ -529,29 +531,30 @@ export default Vue.extend({
         </fig-text-card>
 
 
-        <!-- META DATA -->
+        <!-- TAX -->
         <fig-text-card class="mb-6" variant="white">
             <template v-slot:header-left>
                 <div class="flex justify-center mr-2">
                     <fig-icon
-                        icon="file-code"
+                        icon="receipt-tax"
                         width="26"
                         height="26"
                         :stroke-width="1" />
-                    <div class="text-lg font-bold pl-2">{{ $t('Metadata') }}</div>
+                    <div class="text-lg font-bold pl-2">{{ $t('Tax') }}</div>
                 </div>
             </template>
 
-            <div class="pb-3">
-                <fig-form-checkbox
-                    v-model="productHasMetaData">{{ $t('Metadata_description') }}</fig-form-checkbox>
+            <div class="flex flex-wrap -mx-2">
+                <fig-form-group :class="css.cellOneHalf">
+                    <template v-slot:label>
+                        <label for="product_tax_code">{{ $t('Tax code') }}</label>
+                    </template>
+                    <product-tax-code-select
+                        v-model="product.tax_code"
+                        id="product_tax_code" />
+                </fig-form-group>
             </div>
-
-            <fig-meta-data-builder
-                v-if="productHasMetaData"
-                v-model="product.metadata" />
         </fig-text-card>
-
 
         <!-- ARTIST -->
         <fig-text-card class="mb-6" variant="white">
@@ -645,6 +648,30 @@ export default Vue.extend({
                     </div>
                 </fig-form-group>
             </div>
+        </fig-text-card>
+
+
+        <!-- META DATA -->
+        <fig-text-card class="mb-6" variant="white">
+            <template v-slot:header-left>
+                <div class="flex justify-center mr-2">
+                    <fig-icon
+                        icon="file-code"
+                        width="26"
+                        height="26"
+                        :stroke-width="1" />
+                    <div class="text-lg font-bold pl-2">{{ $t('Metadata') }}</div>
+                </div>
+            </template>
+
+            <div class="pb-3">
+                <fig-form-checkbox
+                    v-model="productHasMetaData">{{ $t('Metadata_description') }}</fig-form-checkbox>
+            </div>
+
+            <fig-meta-data-builder
+                v-if="productHasMetaData"
+                v-model="product.metadata" />
         </fig-text-card>
 
 
