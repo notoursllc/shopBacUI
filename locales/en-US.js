@@ -552,6 +552,7 @@ module.exports = {
     "Vendor": "Vendor",
     "Vendors": "Vendors",
     "Victory!": "Victory!",
+    "Video": "Video",
     "View": "View",
     "View My Order": "View My Order",
     "View product in store": "View product in store",
@@ -582,6 +583,7 @@ module.exports = {
     "You can choose only one more image": "You can choose only one more image",
     "You can choose only _num_ more images": "You can choose only {number} more images",
     "You can upload num more images": "You can upload {number} more images",
+    "YouTube URL": "YouTube URL",
 
     "shipping": {
         "fedex_express_saver": {

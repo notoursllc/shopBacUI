@@ -22,7 +22,8 @@ import {
     FigOverlay,
     FigTextCard,
     FigIconLabel,
-    FigMetaDataBuilder
+    FigMetaDataBuilder,
+    FigYouTube
 } from '@notoursllc/figleaf';
 
 
@@ -52,7 +53,8 @@ export default Vue.extend({
         FigOverlay,
         FigTextCard,
         FigIconLabel,
-        FigMetaDataBuilder
+        FigMetaDataBuilder,
+        FigYouTube
     },
 
     mixins: [
@@ -405,6 +407,40 @@ export default Vue.extend({
             <variant-table
                 :value="product.variants"
                 @change="colors => this.$set(product, 'variants', colors)" />
+        </fig-text-card>
+
+
+        <!-- VIDEO -->
+        <fig-text-card class="mb-6" variant="white">
+            <template v-slot:header-left>
+                <div class="flex justify-center mr-2">
+                    <fig-icon
+                        icon="movie"
+                        width="26"
+                        height="26"
+                        :stroke-width="1" />
+                    <div class="text-lg font-bold pl-2">{{ $t('Video') }}</div>
+                </div>
+            </template>
+
+            <div class="flex flex-wrap -mx-2">
+                <fig-form-group :class="css.cellOneHalf">
+                    <template v-slot:label>
+                        <label for="video_url">{{ $t('YouTube URL') }}</label>
+                    </template>
+                    <fig-form-input
+                        v-model="product.video_url"
+                        maxlength="70"
+                        id="video_url" />
+                </fig-form-group>
+
+                <div :class="css.cellOneHalf" v-show="product.video_url">
+                    <fig-you-tube
+                        :url="product.video_url"
+                        :width="320"
+                        :height="180" />
+                </div>
+            </div>
         </fig-text-card>
 
 
