@@ -327,57 +327,9 @@ export default {
     </div>
 </template>
 
-<style lang="scss">
-@import "~assets/css/components/_mixins.scss";
-
-.el-upload-list--picture .el-upload-list__item {
-    border: 0 !important;
-    margin: 5px 0;
-    padding: 0;
-    height: auto;
-}
-
+<style>
 .ghost {
     opacity: 0.5;
     background: #c8ebfb;
-}
-
-.image-row {
-    @include flexbox();
-    @include flex-direction(column);
-}
-.image-row-fields {
-    @include flexbox();
-}
-.image-row-handle {
-    @include flexbox();
-    @include align-items(center);
-    @include flex(0 0 30px);
-    padding: 2px 5px 2px 0;
-
-    svg {
-        cursor: grab;
-    }
-}
-.image-row-pic {
-    @include flex(0 0 120px);
-    padding: 2px 5px 2px 0;
-
-    img {
-        width: 120px;
-        max-height: 120px;
-    }
-}
-.image-row-input {
-    @include flexbox();
-    @include flex(1 1 auto);
-    @include align-items(flex-start);
-    padding: 2px 5px 2px 0;
-
-    .input-tip {
-        font-size: 12px;
-        line-height: 12px;
-        padding-top: 5px;
-    }
 }
 </style>

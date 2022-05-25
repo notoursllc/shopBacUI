@@ -69,15 +69,17 @@ export default {
     <div>
         <div v-if="product">
             <client-only :placeholder="$t('Loading pictures...')">
-                <carousel :autoplay="true"
-                            :autoplayHoverPause="true"
-                            :navigationEnabled="!!productPics.length"
-                            :perPage="1"
-                            :loop="true"
-                            paginationColor="#cacac8"
-                            paginationActiveColor="#e66d17">
+                <carousel
+                    :autoplay="true"
+                    :autoplayHoverPause="true"
+                    :navigationEnabled="!!productPics.length"
+                    :perPage="1"
+                    :loop="true"
+                    paginationColor="#cacac8"
+                    paginationActiveColor="#e66d17">
                     <slide v-for="(pic, key) in productPics" :key="key">
-                        <img :src="pic"
+                        <img
+                            :src="pic"
                             :alt="product.title"
                             v-img="{group:'prod', src:getLargePic(key)}" />
                     </slide>
@@ -88,8 +90,8 @@ export default {
 </template>
 
 
-<style lang="scss">
-    .VueCarousel-wrapper {
-        box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.1)
-    }
+<style>
+.VueCarousel-wrapper {
+    box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.1)
+}
 </style>

@@ -97,20 +97,3 @@ export default {
         </div>
     </form>
 </template>
-
-<style lang="scss">
-    @import "~assets/css/components/_table.scss";
-    @import "~assets/css/components/_formRow.scss";
-
-    .formContainer {
-        width: 500px;
-
-        .formRow > label {
-            white-space: nowrap;
-        }
-
-        .formRow > span {
-            width: 100%;
-        }
-    }
-</style>

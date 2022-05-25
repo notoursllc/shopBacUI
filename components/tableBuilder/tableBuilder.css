@@ -1,0 +1,77 @@
+.header-input-btn {
+    padding: 2px 1px !important;
+    cursor: pointer;
+}
+
+.col-icon-container {
+    text-align: center;
+    margin-bottom: 5px;
+}
+
+.table-builder-footer {
+    padding-top: 40px;
+    text-align: left;
+}
+
+.table.table-builder-table {
+    border: 0;
+    width: auto !important;
+}
+
+.table.table-builder-table th, td {
+    border: 1px solid #cdcbcb;
+}
+
+.table.table-builder-table thead th {
+    padding: 0.4rem;
+    font-weight: 400;
+    border-bottom: 0;
+    color: #757575;
+}
+.table.table-builder-table .th {
+    background-color: #f0f0f0;
+}
+
+.table.table-builder-table .th input {
+    color: #000;
+    font-weight: 500;
+}
+
+.table.table-builder-table tr:hover {
+    background-color: #f0f9ed;
+}
+
+.table.table-builder-table .empty-column-cell {
+    padding-left: 0.7rem;
+    padding-right: 0;
+}
+
+.table.table-builder-table .empthy-row-cell {
+    padding-left: 0;
+}
+
+.table.table-builder-table .grab-handle-cell {
+    padding-left: 0;
+    vertical-align: middle;
+    width: 30px;
+}
+
+.table.table-builder-table .no-color {
+    background-color: #fff !important;
+    border: 0;
+}
+
+.table.table-builder-table .header-button {
+    padding: 5px 0 20px 0;
+}
+.table.table-builder-table .footer-button {
+    padding: 20px 0 5px 0;
+}
+
+.table.table-builder-table.table-builder-details thead th {
+    padding: 0.2rem;
+}
+
+.table.table-builder-table.table-builder-details tbody td {
+    padding: 0.3rem;
+}

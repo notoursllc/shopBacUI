@@ -1,6 +1,6 @@
 <script>
 import isObject from 'lodash.isobject';
-
+import './tableBuilder.css';
 import {
     FigTableSimple,
     FigTh,
@@ -87,7 +87,3 @@ export default {
         </tbody>
     </fig-table-simple>
 </template>
-
-<style lang="scss">
-@import "~assets/css/components/_tableBuilderComponent.scss";
-</style>

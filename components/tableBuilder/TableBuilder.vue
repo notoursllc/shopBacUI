@@ -2,6 +2,7 @@
 import isObject from 'lodash.isobject';
 import draggable from 'vuedraggable';
 import DataTableSelect from '@/components/product/dataTable/DataTableSelect';
+import './tableBuilder.css';
 import {
     FigButton,
     FigFormInput,
@@ -473,7 +474,3 @@ export default {
         </fig-overlay>
     </div>
 </template>
-
-<style lang="scss">
-@import "~assets/css/components/_tableBuilderComponent.scss";
-</style>

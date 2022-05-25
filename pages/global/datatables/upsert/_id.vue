@@ -126,8 +126,3 @@ export default {
     </fig-overlay>
 </template>
 
-
-<style lang="scss">
-// @import "~assets/css/components/_table.scss";
-@import "~assets/css/components/_formRow.scss";
-</style>
