@@ -1,11 +1,11 @@
 <script>
-import { FigFormSelect } from '@notoursllc/figleaf';
+import { FigFormSelectStripeTaxCode } from '@notoursllc/figleaf';
 
 export default {
     name: 'ProductTaxCodeSelect',
 
     components: {
-        FigFormSelect
+        FigFormSelectStripeTaxCode
     },
 
     props: {
@@ -32,51 +32,32 @@ export default {
 
     data: function() {
         return {
-            selectedVal: null,
-            selectOptions: []
+            selected: null,
+            whiteList: [
+                'txcd_00000000', // Nontaxable
+                'txcd_99999999', // General - Tangible goods
+                'txcd_30011000', // Clothing and footwear
+                'txcd_30011200', // Children's clothing and footwear
+                'txcd_30060006', // Hats
+                'txcd_30060007', // Jewelry
+                'txcd_35010000', // Books
+                'txcd_30060010', // Non-clothing accessories
+            ]
         };
     },
 
     watch: {
         value: {
             handler(newVal) {
-                this.$store.state.taxCodes.forEach((obj) => {
-                    if(obj.value === newVal) {
-                        this.selectedVal = obj;
-                    }
-                });
+                this.selected = newVal;
             },
             immediate: true
         }
     },
 
-    created() {
-        this.createOptions();
-    },
-
     methods: {
         emitInput(val) {
-            // when the select clear button is clicked then the val changes to "0",
-            // but we want null instead:
-            if(!val) {
-                this.$emit('input', null);
-            }
-            else {
-                this.$emit('input', val.value);
-            }
-        },
-
-        createOptions() {
-            const opts = [];
-
-            this.$store.state.taxCodes.forEach((obj) => {
-                opts.push({
-                    label: obj.name,
-                    value: obj.id
-                });
-            });
-
-            this.selectOptions = opts;
+            this.$emit('input', val);
         }
     }
 };
@@ -84,13 +65,12 @@ export default {
 
 
 <template>
-    <fig-form-select
-        v-model="selectedVal"
+    <fig-form-select-stripe-tax-code
+        v-model="selected"
         :clearable="clearable"
-        :options="selectOptions"
         :placeholder="placeholder"
-        @input="emitInput"
         :size="size"
-        v-bind="$attrs"
-        class="w-full" />
+        :white-list="whiteList"
+        :tax-codes="$store.state.taxCodes"
+        @input="emitInput" />
 </template>

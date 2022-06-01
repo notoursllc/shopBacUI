@@ -100,6 +100,9 @@ export default Vue.extend({
             seo_uri: {
                 required,
                 urlValidator
+            },
+            tax_code: {
+                required
             }
         }
     },
@@ -587,7 +590,11 @@ export default Vue.extend({
                     </template>
                     <product-tax-code-select
                         v-model="product.tax_code"
+                        :state="!$v.product.tax_code.$invalid ? null : false"
                         id="product_tax_code" />
+                    <template v-slot:error v-if="$v.product.tax_code.$invalid">
+                        {{ $t('Required') }}
+                    </template>
                 </fig-form-group>
             </div>
         </fig-text-card>
