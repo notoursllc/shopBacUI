@@ -19,7 +19,7 @@ export default (context, inject) => {
     api.getErrorMessage = (err) => {
         let message = err.message;
 
-        if(err.response && err.response.data && err.response.data.message) {
+        if(err?.response?.data?.message) {
             message = err.response.data.message;
         }
 

@@ -30,6 +30,18 @@ export default Vue.extend({
     props: {
         id: {
             type: String
+        },
+
+        showIsGlobal: {
+            type: Boolean,
+            default: false
+        },
+
+        defaults: {
+            type: Object,
+            default() {
+                return {};
+            }
         }
     },
 
@@ -38,6 +50,7 @@ export default Vue.extend({
             loading: false,
             form: {
                 published: true,
+                is_global: true,
                 file: null,
                 name: null,
                 description: null,
@@ -54,6 +67,20 @@ export default Vue.extend({
     mounted() {
         if(this.id) {
             this.fetchArtist();
+        }
+    },
+
+
+    watch: {
+        defaults: {
+            async handler(newVal) {
+                for(const key in newVal) {
+                    if (this.form.hasOwnProperty(key) && key !== 'file') {
+                        this.form[key] = newVal[key];
+                    }
+                }
+            },
+            immediate: true
         }
     },
 
@@ -118,7 +145,7 @@ export default Vue.extend({
             }
         },
 
-        async onSave(event) {
+        async onSave() {
             try {
                 this.loading = true;
 
@@ -129,9 +156,8 @@ export default Vue.extend({
                     args.id = this.id;
                 }
 
-                await this.$api.product_artists.upsert(args);
-
-                this.$emit('saved');
+                const response = await this.$api.product_artists.upsert(args);
+                this.$emit('saved', response.data);
             }
             catch(e) {
                 this.$figleaf.errorToast({
@@ -155,6 +181,12 @@ export default Vue.extend({
                 <fig-label-value>
                     <template v-slot:label>{{ $t('Published') }}:</template>
                     <fig-form-checkbox v-model="form.published" />
+                </fig-label-value>
+
+                <!-- Is global -->
+                <fig-label-value v-if="showIsGlobal">
+                    <template v-slot:label>{{ $t('Is global') }}:</template>
+                    <fig-form-checkbox v-model="form.is_global" />
                 </fig-label-value>
 
                 <!-- image upload -->

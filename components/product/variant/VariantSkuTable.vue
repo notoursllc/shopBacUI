@@ -306,6 +306,7 @@ export default Vue.extend({
                             v-model="sku.label"
                             size="sm"
                             append-to-body
+                            clearable
                             style="min-width:75px" />
                     </fig-td>
 

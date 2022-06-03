@@ -22,6 +22,11 @@ export default {
         size: {
             type: String,
             default: 'md'
+        },
+
+        clearable: {
+            type: Boolean,
+            default: false
         }
     },
 
@@ -47,7 +52,9 @@ export default {
 
     methods: {
         emitInput() {
-            this.$emit('input', this.selectedSize.label);
+            this.$emit(
+                'input',
+                this.selectedSize?.label === undefined ? null : this.selectedSize?.label);
         },
 
         async createOptions() {
@@ -73,7 +80,7 @@ export default {
     <fig-form-select
         v-model="selectedSize"
         taggable
-        :clearable="false"
+        :clearable="clearable"
         :options="selectOptions"
         :placeholder="placeholder"
         @input="emitInput"

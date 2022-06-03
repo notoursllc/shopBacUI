@@ -162,6 +162,7 @@ export default {
                         <fig-tr>
                             <fig-th sortable prop="name" colspan="2">{{ $t('Name') }}</fig-th>
                             <fig-th sortable prop="published">{{ $t('Published') }}</fig-th>
+                            <fig-th sortable prop="is_global">{{ $t('Is global') }}</fig-th>
                             <fig-th sortable prop="website">{{ $t('Website') }}</fig-th>
                             <fig-th sortable prop="city">{{ $t('City') }}</fig-th>
                             <fig-th sortable prop="state">{{ $t('State/Province/Region') }}</fig-th>
@@ -189,6 +190,11 @@ export default {
                         <!-- published -->
                         <fig-td>
                             <boolean-tag :value="obj.published" />
+                        </fig-td>
+
+                        <!-- is global -->
+                        <fig-td>
+                            <boolean-tag :value="obj.is_global" />
                         </fig-td>
 
                         <!-- website -->
@@ -237,6 +243,7 @@ export default {
 
             <product-artist-upsert-form
                 :id="form.id"
+                show-is-global
                 @saved="onFormSaved" />
         </fig-modal>
     </div>
