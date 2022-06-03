@@ -197,7 +197,17 @@ export default {
             }
         },
 
+        babel: {
+            plugins: [
+                '@babel/plugin-proposal-optional-chaining'
+            ]
+        },
+
         // transpile: [/^element-ui/],
+        transpile: [
+            '@notoursllc/figleaf',
+            '@notoursllc/breadvan-api'
+        ],
 
         /*
         ** You can extend webpack config here
