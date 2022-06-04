@@ -78,11 +78,19 @@ export default {
                     value: obj.id
                 };
 
-                if (this.value === opt.value) {
-                    opts.push(opt);
-                    this.selected = opt;
-                }
-                else if(obj.published && obj.is_global) {
+                // if (this.value === opt.value) {
+                //     opts.push(opt);
+                //     this.selected = opt;
+                // }
+                // else if(obj.published && obj.is_global) {
+                //     opts.push(opt);
+
+                //     if(this.value === opt.value) {
+                //         this.selected = opt;
+                //     }
+                // }
+
+                if(obj.published) {
                     opts.push(opt);
 
                     if(this.value === opt.value) {
