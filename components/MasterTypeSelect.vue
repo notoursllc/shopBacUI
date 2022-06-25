@@ -66,12 +66,10 @@ export default {
             const opts = [];
 
             this.$store.state.masterTypes[this.object].forEach((obj) => {
-                if(obj.published) {
-                    opts.push({
-                        label: obj.name,
-                        value: obj.value
-                    });
-                }
+                opts.push({
+                    label: obj.name,
+                    value: obj.value
+                });
             });
 
             this.selectOptions = opts;
