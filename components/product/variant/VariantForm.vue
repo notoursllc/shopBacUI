@@ -131,14 +131,6 @@ export default {
             this.$emit('cancel');
         },
 
-        onVariantDefaultsChange(obj) {
-            if(isObject(obj)) {
-                for(const key in obj) {
-                    this.$set(this.variant, key, obj[key]);
-                }
-            }
-        },
-
         onSkusChange(skus) {
             this.$set(this.variant, 'skus', Array.isArray(skus) ? skus : []);
         },
@@ -234,7 +226,7 @@ export default {
             <variant-sku-table
                 :variant="variant"
                 @input="onSkusChange"
-                @defaults="onVariantDefaultsChange" />
+                @skuLabelType="(val) => { variant.sku_label_type = val }" />
         </fig-text-card>
 
 

@@ -69,7 +69,7 @@ export default {
                             </fig-label-value>
 
                             <fig-label-value>
-                                <template v-slot:label>{{ $t('Size') }}:</template>
+                                <template v-slot:label>{{ $t('Label') }}:</template>
                                 {{ product.product_variant_sku.label }}
                             </fig-label-value>
 

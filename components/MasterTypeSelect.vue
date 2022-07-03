@@ -43,11 +43,16 @@ export default {
                 this.selectedVal = newVal;
             },
             immediate: true
-        }
-    },
+        },
 
-    created() {
-        this.createOptions();
+        object: {
+            handler(newVal) {
+                if(newVal) {
+                    this.createOptions();
+                }
+            },
+            immediate: true
+        }
     },
 
     methods: {
