@@ -5,12 +5,12 @@ import draggable from 'vuedraggable';
 import SizeSelect from '@/components/product/size/SizeSelect';
 import {
     FigFormCheckbox,
-    FigBooleanTag,
     FigButton,
     FigFormInputNumber,
     FigFormInputMoney,
     FigFormInputToggle,
     FigFormInput,
+    FigFormSelectNative,
     FigIcon,
     FigTableSimple,
     FigTooltip,
@@ -18,7 +18,7 @@ import {
     FigTd,
     FigTrNoResults,
     FigPopConfirm,
-    FigMoney
+    FigPopover
 } from '@notoursllc/figleaf';
 
 
@@ -28,21 +28,21 @@ export default Vue.extend({
     components: {
         draggable,
         SizeSelect,
-        FigMoney,
         FigFormCheckbox,
-        FigBooleanTag,
         FigButton,
         FigFormInputNumber,
         FigFormInputMoney,
         FigFormInputToggle,
         FigFormInput,
+        FigFormSelectNative,
         FigIcon,
         FigTableSimple,
         FigTooltip,
         FigTh,
         FigTd,
         FigTrNoResults,
-        FigPopConfirm
+        FigPopConfirm,
+        FigPopover
     },
 
     props: {
@@ -56,6 +56,7 @@ export default Vue.extend({
 
     data: function() {
         return {
+            skuLabelType: 'size',
             skus: Array.isArray(this.variant.skus) ? this.variant.skus : [],
             showBulkEdit: false,
             showBulkEditInputs: {},
@@ -63,15 +64,7 @@ export default Vue.extend({
             whenOutOfStockOptions: [
                 { label: this.$t('Continue selling'), value: true },
                 { label: this.$t('Hide'), value: false }
-            ],
-            isDetailsView: false,
-            defaults: {
-                base_price: 0,
-                sale_price: 0,
-                compare_at_price: 0,
-                cost_price: 0,
-                weight_oz: 0
-            }
+            ]
         };
     },
 
@@ -87,11 +80,7 @@ export default Vue.extend({
             handler(newVal) {
                 if(isObject(newVal)) {
                     this.skus = newVal.skus;
-
-                    // also set the defaults
-                    for(const key in this.defaults) {
-                        this.defaults[key] = newVal[key];
-                    }
+                    this.skuLabelType = newVal.sku_label_type;
                 }
                 else {
                     this.skus = [];
@@ -115,17 +104,12 @@ export default Vue.extend({
             this.$emit('input', cleanSizes);
         },
 
-        emitDefaultsInput() {
-            this.$emit('defaults', this.defaults);
-        },
-
-        removeRow(index) {
+        async deleteSku(index) {
+            await this.$api.product.variant.sku.delete(this.skus[index].id);
             this.skus.splice(index, 1);
         },
 
         addSize() {
-            this.isDetailsView = false;
-
             this.skus.splice(this.skus.length, 1, {
                 ordinal: this.skus.length,
                 label: null,
@@ -142,20 +126,8 @@ export default Vue.extend({
             });
         },
 
-        onToggleChange(index, prop, val) {
-            this.$set(
-                this.skus[index],
-                prop,
-                !val ? null : ''
-            );
-        },
-
-        skuInputIsVisible(index, prop) {
-            return this.skus[index].hasOwnProperty(prop) && this.skus[index][prop] !== null;
-        },
-
-        toggleDetailsView() {
-            this.isDetailsView = !this.isDetailsView;
+        onLabelInputTypeChange(val) {
+            this.$emit('skuLabelType', val);
         }
     }
 });
@@ -171,14 +143,6 @@ export default Vue.extend({
                 @click="addSize"
                 icon="plus"
                 class="mr-2">{{ $t('Add SKU') }}</fig-button>
-
-            <fig-button
-                v-if="skus && skus.length"
-                variant="plain"
-                size="sm"
-                @click="toggleDetailsView"
-                :icon="isDetailsView ? 'edit' : 'columns'"
-                class="mr-2">{{ isDetailsView ? $t('Show edit view') : $t('Show list view') }}</fig-button>
         </div>
 
         <fig-table-simple
@@ -186,14 +150,37 @@ export default Vue.extend({
             hover>
             <template slot="head">
                 <tr>
-                    <fig-th rowspan="2" v-if="skus && skus.length > 1" class="handle-cell align-top"></fig-th>
-                    <fig-th rowspan="2">{{ $t('Size') }}</fig-th>
-                    <fig-th rowspan="2">{{ $t('Inventory') }}</fig-th>
-                    <fig-th rowspan="2">{{ $t('SKU') }}</fig-th>
-                    <fig-th rowspan="2">{{ $t('Barcode') }}</fig-th>
+                    <fig-th v-if="skus && skus.length > 1" class="handle-cell align-top"></fig-th>
+                    <fig-th>
+                        <div class="flex items-center">
+                            {{ $t('Label') }}
+                            <fig-popover placement="bottom">
+                                <fig-button
+                                    slot="toggler"
+                                    icon="adjustments"
+                                    variant="plain"
+                                    size="sm"
+                                    class="ml-2" />
+
+                                <div>{{ $t('Input type') }}</div>
+                                <fig-form-select-native
+                                    v-model="skuLabelType"
+                                    :options="[
+                                        { label: $t('size'), value: 'size' },
+                                        { label: $t('text'), value: 'text' }
+                                    ]"
+                                    size="sm"
+                                    class="w-full"
+                                    @input="onLabelInputTypeChange" />
+                            </fig-popover>
+                        </div>
+                    </fig-th>
+                    <fig-th>{{ $t('Inventory') }}</fig-th>
+                    <fig-th>{{ $t('SKU') }}</fig-th>
+                    <fig-th>{{ $t('Barcode') }}</fig-th>
                     <fig-th>{{ $t('Price') }}</fig-th>
                     <fig-th>{{ $t('Sale price') }}</fig-th>
-                    <fig-th rowspan="2">{{ $t('Is on sale') }}</fig-th>
+                    <fig-th>{{ $t('Is on sale') }}</fig-th>
                     <fig-th>{{ $t('Compare at') }}</fig-th>
                     <fig-th>{{ $t('Cost') }}</fig-th>
                     <fig-th>
@@ -208,78 +195,9 @@ export default Vue.extend({
                             {{ $t('Used to calculate shipping rates at checkout and label prices during fulfillment.') }}
                         </fig-tooltip>
                     </fig-th>
-                    <fig-th rowspan="2" class="text-center">{{ $t('Track inventory') }}</fig-th>
-                    <fig-th rowspan="2" class="text-center">{{ $t('Hide when out of stock') }}</fig-th>
-                    <!-- <fig-th>{{ $t('Country of origin') }}</fig-th> -->
-                    <fig-th rowspan="2"></fig-th>
-                </tr>
-
-                <tr>
-                    <!-- price -->
-                    <fig-th>
-                        <div class="text-xs">{{ $t('default') }}:</div>
-                        <fig-money
-                            v-if="isDetailsView"
-                            :cents="defaults.base_price" />
-                        <fig-form-input-money
-                            v-else
-                            v-model="defaults.base_price"
-                            size="sm"
-                            @input="emitDefaultsInput" />
-                    </fig-th>
-
-                    <!-- sale price -->
-                    <fig-th>
-                        <div class="text-xs">{{ $t('default') }}:</div>
-                        <fig-money
-                            v-if="isDetailsView"
-                            :cents="defaults.sale_price" />
-                        <fig-form-input-money
-                            v-else
-                            v-model="defaults.sale_price"
-                            size="sm"
-                            @input="emitDefaultsInput" />
-                    </fig-th>
-
-                    <!-- compare at -->
-                    <fig-th>
-                        <div class="text-xs">{{ $t('default') }}:</div>
-                        <fig-money
-                            v-if="isDetailsView"
-                            :cents="defaults.compare_at_price" />
-                        <fig-form-input-money
-                            v-else
-                            v-model="defaults.compare_at_price"
-                            size="sm"
-                            @input="emitDefaultsInput" />
-                    </fig-th>
-
-                    <!-- cost -->
-                    <fig-th>
-                        <div class="text-xs">{{ $t('default') }}:</div>
-                        <fig-money
-                            v-if="isDetailsView"
-                            :cents="defaults.cost_price" />
-                        <fig-form-input-money
-                            v-else
-                            v-model="defaults.cost_price"
-                            size="sm"
-                            @input="emitDefaultsInput" />
-                    </fig-th>
-
-                    <!-- weight -->
-                    <fig-th>
-                        <div class="text-xs">{{ $t('default') }}:</div>
-                        <template v-if="isDetailsView">{{ $n(defaults.weight_oz) }}</template>
-                        <fig-form-input-number
-                            v-else
-                            v-model="defaults.weight_oz"
-                            :step=".1"
-                            :min="0"
-                            controls-right
-                            size="sm"
-                            @input="emitDefaultsInput" />
-                    </fig-th>
+                    <fig-th class="text-center">{{ $t('Track inventory') }}</fig-th>
+                    <fig-th class="text-center">{{ $t('Hide when out of stock') }}</fig-th>
+                    <fig-th></fig-th>
                 </tr>
             </template>
 
@@ -292,29 +210,30 @@ export default Vue.extend({
                     v-for="(sku, index) in skus"
                     :key="index">
                     <!-- handle -->
-                    <fig-td v-if="skus.length > 1" class="align-top">
+                    <fig-td v-if="skus.length > 1">
                         <i class="handle">
                             <fig-icon icon="dots-vertical-double" />
                         </i>
                     </fig-td>
 
                     <!-- size -->
-                    <fig-td class="font-semibold align-top">
-                        <template v-if="isDetailsView">{{ sku.label }}</template>
+                    <fig-td class="font-semibold">
                         <size-select
-                            v-else
+                            v-if="skuLabelType === 'size' || !skuLabelType"
                             v-model="sku.label"
                             size="sm"
                             append-to-body
                             clearable
                             style="min-width:75px" />
+
+                        <fig-form-input
+                            v-else
+                            v-model="sku.label" />
                     </fig-td>
 
                     <!-- inventory -->
-                    <fig-td class="text-sm text-right align-top">
-                        <template v-if="isDetailsView">{{ sku.inventory_count }}</template>
+                    <fig-td class="text-sm text-right">
                         <fig-form-input-number
-                            v-else
                             v-model="sku.inventory_count"
                             controls-right
                             :min="0"
@@ -322,197 +241,83 @@ export default Vue.extend({
                     </fig-td>
 
                     <!-- SKU -->
-                    <fig-td class="text-sm align-top">
-                        <template v-if="isDetailsView">{{ sku.sku }}</template>
+                    <fig-td class="text-sm">
                         <fig-form-input
-                            v-else
                             v-model="sku.sku"
                             id="size_sku"
                             size="sm" />
                     </fig-td>
 
                     <!-- Barcode -->
-                    <fig-td class="text-sm align-top">
-                        <template v-if="isDetailsView">{{ sku.barcode }}</template>
+                    <fig-td class="text-sm">
                         <fig-form-input
-                            v-else
                             v-model="sku.barcode"
                             size="sm"
                             id="size_barcode" />
                     </fig-td>
 
                     <!-- Price -->
-                    <fig-td class="text-sm text-right align-top">
-                        <fig-money
-                            v-if="isDetailsView"
-                            :cents="sku.base_price" />
-                        <template v-else>
-                            <fig-form-input-money
-                                v-if="skuInputIsVisible(index, 'base_price')"
-                                v-model="sku.base_price"
-                                size="sm" />
-
-                            <fig-form-input-toggle
-                                :value="skuInputIsVisible(index, 'base_price')"
-                                size="sm"
-                                variant="success"
-                                class="mt-2"
-                                @input="(val) => onToggleChange(index, 'base_price', val)" />
-                        </template>
+                    <fig-td class="text-sm text-right">
+                        <fig-form-input-money
+                            v-model="sku.base_price"
+                            size="sm" />
                     </fig-td>
 
                     <!-- Sale price -->
-                    <fig-td class="text-sm text-right align-top">
-                        <fig-money
-                            v-if="isDetailsView"
-                            :cents="sku.sale_price" />
-                        <template v-else>
-                            <fig-form-input-money
-                                v-if="skuInputIsVisible(index, 'sale_price')"
-                                v-model="sku.sale_price"
-                                size="sm" />
-
-                            <fig-form-input-toggle
-                                :value="skuInputIsVisible(index, 'sale_price')"
-                                size="sm"
-                                variant="success"
-                                class="mt-2"
-                                @input="(val) => onToggleChange(index, 'sale_price', val)" />
-                        </template>
+                    <fig-td class="text-sm text-right">
+                        <fig-form-input-money
+                            v-model="sku.sale_price"
+                            size="sm" />
                     </fig-td>
 
                     <!-- Is on sale -->
-                    <fig-td class="text-center align-top">
-                        <fig-boolean-tag
-                            v-if="isDetailsView"
-                            :bool="sku.is_on_sale"
-                            :true-label="$t('Yes')"
-                            :false-label="$t('No')"
-                            size="sm" />
+                    <fig-td class="text-center">
                         <fig-form-checkbox
-                            v-else
                             v-model="sku.is_on_sale" />
                     </fig-td>
 
                     <!-- Compare at -->
-                    <fig-td class="text-sm text-right align-top">
-                        <fig-money
-                            v-if="isDetailsView"
-                            :cents="sku.compare_at_price" />
-                        <template v-else>
-                            <fig-form-input-money
-                                v-if="skuInputIsVisible(index, 'compare_at_price')"
-                                v-model="sku.compare_at_price"
-                                size="sm"
-                                id="size_price_compare_at" />
-
-                            <fig-form-input-toggle
-                                :value="skuInputIsVisible(index, 'compare_at_price')"
-                                size="sm"
-                                variant="success"
-                                class="mt-2"
-                                @input="(val) => onToggleChange(index, 'compare_at_price', val)" />
-                        </template>
+                    <fig-td class="text-sm text-right">
+                        <fig-form-input-money
+                            v-model="sku.compare_at_price"
+                            size="sm"
+                            id="size_price_compare_at" />
                     </fig-td>
 
                     <!-- Cost -->
-                    <fig-td class="text-sm text-right align-top">
-                        <fig-money
-                            v-if="isDetailsView"
-                            :cents="sku.cost_price" />
-                        <template v-else>
-                            <fig-form-input-money
-                                v-if="skuInputIsVisible(index, 'cost_price')"
-                                v-model="sku.cost_price"
-                                size="sm"
-                                id="size_price_cost" />
-
-                            <fig-form-input-toggle
-                                :value="skuInputIsVisible(index, 'cost_price')"
-                                size="sm"
-                                variant="success"
-                                class="mt-2"
-                                @input="(val) => onToggleChange(index, 'cost_price', val)" />
-                        </template>
+                    <fig-td class="text-sm text-right">
+                        <fig-form-input-money
+                            v-model="sku.cost_price"
+                            size="sm"
+                            id="size_price_cost" />
                     </fig-td>
 
                     <!-- Weight -->
-                    <fig-td class="text-sm text-right align-top">
-                        <template v-if="isDetailsView">{{ sku.weight_oz }}</template>
-                        <template v-else>
-                            <fig-form-input-number
-                                v-if="skuInputIsVisible(index, 'weight_oz')"
-                                v-model="sku.weight_oz"
-                                :step=".01"
-                                :min="0"
-                                controls-right
-                                size="sm"
-                                id="size_weight" />
-
-                            <fig-form-input-toggle
-                                :value="skuInputIsVisible(index, 'weight_oz')"
-                                size="sm"
-                                variant="success"
-                                class="mt-2"
-                                @input="(val) => onToggleChange(index, 'weight_oz', val)" />
-                        </template>
+                    <fig-td class="text-sm text-right">
+                        <fig-form-input-number
+                            v-model="sku.weight_oz"
+                            :step=".01"
+                            :min="0"
+                            controls-right
+                            size="sm"
+                            id="size_weight" />
                     </fig-td>
 
                     <!-- Track inventory -->
-                    <fig-td class="text-center align-top">
-                        <fig-boolean-tag
-                            v-if="isDetailsView"
-                            :bool="sku.track_inventory_count"
-                            :true-label="$t('Yes')"
-                            :false-label="$t('No')"
-                            size="sm" />
+                    <fig-td class="text-center">
                         <fig-form-checkbox
-                            v-else
                             v-model="sku.track_inventory_count" />
                     </fig-td>
 
                     <!-- Hide when out of stock -->
-                    <fig-td class="text-center align-top">
-                        <fig-boolean-tag
-                            v-if="isDetailsView"
-                            :bool="sku.visible_if_no_inventory"
-                            :true-label="$t('Yes')"
-                            :false-label="$t('No')"
-                            size="sm" />
+                    <fig-td class="text-center">
                         <fig-form-checkbox
-                            v-else
                             v-model="sku.visible_if_no_inventory" />
                     </fig-td>
 
-                    <!-- Country of origin -->
-                    <!-- <fig-td class="text-sm align-top">
-                        <template v-if="isDetailsView">
-                            <fig-country
-                                v-if="sku.customs_country_of_origin !== null"
-                                :alpha2="sku.customs_country_of_origin" />
-                            <div
-                                v-else
-                                class="text-gray-400">({{ $t('default') }})</div>
-                        </template>
-                        <template v-else>
-                            <fig-select-country
-                                v-if="sku.customs_country_of_origin !== null"
-                                v-model="sku.customs_country_of_origin"
-                                size="xs"
-                                id="size_origin" />
-
-                            <fig-form-input-toggle
-                                :value="sku.customs_country_of_origin !== null"
-                                size="sm"
-                                variant="success"
-                                class="mt-2"
-                                @input="(val) => onToggleChange(index, 'customs_country_of_origin', val)" />
-                        </template>
-                    </fig-td> -->
-
-                    <fig-td class="align-top">
-                        <fig-pop-confirm @confirm="removeRow(index)">
-                            <div class="text-center" style="min-width:125px">{{ $t('Delete this size?') }}</div>
+                    <fig-td>
+                        <fig-pop-confirm @confirm="deleteSku(index)">
+                            <div class="text-center" style="min-width:125px">{{ $t('Delete this SKU?') }}</div>
                             <fig-button
                                 slot="reference"
                                 variant="ghost"

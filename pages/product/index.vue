@@ -256,6 +256,7 @@ export default {
                             <fig-th sortable prop="published">{{ $t('Published') }}</fig-th>
                             <fig-th sortable prop="sub_type">{{ $t('Sub Type') }}</fig-th>
                             <fig-th sortable prop="gender_type">{{ $t('Gender') }}</fig-th>
+                            <fig-th class="w-8"></fig-th>
                         </tr>
                     </template>
 
@@ -271,11 +272,6 @@ export default {
                         <!-- title -->
                         <fig-td>
                             {{ prod.title }}
-                            <fig-operations-dropdown
-                                :show-view="false"
-                                @edit="goToProductUpsert(prod.id)"
-                                @delete="onProductDelete(prod)"
-                                class="ml-1" />
                         </fig-td>
 
                         <!-- inventory count -->
@@ -296,6 +292,15 @@ export default {
                         <!-- gender -->
                         <fig-td>
                             {{ getMasterTypeLabel('product_gender_type', prod.gender_type) }}
+                        </fig-td>
+
+                        <!-- actions -->
+                        <fig-td class="text-center">
+                            <fig-operations-dropdown
+                                :show-view="false"
+                                @edit="goToProductUpsert(prod.id)"
+                                @delete="onProductDelete(prod)"
+                                class="ml-1" />
                         </fig-td>
                     </tr>
 

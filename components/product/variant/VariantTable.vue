@@ -198,7 +198,7 @@ export default {
             return swatches;
         },
 
-        getVariantSizes(index) {
+        getVariantLabels(index) {
             const variant = this.variants[index];
             const sizes = [];
 
@@ -227,11 +227,11 @@ export default {
                 <tr>
                     <fig-th v-if="canShowGrabHandles" class="w-12"></fig-th>
                     <fig-th>{{ $t('Label') }}</fig-th>
-                    <fig-th sortable prop="base_price">{{ $t('Price') }}</fig-th>
-                    <fig-th>{{ $t('Sizes') }}</fig-th>
+                    <fig-th>{{ $t('SKU labels') }}</fig-th>
                     <fig-th>{{ $t('Images') }}</fig-th>
                     <fig-th>{{ $t('Swatch') }}</fig-th>
                     <fig-th sortable prop="published">{{ $t('Published') }}</fig-th>
+                    <fig-th class="w-6"></fig-th>
                 </tr>
             </template>
 
@@ -241,7 +241,7 @@ export default {
                 @update="setColorOrdinals"
                 ghost-class="ghost"
                 tag="tbody">
-                <tr v-for="(color, idx) in variants" :key="idx">
+                <tr v-for="(variant, idx) in variants" :key="idx">
                     <!-- drag handle -->
                     <fig-td v-show="canShowGrabHandles">
                         <fig-icon
@@ -251,22 +251,12 @@ export default {
 
                     <!-- Label -->
                     <fig-td>
-                        {{ color.label }}
-                        <fig-operations-dropdown
-                            :show-view="false"
-                            @edit="showModal(idx)"
-                            @delete="onDeleteClick(idx)"
-                            class="ml-1" />
+                        {{ variant.label }}
                     </fig-td>
 
-                    <!-- Price -->
+                    <!-- SKU labels -->
                     <fig-td>
-                        <fig-money :cents="color.base_price" />
-                    </fig-td>
-
-                    <!-- Sizes -->
-                    <fig-td>
-                        <span v-for="(label, labelIndex) in getVariantSizes(idx)" :key="labelIndex">
+                        <span v-for="(label, labelIndex) in getVariantLabels(idx)" :key="labelIndex">
                             <fig-tag
                                 variant="light"
                                 class="mr-1 mb-1">{{ label }}</fig-tag>
@@ -303,7 +293,16 @@ export default {
 
                     <!-- Published -->
                     <fig-td>
-                        <boolean-tag :value="color.published" />
+                        <boolean-tag :value="variant.published" />
+                    </fig-td>
+
+                    <!-- Actions -->
+                    <fig-td class="text-center">
+                        <fig-operations-dropdown
+                            :show-view="false"
+                            @edit="showModal(idx)"
+                            @delete="onDeleteClick(idx)"
+                            class="ml-1" />
                     </fig-td>
                 </tr>
             </draggable>
@@ -319,7 +318,7 @@ export default {
         </div>
 
 
-        <!-- color upsert form -->
+        <!-- variant upsert form -->
         <fig-modal
             ref="color_upsert_form_modal"
             size="full">
