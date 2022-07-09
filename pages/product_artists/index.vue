@@ -67,13 +67,13 @@ export default {
             try {
                 this.loading = true;
 
-                const { data, pagination } = await this.$api.product_artists.list({
+                const response = await this.$api.product_artists.list({
                     ...this.pagination,
                     ...this.table
                 });
 
-                this.artists = data;
-                this.totalResults = pagination.rowCount;
+                this.artists = response?.data || [];
+                this.totalResults = response?.pagination.rowCount || 0;
             }
             catch(e) {
                 this.$figleaf.errorToast({

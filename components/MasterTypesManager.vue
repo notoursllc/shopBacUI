@@ -111,14 +111,14 @@ export default {
             this.loading = true;
 
             try {
-                const { data, pagination } = await this.$api.masterType.list({
+                const response = await this.$api.masterType.list({
                     object: this.object,
                     ...this.pagination,
                     ...this.table
                 });
 
-                this.types = data;
-                this.totalResults = pagination.rowCount;
+                this.types = response?.data || [];
+                this.totalResults = response?.pagination.rowCount || 0;
             }
             catch(e) {
                 this.$figleaf.errorToast({

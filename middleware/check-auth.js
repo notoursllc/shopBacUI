@@ -26,7 +26,9 @@ export default function (context) {
         }
     }
     else if(!isAuthenticated) {
-        context.redirect('/tenantmember/login');
+        context.redirect({
+            name: 'tenantmember-login'
+        });
     }
 
 }

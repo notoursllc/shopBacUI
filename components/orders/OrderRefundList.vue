@@ -66,14 +66,14 @@ export default {
             try {
                 this.loading = true;
 
-                const { data, pagination } = await this.$api.cart.refund.list({
+                const response = await this.$api.cart.refund.list({
                     cart_id: this.cartId,
                     ...this.pagination,
                     ...this.table
                 });
 
-                this.refunds = data;
-                this.totalResults = pagination.rowCount;
+                this.refunds = response?.data || [];
+                this.totalResults = response?.pagination.rowCount || 0;
             }
             catch(e) {
                 this.$figleaf.errorToast({

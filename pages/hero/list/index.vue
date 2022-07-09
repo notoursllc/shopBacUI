@@ -63,13 +63,13 @@ export default {
     methods: {
         async fetchData() {
             try {
-                const { data, pagination } = await this.$api.hero.list({
+                const response = await this.$api.hero.list({
                     ...this.pagination,
                     ...this.table
                 });
 
-                this.heros = data;
-                this.totalResults = pagination.rowCount;
+                this.heros = response?.data || [];
+                this.totalResults = response?.pagination.rowCount || 0;
             }
             catch(e) {
                 this.$figleaf.errorToast({

@@ -47,14 +47,14 @@ export default {
     methods: {
         async fetchData() {
             try {
-                const { data, pagination } = await this.$api.cart.closed({
+                const response = await this.$api.cart.closed({
                     _withRelated: '*',
                     ...this.pagination,
                     ...this.table
                 });
 
-                this.carts = data;
-                this.totalResults = pagination.rowCount;
+                this.carts = response?.data || [];
+                this.totalResults = response?.pagination.rowCount || 0;
             }
             catch(e) {
                 this.$figleaf.errorToast({

@@ -61,14 +61,14 @@ export default {
             try {
                 this.loading = true;
 
-                const { data } = await this.$api.account.get();
+                const response = await this.$api.account.get();
 
-                if(!data) {
+                if(!response.data) {
                     throw new Error(this.$t('Item not found'));
                 }
 
                 this.form = {
-                    ...data
+                    ...response.data
                 };
             }
             catch(e) {

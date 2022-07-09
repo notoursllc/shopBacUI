@@ -43,8 +43,8 @@ export default {
 
         async fetchData(paramsObj) {
             try {
-                const { data } = await this.$api.product.accentMessage.list(paramsObj);
-                this.messages = data;
+                const response = await this.$api.product.accentMessage.list(paramsObj);
+                this.messages = response?.data || [];
             }
             catch(e) {
                 this.$figleaf.errorToast({

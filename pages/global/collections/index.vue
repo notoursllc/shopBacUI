@@ -50,13 +50,13 @@ export default {
             try {
                 this.loading = true;
 
-                const { data, pagination } = await this.$api.product.collection.list({
+                const response = await this.$api.product.collection.list({
                     ...this.pagination,
                     ...this.table
                 });
 
-                this.collections = data;
-                this.totalResults = pagination.rowCount;
+                this.collections = response?.data || [];
+                this.totalResults = response?.pagination.rowCount || 0;
             }
             catch(e) {
                 this.$figleaf.errorToast({

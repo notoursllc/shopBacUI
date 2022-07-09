@@ -79,6 +79,7 @@ export default {
                         v-model="userInfo.password"
                         :placeholder="$t('Password')"
                         type="password"
+                        :autocomplete="false"
                         size="lg" />
                 </div>
 

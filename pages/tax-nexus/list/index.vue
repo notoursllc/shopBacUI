@@ -51,13 +51,13 @@ export default {
     methods: {
         async fetchData() {
             try {
-                const { data, pagination } = await this.$api.nexus.list({
+                const response = await this.$api.nexus.list({
                     ...this.pagination,
                     ...this.table
                 });
 
-                this.nexusList = data;
-                this.totalResults = pagination.rowCount;
+                this.nexusList = response?.data || [];
+                this.totalResults = response?.pagination.rowCount || 0;
             }
             catch(e) {
                 this.$figleaf.errorToast({

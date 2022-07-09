@@ -25,7 +25,7 @@ export default {
 
     data() {
         return {
-            account: [],
+            account: {},
             form: {
                 accountId: null
             },
@@ -41,8 +41,8 @@ export default {
     methods: {
         async fetchData() {
             try {
-                const { data } = await this.$api.account.get();
-                this.account = data;
+                const resposne = await this.$api.account.get();
+                this.account = resposne?.data || {};
             }
             catch(e) {
                 this.$figleaf.errorToast({
