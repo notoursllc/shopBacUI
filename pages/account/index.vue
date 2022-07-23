@@ -7,7 +7,8 @@ import {
     FigOverlay,
     FigLabelValueGroup,
     FigLabelValue,
-    FigButton
+    FigButton,
+    FigPopConfirm
 } from '@notoursllc/figleaf';
 
 
@@ -19,6 +20,7 @@ export default {
         FigLabelValueGroup,
         FigLabelValue,
         FigButton,
+        FigPopConfirm,
         AccountUpdateForm,
         AccountDetailsLayout
     },
@@ -29,7 +31,8 @@ export default {
             form: {
                 accountId: null
             },
-            loading: false
+            loading: false,
+            loadingApiInfo: false
         };
     },
 
@@ -63,6 +66,52 @@ export default {
         onFormSaved() {
             this.fetchData();
             this.showModal(false);
+        },
+
+        async onUpdateApiKey() {
+            try {
+                this.loadingApiInfo = true;
+                await this.$api.account.updateApiKey();
+
+                this.$figleaf.successToast({
+                    title: this.$t('Success'),
+                    text: this.$t('API key has been created')
+                });
+
+                this.fetchData();
+            }
+            catch(e) {
+                this.$figleaf.errorToast({
+                    title: this.$t('Error'),
+                    text: e.message
+                });
+            }
+            finally {
+                this.loadingApiInfo = false;
+            }
+        },
+
+        async onDeleteApiKey() {
+            try {
+                this.loadingApiInfo = true;
+                await this.$api.account.deleteApiKey();
+
+                this.$figleaf.successToast({
+                    title: this.$t('Success'),
+                    text: this.$t('API key has been deleted')
+                });
+
+                this.fetchData();
+            }
+            catch(e) {
+                this.$figleaf.errorToast({
+                    title: this.$t('Error'),
+                    text: e.message
+                });
+            }
+            finally {
+                this.loadingApiInfo = false;
+            }
         },
 
         init() {
@@ -120,6 +169,43 @@ export default {
                 </template>
             </account-details-layout>
         </fig-overlay>
+
+
+        <!-- API key -->
+        <div class="mt-20">
+            <fig-overlay :show="loadingApiInfo">
+                <fig-label-value-group density="lg" display="table">
+                    <fig-label-value>
+                        <template v-slot:label>{{ $t('API key') }}:</template>
+
+                        <div>
+                            {{ account.api_key_public }}
+                            <div class="mt-3">
+                                <fig-pop-confirm @confirm="onDeleteApiKey">
+                                    {{ $t('Delete the API key?') }}
+
+                                    <fig-button
+                                        v-if="account.api_key_public"
+                                        slot="reference"
+                                        variant="danger"
+                                        size="sm">{{ $t('Delete') }}</fig-button>
+                                </fig-pop-confirm>
+
+                                <fig-pop-confirm @confirm="onUpdateApiKey">
+                                    {{ $t('Create a new API key?') }}
+
+                                    <fig-button
+                                        slot="reference"
+                                        variant="plain"
+                                        size="sm"
+                                        class="ml-2">{{ $t('Create new') }}</fig-button>
+                                </fig-pop-confirm>
+                            </div>
+                        </div>
+                    </fig-label-value>
+                </fig-label-value-group>
+            </fig-overlay>
+        </div>
 
 
         <!-- add/upsert modal -->
