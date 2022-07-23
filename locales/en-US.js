@@ -64,6 +64,7 @@ module.exports = {
     "Attributes": "Attributes",
 
     "Barcode": "Barcode",
+    "Base": "Base",
     "Basic color": "Basic color",
     "Basic colors": "Basic colors",
     "Billing": "Billing",
@@ -195,6 +196,7 @@ module.exports = {
     "Estimated delivery": "Estimated delivery",
     "Estimated tax": "Estimated tax",
     "example: Black": "example: Black",
+    "Exchange rates": "Exchange rates",
     "Expiration date": "Expiration date",
 
     "Feature": "Feature",
@@ -399,6 +401,7 @@ module.exports = {
     "Quoted shipping rate": "Quoted shipping rate",
 
     "Rate ID": "Rate ID",
+    "Rates": "Rates",
     "Reason": "Reason",
     "RECEIPT": "RECEIPT",
     "Refund": "Refund",
@@ -547,6 +550,7 @@ module.exports = {
     "Trackable": "Trackable",
     "Tracking #": "Tracking #",
     "true": "true",
+    "Truncate": "Truncate",
     "Types": "Types",
 
     "Unable to initialize PayPal flow. Are your options correct?": "Unable to initialize PayPal flow. Are your options correct?",
@@ -579,6 +583,7 @@ module.exports = {
     "Victory!": "Victory!",
     "Video": "Video",
     "View": "View",
+    "View all": "View all",
     "View My Order": "View My Order",
     "View product in store": "View product in store",
     "view raw data": "view raw data",
