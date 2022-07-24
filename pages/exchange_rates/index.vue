@@ -19,9 +19,7 @@ export default {
         return {
             rate: {},
             loading: false,
-            highlight: [
-                'GBP', 'CAD', 'AUD', 'EUR', 'JPY'
-            ],
+            highlight: [],
             onlyHighlights: true
         };
     },
@@ -29,6 +27,7 @@ export default {
     created() {
         this.$store.dispatch('ui/title', this.$t('Exchange rates'));
         this.fetchData();
+        this.fetchAccount();
     },
 
     methods: {
@@ -36,6 +35,28 @@ export default {
             try {
                 const response = await this.$api.exchangeRate.get();
                 this.rate = response?.data || {};
+            }
+            catch(e) {
+                this.$figleaf.errorToast({
+                    title: this.$t('Error'),
+                    text: e.message
+                });
+            }
+        },
+
+        async fetchAccount() {
+            try {
+                const response = await this.$api.account.get();
+                const highlight = response.data?.supported_currencies || [];
+
+                if(response.data?.default_currency) {
+                    highlight.splice(
+                        highlight.indexOf(response.data.default_currency),
+                        1
+                    );
+                }
+
+                this.highlight = highlight;
             }
             catch(e) {
                 this.$figleaf.errorToast({
@@ -59,7 +80,7 @@ export default {
             <!-- Updated -->
             <fig-label-value>
                 <template v-slot:label>{{ $t('Updated') }}:</template>
-                {{ rate.created_at | format8601 }}
+                <template v-if="rate.created_at">{{ rate.created_at | format8601 }}</template>
             </fig-label-value>
 
             <!-- Base -->
@@ -84,7 +105,7 @@ export default {
                     </tr>
                 </table>
 
-                <div class="mt-4">
+                <div v-if="rate.rates && rate.rates.length" class="mt-4">
                     <fig-button
                         size="sm"
                         variant="plain"

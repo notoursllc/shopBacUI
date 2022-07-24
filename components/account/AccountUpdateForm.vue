@@ -6,6 +6,7 @@ import {
     FigLabelValueGroup,
     FigLabelValue,
     FigFormInput,
+    FigFormSelect,
     FigPopConfirm,
     FigSelectCountry,
     FigSelectStateProvince
@@ -19,6 +20,7 @@ export default {
         FigLabelValueGroup,
         FigLabelValue,
         FigFormInput,
+        FigFormSelect,
         FigPopConfirm,
         FigSelectCountry,
         FigSelectStateProvince,
@@ -34,6 +36,7 @@ export default {
     data() {
         return {
             loading: false,
+            exchangeRateOptions: [],
             form: {
                 application_name: null,
                 application_url: null,
@@ -47,13 +50,27 @@ export default {
                 shipping_from_postalCode: null,
                 shipping_from_countryCodeAlpha2: null,
                 shipping_from_phone: null,
-
+                supported_currencies: [],
+                default_currency: null
             },
         };
     },
 
+    computed: {
+        defaultExchangeRateOptions() {
+            const opts = [];
+            this.form.supported_currencies?.forEach((countryCode) => {
+                opts.push(
+                    { label: countryCode, value: countryCode }
+                )
+            });
+            return opts;
+        }
+    },
+
     mounted() {
         this.fetchAccount();
+        this.fetchRate();
     },
 
     methods: {
@@ -67,9 +84,11 @@ export default {
                     throw new Error(this.$t('Item not found'));
                 }
 
-                this.form = {
-                    ...response.data
-                };
+                for(let key in response.data) {
+                    if(this.form.hasOwnProperty(key)) {
+                        this.form[key] = response.data[key];
+                    }
+                }
             }
             catch(e) {
                 this.$figleaf.errorToast({
@@ -79,6 +98,29 @@ export default {
             }
 
             this.loading = false;
+        },
+
+        async fetchRate() {
+            try {
+                const response = await this.$api.exchangeRate.get();
+                const rateOptions = [];
+
+                if(response.data?.rates) {
+                    for(let key in response.data.rates) {
+                        rateOptions.push(
+                            { label: key, value: key }
+                        );
+                    }
+                }
+
+                this.exchangeRateOptions = rateOptions;
+            }
+            catch(e) {
+                this.$figleaf.errorToast({
+                    title: this.$t('Error'),
+                    text: e.message
+                });
+            }
         },
 
         async onSave(event) {
@@ -213,6 +255,25 @@ export default {
 
                 <template v-slot:shipping_from_phone>
                     <fig-form-input v-model="form.shipping_from_phone" />
+                </template>
+
+                <template v-slot:supported_currencies>
+                    <fig-form-select
+                        v-model="form.supported_currencies"
+                        :options="exchangeRateOptions"
+                        :clearable="true"
+                        :multiple="true"
+                        size="md"
+                        :reduce="obj => obj.value" />
+                </template>
+
+                <template v-slot:default_currency v-if="defaultExchangeRateOptions.length">
+                    <fig-form-select
+                        v-model="form.default_currency"
+                        :options="defaultExchangeRateOptions"
+                        :clearable="true"
+                        size="md"
+                        :reduce="obj => obj.value" />
                 </template>
 
                 <template v-slot:button>

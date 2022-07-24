@@ -158,6 +158,7 @@ module.exports = {
     "Data Table updated successfully": "Data Table updated successfully",
     "Data Table not found": "Data Table not found",
     "Data Tables": "Data Tables",
+    "Default currency": "Default currency",
     "Delete": "Delete",
     "Delete the API key?": "Delete the API key?",
     "Delete this column?": "Delete this column?",
@@ -518,6 +519,7 @@ module.exports = {
     "Subtotal": "Subtotal",
     "Success": "Success",
     "Suggestion": "Suggestion",
+    "Supported currency": "Supported currency",
     "Swatch": "Swatch",
     "Swatch added successfully: {hex}": "Swatch added successfully: {hex}",
 

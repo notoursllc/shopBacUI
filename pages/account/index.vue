@@ -162,6 +162,11 @@ export default {
                 <template v-slot:shipping_from_postalCode>{{ account.shipping_from_postalCode }}</template>
                 <template v-slot:shipping_from_countryCodeAlpha2>{{ account.shipping_from_countryCodeAlpha2 }}</template>
                 <template v-slot:shipping_from_phone>{{ account.shipping_from_phone }}</template>
+                <template v-slot:supported_currencies>
+                    {{ Array.isArray(account.supported_currencies) ? account.supported_currencies.join(', ') : null }}
+                </template>
+                <template v-slot:default_currency>{{ account.default_currency }}</template>
+
                 <template v-slot:button>
                     <fig-button
                         variant="primary"

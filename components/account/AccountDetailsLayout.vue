@@ -76,6 +76,16 @@ export default {
         </fig-label-value>
 
         <fig-label-value>
+            <template v-slot:label>{{ $t('Supported currency') }}:</template>
+            <slot name="supported_currencies" />
+        </fig-label-value>
+
+        <fig-label-value>
+            <template v-slot:label>{{ $t('Default currency') }}:</template>
+            <slot name="default_currency" />
+        </fig-label-value>
+
+        <fig-label-value>
             <template v-slot:label>&nbsp;</template>
             <div class="pt-4">
                 <slot name="button" />
