@@ -1,4 +1,5 @@
 <script>
+import isObject from 'lodash.isobject';
 import {
     FigOverlay,
     FigLabelValueGroup,
@@ -22,6 +23,12 @@ export default {
             highlight: [],
             onlyHighlights: true
         };
+    },
+
+    computed: {
+        canShowToggleButton() {
+            return isObject(this.rate.rates) && Object.keys(this.rate.rates).length;
+        }
     },
 
     created() {
@@ -105,7 +112,7 @@ export default {
                     </tr>
                 </table>
 
-                <div v-if="rate.rates && rate.rates.length" class="mt-4">
+                <div v-if="canShowToggleButton" class="mt-4">
                     <fig-button
                         size="sm"
                         variant="plain"
