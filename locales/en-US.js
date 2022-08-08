@@ -52,6 +52,7 @@ module.exports = {
     "API key": "API key",
     "API key has been created": "API key has been created",
     "API key has been deleted": "API key has been deleted",
+    "Application": "Application",
     "Application name": "Application name",
     "Application URL": "Application URL",
     "Are you sure you want to clear this value?": "Are you sure you want to clear this value?",

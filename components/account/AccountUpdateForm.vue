@@ -1,4 +1,5 @@
 <script>
+import draggable from 'vuedraggable';
 import AccountDetailsLayout from '@/components/account/AccountDetailsLayout.vue';
 import {
     FigButton,
@@ -9,12 +10,16 @@ import {
     FigFormSelect,
     FigPopConfirm,
     FigSelectCountry,
-    FigSelectStateProvince
+    FigSelectStateProvince,
+    FigSpecLayout,
+    FigSpec,
+    FigIcon
 } from '@notoursllc/figleaf';
 
 
 export default {
     components: {
+        draggable,
         FigButton,
         FigOverlay,
         FigLabelValueGroup,
@@ -24,6 +29,9 @@ export default {
         FigPopConfirm,
         FigSelectCountry,
         FigSelectStateProvince,
+        FigSpecLayout,
+        FigSpec,
+        FigIcon,
         AccountDetailsLayout
     },
 
@@ -155,6 +163,10 @@ export default {
 
         onDeleteCarrier(idx) {
             this.form.shipengine_carriers.splice(idx, 1);
+        },
+
+        onRemoveSupportedCurrency(index) {
+            this.form.supported_currencies.splice(index, 1);
         }
     }
 }
@@ -257,16 +269,6 @@ export default {
                     <fig-form-input v-model="form.shipping_from_phone" />
                 </template>
 
-                <template v-slot:supported_currencies>
-                    <fig-form-select
-                        v-model="form.supported_currencies"
-                        :options="exchangeRateOptions"
-                        :clearable="true"
-                        :multiple="true"
-                        size="md"
-                        :reduce="obj => obj.value" />
-                </template>
-
                 <template v-slot:default_currency v-if="defaultExchangeRateOptions.length">
                     <fig-form-select
                         v-model="form.default_currency"
@@ -274,6 +276,35 @@ export default {
                         :clearable="true"
                         size="md"
                         :reduce="obj => obj.value" />
+                </template>
+
+                <template v-slot:supported_currencies>
+                    <div class="grid grid-cols-2">
+                        <draggable
+                            v-model="form.supported_currencies"
+                            handle=".supported_currencies_handle"
+                            ghost-class="ghost"
+                            tag="table">
+                            <tr v-for="(obj, index) in form.supported_currencies" :key="index">
+                                <td class="supported_currencies_handle cursor-grab">
+                                    <fig-icon icon="dots-vertical-double" />
+                                </td>
+                                <td class="px-4">
+                                    {{ obj }}
+                                </td>
+                                <td class="pb-1">
+                                    <fig-button
+                                        variant="plain"
+                                        icon="trash"
+                                        size="sm" />
+                                </td>
+                            </tr>
+                        </draggable>
+
+                        <div>
+                            add new
+                        </div>
+                    </div>
                 </template>
 
                 <template v-slot:button>

@@ -128,6 +128,33 @@ export default {
             <account-details-layout>
                 <template v-slot:application_name>{{ account.application_name }}</template>
                 <template v-slot:application_url>{{ account.application_url }}</template>
+                <template v-slot:api_key>
+                    <fig-overlay :show="loadingApiInfo">
+                        {{ account.api_key_public }}
+
+                        <div class="mt-3">
+                            <fig-pop-confirm @confirm="onDeleteApiKey">
+                                {{ $t('Delete the API key?') }}
+
+                                <fig-button
+                                    v-if="account.api_key_public"
+                                    slot="reference"
+                                    variant="danger"
+                                    size="sm">{{ $t('Delete') }}</fig-button>
+                            </fig-pop-confirm>
+
+                            <fig-pop-confirm @confirm="onUpdateApiKey">
+                                {{ $t('Create a new API key?') }}
+
+                                <fig-button
+                                    slot="reference"
+                                    variant="plain"
+                                    size="sm"
+                                    class="ml-2">{{ $t('Create new') }}</fig-button>
+                            </fig-pop-confirm>
+                        </div>
+                    </fig-overlay>
+                </template>
                 <template v-slot:paypal_client_id>{{ account.paypal_client_id }}</template>
                 <template v-slot:shipengine_api_key>{{ account.shipengine_api_key }}</template>
                 <template v-slot:shipengine_carriers>
@@ -174,43 +201,6 @@ export default {
                 </template>
             </account-details-layout>
         </fig-overlay>
-
-
-        <!-- API key -->
-        <div class="mt-20">
-            <fig-overlay :show="loadingApiInfo">
-                <fig-label-value-group density="lg" display="table">
-                    <fig-label-value>
-                        <template v-slot:label>{{ $t('API key') }}:</template>
-
-                        <div>
-                            {{ account.api_key_public }}
-                            <div class="mt-3">
-                                <fig-pop-confirm @confirm="onDeleteApiKey">
-                                    {{ $t('Delete the API key?') }}
-
-                                    <fig-button
-                                        v-if="account.api_key_public"
-                                        slot="reference"
-                                        variant="danger"
-                                        size="sm">{{ $t('Delete') }}</fig-button>
-                                </fig-pop-confirm>
-
-                                <fig-pop-confirm @confirm="onUpdateApiKey">
-                                    {{ $t('Create a new API key?') }}
-
-                                    <fig-button
-                                        slot="reference"
-                                        variant="plain"
-                                        size="sm"
-                                        class="ml-2">{{ $t('Create new') }}</fig-button>
-                                </fig-pop-confirm>
-                            </div>
-                        </div>
-                    </fig-label-value>
-                </fig-label-value-group>
-            </fig-overlay>
-        </div>
 
 
         <!-- add/upsert modal -->
