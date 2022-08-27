@@ -17,7 +17,10 @@ import {
     FigBooleanTag,
     FigTextCard,
     FigPopConfirm,
-    FigCardLastFour
+    FigCardLastFour,
+    FigRowBuilder,
+    FigFormTextarea,
+    FigOverlay
 } from '@notoursllc/figleaf';
 
 
@@ -37,6 +40,9 @@ export default {
         FigTextCard,
         FigPopConfirm,
         FigCardLastFour,
+        FigRowBuilder,
+        FigFormTextarea,
+        FigOverlay,
         JsonTree,
         OrderRefundForm,
         OrderRefundList
@@ -47,7 +53,9 @@ export default {
             cart: null,
             label: null,
             payment: null,
-            shippingRate: {}
+            shippingRate: {},
+            cartNotes: [],
+            cartNotesLoading: false
         };
     },
 
@@ -81,6 +89,7 @@ export default {
                 this.cart = data.cart;
                 this.label = data.label;
                 this.payment = data.payment;
+                this.cartNotes = data.cart.admin_order_notes ? [ ...data.cart.admin_order_notes ] : []
 
                 if(!this.cart) {
                     throw new Error(this.$t('Cart not found'));
@@ -192,7 +201,7 @@ export default {
             });
 
             this.$refs.orderRefundList.fetchData();
-        }
+        },
 
         // labelPurchased() {
         //     this.loadPayment();
@@ -211,6 +220,38 @@ export default {
         //         text: 'Shipping label deleted'
         //     });
         // }
+
+        onAddNote() {
+            this.cartNotes.push({
+                created_at: new Date().toISOString(),
+                note: null
+            })
+        },
+
+        onRemoveNote(index) {
+            this.cartNotes.splice(index, 1);
+        },
+
+        async onSaveNotes() {
+            try {
+                this.cartNotesLoading = true;
+                await this.$api.cart.order.notes.update(this.cart.id, this.cartNotes);
+
+                this.$figleaf.successToast({
+                    title: this.$t('Success'),
+                    text: this.$t('Notes updated successfully')
+                });
+            }
+            catch(e) {
+                this.$figleaf.errorToast({
+                    title: this.$t('Error'),
+                    text: e.message
+                });
+            }
+            finally {
+                this.cartNotesLoading = false;
+            }
+        }
     }
 };
 </script>
@@ -784,6 +825,55 @@ export default {
                 </template>
                 <div>{{ $t('Are you sure you want to send another order confirmation email to the customer?') }}</div>
             </fig-pop-confirm>
+        </fig-text-card>
+
+
+        <!-- Notes -->
+        <fig-text-card class="mb-6" v-if="cart" variant="white">
+            <template v-slot:header-left>
+                <div class="flex justify-center items-center">
+                    <fig-icon
+                        icon="notes"
+                        width="26"
+                        height="26"
+                        :stroke-width="1" />
+                    <div class="text-lg font-bold pl-2">{{ $t('Notes') }}</div>
+                </div>
+            </template>
+
+            <div class="w-full">
+                <fig-overlay :show="cartNotesLoading">
+                    <fig-row-builder
+                        v-model="cartNotes"
+                        @add="onAddNote"
+                        @remove="onRemoveNote"
+                        :sortable="false"
+                        class="w-full">
+                        <template v-slot:buttonLabel>{{ $t('Add note') }}</template>
+
+                        <template v-slot:default="slotScope">
+                            <div class="flex gap-2 w-full">
+                                <div class="whitespace-nowrap">
+                                    {{ slotScope.rowBuilder.created_at | format8601 }}
+                                </div>
+                                <fig-form-textarea
+                                    v-model="slotScope.rowBuilder.note"
+                                    class="flex-grow"
+                                    rows="1" />
+                            </div>
+                        </template>
+
+                        <template v-slot:addButtonRight>
+                            <fig-button
+                                v-if="cartNotes.length"
+                                @click="onSaveNotes"
+                                variant="primary"
+                                size="sm"
+                                icon="floppy">{{ $t('Save notes') }}</fig-button>
+                        </template>
+                    </fig-row-builder>
+                </fig-overlay>
+            </div>
         </fig-text-card>
     </div>
 </template>
