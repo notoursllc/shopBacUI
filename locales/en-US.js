@@ -533,6 +533,7 @@ module.exports = {
     "Tax rate": "Tax rate",
     "TERMS": "TERMS",
     "text": "text",
+    "Thank you!": "Thank you!",
     "Thanks!": "Thanks!",
     "The address you provided does not seem to be a valid mailing adddress.": "The address you provided does not seem to be a valid mailing adddress.",
     "The email response did not return a success code.": "The email response did not return a success code.",
