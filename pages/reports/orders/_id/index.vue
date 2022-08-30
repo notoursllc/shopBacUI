@@ -513,7 +513,9 @@ export default {
                     <fig-button
                         variant="primary"
                         size="sm">
-                        <nuxt-link :to="{ name: 'reports-orders-packing_slip-id', params: { id: cart.id }}">{{ $t('View') }}</nuxt-link>
+                        <nuxt-link
+                            :to="{ name: 'reports-orders-packing_slip-id', params: { id: cart.id }}"
+                            target="_blank">{{ $t('View') }}</nuxt-link>
                     </fig-button>
                 </fig-label-value>
             </fig-label-value-group>
