@@ -38,17 +38,6 @@ export default {
     },
 
     /*
-    ** Nuxt target
-    ** See https://nuxtjs.org/api/configuration-target
-    */
-    target: 'server',
-
-    server: {
-        port: process.env.PORT || 3000
-        // host: '0.0.0.0' // default: localhost
-    },
-
-    /*
     ** Headers of the page
     ** See https://nuxtjs.org/api/configuration-head
     */
@@ -64,11 +53,18 @@ export default {
             { hid: 'description', name: 'description', content: process.env.npm_package_description || '' }
         ],
         link: [
-            { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+            { rel: 'icon', type: 'image/x-icon', href: '/images/favicon.ico' }
         ],
         bodyAttrs: {
             class: 'h-full p-0 m-0 font-normal'
         }
+    },
+
+    telemetry: false,
+
+    server: {
+        port: process.env.PORT || 3001,
+        host: isDev ? 'localhost' : '0.0.0.0' // default: localhost
     },
 
     /*
@@ -206,7 +202,8 @@ export default {
         // transpile: [/^element-ui/],
         transpile: [
             '@notoursllc/figleaf',
-            '@notoursllc/breadvan-api'
+            '@notoursllc/breadvan-api',
+            'lodash-es'
         ],
 
         /*
