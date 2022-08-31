@@ -62,11 +62,6 @@ export default {
 
     telemetry: false,
 
-    server: {
-        port: process.env.PORT || 3001,
-        host: isDev ? 'localhost' : '0.0.0.0' // default: localhost
-    },
-
     /*
     ** Global CSS
     */
