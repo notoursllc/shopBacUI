@@ -197,7 +197,6 @@ export default {
         // transpile: [/^element-ui/],
         transpile: [
             '@notoursllc/figleaf',
-            '@notoursllc/breadvan-api',
             'lodash-es'
         ],
 
