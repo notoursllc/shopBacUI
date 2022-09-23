@@ -58,18 +58,20 @@ export default {
         },
 
         async createOptions() {
-            const { data } = await this.$api.masterType.list({
+            const response = await this.$api.masterType.list({
                 object: 'product_size_type',
                 _sort: 'ordinal:asc'
             });
 
-            this.selectOptions = data.map(obj => {
-                return {
-                    label: obj.name,
-                    value: obj.value,
-                    disabled: !obj.published
-                };
-            });
+            if(Array.isArray(response?.data)) {
+                this.selectOptions = response.data.map(obj => {
+                    return {
+                        label: obj.name,
+                        value: obj.value,
+                        disabled: !obj.published
+                    };
+                });
+            }
         }
     }
 };
