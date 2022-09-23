@@ -28,18 +28,30 @@ export default {
         };
     },
 
+    computed: {
+        buttonIsEnabled() {
+            return this.userInfo.email?.trim().length && this.userInfo.password?.trim().length;
+        }
+    },
+
     methods: {
         async onSubmit() {
-            this.loading = true;
-
             try {
-                await this.$api.tenant.member.login(this.userInfo);
+                this.loading = true;
+
+                const response = await this.$api.tenant.member.login(this.userInfo);
+
+                if(!response) {
+                    throw new Error('Unauthorized');
+                }
 
                 this.$store.dispatch('ui/login');
 
                 this.$router.push({
                     name: 'product'
                 });
+
+                this.$figleaf.clearToasts();
             }
             catch(e) {
                 this.$store.dispatch('ui/logout');
@@ -49,8 +61,9 @@ export default {
                     text: e.message
                 });
             }
-
-            this.loading = false;
+            finally {
+                this.loading = false;
+            }
         }
     }
 };
@@ -90,6 +103,7 @@ export default {
                         icon="lock"
                         size="md"
                         block
+                        :disabled="!buttonIsEnabled"
                         @click="onSubmit">{{ $t('Sign in') }}</fig-button>
                 </div>
             </form>

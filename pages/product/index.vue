@@ -83,11 +83,11 @@ export default {
         },
 
         async fetchMasterTypes() {
-            const { data } = await this.$api.masterType.list();
+            const response = await this.$api.masterType.list();
             const groupedTypes = {};
 
-            if(Array.isArray(data)) {
-                data.forEach((obj) => {
+            if(Array.isArray(response?.data)) {
+                response.data.forEach((obj) => {
                     if(!groupedTypes.hasOwnProperty(obj.object)) {
                         groupedTypes[obj.object] = [];
                     }
