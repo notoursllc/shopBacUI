@@ -45,16 +45,16 @@ export default {
                     throw new Error('Unauthorized');
                 }
 
-                this.$store.dispatch('ui/login');
+                await this.$store.dispatch('ui/login');
 
                 this.$router.push({
-                    name: 'product'
+                    name: 'reports-orders-list'
                 });
 
                 this.$figleaf.clearToasts();
             }
             catch(e) {
-                this.$store.dispatch('ui/logout');
+                await this.$store.dispatch('ui/logout');
 
                 this.$figleaf.errorToast({
                     title: this.$t('Error'),
@@ -84,6 +84,7 @@ export default {
                     <fig-form-input
                         v-model="userInfo.email"
                         :placeholder="$t('Email address')"
+                        type="email"
                         size="lg" />
                 </div>
 
