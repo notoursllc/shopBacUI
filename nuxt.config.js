@@ -142,10 +142,6 @@ export default {
     //     '/_ipx': '~/server/middleware/ipx.js'
     // },
 
-    // serverMiddleware: [
-    //     '~/server/middleware/redirects.js'
-    // ],
-
     /*
     ** Nuxt.js modules
     */
