@@ -59,18 +59,18 @@ export default {
     },
 
     methods: {
-        async fetchProducts(paramsObj) {
+        async fetchProducts() {
             try {
                 this.loading = true;
 
-                const { data, pagination } = await this.$api.product.list({
+                const response = await this.$api.product.list({
                     ...this.pagination,
                     ...this.table,
                     _withRelated: '*'
                 });
 
-                this.products = data;
-                this.totalResults = pagination.rowCount;
+                this.products = response?.data;
+                this.totalResults = response?.pagination.rowCount;
             }
             catch(e) {
                 this.$figleaf.errorToast({
