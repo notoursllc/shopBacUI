@@ -150,12 +150,6 @@ export default {
         '@nuxtjs/axios'
     ],
 
-    router: {
-        middleware: [
-            'check-auth'
-        ]
-    },
-
     axios: {
         // will send the session cookie with the requests
         credentials: true,
