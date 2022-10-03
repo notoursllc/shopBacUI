@@ -8,7 +8,7 @@ if(isDev) {
 
 export default {
 
-    ssr: false,
+    ssr: true,
 
     vue: {
         config: {
