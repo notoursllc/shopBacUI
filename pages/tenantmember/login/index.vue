@@ -104,8 +104,7 @@ export default {
                         icon="lock"
                         size="md"
                         block
-                        :disabled="!buttonIsEnabled"
-                        @click="onSubmit">{{ $t('Sign in') }}</fig-button>
+                        :disabled="!buttonIsEnabled">{{ $t('Sign in') }}</fig-button>
                 </div>
             </form>
         </fig-overlay>
