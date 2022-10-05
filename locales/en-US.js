@@ -595,7 +595,6 @@ module.exports = {
     "View": "View",
     "View all": "View all",
     "View My Order": "View My Order",
-    "View product in store": "View product in store",
     "view raw data": "view raw data",
     "Vintage. Racing.": "Vintage. Racing.",
     "Voided": "Voided",

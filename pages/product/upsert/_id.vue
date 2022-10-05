@@ -200,17 +200,6 @@ export default Vue.extend({
             this.$refs.artist_upsert_modal.hide();
             this.product.product_artist_id = artist.id;
             this.$refs.artist_upsert_select.createOptions();
-        },
-
-
-        goToStore(seoUri) {
-            const routeData = this.$router.resolve({
-                name: 'p-seouri',
-                params: { seouri: seoUri }
-            });
-
-            // this opens the page in a new tab
-            window.open(routeData.href, '_blank');
         }
     }
 });
@@ -219,13 +208,6 @@ export default Vue.extend({
 
 <template>
     <fig-overlay :show="loading">
-
-        <div class="flex justify-end mb-3" v-if="product.id">
-            <fig-button
-                variant="plain"
-                @click="goToStore(product.seo_uri)"
-                icon="new-window">{{ $t('View product in store') }}</fig-button>
-        </div>
 
         <!-- published-->
         <div class="mb-5">
@@ -247,7 +229,7 @@ export default Vue.extend({
                 </div>
             </template>
 
-            <div :class="css.gridRow">
+            <div class="grid grid-cols-4 gap-4">
                 <fig-form-group>
                     <template v-slot:label>
                         <label for="product_type">{{ $t('Product type') }}</label>
@@ -308,12 +290,10 @@ export default Vue.extend({
                 </div>
             </template>
 
-            <div :class="css.gridRow">
+            <div class="grid grid-cols-4 gap-4">
                 <!-- gender -->
                 <fig-form-group>
-                    <template v-slot:label>
-                        <label for="product_gender_type">{{ $t('Gender') }}</label>
-                    </template>
+                    <div><label for="product_gender_type">{{ $t('Gender') }}</label></div>
                     <master-type-select
                         v-model="product.gender_type"
                         object="product_gender_type"
@@ -369,7 +349,7 @@ export default Vue.extend({
                 </div>
             </template>
 
-            <div :class="css.gridRow">
+            <div class="grid grid-cols-3 gap-4">
                 <!-- page title -->
                 <fig-form-group>
                     <label for="product_title">{{ $t('Title') }}</label>
@@ -390,18 +370,6 @@ export default Vue.extend({
                         id="product_caption" />
                 </fig-form-group>
 
-                <!-- description -->
-                <fig-form-group>
-                    <template v-slot:label>
-                        <label for="product_description">{{ $t('Description') }}</label>
-                    </template>
-                    <fig-form-textarea
-                        v-model="product.description"
-                        :rows="4"
-                        maxlength="2000"
-                        id="product_description" />
-                </fig-form-group>
-
                 <!-- copyright -->
                 <fig-form-group>
                     <template v-slot:label>
@@ -414,6 +382,20 @@ export default Vue.extend({
                     <template v-slot:description>
                         Copyright symbol: &copy;
                     </template>
+                </fig-form-group>
+            </div>
+
+            <div>
+                <!-- description -->
+                <fig-form-group>
+                    <template v-slot:label>
+                        <label for="product_description">{{ $t('Description') }}</label>
+                    </template>
+                    <fig-form-textarea
+                        v-model="product.description"
+                        :rows="3"
+                        maxlength="2000"
+                        id="product_description" />
                 </fig-form-group>
             </div>
         </fig-text-card>
@@ -544,12 +526,12 @@ export default Vue.extend({
             </template>
 
             <!-- Ship alone -->
-            <div class="mb-5">
+            <div class="mb-3">
                 <fig-form-checkbox
                     v-model="product.ship_alone">{{ $t('ship_alone_description') }}</fig-form-checkbox>
             </div>
 
-            <div :class="css.gridRow">
+            <div class="grid grid-cols-3 gap-6">
                 <!-- Packing length -->
                 <fig-form-group>
                     <template v-slot:label>
