@@ -228,7 +228,7 @@ export default {
                     <fig-th v-if="canShowGrabHandles" class="w-12"></fig-th>
                     <fig-th>{{ $t('Label') }}</fig-th>
                     <fig-th>{{ $t('SKU labels') }}</fig-th>
-                    <fig-th>{{ $t('Images') }}</fig-th>
+                    <fig-th>{{ $t('Photos') }}</fig-th>
                     <fig-th>{{ $t('Swatch') }}</fig-th>
                     <fig-th sortable prop="published">{{ $t('Published') }}</fig-th>
                     <fig-th class="w-6"></fig-th>
@@ -263,10 +263,9 @@ export default {
                         </span>
                     </fig-td>
 
-                    <!-- Images -->
+                    <!-- Photos -->
                     <fig-td>
                         <div class="flex items-center">
-                            <!-- images -->
                             <div
                                 v-for="(id, objIndex) in getVariantImages(idx)"
                                 :key="objIndex"

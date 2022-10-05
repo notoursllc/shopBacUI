@@ -1,6 +1,7 @@
 <script>
 import draggable from 'vuedraggable';
 import product_mixin from '@/mixins/product_mixin';
+import { getImage } from '@/node_modules/@notoursllc/figleaf/components/nuxtImgBunny/bunnyProvider.js';
 
 import {
     FigFormGroup,
@@ -13,7 +14,7 @@ import {
     FigTh,
     FigTd,
     FigPopConfirm,
-    FigNuxtImgBunny
+    FigTag
 } from '@notoursllc/figleaf';
 
 export default {
@@ -31,7 +32,7 @@ export default {
         FigTh,
         FigTd,
         FigPopConfirm,
-        FigNuxtImgBunny
+        FigTag
     },
 
     mixins: [
@@ -202,6 +203,14 @@ export default {
             this.fileList.forEach((obj, index) => {
                 obj.ordinal = index;
             });
+        },
+
+        getBunnyBgImage(url) {
+            const img = getImage(url, {
+                preset: 'w150'
+            });
+            console.log("HREF", img)
+            return img.url;
         }
 
         // fileInputValueFormatter(files) {
@@ -235,87 +244,76 @@ export default {
         </div>
 
         <!-- image table -->
-        <fig-table-simple
-            hover
-            small
-            responsive
-            v-if="fileList.length"
-            table-class="bread-table mb-5">
-            <template slot="head">
-                <tr>
-                    <fig-th v-if="fileList.length > 1" class="w-5"></fig-th>
-                    <fig-th class="w-24"></fig-th>
-                    <fig-th>
-                        <div class="flex items-center">
-                            {{ $t('Image alt text') }}
-
-                            <fig-tooltip placement="top">
-                                <div slot="toggler" class="ml-1 cursor-pointer">
-                                    <fig-icon icon="info-circle" width="20" height="20" />
-                                </div>
-                                {{ $t('Image_alt_text_description') }}
-                            </fig-tooltip>
+        <draggable
+            v-model="fileList"
+            ghost-class="ghost"
+            handle=".handle"
+            @update="setOrdinals"
+            tag="div"
+            class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+            <div
+                v-for="(obj, index) in fileList" :key="index"
+                class="shadow-sm rounded-lg bg-gray-50 border border-gray-200 flex-shrink-0 h-full">
+                    <div class="flex flex-col h-full">
+                        <div v-if="fileList.length > 1"  class="flex items-center justify-center w-full p-1">
+                            <i class="handle">
+                                <fig-icon icon="dots" />
+                            </i>
                         </div>
-                    </fig-th>
-                    <fig-th class="w-24"></fig-th>
-                </tr>
-            </template>
 
-            <draggable
-                v-model="fileList"
-                ghost-class="ghost"
-                handle=".handle"
-                @update="setOrdinals"
-                tag="tbody">
+                        <fig-overlay :show="obj.loading" class="p-2 flex-1">
+                            <div @click="onPreview(obj.url)"
+                                class="cursor-pointer relative flex-grow">
+                                <div style="padding:0 0 100% 0;">
+                                    <div class="absolute top-0 right-0 left-0 bottom-0"
+                                        :style="`background-image: url(${getBunnyBgImage(obj.url)}); background-size: contain; background-position: 50% 50%; background-repeat: no-repeat;`">
 
-                <tr v-for="(obj, index) in fileList" :key="index">
-                    <!-- handle -->
-                    <fig-td v-if="fileList.length > 1" class="align-middle">
-                        <i class="handle">
-                            <fig-icon icon="dots-vertical-double" />
-                        </i>
-                    </fig-td>
+                                        <fig-tag
+                                            v-if="index === 0"
+                                            size="sm"
+                                            variant="dark"
+                                            class="absolute top-0 left-0 mt-1 ml-1">{{ $t('Primary') }}</fig-tag>
+                                    </div>
+                                </div>
+                            </div>
 
-                    <!-- thumbnail -->
-                    <fig-td>
-                        <fig-overlay :show="obj.loading">
-                            <span @click="onPreview(obj.url)" class="cursor-pointer">
-                                <fig-nuxt-img-bunny
-                                    v-if="obj.url"
-                                    :src="obj.url"
-                                    preset="prodthumb"
-                                    loading="eager"
-                                    :alt="obj.alt_text || $t('variant image')" />
-                            </span>
+                            <div class="mt-2 flex w-full items-center">
+                                <div class="flex-grow">
+                                    <fig-form-input
+                                        v-model="obj.alt_text"
+                                        class="w-full"
+                                        :placeholder="$t('Image alt text')"
+                                        @input="emitChange" />
+                                </div>
+
+                                <div>
+                                    <fig-tooltip placement="top">
+                                        <div slot="toggler" class="ml-1 cursor-pointer">
+                                            <fig-icon icon="info-circle" width="20" height="20" />
+                                        </div>
+                                        {{ $t('Image_alt_text_description') }}
+                                    </fig-tooltip>
+                                </div>
+                            </div>
                         </fig-overlay>
-                    </fig-td>
 
-                    <!-- alt text -->
-                    <fig-td class="align-middle">
-                        <fig-form-input
-                            v-model="obj.alt_text"
-                            class="w-full"
-                            placeholder="Image alt text"
-                            @input="emitChange" />
-                    </fig-td>
+                        <div class="flex justify-end w-full pr-1 pb-1">
+                            <fig-pop-confirm
+                                @confirm="onDeleteImage(obj, index)"
+                                v-if="!obj.loading">
+                                {{ $t('Delete this item?') }}
 
-                    <!-- actions -->
-                    <fig-td class="text-center align-middle">
-                        <fig-pop-confirm
-                            @confirm="onDeleteImage(obj, index)"
-                            v-if="!obj.loading">
-                            {{ $t('Delete this item?') }}
-
-                            <fig-button
-                                slot="reference"
-                                variant="plain"
-                                dotted
-                                icon="trash" />
-                        </fig-pop-confirm>
-                    </fig-td>
-                </tr>
-            </draggable>
-        </fig-table-simple>
+                                <fig-button
+                                    slot="reference"
+                                    variant="plain"
+                                    dotted
+                                    icon="trash"
+                                    size="sm" />
+                            </fig-pop-confirm>
+                        </div>
+                    </div>
+            </div>
+        </draggable>
 
 
         <fig-modal

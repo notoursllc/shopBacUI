@@ -70,7 +70,7 @@ export default {
         createOptions() {
             const opts = [];
 
-            this.$store.state.masterTypes[this.object].forEach((obj) => {
+            this.$store.state.masterTypes[this.object]?.forEach((obj) => {
                 opts.push({
                     label: obj.name,
                     value: obj.value

@@ -162,10 +162,10 @@ export default {
         </fig-text-card>
 
 
-        <!-- Images -->
+        <!-- Photos -->
         <fig-text-card class="mb-6" variant="white">
             <template v-slot:header-left>
-                <span class="text-lg font-bold">{{ $t('Images') }}</span>
+                <span class="text-lg font-bold">{{ $t('Photos') }}</span>
                 <span class="pl-1 text-sm text-gray-500 font-normal">- {{ $t('variant_images_size_suggestion') }}</span>
             </template>
 
