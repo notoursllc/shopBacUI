@@ -367,6 +367,19 @@ export default (context, inject) => {
             formData.append('file', File);
 
             return api.$post('/media/image', formData);
+        },
+
+        video: {
+            add(File) {
+                const formData = new FormData();
+                formData.append('file', File);
+
+                return api.$post('/media/video', formData);
+            },
+
+            del(id) {
+                return api.$delete('/media/video', { id });
+            }
         }
     };
 
@@ -461,10 +474,34 @@ export default (context, inject) => {
             });
         },
 
+
         upsert(data) {
             const prod = cloneDeep(data);
             api.product.stripRelations(prod);
 
+            // const formData = new FormData();
+            // for(let prop in prod) {
+            //     if(Array.isArray(prod[prop])) {
+            //         formData.set(prop, JSON.stringify(prod[prop]))
+            //     }
+            //     else {
+            //         formData.set(
+            //             prop,
+            //             [null, undefined].includes(prod[prop]) ? null : prod[prop]
+            //         );
+            //     }
+            // }
+
+            // if(prod.video) {
+            //     const formData = new FormData();
+            //     formData.set('video', prod.video)
+            //     prod.video = formData;
+            // }
+
+            // delete prod.video;
+
+
+            // console.log("FORM DATA", formData.entries())
             return api[prod.id ? '$put' : '$post']('/product', prod);
         },
 

@@ -169,6 +169,8 @@ module.exports = {
     "Delete this row?": "Delete this row?",
     "Delete this item?": "Delete this item?",
     "Delete this SKU?": "Delete this SKU?",
+    "Delete this video?": "Delete this video?",
+    "Delete video": "Delete video",
     "delete_name?": "Delete {name}?",
     "deleted_name": "Deleted: {name}",
     "Description": "Description",

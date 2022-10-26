@@ -10,7 +10,7 @@ import ProductTaxCodeSelect from '@/components/product/ProductTaxCodeSelect.vue'
 import SeoPreview from '@/components/product/SeoPreview';
 import VariantTable from '@/components/product/variant/VariantTable';
 import ProductArtistUpsertForm from '@/components/product/artist/ProductArtistUpsertForm.vue';
-
+import ProductVideoManager from '@/components/product/ProductVideoManager.vue';
 import {
     FigFormCheckbox,
     FigFormGroup,
@@ -45,6 +45,7 @@ export default Vue.extend({
         SeoPreview,
         VariantTable,
         ProductArtistUpsertForm,
+        ProductVideoManager,
         FigFormCheckbox,
         FigFormGroup,
         FigFormInput,
@@ -159,15 +160,15 @@ export default Vue.extend({
             try {
                 this.loading = true;
 
-                const { data } = await this.$api.product.upsert(this.product);
+                const response = await this.$api.product.upsert(this.product);
 
-                if(!data) {
+                if(!response?.data) {
                     throw new Error('Error updating product');
                 }
 
                 this.$figleaf.successToast({
-                    title: data.id ? this.$t('Product updated successfully') : this.$t('Product added successfully'),
-                    text: data.title
+                    title: response.data.id ? this.$t('Product updated successfully') : this.$t('Product added successfully'),
+                    text: response.data.title
                 });
 
                 this.goToProductList();
@@ -196,7 +197,6 @@ export default Vue.extend({
         },
 
         onProductArtistSaved(artist) {
-            console.log("ON ARTIST SAVED", artist);
             this.$refs.artist_upsert_modal.hide();
             this.product.product_artist_id = artist.id;
             this.$refs.artist_upsert_select.createOptions();
@@ -433,20 +433,32 @@ export default Vue.extend({
                 </div>
             </template>
 
+            <div :class="css.gridRow" class="mb-4">
+                <fig-form-group>
+                    <template v-slot:label>
+                        <label>{{ $t('Video upload') }}</label>
+                    </template>
+                    <product-video-manager
+                        :data="product.video"
+                        @upload="(data) => product.video = data"
+                        @delete="() => product.video = null" />
+                </fig-form-group>
+            </div>
+
             <div :class="css.gridRow">
                 <fig-form-group>
                     <template v-slot:label>
-                        <label for="video_url">{{ $t('YouTube URL') }}</label>
+                        <label for="youtube_video_url">{{ $t('YouTube URL') }}</label>
                     </template>
                     <fig-form-input
-                        v-model="product.video_url"
+                        v-model="product.youtube_video_url"
                         maxlength="70"
-                        id="video_url" />
+                        id="youtube_video_url" />
                 </fig-form-group>
 
-                <div v-show="product.video_url">
+                <div v-show="product.youtube_video_url">
                     <fig-you-tube
-                        :url="product.video_url"
+                        :url="product.youtube_video_url"
                         :width="320"
                         :height="180" />
                 </div>
