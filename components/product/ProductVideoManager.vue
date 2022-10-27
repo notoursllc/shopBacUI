@@ -3,7 +3,8 @@ import {
     FigButton,
     FigOverlay,
     FigModal,
-    FigPopConfirm
+    FigPopConfirm,
+    FigBunnyVideoPlayer
 } from '@notoursllc/figleaf';
 
 export default {
@@ -20,7 +21,8 @@ export default {
         FigButton,
         FigOverlay,
         FigModal,
-        FigPopConfirm
+        FigPopConfirm,
+        FigBunnyVideoPlayer
     },
 
     data: function() {
@@ -127,14 +129,9 @@ export default {
                     {{ $t('Delete this video?') }}
             </fig-pop-confirm>
 
-            <div style="position: relative; padding-top: 56.33802816901409%;">
-                <iframe
-                    :src="`https://iframe.mediadelivery.net/embed/${video.streamLibraryId}/${video.third_party_id}?autoplay=false`"
-                    loading="lazy"
-                    style="border: none; position: absolute; top: 0; height: 100%; width: 100%;"
-                    allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
-                    allowfullscreen="true"></iframe>
-            </div>
+            <fig-bunny-video-player
+                :video-id="video.third_party_id"
+                :video-library-id="video.streamLibraryId" />
         </template>
 
         <template v-else>
