@@ -209,7 +209,6 @@ export default {
             const img = getImage(url, {
                 preset: 'w150'
             });
-            console.log("HREF", img)
             return img.url;
         }
 
