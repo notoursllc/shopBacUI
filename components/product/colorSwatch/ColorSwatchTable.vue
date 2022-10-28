@@ -1,5 +1,6 @@
 <script>
 import draggable from 'vuedraggable';
+import isObect from 'lodash.isobject';
 import ColorSwatchInput from '@/components/product/colorSwatch/ColorSwatchInput';
 
 import {
@@ -91,6 +92,10 @@ export default {
         },
 
         canShowSaveButton(obj) {
+            if(!isObect(obj)) {
+                return;
+            }
+
             const canSave = this.allSwatchHexValues.indexOf(obj.swatch) === -1;
             return obj.label && obj.swatch && canSave;
         },
@@ -115,7 +120,7 @@ export default {
                     label: data.label
                 });
 
-                if(!response.data) {
+                if(!response?.data) {
                     throw new Error(this.$t('Error adding swatch'));
                 }
 
