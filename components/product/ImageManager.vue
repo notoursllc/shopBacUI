@@ -207,7 +207,7 @@ export default {
 
         getBunnyBgImage(url) {
             const img = getImage(url, {
-                preset: 'w150'
+                preset: 'w375'
             });
             return img.url;
         }
