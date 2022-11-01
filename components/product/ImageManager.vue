@@ -81,7 +81,7 @@ export default {
     },
 
     methods: {
-        emitChange() {
+        emitInput() {
             this.$emit('input', this.fileList);
         },
 
@@ -181,7 +181,7 @@ export default {
                 });
 
                 // this.createTempImages(files);
-                this.emitChange();
+                this.emitInput();
             }
             catch(e) {
                 this.$figleaf.errorToast({
@@ -200,13 +200,14 @@ export default {
             // is splice it from the fileList
             this.fileList.splice(index, 1);
             this.setOrdinals();
-            this.emitChange();
         },
 
         setOrdinals() {
             this.fileList.forEach((obj, index) => {
                 obj.ordinal = index;
             });
+
+            this.emitInput();
         },
 
         getBunnyBgImage(url) {
@@ -286,7 +287,7 @@ export default {
                                         v-model="obj.alt_text"
                                         class="w-full"
                                         :placeholder="$t('Image alt text')"
-                                        @input="emitChange" />
+                                        @input="emitInput" />
                                 </div>
 
                                 <div>
