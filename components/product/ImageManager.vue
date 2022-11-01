@@ -90,7 +90,11 @@ export default {
         },
 
         onPreview(url) {
-            this.dialogImageUrl = url;
+            const img = getImage(url, {
+                preset: 'w1280'
+            });
+
+            this.dialogImageUrl = img.url;
             this.$refs.image_preview_modal.show();
         },
 
