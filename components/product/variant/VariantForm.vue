@@ -68,24 +68,18 @@ export default {
     watch: {
         value: {
             handler(newVal) {
-                if(isObject(newVal)) {
-                    this.variant = Object.assign(
-                        {
-                            published: true,
-                            is_taxable: true
-                        },
-                        newVal
-                    );
-                    return;
-                }
-
                 this.variant = {
                     published: true,
                     is_taxable: true,
                     skus: [
                         { label: null }
-                    ]
+                    ],
+                    ...newVal
                 };
+
+                if(!this.variant.sku_label_type) {
+                    this.variant.sku_label_type = 'size';
+                }
             },
             immediate: true
         }
