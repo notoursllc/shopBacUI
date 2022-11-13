@@ -195,7 +195,7 @@ export default Vue.extend({
                             {{ $t('Used to calculate shipping rates at checkout and label prices during fulfillment.') }}
                         </fig-tooltip>
                     </fig-th>
-                    <fig-th class="text-center">{{ $t('Track inventory') }}</fig-th>
+                    <!-- <fig-th class="text-center">{{ $t('Track inventory') }}</fig-th> -->
                     <fig-th class="text-center">{{ $t('Hide when out of stock') }}</fig-th>
                     <fig-th></fig-th>
                 </tr>
@@ -304,10 +304,10 @@ export default Vue.extend({
                     </fig-td>
 
                     <!-- Track inventory -->
-                    <fig-td class="text-center">
+                    <!-- <fig-td class="text-center">
                         <fig-form-checkbox
                             v-model="sku.track_inventory_count" />
-                    </fig-td>
+                    </fig-td> -->
 
                     <!-- Hide when out of stock -->
                     <fig-td class="text-center">
