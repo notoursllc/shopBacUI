@@ -78,7 +78,7 @@ export default Vue.extend({
             productHasMetaData: false,
             domainName: this.$config.DOMAIN_NAME,
             css: {
-                gridRow: 'grid grid-cols-1 md:grid-cols-2 gap-4'
+                gridRow: 'w-full lg:w-1/3 md:w-1/2 grid grid-cols-1 gap-1'
             }
         };
     },
@@ -229,7 +229,7 @@ export default Vue.extend({
                 </div>
             </template>
 
-            <div class="grid grid-cols-4 gap-4">
+            <div :class="css.gridRow">
                 <fig-form-group>
                     <template v-slot:label>
                         <label for="product_type">{{ $t('Product type') }}</label>
@@ -290,7 +290,7 @@ export default Vue.extend({
                 </div>
             </template>
 
-            <div class="grid grid-cols-4 gap-4">
+            <div :class="css.gridRow">
                 <!-- gender -->
                 <fig-form-group>
                     <div><label for="product_gender_type">{{ $t('Gender') }}</label></div>
@@ -349,7 +349,7 @@ export default Vue.extend({
                 </div>
             </template>
 
-            <div class="grid grid-cols-3 gap-4">
+            <div :class="css.gridRow">
                 <!-- page title -->
                 <fig-form-group>
                     <label for="product_title">{{ $t('Title') }}</label>
@@ -383,9 +383,7 @@ export default Vue.extend({
                         Copyright symbol: &copy;
                     </template>
                 </fig-form-group>
-            </div>
 
-            <div>
                 <!-- description -->
                 <fig-form-group>
                     <template v-slot:label>
@@ -479,47 +477,44 @@ export default Vue.extend({
                 </div>
             </template>
 
-            <!-- is shippable (a physical product) -->
-            <div class="mb-3">
-                <fig-form-checkbox
-                    v-model="product.shippable">{{ $t('This is a physical product') }}</fig-form-checkbox>
-            </div>
-
-            <div v-if="!product.shippable" class="text-sm">
-                {{ $t('shippable_off_desc') }}
-            </div>
-
-            <div v-else class="px-4">
-                <div class="font-semibold mb-2">{{ $t('CUSTOMS INFORMATION') }}:</div>
-                <div :class="css.gridRow">
-                    <!-- country of origin -->
-                    <fig-form-group>
-                        <template v-slot:label>
-                            <label for="product_customs_country_of_origin">{{ $t('Country of origin') }}</label>
-                        </template>
-                        <fig-select-country
-                            v-model="product.customs_country_of_origin"
-                            id="product_customs_country_of_origin" />
-
-                        <div slot="description">
-                            {{ $t('customs_country_of_origin_desc') }}
-                        </div>
-                    </fig-form-group>
-
-                    <!-- HS code -->
-                    <fig-form-group>
-                        <template v-slot:label>
-                            <label for="product_customs_harmonized_system_code">{{ $t('HS (Harmonized System) code') }}</label>
-                        </template>
-                        <fig-form-input
-                            v-model="product.customs_harmonized_system_code"
-                            id="product_customs_harmonized_system_code" />
-
-                        <div slot="description">
-                            {{ $t('customs_hs_code_desc') }}
-                        </div>
-                    </fig-form-group>
+            <div :class="css.gridRow">
+                <!-- is shippable (a physical product) -->
+                <div class="mb-3">
+                    <fig-form-checkbox
+                        v-model="product.shippable">{{ $t('This is a physical product') }}</fig-form-checkbox>
                 </div>
+
+                <div v-if="!product.shippable" class="text-sm">
+                    {{ $t('shippable_off_desc') }}
+                </div>
+
+                <!-- country of origin -->
+                <fig-form-group>
+                    <template v-slot:label>
+                        <label for="product_customs_country_of_origin">{{ $t('Country of origin') }}</label>
+                    </template>
+                    <fig-select-country
+                        v-model="product.customs_country_of_origin"
+                        id="product_customs_country_of_origin" />
+
+                    <div slot="description">
+                        {{ $t('customs_country_of_origin_desc') }}
+                    </div>
+                </fig-form-group>
+
+                <!-- HS code -->
+                <fig-form-group>
+                    <template v-slot:label>
+                        <label for="product_customs_harmonized_system_code">{{ $t('HS (Harmonized System) code') }}</label>
+                    </template>
+                    <fig-form-input
+                        v-model="product.customs_harmonized_system_code"
+                        id="product_customs_harmonized_system_code" />
+
+                    <div slot="description">
+                        {{ $t('customs_hs_code_desc') }}
+                    </div>
+                </fig-form-group>
             </div>
         </fig-text-card>
 
@@ -543,7 +538,7 @@ export default Vue.extend({
                     v-model="product.ship_alone">{{ $t('ship_alone_description') }}</fig-form-checkbox>
             </div>
 
-            <div class="grid grid-cols-3 gap-6">
+            <div :class="css.gridRow">
                 <!-- Packing length -->
                 <fig-form-group>
                     <template v-slot:label>
@@ -617,6 +612,7 @@ export default Vue.extend({
                 </fig-form-group>
             </div>
         </fig-text-card>
+
 
         <!-- ARTIST -->
         <fig-text-card class="mb-6" variant="white">
@@ -766,15 +762,13 @@ export default Vue.extend({
 
 
         <div class="pt-4">
-            <div class="flex items-center justify-center">
-                <fig-button
-                    variant="primary"
-                    size="lg"
-                    @click="onSaveClick"
-                    :disabled="$v.product.$invalid">{{ $t('Save') }}</fig-button>
-            </div>
+            <fig-button
+                variant="primary"
+                size="lg"
+                @click="onSaveClick"
+                :disabled="$v.product.$invalid">{{ $t('Save') }}</fig-button>
 
-            <div class="pt-2 text-danger flex justify-center" v-show="$v.product.$invalid">
+            <div class="pt-2 text-danger" v-show="$v.product.$invalid">
                 <fig-icon-label>
                     <fig-icon slot="left" icon="alert-circle" variant="danger" />
                     {{ $t('Please fix the errors above before saving') }}

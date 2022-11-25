@@ -152,7 +152,6 @@ module.exports = {
     "Customers won’t see this": "Customers won’t see this",
     "customs_country_of_origin_desc": "In most cases, where the product is manufactured",
     "customs_hs_code_desc": "Used by border officers to classify this product",
-    "CUSTOMS INFORMATION": "CUSTOMS INFORMATION",
     "cvv_info": "3-digit security code usually found on the back of your card. American Express cards have a 4-digit code located on the front.",
     "CVV": "CVV",
 

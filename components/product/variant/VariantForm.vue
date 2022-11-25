@@ -243,8 +243,6 @@ export default {
                 <div class="text-lg font-bold">{{ $t('Shipping') }}</div>
             </template>
 
-            <h4>{{ $t('CUSTOMS INFORMATION') }}</h4>
-
             <div class="flex flex-wrap -mx-2">
                 <!-- country of origin -->
                 <fig-form-group :class="css.cellOneThird">

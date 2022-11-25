@@ -131,7 +131,8 @@ export default {
 
             <fig-bunny-video-player
                 :video-id="video.third_party_id"
-                :video-library-id="video.streamLibraryId" />
+                :video-library-id="video.streamLibraryId"
+                class="aspect-video" />
         </template>
 
         <template v-else>
