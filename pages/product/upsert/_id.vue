@@ -11,6 +11,7 @@ import SeoPreview from '@/components/product/SeoPreview';
 import VariantTable from '@/components/product/variant/VariantTable';
 import ProductArtistUpsertForm from '@/components/product/artist/ProductArtistUpsertForm.vue';
 import ProductVideoManager from '@/components/product/ProductVideoManager.vue';
+import { in_to_cm, cm_to_in } from '@/utils/common.js';
 import {
     FigFormCheckbox,
     FigFormGroup,
@@ -142,6 +143,10 @@ export default Vue.extend({
                     throw new Error(this.$t('Product not found'));
                 }
 
+                data.packing_length_cm = data.packing_length_cm ? cm_to_in(data.packing_length_cm) : null;
+                data.packing_width_cm = data.packing_width_cm ? cm_to_in(data.packing_width_cm) : null;
+                data.packing_height_cm = data.packing_height_cm ? cm_to_in(data.packing_height_cm) : null;
+
                 this.productHasMetaData = !!data.metadata;
                 this.product = data;
                 this.$store.dispatch('ui/title', this.$t('Product: {name}', { name: data.title }));
@@ -159,6 +164,10 @@ export default Vue.extend({
         async onSaveClick() {
             try {
                 this.loading = true;
+
+                this.product.packing_length_cm = in_to_cm(this.product.packing_length_cm);
+                this.product.packing_width_cm = in_to_cm(this.product.packing_width_cm);
+                this.product.packing_height_cm = in_to_cm(this.product.packing_height_cm);
 
                 const response = await this.$api.product.upsert(this.product);
 
@@ -542,11 +551,11 @@ export default Vue.extend({
                 <!-- Packing length -->
                 <fig-form-group>
                     <template v-slot:label>
-                        <label for="packing_length_cm">{{ $t('Packing length (cm)') }}</label>
+                        <label for="packing_length_cm">{{ $t('Packing length (inches)') }}</label>
                     </template>
                     <fig-form-input-number
                         v-model="product.packing_length_cm"
-                        :step="1"
+                        :step=".1"
                         :min="0"
                         controls-right
                         size="md"
@@ -556,11 +565,11 @@ export default Vue.extend({
                 <!-- Packing width -->
                 <fig-form-group>
                     <template v-slot:label>
-                        <label for="packing_width_cm">{{ $t('Packing width (cm)') }}</label>
+                        <label for="packing_width_cm">{{ $t('Packing width (inches)') }}</label>
                     </template>
                     <fig-form-input-number
                         v-model="product.packing_width_cm"
-                        :step="1"
+                        :step=".1"
                         :min="0"
                         controls-right
                         size="md"
@@ -570,11 +579,11 @@ export default Vue.extend({
                 <!-- Packing width -->
                 <fig-form-group>
                     <template v-slot:label>
-                        <label for="packing_height_cm">{{ $t('Packing height (cm)') }}</label>
+                        <label for="packing_height_cm">{{ $t('Packing height (inches)') }}</label>
                     </template>
                     <fig-form-input-number
                         v-model="product.packing_height_cm"
-                        :step="1"
+                        :step=".1"
                         :min="0"
                         controls-right
                         size="md"

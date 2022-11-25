@@ -118,3 +118,26 @@ export const colorLuminance = (hex, lum) => {
 
     return rgb;
 };
+
+
+export function in_to_cm(inches) {
+    if(!isNumeric(inches)) {
+        console.error(`in_to_cm method was not given a numeric value: ${inches}`);
+        return null;
+    }
+
+    const cm = inches * 2.54;
+    return Math.round(cm * 100) / 100;
+}
+
+
+export function cm_to_in(cm) {
+    if(!isNumeric(cm)) {
+        console.error(`cm_to_in method was not given a numeric value: ${cm}`);
+        return null;
+    }
+
+    const inches = cm * 0.39370079;
+    return Math.round(inches * 100) / 100;
+}
+
