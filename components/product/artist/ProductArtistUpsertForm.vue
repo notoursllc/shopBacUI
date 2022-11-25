@@ -206,6 +206,12 @@ export default Vue.extend({
                     </template>
                 </fig-label-value>
 
+                <!-- Image alt text -->
+                <fig-label-value>
+                    <template v-slot:label>{{ $t('Image alt text') }}:</template>
+                    <fig-form-input v-model="form.alt_text" />
+                </fig-label-value>
+
                 <!-- Name -->
                 <fig-label-value>
                     <template v-slot:label>{{ $t('Name') }}:</template>
