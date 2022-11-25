@@ -23,6 +23,8 @@ import {
     FigFormInputEndcapper,
     FigOverlay,
     FigTextCard,
+    FigTooltip,
+    FigIcon,
     FigIconLabel,
     FigMetaDataBuilder,
     FigYouTube,
@@ -57,6 +59,8 @@ export default Vue.extend({
         FigFormInputEndcapper,
         FigOverlay,
         FigTextCard,
+        FigTooltip,
+        FigIcon,
         FigIconLabel,
         FigMetaDataBuilder,
         FigYouTube,
@@ -528,7 +532,7 @@ export default Vue.extend({
         </fig-text-card>
 
 
-        <!-- PACKAGING -->
+        <!-- PRODUCT DIMENSIONS -->
         <fig-text-card class="mb-6" variant="white">
             <template v-slot:header-left>
                 <div class="flex justify-center mr-2">
@@ -537,7 +541,19 @@ export default Vue.extend({
                         width="26"
                         height="26"
                         :stroke-width="1" />
-                    <div class="text-lg font-bold pl-2">{{ $t('Packaging') }}</div>
+                    <div class="text-lg font-bold pl-2">
+                        {{ $t('Product dimensions') }}
+
+                        <fig-tooltip placement="top">
+                            <template v-slot:toggler>
+                                <fig-icon
+                                    icon="info-circle"
+                                    width="18"
+                                    height="18" />
+                            </template>
+                            {{ $t('product_dimensions_tooltip') }}
+                        </fig-tooltip>
+                    </div>
                 </div>
             </template>
 
