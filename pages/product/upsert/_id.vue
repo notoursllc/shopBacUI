@@ -567,43 +567,52 @@ export default Vue.extend({
                 <!-- Packing length -->
                 <fig-form-group>
                     <template v-slot:label>
-                        <label for="packing_length_cm">{{ $t('Packing length (inches)') }}</label>
+                        <label for="packing_length_cm">{{ $t('Length') }}</label>
                     </template>
-                    <fig-form-input-number
-                        v-model="product.packing_length_cm"
-                        :step=".1"
-                        :min="0"
-                        controls-right
-                        size="md"
-                        id="packing_length_cm" />
+                    <div class="flex items-center w-full whitespace-nowrap">
+                        <fig-form-input-number
+                            v-model="product.packing_length_cm"
+                            :step=".1"
+                            :min="0"
+                            controls-right
+                            size="md"
+                            id="packing_length_cm" />
+                        <span class="pl-1">{{ $t('inches') }}</span>
+                    </div>
                 </fig-form-group>
 
                 <!-- Packing width -->
                 <fig-form-group>
                     <template v-slot:label>
-                        <label for="packing_width_cm">{{ $t('Packing width (inches)') }}</label>
+                        <label for="packing_width_cm">{{ $t('Width') }}</label>
                     </template>
-                    <fig-form-input-number
-                        v-model="product.packing_width_cm"
-                        :step=".1"
-                        :min="0"
-                        controls-right
-                        size="md"
-                        id="packing_width_cm" />
+                    <div class="flex items-center w-full whitespace-nowrap">
+                        <fig-form-input-number
+                            v-model="product.packing_width_cm"
+                            :step=".1"
+                            :min="0"
+                            controls-right
+                            size="md"
+                            id="packing_width_cm" />
+                        <span class="pl-1">{{ $t('inches') }}</span>
+                    </div>
                 </fig-form-group>
 
                 <!-- Packing width -->
                 <fig-form-group>
                     <template v-slot:label>
-                        <label for="packing_height_cm">{{ $t('Packing height (inches)') }}</label>
+                        <label for="packing_height_cm">{{ $t('Height') }}</label>
                     </template>
-                    <fig-form-input-number
-                        v-model="product.packing_height_cm"
-                        :step=".1"
-                        :min="0"
-                        controls-right
-                        size="md"
-                        id="packing_height_cm" />
+                    <div class="flex items-center w-full whitespace-nowrap">
+                        <fig-form-input-number
+                            v-model="product.packing_height_cm"
+                            :step=".1"
+                            :min="0"
+                            controls-right
+                            size="md"
+                            id="packing_height_cm" />
+                        <span class="pl-1">{{ $t('inches') }}</span>
+                    </div>
                 </fig-form-group>
             </div>
         </fig-text-card>

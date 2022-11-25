@@ -225,6 +225,7 @@ module.exports = {
     "Grand total": "Grand total",
 
     "HATS": "HATS",
+    "Height": "Height",
     "Height (cm)": "Height (cm)",
     "Hero slides": "Hero slides",
     "hero_image_aspect_ratio_recommendation": "An aspect ratio of 16:9 is recommended (example: 1280 px x 720 px)",
@@ -332,9 +333,6 @@ module.exports = {
     "Package": "Package",
     "Package types": "Package types",
     "Packaging": "Packaging",
-    "Packing length (inches)": "Packing length (inches)",
-    "Packing height (inches)": "Packing height (inches)",
-    "Packing width (inches)": "Packing width (inches)",
     "Page title": "Page title",
     "Password": "Password",
     "password_error_maxLength": "maximum length: {val}",
@@ -615,6 +613,7 @@ module.exports = {
     "Website": "Website",
     "Weight (oz)": "Weight (oz)",
     "When out of stock": "When out of stock",
+    "Width": "Width",
     "Width (cm)": "Width (cm)",
 
     "Yes": "Yes",
