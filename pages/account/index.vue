@@ -8,7 +8,8 @@ import {
     FigLabelValueGroup,
     FigLabelValue,
     FigButton,
-    FigPopConfirm
+    FigPopConfirm,
+    FigNuxtImgBunny
 } from '@notoursllc/figleaf';
 
 
@@ -21,6 +22,7 @@ export default {
         FigLabelValue,
         FigButton,
         FigPopConfirm,
+        FigNuxtImgBunny,
         AccountUpdateForm,
         AccountDetailsLayout
     },
@@ -128,6 +130,16 @@ export default {
             <account-details-layout>
                 <template v-slot:application_name>{{ account.application_name }}</template>
                 <template v-slot:application_url>{{ account.application_url }}</template>
+                <template v-slot:application_logo>
+                    <fig-nuxt-img-bunny
+                        v-if="account.application_logo"
+                        :src="account.application_logo"
+                        preset="w150"
+                        loading="lazy" />
+                </template>
+                <template v-slot:order_details_page_url>
+                    <div>{{ account.order_details_page_url }}</div>
+                </template>
                 <template v-slot:api_key>
                     <fig-overlay :show="loadingApiInfo">
                         {{ account.api_key_public }}
@@ -155,7 +167,8 @@ export default {
                         </div>
                     </fig-overlay>
                 </template>
-                <template v-slot:paypal_client_id>{{ account.paypal_client_id }}</template>
+                <!-- <template v-slot:paypal_client_id>{{ account.paypal_client_id }}</template> -->
+                <template v-slot:stripe_api_key>{{ account.stripe_key }}</template>
                 <template v-slot:shipengine_api_key>{{ account.shipengine_api_key }}</template>
                 <template v-slot:shipengine_carriers>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

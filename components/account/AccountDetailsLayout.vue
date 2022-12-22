@@ -35,6 +35,16 @@ export default {
                 </fig-label-value>
 
                 <fig-label-value>
+                    <template v-slot:label>{{ $t('Application logo') }}:</template>
+                    <slot name="application_logo" />
+                </fig-label-value>
+
+                <fig-label-value>
+                    <template v-slot:label>{{ $t('URL to order details page') }}:</template>
+                    <slot name="order_details_page_url" />
+                </fig-label-value>
+
+                <fig-label-value>
                     <template v-slot:label>{{ $t('API key') }}:</template>
                     <slot name="api_key" />
                 </fig-label-value>
@@ -46,10 +56,16 @@ export default {
             <label slot="label">{{ $t('Payments')}}</label>
 
             <fig-label-value-group density="lg" display="table" class="w-full">
-                <fig-label-value>
+                <!-- <fig-label-value>
                     <template v-slot:label>{{ $t('Paypal client ID') }}:</template>
                     <slot name="paypal_client_id" />
+                </fig-label-value> -->
+
+                <fig-label-value>
+                    <template v-slot:label>{{ $t('Stripe API key') }}:</template>
+                    <slot name="stripe_api_key" />
                 </fig-label-value>
+
 
                 <fig-label-value>
                     <template v-slot:label>{{ $t('Default currency') }}:</template>

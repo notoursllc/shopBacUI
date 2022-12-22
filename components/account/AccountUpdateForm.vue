@@ -48,7 +48,10 @@ export default {
             form: {
                 application_name: null,
                 application_url: null,
-                paypal_client_id: null,
+                application_logo: null,
+                order_details_page_url: null,
+                // paypal_client_id: null,
+                stripe_key: null,
                 shipengine_api_key: null,
                 shipengine_carriers: [],
                 shipping_from_company: null,
@@ -152,6 +155,10 @@ export default {
         },
 
         addCarrier() {
+            if(!Array.isArray(this.form.shipengine_carriers)) {
+                this.form.shipengine_carriers = [];
+            }
+
             this.form.shipengine_carriers.push({
                 id: null,
                 service_codes: {
@@ -167,6 +174,18 @@ export default {
 
         onRemoveSupportedCurrency(index) {
             this.form.supported_currencies.splice(index, 1);
+        },
+
+        async onLogoChange(event) {
+            // event.target.files is a FileList object
+            // https://developer.mozilla.org/en-US/docs/Web/API/FileList
+            const files = event.target.files;
+
+            if (!files.length) {
+                return;
+            }
+
+            this.form.application_logo = files[0];
         }
     }
 }
@@ -185,8 +204,28 @@ export default {
                     <fig-form-input v-model="form.application_url" />
                 </template>
 
-                <template v-slot:paypal_client_id>
+                <template v-slot:application_logo>
+                    <input
+                        accept="image/*"
+                        :multiple="false"
+                        type="file"
+                        :placeholder="$t('No file chosen')"
+                        @input="onLogoChange" />
+                </template>
+
+                <template v-slot:order_details_page_url>
+                    <fig-form-input v-model="form.order_details_page_url" />
+                    <div class="text-sm text-gray-400">
+                        {{ $t('order_details_page_url_token_tip') }}
+                    </div>
+                </template>
+
+                <!-- <template v-slot:paypal_client_id>
                     <fig-form-input v-model="form.paypal_client_id" />
+                </template>                -->
+
+                <template v-slot:stripe_api_key>
+                    <fig-form-input v-model="form.stripe_key" />
                 </template>
 
                 <template v-slot:shipengine_api_key>
@@ -301,9 +340,10 @@ export default {
                             </tr>
                         </draggable>
 
-                        <div>
+                        <!-- TODO: need way to add a new currency -->
+                        <!-- <div>
                             add new
-                        </div>
+                        </div> -->
                     </div>
                 </template>
 

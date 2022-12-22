@@ -106,7 +106,19 @@ export default (context, inject) => {
         },
 
         update(data) {
-            return api.$put('/account', data)
+            const fd = new FormData();
+
+            for(let key in data) {
+                let val = data[key];
+
+                if(val && ['shipengine_carriers', 'supported_currencies'].includes(key)) {
+                    val = JSON.stringify(val);
+                }
+
+                fd.append(key, val);
+            }
+
+            return api.$put('/account', fd)
         },
 
         deleteApiKey() {
