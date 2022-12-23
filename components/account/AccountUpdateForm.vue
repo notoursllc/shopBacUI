@@ -44,7 +44,8 @@ export default {
     data() {
         return {
             loading: false,
-            exchangeRateOptions: [],
+            exchangeRates: [],
+            addSupportedCurrencies: [],
             form: {
                 application_name: null,
                 application_url: null,
@@ -63,7 +64,7 @@ export default {
                 shipping_from_phone: null,
                 supported_currencies: [],
                 default_currency: null
-            },
+            }
         };
     },
 
@@ -76,12 +77,30 @@ export default {
                 )
             });
             return opts;
+        },
+
+        exchangeRateOptions() {
+            const supportedCurrencies = Array.isArray(this.form.supported_currencies) ? this.form.supported_currencies : [];
+            const options = [];
+
+            if(this.exchangeRates) {
+                for(let key in this.exchangeRates) {
+                    // don't include keys that are already selected
+                    if(!supportedCurrencies.includes(key)) {
+                        options.push(
+                            { label: key, value: key }
+                        );
+                    }
+                }
+            }
+
+            return options;
         }
     },
 
     mounted() {
         this.fetchAccount();
-        this.fetchRate();
+        this.fetchExchangeRates();
     },
 
     methods: {
@@ -100,6 +119,7 @@ export default {
                         this.form[key] = response.data[key];
                     }
                 }
+
             }
             catch(e) {
                 this.$figleaf.errorToast({
@@ -107,24 +127,15 @@ export default {
                     text: e.message
                 });
             }
-
-            this.loading = false;
+            finally {
+                this.loading = false;
+            }
         },
 
-        async fetchRate() {
+        async fetchExchangeRates() {
             try {
                 const response = await this.$api.exchangeRate.get();
-                const rateOptions = [];
-
-                if(response.data?.rates) {
-                    for(let key in response.data.rates) {
-                        rateOptions.push(
-                            { label: key, value: key }
-                        );
-                    }
-                }
-
-                this.exchangeRateOptions = rateOptions;
+                this.exchangeRates = response.data?.rates;
             }
             catch(e) {
                 this.$figleaf.errorToast({
@@ -150,8 +161,9 @@ export default {
                     text: e.message
                 });
             }
-
-            this.loading = false;
+            finally {
+                this.loading = false;
+            }
         },
 
         addCarrier() {
@@ -186,6 +198,33 @@ export default {
             }
 
             this.form.application_logo = files[0];
+        },
+
+        onAddSupportedCurrencies() {
+            if(!Array.isArray(this.form.supported_currencies) && this.addSupportedCurrencies.length) {
+                this.form.supported_currencies = [];
+            }
+
+            this.addSupportedCurrencies.forEach((currency) => {
+                if(!this.form.supported_currencies.includes(currency)) {
+                    this.form.supported_currencies.push(currency)
+                }
+            });
+
+            this.addSupportedCurrencies = [];
+        },
+
+        onRemoveSupportedCurrency(index) {
+            this.form.supported_currencies.splice(index, 1);
+
+            if(!this.form.supported_currencies.includes(this.form.default_currency)) {
+                this.form.default_currency = null;
+
+                this.$figleaf.toast({
+                    title: this.$t('Notice'),
+                    text: this.$t('default_currency_removed_notice')
+                });
+            }
         }
     }
 }
@@ -318,32 +357,44 @@ export default {
                 </template>
 
                 <template v-slot:supported_currencies>
-                    <div class="grid grid-cols-2">
+                    <div class="grid grid-cols-1 gap-4">
                         <draggable
                             v-model="form.supported_currencies"
                             handle=".supported_currencies_handle"
                             ghost-class="ghost"
                             tag="table">
-                            <tr v-for="(obj, index) in form.supported_currencies" :key="index">
+                            <tr v-for="(currency, index) in form.supported_currencies" :key="index">
                                 <td class="supported_currencies_handle cursor-grab">
                                     <fig-icon icon="dots-vertical-double" />
                                 </td>
                                 <td class="px-4">
-                                    {{ obj }}
+                                    {{ currency }}
                                 </td>
                                 <td class="pb-1">
                                     <fig-button
                                         variant="plain"
                                         icon="trash"
-                                        size="sm" />
+                                        size="sm"
+                                        @click="onRemoveSupportedCurrency(index)"/>
                                 </td>
                             </tr>
                         </draggable>
 
-                        <!-- TODO: need way to add a new currency -->
-                        <!-- <div>
-                            add new
-                        </div> -->
+                        <div>
+                            <div>{{ $t('Add supported currencies') }}</div>
+                            <fig-form-select
+                                v-model="addSupportedCurrencies"
+                                :options="exchangeRateOptions"
+                                size="md"
+                                clearable
+                                multiple
+                                :reduce="obj => obj.value" />
+                            <div class="mt-2">
+                                <fig-button
+                                    variant="plain"
+                                    @click="onAddSupportedCurrencies">{{ $t('Add') }}</fig-button>
+                            </div>
+                        </div>
                     </div>
                 </template>
 
